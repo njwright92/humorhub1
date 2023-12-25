@@ -3,16 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 0, 0, 0; /* Black */
+  --background-start-rgb: 214, 219, 220; /* Light Beige */
+  --background-end-rgb: 255, 255, 255; /* White */
+  --accent-color: 255, 0, 0; /* Red */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 255, 255, 255; /* White */
+    --background-start-rgb: 0, 0, 0; /* Black */
+    --background-end-rgb: 34, 34, 34; /* Dark Gray/Black */
+    --accent-color: 255, 0, 0; /* Darker Red */
   }
 }
 
@@ -24,4 +26,153 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  font-family: "Comic Sans MS", "Comic Sans", sans-serif, Arial;
+}
+
+.screen-container {
+  @apply flex flex-col min-h-screen p-8 text-black text-center;
+}
+
+.card-style {
+  @apply flex-grow;
+  @apply bg-beige rounded-lg shadow p-4 mt-4 mb-4 text-black;
+}
+
+.title {
+  @apply text-4xl font-bold m-4;
+  color: rgb(var(--accent-color));
+}
+
+.title-style {
+  @apply text-2xl font-semibold mb-2;
+  color: rgb(var(--accent-color));
+}
+
+.subtitle-style {
+  @apply text-xl font-semibold mb-2;
+  color: rgb(var(--accent-color));
+}
+
+.flex-row-wrap {
+  @apply flex flex-row flex-wrap sm:flex-nowrap;
+}
+
+.section-style {
+  @apply mb-6;
+}
+
+.btn {
+  @apply py-2 px-4 mt-4 rounded font-semibold transition duration-300 ease-in-out transform;
+  background-color: green;
+  color: beige;
+}
+
+.btn:hover {
+  @apply bg-red-600 shadow-lg -translate-y-1;
+}
+
+.btn:active {
+  @apply bg-red-700;
+}
+
+.modal-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50;
+}
+
+.modal-container {
+  @apply bg-gray-100 p-8 border-4 border-gray-600 rounded-lg shadow-lg relative max-w-sm;
+}
+
+.modal-title {
+  @apply text-center mb-4 text-black text-xl;
+}
+
+.form-container {
+  @apply flex flex-col gap-1;
+}
+
+.input-field {
+  @apply border-4 border-gray-600 p-2 rounded-lg bg-white text-black;
+}
+
+.close-button {
+  @apply absolute top-2 right-2 text-gray-600 cursor-pointer bg-transparent border-none text-xl;
+}
+
+.close-button:hover {
+  @apply text-gray-700;
+}
+
+.standard-input {
+  @apply border border-gray-300 px-4 py-2 rounded-md bg-gray-100 text-black;
+}
+
+.standard-input:focus {
+  @apply outline-none border-blue-500 shadow-md;
+}
+
+.the-text {
+  @apply block text-gray-600 text-sm font-semibold mb-2;
+}
+
+.micFinderTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.25rem;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .micFinderTitle {
+    font-size: 3rem;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.event-item {
+  @apply p-2 mb-4 border-b-2 border-eventItemBorder;
+}
+
+.event-item h3 {
+  @apply text-lg font-semibold text-black mb-1;
+}
+
+.event-item p {
+  @apply text-sm text-gray-700 mb-2;
+}
+
+.event-item .details {
+  @apply text-sm text-gray-800 align-middle;
+}
+
+.event-item h3::before {
+  content: "🎤 ";
+  @apply text-xl align-middle;
+}
+
+.event-item p::before {
+  @apply text-lg align-middle;
+}
+
+.modern-input {
+  @apply border border-modernInputBorder px-1.5 py-3 rounded-full bg-modernInputBg shadow-sm transition-all text-black;
+}
+
+.modern-input:focus {
+  @apply outline-none border-blue-500 shadow-md;
+}
+
+.modern-input:hover {
+  @apply border-blue-500;
 }
