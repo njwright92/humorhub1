@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0; /* Black */
+  --foreground-rgb: 10, 10, 10; /* Black */
   --background-start-rgb: 214, 219, 220; /* Light Beige */
-  --background-end-rgb: 255, 255, 255; /* White */
-  --accent-color: 255, 0, 0; /* Red */
+  --background-end-rgb: 250, 250, 250; /* White */
+  --accent-color: 127, 29, 29;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255; /* White */
-    --background-start-rgb: 0, 0, 0; /* Black */
-    --background-end-rgb: 34, 34, 34; /* Dark Gray/Black */
-    --accent-color: 255, 0, 0; /* Darker Red */
+    --foreground-rgb: 250, 250, 250; /* White */
+    --background-start-rgb: 10, 10, 10; /* Black */
+    --background-end-rgb: 25, 25, 25; /* Dark Gray/Black */
+    --accent-color: 127, 29, 29;
   }
 }
 
@@ -23,9 +23,9 @@ body {
   background: linear-gradient(
       to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
+      rgb(var(--background-start-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-end-rgb));
   font-family: "Comic Sans MS", "Comic Sans", sans-serif, Arial;
 }
 
@@ -39,7 +39,7 @@ body {
 }
 
 .title {
-  @apply text-4xl font-bold m-4;
+  @apply text-4xl font-bold mt-10 mb-2;
   color: rgb(var(--accent-color));
 }
 
@@ -62,17 +62,17 @@ body {
 }
 
 .btn {
-  @apply py-2 px-4 mt-4 rounded font-semibold transition duration-300 ease-in-out transform;
-  background-color: green;
-  color: beige;
+  background-color: rgb(
+    var(--accent-color)
+  ); /* Use rgb() for proper color rendering */
+  color: rgb(var(--foreground-rgb)); /* Use rgb() for proper color rendering */
+  border-radius: 0.625rem; /* 10px equivalent */
+  @apply px-2 py-1 m-2;
 }
 
-.btn:hover {
-  @apply bg-red-600 shadow-lg -translate-y-1;
-}
-
+.btn:hover,
 .btn:active {
-  @apply bg-red-700;
+  @apply scale-105; /* Add @apply for Tailwind utility */
 }
 
 .modal-backdrop {
@@ -92,7 +92,8 @@ body {
 }
 
 .input-field {
-  @apply border-4 border-gray-600 p-2 rounded-lg bg-white text-black;
+  color: --background-start-rgb;
+  @apply border-4 border-gray-600 p-2 rounded-lg bg-white;
 }
 
 .close-button {
@@ -145,7 +146,8 @@ body {
 }
 
 .event-item h3 {
-  @apply text-lg font-semibold text-black mb-1;
+  color: --background-end-rgb;
+  @apply text-lg font-semibold  mb-1;
 }
 
 .event-item p {
@@ -175,4 +177,16 @@ body {
 
 .modern-input:hover {
   @apply border-blue-500;
+}
+
+.neu-button {
+  color: var(--foreground-rgb);
+  @apply text-white px-2 py-1 rounded-lg shadow-md flex items-center justify-center text-2xl;
+  transition: transform 300ms, box-shadow 300ms;
+}
+
+.neu-button:hover {
+  @apply shadow-inner;
+  transform: scale(1.05);
+  text-decoration: underline;
 }

@@ -3,16 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import AuthModal from "./authModal";
-import {
-  MicrophoneIcon,
-  InformationCircleIcon,
-  UserCircleIcon,
-  UserIcon,
-  Bars3Icon,
-  XMarkIcon,
-  DocumentTextIcon,
-  HomeModernIcon,
-} from "@heroicons/react/24/solid";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import SearchBar from "./searchBar";
 import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
@@ -24,7 +15,6 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const cityContext = useCity();
   const router = useRouter();
-
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -52,12 +42,15 @@ export default function Header() {
     <>
       <header className="bg-red-900 text-white p-2 sticky top-0 z-50">
         <nav className="container flex justify-between items-center">
-          <Link
-            href="/"
-            className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center"
-          >
-            <span className="hidden md:inline-block">Home</span>
-            <HomeModernIcon className="h-8 w-8" />
+          <Link href="/" className="neu-button">
+            <Image
+              src={micFinder}
+              alt="Mic"
+              width={70}
+              height={70}
+              className="rounded-full"
+              priority
+            />
           </Link>
 
           <div className="micFinderTitle">
@@ -86,51 +79,45 @@ export default function Header() {
               <XMarkIcon className="h-6 w-6" />
               <span className="sr-only">Close menu</span>
             </button>
-
+            <Link href="/" className="neu-button">
+              <Image
+                src={micFinder}
+                alt="Mic"
+                width={70}
+                height={70}
+                className="rounded-full"
+                priority
+              />
+            </Link>
             <Link
               href="/MicFinder"
               className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
             >
-              <Image src={micFinder} alt="Mic" width={20} height={20} />
               <span>Mic Finder</span>
             </Link>
             <Link
               href="/ComicBot"
               className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
             >
-              <MicrophoneIcon className="h-5 w-5" />
               <span>ComicBot</span>
             </Link>
             <Link
               href="/JokePad"
               className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
             >
-              <DocumentTextIcon className="h-5 w-5" />
               <span>JokePad</span>
             </Link>
 
-            <button
-              onClick={toggleAuthModal}
-              className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
-            >
-              <UserCircleIcon className="h-5 w-5" />
-              <span>Sign In/Up</span>
-            </button>
-
-            <Link
-              href="/Profile"
-              className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
-            >
-              <UserIcon className="h-5 w-5" />
+            <Link href="/Profile" className="neu-button">
               <span>Profile</span>
             </Link>
 
-            <Link
-              href="/about"
-              className="neu-button px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
-            >
-              <InformationCircleIcon className="h-5 w-5" />
-              <span>About</span>
+            <button onClick={toggleAuthModal} className="neu-button">
+              <span>Sign In/Up</span>
+            </button>
+
+            <Link href="/contact" className="neu-button">
+              <span>Contact</span>
             </Link>
           </div>
         </nav>

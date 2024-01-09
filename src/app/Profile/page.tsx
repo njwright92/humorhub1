@@ -7,6 +7,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 export default function UserProfile() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -118,6 +120,7 @@ export default function UserProfile() {
 
   return (
     <div className="screen-container">
+      <Header />
       <h1 className="title">User Profile</h1>
       <div className="card-style">
         <div className="mb-6">
@@ -228,6 +231,7 @@ export default function UserProfile() {
           Edit Profile
         </button>
       )}
+      <Footer />
     </div>
   );
 }

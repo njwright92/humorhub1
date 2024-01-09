@@ -148,17 +148,20 @@ const Jokes = () => {
 
         <div className="jokes-list">
           {jokes.map((joke, index) => (
-            <div key={index} className="event-item">
+            <div
+              key={index}
+              className="event-item flex justify-between items-center"
+            >
               {editingIndex === index ? (
                 <>
                   <textarea
                     value={joke.joke}
                     onChange={(e) => handleEditChange(e, index)}
-                    className="input-field"
+                    className="input-field flex-grow mr-4"
                   />
-                  <div className="button-container">
+                  <div className="button-container flex-shrink-0">
                     <button
-                      className="btn"
+                      className="btn mr-2"
                       onClick={() => handleEditSubmit(index)}
                     >
                       Save
@@ -170,15 +173,17 @@ const Jokes = () => {
                 </>
               ) : (
                 <>
-                  <p>{joke.joke}</p>
-                  <PencilIcon
-                    className="icon-style"
-                    onClick={() => handleEditClick(index)}
-                  />
-                  <TrashIcon
-                    className="icon-style"
-                    onClick={() => handleDelete(joke.id)}
-                  />
+                  <p className="flex-grow">{joke.joke}</p>
+                  <div className="icon-container flex-shrink-0 flex">
+                    <PencilIcon
+                      className="h-6 w-6 mr-2 cursor-pointer"
+                      onClick={() => handleEditClick(index)}
+                    />
+                    <TrashIcon
+                      className="h-6 w-6 cursor-pointer"
+                      onClick={() => handleDelete(joke.id)}
+                    />
+                  </div>
                 </>
               )}
             </div>

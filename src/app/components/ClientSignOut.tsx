@@ -2,9 +2,8 @@
 
 import React from "react";
 import { getAuth, signOut } from "firebase/auth";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 
-const ClientOnlySignOutButton: React.FC = () => {
+const ClientSignOutButton: React.FC = () => {
   const handleSignOut = async () => {
     const auth = getAuth();
     try {
@@ -20,14 +19,10 @@ const ClientOnlySignOutButton: React.FC = () => {
   };
 
   return (
-    <button
-      onClick={handleSignOut}
-      className="btn"
-    >
-      <ArrowRightOnRectangleIcon className="inline-block h-4 w-4 mr-1" />
+    <button onClick={handleSignOut} className="btn">
       Sign Out
     </button>
   );
 };
 
-export default ClientOnlySignOutButton;
+export default ClientSignOutButton;

@@ -485,7 +485,7 @@ const EventsPage = () => {
     <div className="screen-container">
       <Header />
       <h1 className="title">Open Mic Events!</h1>
-      <p className="text-lg md:text-xl text-center mt-4 mb-2 text-beige">
+      <p className="text-lg md:text-xl text-center mt-4 text-beige">
         Got an amazing event coming up? Share it here and get the word out to
         the local community!
       </p>

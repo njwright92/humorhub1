@@ -117,9 +117,16 @@ export default function Home() {
         <section className="mb-6">
           <h3 className="subtitle-style">Step into the Spotlight:</h3>
           <p>
-            Whether you&apos;re a budding comedian, a poet, or a musician,
-            OpenMicFinder is your platform to shine. Find events that resonate
-            with your art and let the world be your audience.
+            Whether you're a budding comedian, a poet, or a musician,
+            OpenMicFinder is your gateway to visibility. Our platform connects
+            performers with venues hosting open mic events. Showcase your
+            talent, grow your fan base, and network with other artists.
+          </p>
+          <p>
+            Our user-friendly interface allows you to effortlessly search for
+            open mic events based on location, date, and performance type. This
+            ensures that you find the perfect stage that aligns with your
+            artistic style and preferences.
           </p>
         </section>
         <div>
@@ -128,16 +135,20 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
       <section className="card-style mt-10 p-1" data-aos="fade-up">
         <h2 className="title-style">ComicBot</h2>
         <div className="flex flex-col items-center">
           <p className="mb-4">
-            Your personal comedy bit creation assistant fine-tuned from a llm on
-            comedy scripts. Utilizing cutting-edge GPT technology, ComicBot
-            engages you in a conversational interface to help you craft the
-            funniest bits. It&apos;s like having a writing partner who&apos;s
-            always in a funny mood. Sign up to get access!
+            Your personal comedy bit creation assistant, ComicBot, is powered by
+            state-of-the-art GPT technology. It simulates a collaborative
+            writing experience, helping you brainstorm and refine your comedy
+            sketches.
+          </p>
+          <p className="mb-4">
+            Engage in witty and creative dialogues with ComicBot to develop
+            unique and hilarious comedy routines. Whether you're preparing for a
+            stand-up show or just seeking to enhance your comedic skills,
+            ComicBot is your ideal partner.
           </p>
 
           <Link href="/ComicBot">
@@ -160,10 +171,17 @@ export default function Home() {
         <h2 className="title-style">Jokepad</h2>
         <div className="flex flex-col items-center">
           <p className="mb-4">
-            With Comedify, you can unleash your comedy genius by writing and
-            working on jokes and bits. Our platform provides a creative space to
-            refine your material and take your comedy to the next level! Sign up
-            to get access!
+            With Jokepad, immerse yourself in a creative hub designed for
+            comedians and writers. Our platform is a sanctuary for your humorous
+            thoughts, where you can jot down, organize, and refine your jokes
+            and comedic stories.
+          </p>
+          <p className="mb-4">
+            Never lose a brilliant idea again, as Jokepad securely syncs your
+            content to the cloud. This ensures that your jokes and notes are
+            always accessible, anytime and anywhere. Its user-friendly interface
+            makes it simple to capture every fleeting thought and turn it into
+            comedic gold.
           </p>
 
           <Link href="/JokePad">
