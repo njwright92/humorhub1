@@ -6,7 +6,7 @@
   --foreground-rgb: 10, 10, 10; /* Black */
   --background-start-rgb: 214, 219, 220; /* Light Beige */
   --background-end-rgb: 250, 250, 250; /* White */
-  --accent-color: 127, 29, 29;
+  --accent-color: 22, 101, 52;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,7 +14,7 @@
     --foreground-rgb: 250, 250, 250; /* White */
     --background-start-rgb: 10, 10, 10; /* Black */
     --background-end-rgb: 25, 25, 25; /* Dark Gray/Black */
-    --accent-color: 127, 29, 29;
+    --accent-color: 22, 101, 52;
   }
 }
 
@@ -30,12 +30,14 @@ body {
 }
 
 .screen-container {
-  @apply flex flex-col min-h-screen p-8 text-black text-center;
+  @apply flex flex-col min-h-screen p-8 text-white text-center;
 }
 
 .card-style {
   @apply flex-grow;
-  @apply bg-beige rounded-lg shadow p-4 mt-4 mb-4 text-black;
+  @apply bg-black text-white p-4 mt-10 mb-10;
+  border-color: rgb(var(--accent-color));
+  border-width: 0.125rem;
 }
 
 .title {
@@ -142,20 +144,19 @@ body {
 }
 
 .event-item {
-  @apply p-2 mb-4 border-b-2 border-eventItemBorder;
+  @apply p-2 mb-4 border-b-2 text-white border-eventItemBorder;
 }
 
 .event-item h3 {
-  color: --background-end-rgb;
   @apply text-lg font-semibold  mb-1;
 }
 
 .event-item p {
-  @apply text-sm text-gray-700 mb-2;
+  @apply text-sm mb-2;
 }
 
 .event-item .details {
-  @apply text-sm text-gray-800 align-middle;
+  @apply align-middle;
 }
 
 .event-item h3::before {

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import AuthModal from "./authModal";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import SearchBar from "./searchBar";
 import { useCity } from "./cityContext";
@@ -13,10 +14,22 @@ import Image from "next/image";
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const cityContext = useCity();
   const router = useRouter();
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleAuthStateChanged = useCallback((user: User | null) => {
+    setIsUserSignedIn(!!user);
+  }, []);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+    return () => unsubscribe();
+  }, [handleAuthStateChanged]);
 
   const handleSearch = (searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toLowerCase().trim();
@@ -31,18 +44,28 @@ export default function Header() {
 
     if (matchingCity) {
       // Redirect to the events page with the selected city
-      router.push(`/events?city=${encodeURIComponent(matchingCity)}`);
+      router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
     } else {
       // Handle no matches found
       alert("No matching cities found, adding more cities check back soon.");
     }
   };
 
+  const handleMouseEnter = () => {
+    if (!isUserSignedIn) {
+      setShowTooltip(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
   return (
     <>
-      <header className="bg-red-900 text-white p-2 sticky top-0 z-50">
-        <nav className="container flex justify-between items-center">
-          <Link href="/" className="neu-button">
+      <header className="bg-green-800 p-2 text-white sticky top-0 z-50">
+        <nav className="flex justify-between items-center">
+          <Link href="/">
             <Image
               src={micFinder}
               alt="Mic"
@@ -95,18 +118,43 @@ export default function Header() {
             >
               <span>Mic Finder</span>
             </Link>
-            <Link
-              href="/ComicBot"
-              className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
-            >
-              <span>ComicBot</span>
-            </Link>
-            <Link
-              href="/JokePad"
-              className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
-            >
-              <span>JokePad</span>
-            </Link>
+            {isUserSignedIn ? (
+              <Link href="/ComicBot" className="neu-button">
+                <span>ComicBot</span>
+              </Link>
+            ) : (
+              <span
+                className="neu-button opacity-50 cursor-not-allowed"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <span>ComicBot</span>
+                {showTooltip && (
+                  <div className="tooltip">
+                    Please sign in to access this page
+                  </div>
+                )}
+              </span>
+            )}
+
+            {isUserSignedIn ? (
+              <Link href="/JokePad" className="neu-button">
+                <span>JokePad</span>
+              </Link>
+            ) : (
+              <span
+                className="neu-button opacity-50 cursor-not-allowed"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <span>JokePad</span>
+                {showTooltip && (
+                  <div className="tooltip">
+                    Please sign in to access this page
+                  </div>
+                )}
+              </span>
+            )}
 
             <Link href="/Profile" className="neu-button">
               <span>Profile</span>

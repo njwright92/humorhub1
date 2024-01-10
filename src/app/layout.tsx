@@ -17,6 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <CityProvider>
       <EventProvider>
+        
       <body>{children}</body>
       </EventProvider>
       </CityProvider>

@@ -557,9 +557,9 @@ const EventsPage = () => {
           filteredEvents.map((event) => (
             <div key={event.id} className="event-item">
               <h3 className="text-lg font-semibold">{event.name}</h3>
-              <p className="font-bold">📅 Date: {event.date}</p>
-              <p className="font-bold">📍 Location: {event.location}</p>
-              <div className="details font-bold">
+              <p className="details-label">📅 Date: {event.date}</p>
+              <p className="details-label">📍 Location: {event.location}</p>
+              <div className="details-label">
                 <span className="details-label">ℹ️ Details:</span>
                 <div dangerouslySetInnerHTML={{ __html: event.details }} />
               </div>
