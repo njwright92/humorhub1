@@ -19,14 +19,7 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-start-rgb))
-    )
-    rgb(var(--background-end-rgb));
-  font-family: "Comic Sans MS", "Comic Sans", sans-serif, Arial;
+  @apply text-[rgb(var(--foreground-rgb))] bg-gradient-to-b from-transparent to-[rgb(var(--background-start-rgb))] bg-[rgb(var(--background-end-rgb))] font-comic;
 }
 
 .screen-container {
@@ -34,25 +27,25 @@ body {
 }
 
 .card-style {
-  @apply flex-grow;
-  @apply bg-black text-white p-4 mt-10 mb-10;
-  border-color: rgb(var(--accent-color));
-  border-width: 0.125rem;
+  @apply flex-grow bg-black text-white p-4 mt-10 mb-10 border-2 border-[rgb(var(--accent-color))] rounded-soft;
+}
+
+.title,
+.title-style,
+.subtitle-style {
+  @apply text-accent font-bold;
 }
 
 .title {
-  @apply text-4xl font-bold mt-10 mb-2;
-  color: rgb(var(--accent-color));
+  @apply text-4xl mt-10 mb-2;
 }
 
 .title-style {
-  @apply text-2xl font-semibold mb-2;
-  color: rgb(var(--accent-color));
+  @apply text-2xl mb-2;
 }
 
 .subtitle-style {
-  @apply text-xl font-semibold mb-2;
-  color: rgb(var(--accent-color));
+  @apply text-xl mb-2;
 }
 
 .flex-row-wrap {
@@ -64,17 +57,7 @@ body {
 }
 
 .btn {
-  background-color: rgb(
-    var(--accent-color)
-  ); /* Use rgb() for proper color rendering */
-  color: rgb(var(--foreground-rgb)); /* Use rgb() for proper color rendering */
-  border-radius: 0.625rem; /* 10px equivalent */
-  @apply px-2 py-1 m-2;
-}
-
-.btn:hover,
-.btn:active {
-  @apply scale-105; /* Add @apply for Tailwind utility */
+  @apply bg-[rgb(var(--accent-color))] text-[rgb(var(--foreground-rgb))] px-2 py-1 m-2 rounded-soft transform transition-transform hover:scale-105;
 }
 
 .modal-backdrop {
@@ -93,25 +76,23 @@ body {
   @apply flex flex-col gap-1;
 }
 
-.input-field {
-  color: --background-start-rgb;
-  @apply border-4 border-gray-600 p-2 rounded-lg bg-white;
+.input-field,
+.standard-input,
+.modern-input {
+  @apply border-4 border-gray-600 p-2 bg-white rounded-soft text-black;
 }
 
 .close-button {
-  @apply absolute top-2 right-2 text-gray-600 cursor-pointer bg-transparent border-none text-xl;
+  @apply absolute top-2 right-2 text-gray-600 cursor-pointer bg-transparent border-none text-xl hover:text-gray-700;
 }
 
-.close-button:hover {
-  @apply text-gray-700;
+.standard-input:focus,
+.modern-input:focus {
+  @apply outline-none border-blue-500 shadow-md;
 }
 
 .standard-input {
-  @apply border border-gray-300 px-4 py-2 rounded-md bg-gray-100 text-black;
-}
-
-.standard-input:focus {
-  @apply outline-none border-blue-500 shadow-md;
+  @apply border-gray-300 px-4 py-2 bg-gray-100;
 }
 
 .the-text {
@@ -119,36 +100,22 @@ body {
 }
 
 .micFinderTitle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.25rem;
-  font-weight: bold;
+  @apply flex justify-center items-center text-3xl font-bold;
 }
 
 @media (min-width: 768px) {
   .micFinderTitle {
-    font-size: 3rem;
+    @apply text-4xl;
   }
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
 
 .event-item {
-  @apply p-2 mb-4 border-b-2 text-white border-eventItemBorder;
+  @apply p-2 mb-4 border-b-2 border-eventItemBorder text-white;
 }
 
 .event-item h3 {
-  @apply text-lg font-semibold  mb-1;
+  @apply text-lg font-semibold mb-1;
 }
 
 .event-item p {
@@ -159,35 +126,28 @@ body {
   @apply align-middle;
 }
 
-.event-item h3::before {
-  content: "🎤 ";
+.event-item h3::before,
+.event-item p::before {
   @apply text-xl align-middle;
 }
 
-.event-item p::before {
-  @apply text-lg align-middle;
-}
-
-.modern-input {
-  @apply border border-modernInputBorder px-1.5 py-3 rounded-full bg-modernInputBg shadow-sm transition-all text-black;
-}
-
-.modern-input:focus {
-  @apply outline-none border-blue-500 shadow-md;
-}
-
-.modern-input:hover {
-  @apply border-blue-500;
-}
-
 .neu-button {
-  color: var(--foreground-rgb);
-  @apply text-white px-2 py-1 rounded-lg shadow-md flex items-center justify-center text-2xl;
-  transition: transform 300ms, box-shadow 300ms;
+  @apply text-white px-2 py-1 rounded-lg shadow-md flex items-center justify-center text-2xl transition-all hover:shadow-inner transform hover:scale-105;
 }
 
-.neu-button:hover {
-  @apply shadow-inner;
-  transform: scale(1.05);
-  text-decoration: underline;
+.profile-image {
+  @apply rounded-full;
+}
+
+/* Utility classes */
+.rounded-soft {
+  border-radius: 0.635rem; /* 10px equivalent */
+}
+
+.text-accent {
+  color: rgb(var(--accent-color));
+}
+
+.font-comic {
+  font-family: "Comic Sans MS", "Comic Sans", sans-serif, Arial;
 }

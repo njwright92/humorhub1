@@ -19,7 +19,6 @@ export default function Header() {
   const router = useRouter();
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
@@ -51,14 +50,10 @@ export default function Header() {
     }
   };
 
-  const handleMouseEnter = () => {
+  const handleClick = () => {
     if (!isUserSignedIn) {
-      setShowTooltip(true);
+      alert("Please sign in to access this page");
     }
-  };
-
-  const handleMouseLeave = () => {
-    setShowTooltip(false);
   };
 
   return (
@@ -125,15 +120,9 @@ export default function Header() {
             ) : (
               <span
                 className="neu-button opacity-50 cursor-not-allowed"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onClick={handleClick}
               >
                 <span>ComicBot</span>
-                {showTooltip && (
-                  <div className="tooltip">
-                    Please sign in to access this page
-                  </div>
-                )}
               </span>
             )}
 
@@ -144,25 +133,21 @@ export default function Header() {
             ) : (
               <span
                 className="neu-button opacity-50 cursor-not-allowed"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onClick={handleClick}
               >
                 <span>JokePad</span>
-                {showTooltip && (
-                  <div className="tooltip">
-                    Please sign in to access this page
-                  </div>
-                )}
               </span>
             )}
 
-            <Link href="/Profile" className="neu-button">
-              <span>Profile</span>
-            </Link>
-
-            <button onClick={toggleAuthModal} className="neu-button">
-              <span>Sign In/Up</span>
-            </button>
+            {isUserSignedIn ? (
+              <Link href="/Profile" className="neu-button">
+                <span>Profile</span>
+              </Link>
+            ) : (
+              <button onClick={toggleAuthModal} className="neu-button">
+                <span>Sign In/Up</span>
+              </button>
+            )}
 
             <Link href="/contact" className="neu-button">
               <span>Contact</span>

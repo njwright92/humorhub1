@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import Image from "next/image";
 import { EventContext, Event } from "../components/eventContext";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -20,6 +20,10 @@ export default function UserProfile() {
   const auth = getAuth();
   const storage = getStorage();
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+
+  const profileImageObjectURL = useMemo(() => {
+    return profileImage ? URL.createObjectURL(profileImage) : null;
+  }, [profileImage]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -124,9 +128,9 @@ export default function UserProfile() {
       <h1 className="title">User Profile</h1>
       <div className="card-style">
         <div className="mb-6">
-          <label htmlFor="profilePicture" className="the-text">
-            Profile Picture:
-          </label>
+          {isEditing && (
+            <label htmlFor="profilePicture">Profile Picture:</label>
+          )}
           {isEditing ? (
             <>
               <input
@@ -136,10 +140,10 @@ export default function UserProfile() {
                 onChange={handleImageChange}
                 className="standard-input"
               />
-              {profileImage && (
+              {profileImageObjectURL && (
                 <div className="inline-block">
                   <Image
-                    src={URL.createObjectURL(profileImage)}
+                    src={profileImageObjectURL}
                     alt="Profile Preview"
                     width={300}
                     height={300}
@@ -155,8 +159,8 @@ export default function UserProfile() {
                 <Image
                   src={profileImageUrl}
                   alt="Profile Preview"
-                  width={300}
-                  height={300}
+                  width={200}
+                  height={200}
                   className="profile-image"
                   unoptimized
                   priority
@@ -167,9 +171,7 @@ export default function UserProfile() {
         </div>
 
         <div className="form-container">
-          <label htmlFor="name" className="the-text">
-            Name:
-          </label>
+          {isEditing && <label htmlFor="name">Name:</label>}
           {isEditing ? (
             <input
               id="name"
@@ -185,9 +187,7 @@ export default function UserProfile() {
         </div>
 
         <div className="form-container">
-          <label htmlFor="bio" className="the-text">
-            Bio:
-          </label>
+          {isEditing && <label htmlFor="bio">Bio:</label>}
           {isEditing ? (
             <textarea
               id="bio"
@@ -201,36 +201,33 @@ export default function UserProfile() {
           )}
         </div>
 
-        <div className="mb-6">
-          <h2 className="title-style">Saved Events</h2>
-          {savedEvents.map((event) => (
-            <div key={event.id} className="event-item">
-              <h3 className="subtitle-style">{event.name}</h3>
-              <p className="standard-input">Location: {event.location}</p>
-              <div className="details">
-                <span className="the-text">ℹ️ Details:</span>
-                <div dangerouslySetInnerHTML={{ __html: event.details }} />
-              </div>
-              <button
-                className="btn"
-                onClick={() => handleDeleteEvent(event.id)}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
+        {isEditing ? (
+          <button onClick={handleSubmit} className="btn">
+            Save Changes
+          </button>
+        ) : (
+          <button onClick={handleEdit} className="btn">
+            Edit Profile
+          </button>
+        )}
       </div>
 
-      {isEditing ? (
-        <button onClick={handleSubmit} className="btn">
-          Save Changes
-        </button>
-      ) : (
-        <button onClick={handleEdit} className="btn">
-          Edit Profile
-        </button>
-      )}
+      <div className="mb-6">
+        <h2 className="title-style">Saved Events</h2>
+        {savedEvents.map((event) => (
+          <div key={event.id} className="event-item">
+            <h3 className="subtitle-style">{event.name}</h3>
+            <p className="standard-input">Location: {event.location}</p>
+            <div className="details">
+              <span className="the-text">ℹ️ Details:</span>
+              <div dangerouslySetInnerHTML={{ __html: event.details }} />
+            </div>
+            <button className="btn" onClick={() => handleDeleteEvent(event.id)}>
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
       <Footer />
     </div>
   );
