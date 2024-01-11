@@ -40,7 +40,7 @@ const HumorHubAPISection: React.FC = () => {
         </div>
       ))}
 
-      <Link href="/api-signup">
+      <Link href="/HHapi">
         <button className="btn">Subsribe for our API</button>
       </Link>
     </div>
