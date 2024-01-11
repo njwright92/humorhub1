@@ -109,7 +109,6 @@ body {
   }
 }
 
-
 .event-item {
   @apply p-2 mb-4 border-b-2 border-eventItemBorder text-white;
 }
@@ -150,4 +149,20 @@ body {
 
 .font-comic {
   font-family: "Comic Sans MS", "Comic Sans", sans-serif, Arial;
+}
+
+select {
+  color: gray;
+}
+
+select:required:invalid {
+  color: gray;
+}
+
+option[value=""][disabled] {
+  display: none;
+}
+
+option {
+  color: black;
 }
