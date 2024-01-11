@@ -161,68 +161,38 @@ const ComicBot = () => {
   }, [userInput, conversation, askComicbot]);
 
   return (
-    <main className="screen-container flex flex-col">
+    <>
       <Header />
-      <h1 className="title">ComicBot!</h1>
+      <main className="screen-container flex flex-col">
+        <h1 className="title">ComicBot!</h1>
 
-      <div className="card-style">
-        <div className="form-container">
-          <textarea
-            name="userInput"
-            value={userInput}
-            onChange={handleInputChange}
-            className="input-field"
-            placeholder="Write a funny take on everyday life, like 'Why is pizza round, but comes in a square box?'"
-            disabled={isLoading}
-          />
-          <button onClick={handleSend} disabled={isLoading} className="btn">
-            Send
-          </button>
-        </div>
+        <div className="card-style">
+          <div className="form-container">
+            <textarea
+              name="userInput"
+              value={userInput}
+              onChange={handleInputChange}
+              className="input-field"
+              placeholder="Write a funny take on everyday life, like 'Why is pizza round, but comes in a square box?'"
+              disabled={isLoading}
+            />
+            <button onClick={handleSend} disabled={isLoading} className="btn">
+              Send
+            </button>
+          </div>
 
-        <div className="section-style">
-          {isLoading && (
-            <div className="modal-container">
-              <span>Loading...</span>
-              {/* Loading spinner */}
-            </div>
-          )}
-          {/* Conversations */}
-          {conversation &&
-            conversation.map((message, index) => (
-              <div
-                key={index}
-                className={
-                  message.from === "bot"
-                    ? "bot-message-container"
-                    : "user-message-container"
-                }
-              >
-                <span>{message.from === "bot" ? "ComicBot:.." : "...You"}</span>
-                <p
-                  className={
-                    message.from === "bot" ? "bot-message" : "user-message"
-                  }
-                >
-                  {message.text}
-                </p>
+          <div className="section-style">
+            {isLoading && (
+              <div className="modal-container">
+                <span>Loading...</span>
+                {/* Loading spinner */}
               </div>
-            ))}
-        </div>
-
-        <button onClick={saveConversation} className="btn" disabled={isSaved}>
-          {isSaved ? "Conversation Saved" : "Save Conversation"}
-        </button>
-
-        <div className="previous-conversations">
-          <h2 className="subtitle-style">Previous Conversations</h2>
-          {/* Previous Conversations */}
-          {allConversations.map((convo, index) => (
-            <div key={index} className="event-item">
-              {/* Conversation Messages */}
-              {convo.messages.map((message, i) => (
+            )}
+            {/* Conversations */}
+            {conversation &&
+              conversation.map((message, index) => (
                 <div
-                  key={i}
+                  key={index}
                   className={
                     message.from === "bot"
                       ? "bot-message-container"
@@ -232,22 +202,55 @@ const ComicBot = () => {
                   <span>
                     {message.from === "bot" ? "ComicBot:.." : "...You"}
                   </span>
-                  <p>{message.text}</p>
+                  <p
+                    className={
+                      message.from === "bot" ? "bot-message" : "user-message"
+                    }
+                  >
+                    {message.text}
+                  </p>
                 </div>
               ))}
-              <button
-                className="btn"
-                onClick={() => deleteConversation(convo.id)}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
+          <button onClick={saveConversation} className="btn" disabled={isSaved}>
+            {isSaved ? "Conversation Saved" : "Save Conversation"}
+          </button>
+
+          <div className="previous-conversations">
+            <h2 className="subtitle-style">Previous Conversations</h2>
+            {/* Previous Conversations */}
+            {allConversations.map((convo, index) => (
+              <div key={index} className="event-item">
+                {/* Conversation Messages */}
+                {convo.messages.map((message, i) => (
+                  <div
+                    key={i}
+                    className={
+                      message.from === "bot"
+                        ? "bot-message-container"
+                        : "user-message-container"
+                    }
+                  >
+                    <span>
+                      {message.from === "bot" ? "ComicBot:.." : "...You"}
+                    </span>
+                    <p>{message.text}</p>
+                  </div>
+                ))}
+                <button
+                  className="btn"
+                  onClick={() => deleteConversation(convo.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
       <Footer />
-    </main>
+    </>
   );
 };
 

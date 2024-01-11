@@ -32,8 +32,9 @@ const ContactPage: React.FC = () => {
   };
 
   return (
+    <><Header />
     <div className="screen-container">
-      <Header />
+      
       <section className="card-style">
         <h1 className="title">Contact Us</h1>
         <form onSubmit={handleSubmit}>
@@ -77,8 +78,10 @@ const ContactPage: React.FC = () => {
           <button type="submit">Submit</button>
         </form>
       </section>
-      <Footer />
+     
     </div>
+     <Footer />
+     </>
   );
 };
 

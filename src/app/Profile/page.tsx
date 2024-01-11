@@ -123,112 +123,117 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="screen-container">
+    <>
       <Header />
-      <h1 className="title">User Profile</h1>
-      <div className="card-style">
-        <div className="mb-6">
-          {isEditing && (
-            <label htmlFor="profilePicture">Profile Picture:</label>
-          )}
-          {isEditing ? (
-            <>
-              <input
-                id="profilePicture"
-                name="profilePicture"
-                type="file"
-                onChange={handleImageChange}
-                className="standard-input"
-              />
-              {profileImageObjectURL && (
+      <div className="screen-container">
+        <h1 className="title">User Profile</h1>
+        <div className="card-style">
+          <div className="mb-6">
+            {isEditing && (
+              <label htmlFor="profilePicture">Profile Picture:</label>
+            )}
+            {isEditing ? (
+              <>
+                <input
+                  id="profilePicture"
+                  name="profilePicture"
+                  type="file"
+                  onChange={handleImageChange}
+                  className="standard-input"
+                />
+                {profileImageObjectURL && (
+                  <div className="inline-block">
+                    <Image
+                      src={profileImageObjectURL}
+                      alt="Profile Preview"
+                      width={300}
+                      height={300}
+                      className="profile-image"
+                      priority
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              profileImageUrl && (
                 <div className="inline-block">
                   <Image
-                    src={profileImageObjectURL}
+                    src={profileImageUrl}
                     alt="Profile Preview"
-                    width={300}
-                    height={300}
+                    width={200}
+                    height={200}
                     className="profile-image"
+                    unoptimized
                     priority
                   />
                 </div>
-              )}
-            </>
-          ) : (
-            profileImageUrl && (
-              <div className="inline-block">
-                <Image
-                  src={profileImageUrl}
-                  alt="Profile Preview"
-                  width={200}
-                  height={200}
-                  className="profile-image"
-                  unoptimized
-                  priority
-                />
-              </div>
-            )
-          )}
-        </div>
-
-        <div className="form-container">
-          {isEditing && <label htmlFor="name">Name:</label>}
-          {isEditing ? (
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="standard-input"
-            />
-          ) : (
-            <p className="subtitle-style">{name}</p>
-          )}
-        </div>
-
-        <div className="form-container">
-          {isEditing && <label htmlFor="bio">Bio:</label>}
-          {isEditing ? (
-            <textarea
-              id="bio"
-              name="bio"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              className="standard-input h-24"
-            />
-          ) : (
-            <p className="subtitle-style">{bio}</p>
-          )}
-        </div>
-
-        {isEditing ? (
-          <button onClick={handleSubmit} className="btn">
-            Save Changes
-          </button>
-        ) : (
-          <button onClick={handleEdit} className="btn">
-            Edit Profile
-          </button>
-        )}
-      </div>
-
-      <div className="mb-6">
-        <h2 className="title-style">Saved Events</h2>
-        {savedEvents.map((event) => (
-          <div key={event.id} className="event-item">
-            <h3 className="subtitle-style">{event.name}</h3>
-            <p className="standard-input">Location: {event.location}</p>
-            <div className="details">
-              <span className="the-text">ℹ️ Details:</span>
-              <div dangerouslySetInnerHTML={{ __html: event.details }} />
-            </div>
-            <button className="btn" onClick={() => handleDeleteEvent(event.id)}>
-              Delete
-            </button>
+              )
+            )}
           </div>
-        ))}
+
+          <div className="form-container">
+            {isEditing && <label htmlFor="name">Name:</label>}
+            {isEditing ? (
+              <input
+                id="name"
+                name="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="standard-input"
+              />
+            ) : (
+              <p className="subtitle-style">{name}</p>
+            )}
+          </div>
+
+          <div className="form-container">
+            {isEditing && <label htmlFor="bio">Bio:</label>}
+            {isEditing ? (
+              <textarea
+                id="bio"
+                name="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className="standard-input h-24"
+              />
+            ) : (
+              <p className="subtitle-style">{bio}</p>
+            )}
+          </div>
+
+          {isEditing ? (
+            <button onClick={handleSubmit} className="btn">
+              Save Changes
+            </button>
+          ) : (
+            <button onClick={handleEdit} className="btn">
+              Edit Profile
+            </button>
+          )}
+        </div>
+
+        <div className="mb-6">
+          <h2 className="title-style">Saved Events</h2>
+          {savedEvents.map((event) => (
+            <div key={event.id} className="event-item">
+              <h3 className="subtitle-style">{event.name}</h3>
+              <p className="standard-input">Location: {event.location}</p>
+              <div className="details">
+                <span className="the-text">ℹ️ Details:</span>
+                <div dangerouslySetInnerHTML={{ __html: event.details }} />
+              </div>
+              <button
+                className="btn"
+                onClick={() => handleDeleteEvent(event.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 }

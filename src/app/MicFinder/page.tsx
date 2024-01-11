@@ -482,154 +482,156 @@ const EventsPage = () => {
   const MemoizedEventForm = React.memo(EventForm);
 
   return (
-    <div className="screen-container">
+    <>
       <Header />
-      <h1 className="title">Open Mic Events!</h1>
-      <p className="text-lg md:text-xl text-center mt-4 text-beige">
-        Got an amazing event coming up? Share it here and get the word out to
-        the local community!
-      </p>
-      <div className="text-center mb-2">
-        <MemoizedEventForm />
-      </div>
-      <h6 className="text-center mt-4">
-        Select your city and date to view events!
-        <br />
-        Or scroll down to see all events!
-      </h6>
-      <div className="flex flex-col justify-center items-center mt-2">
-        <select
-          id="citySelect"
-          name="selectedCity"
-          value={selectedCity}
-          onChange={handleCityChange}
-          className="modern-input max-w-xs mx-auto"
-        >
-          <option value="">Select a City</option>
-          <option value="Los Angeles CA">Los Angeles, CA</option>
-          <option value="San Diego CA">San Diego, CA</option>
-          <option value="San Francisco CA">San Francisco, CA</option>
-          <option value="Miami FL">Miami, FL</option>
-          <option value="Maui HA">Maui, HA</option>
-          <option value="Boise ID">Boise, ID</option>
-          <option value="Coeur D&#39;Alene ID">Coeur D&#39;Alene, ID</option>
-          <option value="Hayden ID">Hayden, ID</option>
-          <option value="Moscow ID">Moscow, ID</option>
-          <option value="Post Falls ID">Post Falls, ID</option>
-          <option value="Sandpoint ID">Sandpoint, ID</option>
-          <option value="Boston MA">Boston, MA</option>
-          <option value="New York City NY">New York City, NY</option>
-          <option value="Portland OR">Portland, OR</option>
-          <option value="Austin TX">Austin, TX</option>
-          <option value="Salt Lake City UT">Salt Lake City, UT</option>
-          <option value="Cheney WA">Cheney, WA</option>
-          <option value="Medical Lake WA">Medical Lake, WA</option>
-          <option value="Seattle WA">Seattle, WA</option>
-          <option value="Spokane Valley WA">Spokane Valley, WA</option>
-          <option value="Spokane WA">Spokane, WA</option>
-        </select>
-        <div className="relative mt-2">
-          <ReactDatePicker
-            ref={datePickerRef}
-            id="datePicker"
-            selected={selectedDate}
-            onChange={handleDateChange}
-            className="modern-input"
-          />
-          <CalendarIcon
-            className="h-5 w-5 text-black absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
-            onClick={openDatePicker}
+      <div className="screen-container">
+        <h1 className="title">Open Mic Events!</h1>
+        <p className="text-lg md:text-xl text-center mt-4 text-beige">
+          Got an amazing event coming up? Share it here and get the word out to
+          the local community!
+        </p>
+        <div className="text-center mb-2">
+          <MemoizedEventForm />
+        </div>
+        <h6 className="text-center mt-4">
+          Select your city and date to view events!
+          <br />
+          Or scroll down to see all events!
+        </h6>
+        <div className="flex flex-col justify-center items-center mt-2">
+          <select
+            id="citySelect"
+            name="selectedCity"
+            value={selectedCity}
+            onChange={handleCityChange}
+            className="modern-input max-w-xs mx-auto"
+          >
+            <option value="">Select a City</option>
+            <option value="Los Angeles CA">Los Angeles, CA</option>
+            <option value="San Diego CA">San Diego, CA</option>
+            <option value="San Francisco CA">San Francisco, CA</option>
+            <option value="Miami FL">Miami, FL</option>
+            <option value="Maui HA">Maui, HA</option>
+            <option value="Boise ID">Boise, ID</option>
+            <option value="Coeur D&#39;Alene ID">Coeur D&#39;Alene, ID</option>
+            <option value="Hayden ID">Hayden, ID</option>
+            <option value="Moscow ID">Moscow, ID</option>
+            <option value="Post Falls ID">Post Falls, ID</option>
+            <option value="Sandpoint ID">Sandpoint, ID</option>
+            <option value="Boston MA">Boston, MA</option>
+            <option value="New York City NY">New York City, NY</option>
+            <option value="Portland OR">Portland, OR</option>
+            <option value="Austin TX">Austin, TX</option>
+            <option value="Salt Lake City UT">Salt Lake City, UT</option>
+            <option value="Cheney WA">Cheney, WA</option>
+            <option value="Medical Lake WA">Medical Lake, WA</option>
+            <option value="Seattle WA">Seattle, WA</option>
+            <option value="Spokane Valley WA">Spokane Valley, WA</option>
+            <option value="Spokane WA">Spokane, WA</option>
+          </select>
+          <div className="relative mt-2">
+            <ReactDatePicker
+              ref={datePickerRef}
+              id="datePicker"
+              selected={selectedDate}
+              onChange={handleDateChange}
+              className="modern-input"
+            />
+            <CalendarIcon
+              className="h-5 w-5 text-black absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
+              onClick={openDatePicker}
+            />
+          </div>
+        </div>
+
+        {/* Event List */}
+        <div className="card-style">
+          <h2
+            className="title-style text-center"
+            style={{ borderBottom: "0.15rem solid #005eff" }}
+          >
+            Events List:
+          </h2>
+          {selectedCity === "" ? (
+            <p>Please select a city to see today&#39;s events.</p>
+          ) : filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
+              <div key={event.id} className="event-item">
+                <h3 className="text-lg font-semibold">{event.name}</h3>
+                <p className="details-label">📅 Date: {event.date}</p>
+                <p className="details-label">📍 Location: {event.location}</p>
+                <div className="details-label">
+                  <span className="details-label">ℹ️ Details:</span>
+                  <div dangerouslySetInnerHTML={{ __html: event.details }} />
+                </div>
+                <button
+                  className="btn mt-1 px-1 py-1"
+                  onClick={() => handleEventSave(event)}
+                >
+                  Save Event
+                </button>
+              </div>
+            ))
+          ) : (
+            <p>
+              No events found for {selectedCity || "the selected city"} on{" "}
+              {selectedDate.toLocaleDateString()}.
+            </p>
+          )}
+        </div>
+
+        {/* Map Component */}
+        <div className="card-style">
+          <MemoizedGoogleMap
+            lat={selectedCityCoordinates.lat}
+            lng={selectedCityCoordinates.lng}
+            events={filteredEvents}
           />
         </div>
-      </div>
 
-      {/* Event List */}
-      <div className="card-style">
-        <h2
-          className="title-style text-center"
-          style={{ borderBottom: "0.15rem solid #005eff" }}
-        >
-          Events List:
-        </h2>
-        {selectedCity === "" ? (
-          <p>Please select a city to see today&#39;s events.</p>
-        ) : filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
+        <div className="card-style">
+          <div className="city-filter flex flex-wrap">
+            <br />
+            <br />
+            <button
+              onClick={() => handleCityFilterChange("All Cities")}
+              className="city-button m-1 underline text-red-700 font-bold text-lg hover:text-red-500 flex-grow"
+            >
+              All Cities
+            </button>
+            {uniqueCities.map((city) => (
+              <button
+                key={city}
+                onClick={() => handleCityFilterChange(city)}
+                className="city-button m-1 underline text-red-800 hover:text-red-500 flex-grow"
+              >
+                {city}
+              </button>
+            ))}
+          </div>
+          <h2
+            className="title-style text-center"
+            style={{ borderBottom: "0.15rem solid #005eff" }}
+          >
+            {filterCity === "All Cities"
+              ? "All Events"
+              : `All Events in ${filterCity}`}
+          </h2>
+          {eventsByCity.map((event) => (
             <div key={event.id} className="event-item">
               <h3 className="text-lg font-semibold">{event.name}</h3>
-              <p className="details-label">📅 Date: {event.date}</p>
-              <p className="details-label">📍 Location: {event.location}</p>
-              <div className="details-label">
+              <p className="font-bold">📅 Date: {event.date}</p>
+              <p className="font-bold">📍 Location: {event.location}</p>
+              <div className="details font-bold">
                 <span className="details-label">ℹ️ Details:</span>
                 <div dangerouslySetInnerHTML={{ __html: event.details }} />
               </div>
-              <button
-                className="btn mt-1 px-1 py-1"
-                onClick={() => handleEventSave(event)}
-              >
-                Save Event
-              </button>
             </div>
-          ))
-        ) : (
-          <p>
-            No events found for {selectedCity || "the selected city"} on{" "}
-            {selectedDate.toLocaleDateString()}.
-          </p>
-        )}
-      </div>
-
-      {/* Map Component */}
-      <div className="card-style">
-        <MemoizedGoogleMap
-          lat={selectedCityCoordinates.lat}
-          lng={selectedCityCoordinates.lng}
-          events={filteredEvents}
-        />
-      </div>
-
-      <div className="card-style">
-        <div className="city-filter flex flex-wrap">
-          <br />
-          <br />
-          <button
-            onClick={() => handleCityFilterChange("All Cities")}
-            className="city-button m-1 underline text-red-700 font-bold text-lg hover:text-red-500 flex-grow"
-          >
-            All Cities
-          </button>
-          {uniqueCities.map((city) => (
-            <button
-              key={city}
-              onClick={() => handleCityFilterChange(city)}
-              className="city-button m-1 underline text-red-800 hover:text-red-500 flex-grow"
-            >
-              {city}
-            </button>
           ))}
         </div>
-        <h2
-          className="title-style text-center"
-          style={{ borderBottom: "0.15rem solid #005eff" }}
-        >
-          {filterCity === "All Cities"
-            ? "All Events"
-            : `All Events in ${filterCity}`}
-        </h2>
-        {eventsByCity.map((event) => (
-          <div key={event.id} className="event-item">
-            <h3 className="text-lg font-semibold">{event.name}</h3>
-            <p className="font-bold">📅 Date: {event.date}</p>
-            <p className="font-bold">📍 Location: {event.location}</p>
-            <div className="details font-bold">
-              <span className="details-label">ℹ️ Details:</span>
-              <div dangerouslySetInnerHTML={{ __html: event.details }} />
-            </div>
-          </div>
-        ))}
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 

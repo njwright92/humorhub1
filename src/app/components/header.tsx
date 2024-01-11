@@ -85,7 +85,7 @@ export default function Header() {
           </div>
 
           <div
-            className={`absolute top-0 right-0 h-screen w-1/4 bg-black bg-opacity-75 z-50 transform ${
+            className={`absolute top-0 right-0 h-screen w-1/2 bg-black bg-opacity-75 z-50 transform ${
               isMenuOpen ? "translate-x-0" : "translate-x-full"
             } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-2`}
           >

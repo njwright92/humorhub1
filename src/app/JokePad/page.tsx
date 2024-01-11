@@ -124,8 +124,9 @@ const Jokes = () => {
   };
 
   return (
+    <><Header />
     <main className="screen-container flex flex-col">
-      <Header />
+      
       <h1 className="title">JokePad!</h1>
 
       <div className="card-style">
@@ -191,8 +192,10 @@ const Jokes = () => {
         </div>
       </div>
 
-      <Footer />
+    
     </main>
+      <Footer />
+      </>
   );
 };
 

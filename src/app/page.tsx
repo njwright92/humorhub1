@@ -157,11 +157,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section>
+        <section data-aos="fade-up">
           <HumorHubAPISection />
         </section>
       </div>
-      <Footer data-aos="fade-up" />
+      <Footer />
     </>
   );
 }
