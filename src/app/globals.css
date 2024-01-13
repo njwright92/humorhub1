@@ -57,6 +57,7 @@ body {
 }
 
 .btn {
+  
   @apply bg-[rgb(var(--accent-color))] text-[rgb(var(--foreground-rgb))] px-2 py-1 m-2 rounded-soft transform transition-transform hover:scale-105;
 }
 

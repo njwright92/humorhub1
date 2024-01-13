@@ -205,7 +205,7 @@ const mockEvents: Event[] = [
     lat: 47.5725708,
     lng: -117.6844563,
     details: `
-    Signup in person or DM starts at 7:00pm sharpHappens on the 3RD THURSDAY OF THE MONTH. It is an open mic with a 20-min feature act at the end. Comics get the light when they have 1 min remaining. If you're looking to perform at the Fox Hole and DZ, let Chris know so he can put you towards the front of the lineup. Every comic that performs gets an even cut of tips @ the end of the show, so it pays (at least a little bit) to be (at least a little bit) funny. <a href="https://www.facebook.com/thefoxholemedicallake/"> foxholemedicallake Facebook</a> 
+    Signup in person or DM starts at 7:00pm sharp Happens on the 3RD THURSDAY OF THE MONTH. It is an open mic with a 20-min feature act at the end. Comics get the light when they have 1 min remaining. If you're looking to perform at the Fox Hole and DZ, let Chris know so he can put you towards the front of the lineup. Every comic that performs gets an even cut of tips @ the end of the show, so it pays (at least a little bit) to be (at least a little bit) funny. <a href="https://www.facebook.com/thefoxholemedicallake/"> foxholemedicallake Facebook</a> 
     <a href="https://www.google.com/maps/place/The+Foxhole+Bar+and+Grill/@47.5725708,-117.6844563,17z/data=!3m1!4b1!4m6!3m5!1s0x549e6b079450a8a7:0x706aa4e325b9b6cd!8m2!3d47.5725708!4d-117.6818814!16s%2Fg%2F11syxzl8hk?entry=ttu" ttarget="_blank" style="text-decoration: underline; color: green;">
       View on Google Maps
     </a>

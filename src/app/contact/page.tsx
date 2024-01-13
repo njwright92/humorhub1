@@ -39,7 +39,7 @@ const ContactPage: React.FC = () => {
         <h1 className="title">Contact Us</h1>
         <form onSubmit={handleSubmit}>
           <p className="text-center mb-4">
-            We're always here to help. If you have any questions, feedback, or
+            We&#39;re always here to help. If you have any questions, feedback, or
             need assistance, please fill out the form below. Our team will get
             back to you as soon as possible. Thank you for reaching out to us!
           </p>

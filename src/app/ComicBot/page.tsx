@@ -13,6 +13,7 @@ import {
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
+import axios from "axios";
 import Footer from "../components/footer";
 
 type ConversationMessage = {
@@ -35,27 +36,31 @@ const ComicBot = () => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const askComicbot = useCallback(async (prompt: string | null) => {
+  const API_ENDPOINT =
+    "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1";
+  const HEADERS = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer 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",
+  };
+
+  const askComicbot = useCallback(async (Prompt: string) => {
     try {
-      const response = await fetch(
-        "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer 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",
-          },
-          body: JSON.stringify({ inputs: prompt }),
-        }
+      const response = await axios.post(
+        API_ENDPOINT,
+        { inputs: Prompt }, // Using 'Prompt' as per the function parameter
+        { headers: HEADERS }
       );
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-      const data = await response.json();
-      return data;
+
+      // Directly returning the response data
+      return response.data;
     } catch (error) {
-      console.error("Error making request:", error);
-      alert("Error please try again");
+      if (error instanceof Error) {
+        console.error("Error making request:", error);
+        throw new Error("Error in askComicbot: " + error.message);
+      } else {
+        console.error("An unknown error occurred:", error);
+        throw new Error("Error in askComicbot: An unknown error occurred");
+      }
     }
   }, []);
 

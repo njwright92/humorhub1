@@ -14,14 +14,29 @@ type Article = {
 const NewsPage: React.FC = () => {
   const [category, setCategory] = useState("");
   const [query, setQuery] = useState("");
-  const [articles, setArticles] = useState<Article[]>([]); // Use the Article type for state
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchNews = async () => {
-    const response = await fetch(
-      `/api/news/${category}?q=${encodeURIComponent(query)}`
-    );
-    const data = await response.json();
-    setArticles(data);
+    setIsLoading(true);
+    const endpoint = `/api/news/${category}?q=${encodeURIComponent(query)}`;
+    console.log(`Requesting URL: ${endpoint}`); // Add this console log to debug the URL
+
+    try {
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(`Data received:`, data); // Log received data
+      setArticles(data);
+      setError("");
+    } catch (error) {
+      console.error("Error fetching news:", error);
+      setError("Error fetching news. Please try again later.");
+    }
+    setIsLoading(false);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -33,6 +48,9 @@ const NewsPage: React.FC = () => {
     <>
       <Header />
       <div className="screen-container">
+        {error && <p>{error}</p>}
+        {isLoading && <p>Loading news...</p>}
+
         <h1 className="title">News Page</h1>
         <div className="card-style">
           <p className="text-center mb-4">
@@ -52,7 +70,7 @@ const NewsPage: React.FC = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Select Category
               </option>
               <option value="news">Latest News</option>
@@ -65,7 +83,7 @@ const NewsPage: React.FC = () => {
             <input
               id="searchQuery"
               name="query"
-              className="flex-grow md:flex-grow-0"
+              className="flex-grow md:flex-grow-0 text-black"
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}

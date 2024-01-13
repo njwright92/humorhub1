@@ -140,6 +140,19 @@ export default function Header() {
             )}
 
             {isUserSignedIn ? (
+              <Link href="/HHapi" className="neu-button">
+                <span>News API</span>
+              </Link>
+            ) : (
+              <span
+                className="neu-button opacity-50 cursor-not-allowed"
+                onClick={handleClick}
+              >
+                <span>News API</span>
+              </span>
+            )}
+
+            {isUserSignedIn ? (
               <Link href="/Profile" className="neu-button">
                 <span>Profile</span>
               </Link>

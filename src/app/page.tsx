@@ -74,7 +74,7 @@ export default function Home() {
           <section className="mb-6">
             <h3 className="subtitle-style">Step into the Spotlight:</h3>
             <p>
-              Whether you're a budding comedian, a poet, or a musician,
+              Whether you&#39;re a budding comedian, a poet, or a musician,
               OpenMicFinder is your gateway to visibility. Our platform connects
               performers with venues hosting open mic events. Showcase your
               talent, grow your fan base, and network with other artists.
@@ -103,9 +103,9 @@ export default function Home() {
             </p>
             <p className="mb-4">
               Engage in witty and creative dialogues with ComicBot to develop
-              unique and hilarious comedy routines. Whether you're preparing for
-              a stand-up show or just seeking to enhance your comedic skills,
-              ComicBot is your ideal partner.
+              unique and hilarious comedy routines. Whether you&#39;re preparing
+              for a stand-up show or just seeking to enhance your comedic
+              skills, ComicBot is your ideal partner.
             </p>
 
             <Link href="/ComicBot">
