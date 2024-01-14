@@ -4,53 +4,104 @@ import React, { useState } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 
-// Define the type for articles
+const NewsAPI = require("newsapi");
+const newsapi = new NewsAPI("a45f6ec6576a496c9fe1c30f7b819207");
+
+type Category =
+  | "business"
+  | "entertainment"
+  | "general"
+  | "health"
+  | "science"
+  | "sports"
+  | "technology";
+const categories: Category[] = [
+  "business",
+  "entertainment",
+  "general",
+  "health",
+  "science",
+  "sports",
+  "technology",
+];
+
 type Article = {
   title: string;
-  content: string;
-  // Add other relevant properties here
+  url: string;
 };
 
-const NewsPage: React.FC = () => {
-  const [category, setCategory] = useState("");
-  const [query, setQuery] = useState("");
-  const [articles, setArticles] = useState<Article[]>([]);
+type ArticlesByCategory = {
+  [key in Category]?: Article[];
+};
+
+const NewsPage = () => {
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [articlesByCategory, setArticlesByCategory] =
+    useState<ArticlesByCategory>({});
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isNewsFetched, setIsNewsFetched] = useState(false);
 
-  const fetchNews = async () => {
-    setIsLoading(true);
-    const endpoint = `/api/news/${category}?q=${encodeURIComponent(query)}`;
-    console.log(`Requesting URL: ${endpoint}`); // Add this console log to debug the URL
+  const handleCategoryChange = (category: Category, isChecked: boolean) => {
+    if (isChecked) {
+      setSelectedCategories([...selectedCategories, category]);
+    } else {
+      setSelectedCategories(
+        selectedCategories.filter((cat) => cat !== category)
+      );
+    }
+  };
 
+  const fetchCategoryNews = async (category: Category) => {
     try {
-      const response = await fetch(endpoint);
+      const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=3&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
+
+      const response = await fetch(newsApiUrl);
+
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.status}`);
       }
+
       const data = await response.json();
-      console.log(`Data received:`, data); // Log received data
-      setArticles(data);
-      setError("");
+      return data.articles;
     } catch (error) {
-      console.error("Error fetching news:", error);
-      setError("Error fetching news. Please try again later.");
+      console.error("Error fetching news for category:", category, error);
+      setError("Failed to fetch news");
     }
-    setIsLoading(false);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    fetchNews();
+  const fetchSelectedNews = async () => {
+    setIsNewsFetched(true);
+    try {
+      const newsPromises = selectedCategories.map((category) =>
+        fetchCategoryNews(category)
+      );
+      const newsResults = await Promise.all(newsPromises);
+      const combinedResults = selectedCategories.reduce(
+        (acc, category, index) => {
+          acc[category] = newsResults[index] || []; // Handle categories with no news or errors
+          return acc;
+        },
+        {} as ArticlesByCategory
+      );
+      setArticlesByCategory(combinedResults);
+    } catch (error) {
+      console.error("Error fetching selected news:", error);
+      setError("Failed to fetch selected news");
+    }
+  };
+
+  const resetNews = () => {
+    setSelectedCategories([]);
+    setArticlesByCategory({});
+    setIsNewsFetched(false); // Reset the fetched state
+    setError("");
   };
 
   return (
-    <>
+    <div>
       <Header />
       <div className="screen-container">
-        {error && <p>{error}</p>}
-        {isLoading && <p>Loading news...</p>}
-
+        {error && <p className="error-message">{error}</p>}
         <h1 className="title">News Page</h1>
         <div className="card-style">
           <p className="text-center mb-4">
@@ -59,54 +110,62 @@ const NewsPage: React.FC = () => {
             options below to select your news category of interest and enter a
             search query to narrow down your results.
           </p>
-          <form
-            className="flex flex-col md:flex-row justify-center items-center gap-4 p-4"
-            onSubmit={handleSubmit}
-          >
-            <select
-              id="category"
-              name="category"
-              className="flex-grow md:flex-grow-0"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="" disabled>
-                Select Category
-              </option>
-              <option value="news">Latest News</option>
-              <option value="comedy">Comedy</option>
-              <option value="politics">Politics</option>
-              <option value="world">World News</option>
-              <option value="entertainment">Entertainment</option>
-            </select>
+          <div className="card">
+            <p className="instructions">
+              Select your preferred news categories:
+            </p>
+            <div className="checkbox-container">
+              {categories.map((category) => (
+                <div key={category} className="checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedCategories.includes(category)}
+                    onChange={(e) =>
+                      handleCategoryChange(category, e.target.checked)
+                    }
+                  />
+                  <label className="cursor-pointer">
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
 
-            <input
-              id="searchQuery"
-              name="query"
-              className="flex-grow md:flex-grow-0 text-black"
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search Query"
-            />
+          <button onClick={fetchSelectedNews} className="btn">
+            Fetch News
+          </button>
+          <button onClick={resetNews} className="btn">
+            Reset
+          </button>
 
-            <button className="btn" type="submit">
-              Fetch News
-            </button>
-          </form>
-          <div className="news-container">
-            {articles.map((article, index) => (
-              <div key={index} className="news-article">
-                <h3 className="article-title">{article.title}</h3>
-                <p className="article-content">{article.content}</p>
-                {/* Other article details */}
+          {isNewsFetched &&
+            selectedCategories.map((category) => (
+              <div key={category} className="category-container">
+                <h2 className="category-title">
+                  {category.charAt(0).toUpperCase() + category.slice(1)} News
+                </h2>
+                <div className="category-content">
+                  {articlesByCategory[category]?.map((article, index) => (
+                    <div key={index} className="news-item">
+                      <a
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="news-link"
+                      >
+                        {article.title}
+                      </a>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
-          </div>
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

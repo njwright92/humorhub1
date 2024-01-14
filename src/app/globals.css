@@ -57,7 +57,6 @@ body {
 }
 
 .btn {
-  
   @apply bg-[rgb(var(--accent-color))] text-[rgb(var(--foreground-rgb))] px-2 py-1 m-2 rounded-soft transform transition-transform hover:scale-105;
 }
 
@@ -165,5 +164,94 @@ option[value=""][disabled] {
 }
 
 option {
-  color: black;
+  color: rgb(22, 22, 22);
+}
+
+.category-container {
+  margin-top: 2rem;
+  padding: 0.5rem;
+}
+/* Title and line below category title */
+.category-title {
+  font-size: 1.5rem; /* Make the category titles stand out */
+  margin-bottom: 0.5rem; /* Spacing between title and line */
+  text-align: center; /* Center the text */
+}
+
+/* Horizontal line below the title */
+.category-title:after {
+  content: "";
+  display: block;
+  width: 50%; /* Line width */
+  height: 2px; /* Line thickness */
+  background: #46a049; /* Line color */
+  margin: 0.5rem auto 1.5rem; /* Space above, auto center, space below */
+}
+
+/* Style for the news items */
+.news-item {
+  margin: 1rem 0; /* Space between news items */
+  padding: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.news-item:hover {
+  background-color: #828282;
+  cursor: pointer;
+  border-radius: 0.625rem;
+}
+
+/* Links within news items */
+.news-item a {
+  color: #e4e4e4; /* Dark text for readability */
+  text-decoration: none; /* No underline */
+  transition: color 0.2s ease;
+}
+
+.news-item a:hover {
+  color: #dedede; /* Change color on hover */
+}
+
+/* Error message styling */
+.error-message {
+  color: #d9534f; /* Red color for errors */
+  margin: 1rem 0; /* Spacing */
+  font-weight: bold;
+}
+
+.card {
+  background-color: #f5f5f5; /* Gray background */
+  padding: 0.5rem; /* Padding around the card */
+  border-radius: 0.625rem; /* Rounded corners */
+  text-align: center; /* Center text */
+  margin: 0 auto; /* Center the card horizontally */
+  max-width: 500px; /* Maximum width of the card */
+  color: rgb(39, 39, 39);
+}
+
+.instructions {
+  margin-bottom: 1rem; /* Space below the instruction text */
+  font-weight: bold; /* Make text bold */
+  color: rgb(39, 39, 39);
+}
+
+.checkbox-container {
+  display: grid;
+  border-radius: 0.625rem;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: start; /* Align items to the start of each grid cell */
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container label {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.checkbox-container label:hover {
+  cursor: pointer;
 }
