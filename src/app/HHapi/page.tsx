@@ -4,9 +4,6 @@ import React, { useState } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 
-const NewsAPI = require("newsapi");
-const newsapi = new NewsAPI("a45f6ec6576a496c9fe1c30f7b819207");
-
 type Category =
   | "business"
   | "entertainment"
@@ -53,7 +50,7 @@ const NewsPage = () => {
 
   const fetchCategoryNews = async (category: Category) => {
     try {
-      const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=3&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
+      const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=5&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
 
       const response = await fetch(newsApiUrl);
 

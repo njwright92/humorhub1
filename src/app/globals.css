@@ -193,23 +193,26 @@ option {
   margin: 1rem 0; /* Space between news items */
   padding: 0.5rem;
   transition: background-color 0.2s ease;
+  text-decoration: underline;
 }
 
 .news-item:hover {
   background-color: #828282;
   cursor: pointer;
   border-radius: 0.625rem;
+  text-decoration: none;
 }
 
 /* Links within news items */
 .news-item a {
   color: #e4e4e4; /* Dark text for readability */
-  text-decoration: none; /* No underline */
+
   transition: color 0.2s ease;
 }
 
 .news-item a:hover {
   color: #dedede; /* Change color on hover */
+  text-decoration: none;
 }
 
 /* Error message styling */
