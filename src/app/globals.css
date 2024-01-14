@@ -30,6 +30,11 @@ body {
   @apply flex-grow bg-black text-white p-4 mt-10 mb-10 border-2 border-[rgb(var(--accent-color))] rounded-soft;
 }
 
+.card-style1 {
+  @apply flex-grow bg-black text-black p-4 mt-10 mb-10 border-2 border-[rgb(var(--accent-color))] rounded-soft;
+}
+
+
 .title,
 .title-style,
 .subtitle-style {

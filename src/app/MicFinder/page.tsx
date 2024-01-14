@@ -581,7 +581,7 @@ const EventsPage = () => {
         </div>
 
         {/* Map Component */}
-        <div className="card-style">
+        <div className="card-style1">
           <MemoizedGoogleMap
             lat={selectedCityCoordinates.lat}
             lng={selectedCityCoordinates.lng}
