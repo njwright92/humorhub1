@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 
@@ -34,8 +34,9 @@ type ArticlesByCategory = {
 
 const NewsPage = () => {
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
-  const [articlesByCategory, setArticlesByCategory] =
-    useState<ArticlesByCategory>({});
+  const [fetchedArticles, setFetchedArticles] = useState<ArticlesByCategory>(
+    {}
+  );
   const [error, setError] = useState("");
   const [isNewsFetched, setIsNewsFetched] = useState(false);
 
@@ -45,7 +46,7 @@ const NewsPage = () => {
     );
   };
 
-  const fetchCategoryNews = async (category: Category) => {
+  const fetchCategoryNews = useCallback(async (category: Category) => {
     try {
       const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=5&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
 
@@ -61,8 +62,9 @@ const NewsPage = () => {
       console.error("Error fetching news for category:", category, error);
       setError("Failed to fetch news");
     }
-  };
-  const fetchSelectedNews = async () => {
+  }, []); // No dependencies, the function is created once and memoized
+
+  const fetchSelectedNews = useCallback(async () => {
     setIsNewsFetched(true);
     try {
       const newsResults: any[] = [];
@@ -77,16 +79,16 @@ const NewsPage = () => {
         },
         {} as ArticlesByCategory
       );
-      setArticlesByCategory(combinedResults);
+      setFetchedArticles(combinedResults);
     } catch (error) {
       console.error("Error fetching selected news:", error);
       setError("Failed to fetch selected news");
     }
-  };
+  }, [fetchCategoryNews, selectedCategories]);
 
   const resetNews = () => {
     setSelectedCategories([]);
-    setArticlesByCategory({});
+    setFetchedArticles({});
     setIsNewsFetched(false);
     setError("");
   };
@@ -136,25 +138,27 @@ const NewsPage = () => {
           </button>
 
           {isNewsFetched &&
-            selectedCategories.map((category) => (
+            Object.keys(fetchedArticles).map((category) => (
               <section key={category} className="category-container">
                 <h2 className="category-title">
                   {category.charAt(0).toUpperCase() + category.slice(1)} News
                 </h2>
 
-                {articlesByCategory[category]?.map((article, index) => (
-                  <article key={index} className="news-item">
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="news-link"
-                    >
-                      {article.title}
-                    </a>
-                    <p className="news-description">{article.description}</p>
-                  </article>
-                ))}
+                {fetchedArticles[category as Category]?.map(
+                  (article, index) => (
+                    <article key={index} className="news-item">
+                      <a
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="news-link"
+                      >
+                        {article.title}
+                      </a>
+                      <p className="news-description">{article.description}</p>
+                    </article>
+                  )
+                )}
               </section>
             ))}
         </section>
