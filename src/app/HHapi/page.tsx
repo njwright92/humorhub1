@@ -25,6 +25,7 @@ const categories: Category[] = [
 type Article = {
   title: string;
   url: string;
+  description: string;
 };
 
 type ArticlesByCategory = {
@@ -140,20 +141,20 @@ const NewsPage = () => {
                 <h2 className="category-title">
                   {category.charAt(0).toUpperCase() + category.slice(1)} News
                 </h2>
-                <div className="category-content">
-                  {articlesByCategory[category]?.map((article, index) => (
-                    <article key={index} className="news-item">
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="news-link"
-                      >
-                        {article.title}
-                      </a>
-                    </article>
-                  ))}
-                </div>
+
+                {articlesByCategory[category]?.map((article, index) => (
+                  <article key={index} className="news-item">
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="news-link"
+                    >
+                      {article.title}
+                    </a>
+                    <p className="news-description">{article.description}</p>
+                  </article>
+                ))}
               </section>
             ))}
         </section>

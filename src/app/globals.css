@@ -187,36 +187,34 @@ option {
   content: "";
   display: block;
   width: 50%; /* Line width */
-  height: 2px; /* Line thickness */
+  height: .125rem; /* Line thickness */
   background: #46a049; /* Line color */
   margin: 0.5rem auto 1.5rem; /* Space above, auto center, space below */
 }
 
 /* Style for the news items */
-.news-item {
+.news-item a {
+  color : rgb(0, 110, 255);
   margin: 1rem 0; /* Space between news items */
   padding: 0.5rem;
   transition: background-color 0.2s ease;
   text-decoration: underline;
+  margin-top: 1.5rem;
 }
 
-.news-item:hover {
-  background-color: #828282;
+.news-item a:hover {
+  background-color: #bcbcbc;
   cursor: pointer;
   border-radius: 0.625rem;
   text-decoration: none;
 }
 
-/* Links within news items */
-.news-item a {
-  color: #e4e4e4; /* Dark text for readability */
-
-  transition: color 0.2s ease;
-}
-
-.news-item a:hover {
-  color: #dedede; /* Change color on hover */
+.news-description {
+  color: #dedede;
+  padding: 0.5rem;
+  transition: background-color 0.2s ease;
   text-decoration: none;
+  margin-bottom: 1.5rem;
 }
 
 /* Error message styling */
