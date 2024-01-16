@@ -124,78 +124,75 @@ const Jokes = () => {
   };
 
   return (
-    <><Header />
-    <main className="screen-container flex flex-col">
-      
-      <h1 className="title">JokePad!</h1>
+    <>
+      <Header />
+      <main className="screen-container flex flex-col">
+        <h1 className="title">JokePad!</h1>
 
-      <div className="card-style">
-        <form onSubmit={handleSubmit} className="form-container">
-          <label htmlFor="joke" className="the-text">
-            Write Your Joke/Bit:
-          </label>
-          <textarea
-            id="joke"
-            value={newJoke}
-            onChange={handleInputChange}
-            placeholder="Write your bit.."
-            className="input-field"
-            required
-          />
-          <button type="submit" className="btn">
-            Add Joke
-          </button>
-        </form>
+        <div className="card-style">
+          <form onSubmit={handleSubmit} className="form-container">
+            <label htmlFor="joke" className="the-text">
+              Write Your Joke/Bit:
+            </label>
+            <textarea
+              id="joke"
+              value={newJoke}
+              onChange={handleInputChange}
+              placeholder="Write your bit.."
+              className="input-field"
+              required
+            />
+            <button type="submit" className="btn">
+              Add Joke
+            </button>
+          </form>
 
-        <div className="jokes-list">
-          {jokes.map((joke, index) => (
-            <div
-              key={index}
-              className="event-item flex justify-between items-center"
-            >
-              {editingIndex === index ? (
-                <>
-                  <textarea
-                    value={joke.joke}
-                    onChange={(e) => handleEditChange(e, index)}
-                    className="input-field flex-grow mr-4"
-                  />
-                  <div className="button-container flex-shrink-0">
-                    <button
-                      className="btn mr-2"
-                      onClick={() => handleEditSubmit(index)}
-                    >
-                      Save
-                    </button>
-                    <button className="btn" onClick={handleCancelEdit}>
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="flex-grow">{joke.joke}</p>
-                  <div className="icon-container flex-shrink-0 flex">
-                    <PencilIcon
-                      className="h-6 w-6 mr-2 cursor-pointer"
-                      onClick={() => handleEditClick(index)}
+          <div className="jokes-list">
+            {jokes.map((joke, index) => (
+              <div key={index} className="event-item">
+                {editingIndex === index ? (
+                  <div className="flex flex-col w-full">
+                    <textarea
+                      value={joke.joke}
+                      onChange={(e) => handleEditChange(e, index)}
+                      className="input-field flex-grow mb-2" // removed mr-4 to make full width and added margin-bottom
                     />
-                    <TrashIcon
-                      className="h-6 w-6 cursor-pointer"
-                      onClick={() => handleDelete(joke.id)}
-                    />
+                    <div className="button-container flex justify-start">
+                      {" "}
+                      {/* Removed flex-shrink-0 and changed flex alignment */}
+                      <button
+                        className="btn mr-2"
+                        onClick={() => handleEditSubmit(index)}
+                      >
+                        Save
+                      </button>
+                      <button className="btn" onClick={handleCancelEdit}>
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                </>
-              )}
-            </div>
-          ))}
+                ) : (
+                  <div className="flex justify-between items-center w-full">
+                    <p className="flex-grow">{joke.joke}</p>
+                    <div className="icon-container flex-shrink-0 flex">
+                      <PencilIcon
+                        className="h-6 w-6 mr-2 cursor-pointer"
+                        onClick={() => handleEditClick(index)}
+                      />
+                      <TrashIcon
+                        className="h-6 w-6 cursor-pointer"
+                        onClick={() => handleDelete(joke.id)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-    
-    </main>
+      </main>
       <Footer />
-      </>
+    </>
   );
 };
 

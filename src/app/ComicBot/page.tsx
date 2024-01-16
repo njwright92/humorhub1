@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import axios from "axios";
 import Footer from "../components/footer";
+import LoadingSpinner from "../components/loading";
 
 type ConversationMessage = {
   from: string;
@@ -26,6 +27,13 @@ type Conversation = {
   messages: ConversationMessage[];
 };
 
+const API_ENDPOINT =
+  "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-instruct-v0.2";
+const HEADERS = {
+  "Content-Type": "application/json",
+  Authorization: "Bearer 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",
+};
+
 const ComicBot = () => {
   const [allConversations, setAllConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
@@ -35,13 +43,6 @@ const ComicBot = () => {
     auth.currentUser ? auth.currentUser.uid : null
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const API_ENDPOINT =
-    "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1";
-  const HEADERS = {
-    "Content-Type": "application/json",
-    Authorization: "Bearer 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",
-  };
 
   const askComicbot = useCallback(async (Prompt: string) => {
     try {
@@ -143,16 +144,15 @@ const ComicBot = () => {
   const handleSend = useCallback(async () => {
     setIsLoading(true);
     setIsSaved(false);
-    setConversation([...conversation, { from: "user", text: userInput }]);
-    setUserInput("");
 
     try {
       const botResponses = await askComicbot(userInput);
       if (botResponses && botResponses.length > 0) {
         const botResponse = botResponses[0].generated_text;
         setConversation((prevConversation) => [
-          ...prevConversation,
+          { from: "user", text: userInput },
           { from: "bot", text: botResponse },
+          ...prevConversation,
         ]);
       } else {
         console.error("Unexpected response format:", botResponses);
@@ -162,6 +162,7 @@ const ComicBot = () => {
       alert("Error please try again");
     } finally {
       setIsLoading(false);
+      setUserInput("");
     }
   }, [userInput, conversation, askComicbot]);
 
@@ -178,7 +179,7 @@ const ComicBot = () => {
               value={userInput}
               onChange={handleInputChange}
               className="input-field"
-              placeholder="Write a funny take on everyday life, like 'Why is pizza round, but comes in a square box?'"
+              placeholder="Write a funny take on everyday life..."
               disabled={isLoading}
             />
             <button onClick={handleSend} disabled={isLoading} className="btn">
@@ -187,33 +188,21 @@ const ComicBot = () => {
           </div>
 
           <div className="section-style">
-            {isLoading && (
-              <div className="modal-container">
-                <span>Loading...</span>
-                {/* Loading spinner */}
-              </div>
-            )}
-            {/* Conversations */}
+            {isLoading && <LoadingSpinner />}
             {conversation &&
               conversation.map((message, index) => (
                 <div
                   key={index}
                   className={
                     message.from === "bot"
-                      ? "bot-message-container"
-                      : "user-message-container"
+                      ? "user-message-container"
+                      : "bot-message-container"
                   }
                 >
                   <span>
                     {message.from === "bot" ? "ComicBot:.." : "...You"}
                   </span>
-                  <p
-                    className={
-                      message.from === "bot" ? "bot-message" : "user-message"
-                    }
-                  >
-                    {message.text}
-                  </p>
+                  <p>{message.text}</p>
                 </div>
               ))}
           </div>
@@ -225,32 +214,35 @@ const ComicBot = () => {
           <div className="previous-conversations">
             <h2 className="subtitle-style">Previous Conversations</h2>
             {/* Previous Conversations */}
-            {allConversations.map((convo, index) => (
-              <div key={index} className="event-item">
-                {/* Conversation Messages */}
-                {convo.messages.map((message, i) => (
-                  <div
-                    key={i}
-                    className={
-                      message.from === "bot"
-                        ? "bot-message-container"
-                        : "user-message-container"
-                    }
+            {allConversations
+              .slice()
+              .reverse()
+              .map((convo, index) => (
+                <div key={index} className="event-item">
+                  {/* Conversation Messages */}
+                  {convo.messages.map((message, i) => (
+                    <div
+                      key={i}
+                      className={
+                        message.from === "bot"
+                          ? "bot-message-container"
+                          : "user-message-container"
+                      }
+                    >
+                      <span>
+                        {message.from === "bot" ? "ComicBot:.." : "...You"}
+                      </span>
+                      <p>{message.text}</p>
+                    </div>
+                  ))}
+                  <button
+                    className="btn"
+                    onClick={() => deleteConversation(convo.id)}
                   >
-                    <span>
-                      {message.from === "bot" ? "ComicBot:.." : "...You"}
-                    </span>
-                    <p>{message.text}</p>
-                  </div>
-                ))}
-                <button
-                  className="btn"
-                  onClick={() => deleteConversation(convo.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+                    Delete
+                  </button>
+                </div>
+              ))}
           </div>
         </div>
       </main>

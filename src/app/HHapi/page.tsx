@@ -39,13 +39,9 @@ const NewsPage = () => {
   const [isNewsFetched, setIsNewsFetched] = useState(false);
 
   const handleCategoryChange = (category: Category, isChecked: boolean) => {
-    if (isChecked) {
-      setSelectedCategories([...selectedCategories, category]);
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((cat) => cat !== category)
-      );
-    }
+    setSelectedCategories((prev) =>
+      isChecked ? [...prev, category] : prev.filter((cat) => cat !== category)
+    );
   };
 
   const fetchCategoryNews = async (category: Category) => {
@@ -65,17 +61,17 @@ const NewsPage = () => {
       setError("Failed to fetch news");
     }
   };
-
   const fetchSelectedNews = async () => {
     setIsNewsFetched(true);
     try {
-      const newsPromises = selectedCategories.map((category) =>
-        fetchCategoryNews(category)
-      );
-      const newsResults = await Promise.all(newsPromises);
+      const newsResults: any[] = [];
+      for (const category of selectedCategories) {
+        const result = await fetchCategoryNews(category);
+        newsResults.push(result);
+      }
       const combinedResults = selectedCategories.reduce(
         (acc, category, index) => {
-          acc[category] = newsResults[index] || []; // Handle categories with no news or errors
+          acc[category] = newsResults[index] || [];
           return acc;
         },
         {} as ArticlesByCategory
@@ -90,7 +86,7 @@ const NewsPage = () => {
   const resetNews = () => {
     setSelectedCategories([]);
     setArticlesByCategory({});
-    setIsNewsFetched(false); // Reset the fetched state
+    setIsNewsFetched(false);
     setError("");
   };
 

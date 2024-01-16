@@ -34,7 +34,6 @@ body {
   @apply flex-grow bg-black text-black p-4 mt-10 mb-10 border-2 border-[rgb(var(--accent-color))] rounded-soft;
 }
 
-
 .title,
 .title-style,
 .subtitle-style {
@@ -262,4 +261,20 @@ option {
 
 .checkbox-container label:hover {
   cursor: pointer;
+}
+
+.bot-message-container {
+  background-color: #f0f0f0ca; /* Light gray background */
+  color: #000000; /* Black text */
+  padding: 0.625rem; /* Converted from 10px */
+  border-radius: 0.625rem; /* Border radius */
+  text-align: start;
+}
+
+.user-message-container {
+  background-color: #fffffff8; /* White background */
+  color: #000000; /* Black text */
+  padding: 0.625rem; /* Converted from 10px */
+  border-radius: 0.625rem; /* Border radius */
+  text-align: start;
 }
