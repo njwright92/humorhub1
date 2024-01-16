@@ -129,7 +129,7 @@ const Jokes = () => {
       <main className="screen-container flex flex-col">
         <h1 className="title">JokePad!</h1>
 
-        <div className="card-style">
+        <section className="card-style">
           <form onSubmit={handleSubmit} className="form-container">
             <label htmlFor="joke" className="the-text">
               Write Your Joke/Bit:
@@ -147,19 +147,17 @@ const Jokes = () => {
             </button>
           </form>
 
-          <div className="jokes-list">
+          <section className="jokes-list">
             {jokes.map((joke, index) => (
-              <div key={index} className="event-item">
+              <article key={index} className="event-item">
                 {editingIndex === index ? (
-                  <div className="flex flex-col w-full">
+                  <>
                     <textarea
                       value={joke.joke}
                       onChange={(e) => handleEditChange(e, index)}
-                      className="input-field flex-grow mb-2" // removed mr-4 to make full width and added margin-bottom
+                      className="input-field flex-grow mb-2"
                     />
                     <div className="button-container flex justify-start">
-                      {" "}
-                      {/* Removed flex-shrink-0 and changed flex alignment */}
                       <button
                         className="btn mr-2"
                         onClick={() => handleEditSubmit(index)}
@@ -170,7 +168,7 @@ const Jokes = () => {
                         Cancel
                       </button>
                     </div>
-                  </div>
+                  </>
                 ) : (
                   <div className="flex justify-between items-center w-full">
                     <p className="flex-grow">{joke.joke}</p>
@@ -186,10 +184,10 @@ const Jokes = () => {
                     </div>
                   </div>
                 )}
-              </div>
+              </article>
             ))}
-          </div>
-        </div>
+          </section>
+        </section>
       </main>
       <Footer />
     </>

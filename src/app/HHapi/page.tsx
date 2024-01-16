@@ -91,25 +91,28 @@ const NewsPage = () => {
   };
 
   return (
-    <div>
+    <>
       <Header />
       <div className="screen-container">
         {error && <p className="error-message">{error}</p>}
         <h1 className="title">News Page</h1>
-        <div className="card-style">
+        <section className="card-style">
           <p className="text-center mb-4">
             Welcome to the Humor Hub News Portal. Here you can find the latest
             headlines, comedy, politics, world news, and entertainment. Use the
             options below to select your news category of interest and enter a
             search query to narrow down your results.
           </p>
-          <div className="card">
+          <section className="card">
             <p className="instructions">
               Select your preferred news categories:
             </p>
             <div className="checkbox-container">
               {categories.map((category) => (
-                <div key={category} className="checkbox-wrapper">
+                <label
+                  key={category}
+                  className="checkbox-wrapper cursor-pointer"
+                >
                   <input
                     type="checkbox"
                     className="mr-2"
@@ -118,13 +121,11 @@ const NewsPage = () => {
                       handleCategoryChange(category, e.target.checked)
                     }
                   />
-                  <label className="cursor-pointer">
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </label>
-                </div>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </label>
               ))}
             </div>
-          </div>
+          </section>
 
           <button onClick={fetchSelectedNews} className="btn">
             Fetch News
@@ -135,13 +136,13 @@ const NewsPage = () => {
 
           {isNewsFetched &&
             selectedCategories.map((category) => (
-              <div key={category} className="category-container">
+              <section key={category} className="category-container">
                 <h2 className="category-title">
                   {category.charAt(0).toUpperCase() + category.slice(1)} News
                 </h2>
                 <div className="category-content">
                   {articlesByCategory[category]?.map((article, index) => (
-                    <div key={index} className="news-item">
+                    <article key={index} className="news-item">
                       <a
                         href={article.url}
                         target="_blank"
@@ -150,15 +151,16 @@ const NewsPage = () => {
                       >
                         {article.title}
                       </a>
-                    </div>
+                    </article>
                   ))}
                 </div>
-              </div>
+              </section>
             ))}
-        </div>
+        </section>
       </div>
+
       <Footer />
-    </div>
+    </>
   );
 };
 

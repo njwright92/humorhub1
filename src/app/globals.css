@@ -139,7 +139,7 @@ body {
 }
 
 .profile-image {
-  @apply rounded-full;
+  @apply rounded-full mx-auto;
 }
 
 /* Utility classes */
@@ -264,17 +264,9 @@ option {
 }
 
 .bot-message-container {
-  background-color: #f0f0f0ca; /* Light gray background */
-  color: #000000; /* Black text */
-  padding: 0.625rem; /* Converted from 10px */
-  border-radius: 0.625rem; /* Border radius */
-  text-align: start;
-}
-
-.user-message-container {
-  background-color: #fffffff8; /* White background */
-  color: #000000; /* Black text */
-  padding: 0.625rem; /* Converted from 10px */
-  border-radius: 0.625rem; /* Border radius */
+  background-color: #f0f0f03c;
+  color: #ffffffdf;
+  padding: 0.625rem;
+  border-radius: 0.625rem;
   text-align: start;
 }

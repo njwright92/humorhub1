@@ -125,15 +125,14 @@ export default function UserProfile() {
   return (
     <>
       <Header />
-      <div className="screen-container">
+      <main className="screen-container">
         <h1 className="title">User Profile</h1>
-        <div className="card-style">
+
+        <section className="card-style">
           <div className="mb-6">
-            {isEditing && (
-              <label htmlFor="profilePicture">Profile Picture:</label>
-            )}
             {isEditing ? (
               <>
+                <label htmlFor="profilePicture">Profile Picture:</label>
                 <input
                   id="profilePicture"
                   name="profilePicture"
@@ -142,81 +141,78 @@ export default function UserProfile() {
                   className="standard-input"
                 />
                 {profileImageObjectURL && (
-                  <div className="inline-block">
-                    <Image
-                      src={profileImageObjectURL}
-                      alt="Profile Preview"
-                      width={300}
-                      height={300}
-                      className="profile-image"
-                      priority
-                    />
-                  </div>
+                  <Image
+                    src={profileImageObjectURL}
+                    alt="Profile Preview"
+                    width={300}
+                    height={300}
+                    className="profile-image"
+                    priority
+                  />
                 )}
               </>
             ) : (
               profileImageUrl && (
-                <div className="inline-block">
-                  <Image
-                    src={profileImageUrl}
-                    alt="Profile Preview"
-                    width={200}
-                    height={200}
-                    className="profile-image"
-                    unoptimized
-                    priority
-                  />
-                </div>
+                <Image
+                  src={profileImageUrl}
+                  alt="Profile Preview"
+                  width={200}
+                  height={200}
+                  className="profile-image "
+                  unoptimized
+                  priority
+                />
               )
             )}
           </div>
 
           <div className="form-container">
-            {isEditing && <label htmlFor="name">Name:</label>}
             {isEditing ? (
-              <input
-                id="name"
-                name="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="standard-input"
-              />
+              <>
+                <label htmlFor="name">Name:</label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="standard-input"
+                />
+              </>
             ) : (
               <p className="subtitle-style">{name}</p>
             )}
           </div>
 
           <div className="form-container">
-            {isEditing && <label htmlFor="bio">Bio:</label>}
             {isEditing ? (
-              <textarea
-                id="bio"
-                name="bio"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                className="standard-input h-24"
-              />
+              <>
+                <label htmlFor="bio">Bio:</label>
+                <textarea
+                  id="bio"
+                  name="bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="standard-input h-24"
+                />
+              </>
             ) : (
               <p className="subtitle-style">{bio}</p>
             )}
           </div>
 
-          {isEditing ? (
-            <button onClick={handleSubmit} className="btn">
-              Save Changes
-            </button>
-          ) : (
-            <button onClick={handleEdit} className="btn">
-              Edit Profile
-            </button>
-          )}
-        </div>
+          <button
+            onClick={isEditing ? handleSubmit : handleEdit}
+            className="btn"
+          >
+            {isEditing ? "Save Changes" : "Edit Profile"}
+          </button>
+        </section>
 
-        <div className="mb-6">
+        <section className="mb-6">
           <h2 className="title-style">Saved Events</h2>
           {savedEvents.map((event) => (
-            <div key={event.id} className="event-item">
+            <article key={event.id} className="event-item">
               <h3 className="subtitle-style">{event.name}</h3>
               <p className="standard-input">Location: {event.location}</p>
               <div className="details">
@@ -229,10 +225,10 @@ export default function UserProfile() {
               >
                 Delete
               </button>
-            </div>
+            </article>
           ))}
-        </div>
-      </div>
+        </section>
+      </main>
       <Footer />
     </>
   );

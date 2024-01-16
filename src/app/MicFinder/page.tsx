@@ -545,7 +545,7 @@ const EventsPage = () => {
         </div>
 
         {/* Event List */}
-        <div className="card-style">
+        <section className="card-style">
           <h2
             className="title-style text-center"
             style={{ borderBottom: "0.15rem solid #005eff" }}
@@ -578,18 +578,18 @@ const EventsPage = () => {
               {selectedDate.toLocaleDateString()}.
             </p>
           )}
-        </div>
+        </section>
 
         {/* Map Component */}
-        <div className="card-style1">
+        <section className="card-style1">
           <MemoizedGoogleMap
             lat={selectedCityCoordinates.lat}
             lng={selectedCityCoordinates.lng}
             events={filteredEvents}
           />
-        </div>
+        </section>
 
-        <div className="card-style">
+        <section className="card-style">
           <div className="city-filter flex flex-wrap">
             <br />
             <br />
@@ -628,7 +628,7 @@ const EventsPage = () => {
               </div>
             </div>
           ))}
-        </div>
+        </section>
       </div>
       <Footer />
     </>

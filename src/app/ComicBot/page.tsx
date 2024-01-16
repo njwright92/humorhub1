@@ -171,8 +171,7 @@ const ComicBot = () => {
       <Header />
       <main className="screen-container flex flex-col">
         <h1 className="title">ComicBot!</h1>
-
-        <div className="card-style">
+        <section className="card-style">
           <div className="form-container">
             <textarea
               name="userInput"
@@ -187,53 +186,34 @@ const ComicBot = () => {
             </button>
           </div>
 
-          <div className="section-style">
-            {isLoading && <LoadingSpinner />}
-            {conversation &&
-              conversation.map((message, index) => (
-                <div
-                  key={index}
-                  className={
-                    message.from === "bot"
-                      ? "user-message-container"
-                      : "bot-message-container"
-                  }
-                >
-                  <span>
-                    {message.from === "bot" ? "ComicBot:.." : "...You"}
-                  </span>
-                  <p>{message.text}</p>
-                </div>
-              ))}
-          </div>
+          {isLoading && <LoadingSpinner />}
+          <section className="section-style">
+            {conversation.map((message, index) => (
+              <article key={index} className="bot-message-container">
+                <span>{message.from === "bot" ? "ComicBot:.." : "...You"}</span>
+                <p>{message.text}</p>
+              </article>
+            ))}
+          </section>
 
           <button onClick={saveConversation} className="btn" disabled={isSaved}>
             {isSaved ? "Conversation Saved" : "Save Conversation"}
           </button>
 
-          <div className="previous-conversations">
+          <section className="previous-conversations">
             <h2 className="subtitle-style">Previous Conversations</h2>
-            {/* Previous Conversations */}
             {allConversations
               .slice()
               .reverse()
               .map((convo, index) => (
-                <div key={index} className="event-item">
-                  {/* Conversation Messages */}
+                <React.Fragment key={index}>
                   {convo.messages.map((message, i) => (
-                    <div
-                      key={i}
-                      className={
-                        message.from === "bot"
-                          ? "bot-message-container"
-                          : "user-message-container"
-                      }
-                    >
+                    <article key={index} className="bot-message-container">
                       <span>
                         {message.from === "bot" ? "ComicBot:.." : "...You"}
                       </span>
                       <p>{message.text}</p>
-                    </div>
+                    </article>
                   ))}
                   <button
                     className="btn"
@@ -241,10 +221,10 @@ const ComicBot = () => {
                   >
                     Delete
                   </button>
-                </div>
+                </React.Fragment>
               ))}
-          </div>
-        </div>
+          </section>
+        </section>
       </main>
       <Footer />
     </>
