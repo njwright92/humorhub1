@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { db, auth } from "../../../firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
 import {
@@ -25,7 +25,7 @@ type Joke = {
 const Jokes = () => {
   const [jokes, setJokes] = useState<Joke[]>([]);
   const [newJoke, setNewJoke] = useState<string>("");
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editingJokeId, setEditingJokeId] = useState<string | null>(null);
   const [userUID, setUserUID] = useState<string | null>(
     auth.currentUser ? auth.currentUser.uid : null
   );
@@ -46,26 +46,26 @@ const Jokes = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchJokes = async () => {
-      const jokeQuery = query(
-        collection(db, "jokes"),
-        where("uid", "==", userUID)
-      );
-      const unsubscribe = onSnapshot(jokeQuery, (querySnapshot) => {
-        const fetchedJokes = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          joke: doc.data().joke,
-        }));
-        setJokes(fetchedJokes);
-      });
-      return () => unsubscribe();
-    };
-    if (userUID) {
-      fetchJokes();
-    }
-    return () => {};
+  const fetchJokes = useCallback(async () => {
+    if (!userUID) return;
+
+    const jokeQuery = query(
+      collection(db, "jokes"),
+      where("uid", "==", userUID)
+    );
+    const unsubscribe = onSnapshot(jokeQuery, (querySnapshot) => {
+      const fetchedJokes = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        joke: doc.data().joke,
+      }));
+      setJokes(fetchedJokes);
+    });
+    return () => unsubscribe();
   }, [userUID]);
+
+  useEffect(() => {
+    fetchJokes();
+  }, [fetchJokes]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,30 +84,34 @@ const Jokes = () => {
     }
   };
 
-  const handleCancelEdit = () => setEditingIndex(null);
+  const handleCancelEdit = () => setEditingJokeId(null);
 
-  const handleEditClick = (index: React.SetStateAction<number | null>) =>
-    setEditingIndex(index);
+  const handleEditClick = (jokeId: string) => setEditingJokeId(jokeId);
 
-  const handleEditChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    index: number
-  ) => {
-    setJokes((jokes) => {
-      const newJokes = [...jokes];
-      newJokes[index].joke = e.target.value;
-      return newJokes;
-    });
-  };
-  const handleEditSubmit = async (index: number) => {
-    const editedJoke = jokes[index];
+  const handleEditChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>, jokeId: string) => {
+      setJokes((currentJokes) => {
+        const updatedJokes = currentJokes.map((joke) =>
+          joke.id === jokeId ? { ...joke, joke: e.target.value } : joke
+        );
+        return updatedJokes;
+      });
+    },
+    []
+  );
+
+  const handleEditSubmit = async (jokeId: string) => {
+    const editedJoke = jokes.find((j) => j.id === jokeId);
+    if (!editedJoke) return; // Check if the joke is found
+
     try {
-      const jokeDoc = doc(db, "jokes", editedJoke.id);
+      // Update the joke using Firestore operations
+      const jokeDoc = doc(db, "jokes", jokeId); // Use jokeId which is a string
       await updateDoc(jokeDoc, {
         joke: editedJoke.joke,
         uid: userUID,
       });
-      setEditingIndex(null);
+      setEditingJokeId(null); // Reset the editing state
     } catch (error) {
       console.error("Error updating joke: ", error);
     }
@@ -148,19 +152,19 @@ const Jokes = () => {
           </form>
 
           <section className="jokes-list">
-            {jokes.map((joke, index) => (
-              <article key={index} className="event-item">
-                {editingIndex === index ? (
+            {jokes.map((joke) => (
+              <article key={joke.id} className="event-item">
+                {editingJokeId === joke.id ? (
                   <>
                     <textarea
                       value={joke.joke}
-                      onChange={(e) => handleEditChange(e, index)}
-                      className="input-field flex-grow mb-2"
+                      onChange={(e) => handleEditChange(e, joke.id)}
+                      className="input-field flex-grow mb-2 w-full"
                     />
                     <div className="button-container flex justify-start">
                       <button
                         className="btn mr-2"
-                        onClick={() => handleEditSubmit(index)}
+                        onClick={() => handleEditSubmit(joke.id)}
                       >
                         Save
                       </button>
@@ -175,7 +179,7 @@ const Jokes = () => {
                     <div className="icon-container flex-shrink-0 flex">
                       <PencilIcon
                         className="h-6 w-6 mr-2 cursor-pointer"
-                        onClick={() => handleEditClick(index)}
+                        onClick={() => handleEditClick(joke.id)}
                       />
                       <TrashIcon
                         className="h-6 w-6 cursor-pointer"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, useMemo } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { db } from "../../../firebase.config";
@@ -26,24 +26,23 @@ const ContactPage: React.FC = () => {
     setFormState({ ...formState, [name]: value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const collectionRef = useMemo(() => collection(db, "contacts"), []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const collectionRef = collection(db, "contacts");
     try {
-      const docRef = await addDoc(collectionRef, {
-        ...formState,
-      });
+      const docRef = await addDoc(collectionRef, formState);
       console.log("Document written with ID: ", docRef.id);
       alert("Form submitted successfully!");
-      setFormState({
-        name: "",
-        email: "",
-        message: "",
-      });
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("Error submitting form. Please try again.");
     }
+    setFormState({
+      name: "",
+      email: "",
+      message: "",
+    });
   };
 
   return (

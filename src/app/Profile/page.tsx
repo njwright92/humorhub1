@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import Image from "next/image";
 import { EventContext, Event } from "../components/eventContext";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
@@ -34,35 +34,42 @@ export default function UserProfile() {
   }, [auth]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const userRef = doc(db, "users", user.uid);
-          const docSnap = await getDoc(userRef);
-          if (docSnap.exists()) {
-            const userData = docSnap.data();
-            setName(userData.name);
-            setBio(userData.bio);
-            setProfileImageUrl(userData.profileImageUrl);
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+    const fetchUserDataAndEvents = async (user: User) => {
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userEventsRef = doc(db, "userEvents", user.uid);
+
+        // Fetch both user data and events in parallel
+        const [userDocSnap, userEventsDocSnap] = await Promise.all([
+          getDoc(userRef),
+          getDoc(userEventsRef),
+        ]);
+
+        // Process user data
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setName(userData.name);
+          setBio(userData.bio);
+          setProfileImageUrl(userData.profileImageUrl);
         }
 
-        try {
-          const userEventsRef = doc(db, "userEvents", user.uid);
-          const docSnapEvents = await getDoc(userEventsRef);
-          if (docSnapEvents.exists() && docSnapEvents.data().events) {
-            const eventsFromFirestore: Event[] = docSnapEvents.data().events;
-            eventsFromFirestore.forEach((event: Event) => {
-              if (!savedEvents.some((e) => e.id === event.id)) {
-                saveEvent(event);
-              }
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching user events:", error);
+        // Process user events
+        if (userEventsDocSnap.exists() && userEventsDocSnap.data().events) {
+          const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
+          eventsFromFirestore.forEach((event) => {
+            if (!savedEvents.some((e) => e.id === event.id)) {
+              saveEvent(event);
+            }
+          });
         }
+      } catch (error) {
+        console.error("Error fetching user data and events:", error);
+      }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        fetchUserDataAndEvents(user);
       }
     });
 

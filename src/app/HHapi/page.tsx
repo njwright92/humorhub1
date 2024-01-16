@@ -32,6 +32,24 @@ type ArticlesByCategory = {
   [key in Category]?: Article[];
 };
 
+const fetchCategoryNews = async (category: Category) => {
+  try {
+    const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=5&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
+
+    const response = await fetch(newsApiUrl);
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.articles;
+  } catch (error) {
+    console.error("Error fetching news for category:", category, error);
+    throw new Error("Failed to fetch news");
+  }
+};
+
 const NewsPage = () => {
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [fetchedArticles, setFetchedArticles] = useState<ArticlesByCategory>(
@@ -46,32 +64,13 @@ const NewsPage = () => {
     );
   };
 
-  const fetchCategoryNews = useCallback(async (category: Category) => {
-    try {
-      const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=5&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
-
-      const response = await fetch(newsApiUrl);
-
-      if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data.articles;
-    } catch (error) {
-      console.error("Error fetching news for category:", category, error);
-      setError("Failed to fetch news");
-    }
-  }, []); // No dependencies, the function is created once and memoized
-
   const fetchSelectedNews = useCallback(async () => {
     setIsNewsFetched(true);
     try {
-      const newsResults: any[] = [];
-      for (const category of selectedCategories) {
-        const result = await fetchCategoryNews(category);
-        newsResults.push(result);
-      }
+      const fetchPromises = selectedCategories.map((category) =>
+        fetchCategoryNews(category)
+      );
+      const newsResults = await Promise.all(fetchPromises);
       const combinedResults = selectedCategories.reduce(
         (acc, category, index) => {
           acc[category] = newsResults[index] || [];
@@ -84,7 +83,7 @@ const NewsPage = () => {
       console.error("Error fetching selected news:", error);
       setError("Failed to fetch selected news");
     }
-  }, [fetchCategoryNews, selectedCategories]);
+  }, [selectedCategories]);
 
   const resetNews = () => {
     setSelectedCategories([]);

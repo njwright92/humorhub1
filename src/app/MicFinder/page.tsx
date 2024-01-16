@@ -8,7 +8,6 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "@heroicons/react/24/solid";
@@ -18,6 +17,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db, auth } from "../../../firebase.config";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import { onAuthStateChanged } from "firebase/auth";
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
@@ -270,9 +270,9 @@ const mockEvents: Event[] = [
 ];
 
 const EventsPage = () => {
-  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const datePickerRef = useRef<any>(null);
+  const datePickerRef = useRef<ReactDatePicker>(null);
   const [events, setEvents] = useState<Event[]>(mockEvents);
   const { saveEvent } = useContext(EventContext);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
@@ -344,7 +344,7 @@ const EventsPage = () => {
       isRecurring: doc.data().isRecurring,
     }));
 
-    setAllEvents([...mockEvents, ...fetchedEvents]);
+    setAllEvents(mockEvents.concat(fetchedEvents));
   }, []);
 
   useEffect(() => {
@@ -438,24 +438,33 @@ const EventsPage = () => {
     });
   }, [events, selectedCity, selectedDate, isRecurringEvent, searchTerm]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsUserSignedIn(!!user); // Update isUserSignedIn based on user's authentication status
+      // ... other logic if needed
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
   const handleEventSave = useCallback(
-    (event: Event) => {
+    async (event: Event) => {
       if (!isUserSignedIn) {
         alert("You must be signed in to save events.");
         return;
       }
 
-      saveEvent(event)
-        .then(() => {
-          alert("Event saved to your profile!");
-        })
-        .catch((error) => {
-          console.error("Error saving event:", error);
-          alert("There was a problem saving the event.");
-        });
+      try {
+        await saveEvent(event);
+        alert("Event saved to your profile!");
+      } catch (error) {
+        console.error("Error saving event:", error);
+        alert("There was a problem saving the event.");
+      }
     },
     [saveEvent, isUserSignedIn]
   );
+
   const handleCityChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedCity(event.target.value);

@@ -48,11 +48,9 @@ const ComicBot = () => {
     try {
       const response = await axios.post(
         API_ENDPOINT,
-        { inputs: Prompt }, // Using 'Prompt' as per the function parameter
+        { inputs: Prompt },
         { headers: HEADERS }
       );
-
-      // Directly returning the response data
       return response.data;
     } catch (error) {
       if (error instanceof Error) {
@@ -77,27 +75,26 @@ const ComicBot = () => {
       unsubscribe();
     };
   }, []);
+  const fetchConvos = useCallback(async () => {
+    if (!userUID) return;
+
+    const convoQuery = query(
+      collection(db, "conversations"),
+      where("uid", "==", userUID)
+    );
+    const querySnapshot = await getDocs(convoQuery);
+
+    const fetchedConvos = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      messages: doc.data().messages,
+    }));
+
+    setAllConversations(fetchedConvos);
+  }, [userUID]);
 
   useEffect(() => {
-    const fetchConvos = async () => {
-      const convoQuery = query(
-        collection(db, "conversations"),
-        where("uid", "==", userUID)
-      );
-      const querySnapshot = await getDocs(convoQuery);
-
-      const fetchedConvos = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        messages: doc.data().messages,
-      }));
-
-      setAllConversations(fetchedConvos);
-    };
-
-    if (userUID) {
-      fetchConvos();
-    }
-  }, [userUID]);
+    fetchConvos();
+  }, [fetchConvos]);
 
   const saveConversation = useCallback(async () => {
     try {
@@ -166,6 +163,12 @@ const ComicBot = () => {
     }
   }, [userInput, conversation, askComicbot]);
 
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      await handleSend();
+    }
+  };
   return (
     <>
       <Header />
@@ -177,6 +180,7 @@ const ComicBot = () => {
               name="userInput"
               value={userInput}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               className="input-field"
               placeholder="Write a funny take on everyday life..."
               disabled={isLoading}
@@ -187,9 +191,13 @@ const ComicBot = () => {
           </div>
 
           {isLoading && <LoadingSpinner />}
+
           <section className="section-style">
             {conversation.map((message, index) => (
-              <article key={index} className="bot-message-container">
+              <article
+                key={`${message.from}-${index}`}
+                className="bot-message-container"
+              >
                 <span>{message.from === "bot" ? "ComicBot:.." : "...You"}</span>
                 <p>{message.text}</p>
               </article>
@@ -205,10 +213,13 @@ const ComicBot = () => {
             {allConversations
               .slice()
               .reverse()
-              .map((convo, index) => (
-                <React.Fragment key={index}>
-                  {convo.messages.map((message, i) => (
-                    <article key={index} className="bot-message-container">
+              .map((convo) => (
+                <React.Fragment key={convo.id}>
+                  {convo.messages.map((message, messageIndex) => (
+                    <article
+                      key={`${convo.id}-message-${messageIndex}`}
+                      className="bot-message-container"
+                    >
                       <span>
                         {message.from === "bot" ? "ComicBot:.." : "...You"}
                       </span>
