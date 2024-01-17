@@ -445,7 +445,7 @@ const EventsPage = () => {
     });
 
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   const handleEventSave = useCallback(
     async (event: Event) => {

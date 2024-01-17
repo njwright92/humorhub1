@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "../components/header";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../../firebase.config";
@@ -13,7 +13,7 @@ import {
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
-import axios from "axios";
+
 import Footer from "../components/footer";
 import LoadingSpinner from "../components/loading";
 
@@ -27,12 +27,11 @@ type Conversation = {
   messages: ConversationMessage[];
 };
 
-const API_ENDPOINT =
-  "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-instruct-v0.2";
-const HEADERS = {
-  "Content-Type": "application/json",
-  Authorization: "Bearer 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",
-};
+const {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} = require("@google/generative-ai");
 
 const ComicBot = () => {
   const [allConversations, setAllConversations] = useState<Conversation[]>([]);
@@ -44,22 +43,46 @@ const ComicBot = () => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const askComicbot = useCallback(async (Prompt: string) => {
+  const genAI = useMemo(() => {
+    return new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+  }, []);
+
+  const askComicbot = useCallback(async (userInput: string) => {
+    // Log the API key for debugging purposes
+    console.log(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+
+    // Define the comedy prompt
+    const comedyPrompt = `You are a witty and humorous AI, known for your sharp and clever comedy. Your style is light-hearted and playful, often finding humor in everyday situations. Here's what someone said: "${userInput}" How would you respond humorously?`;
+
     try {
-      const response = await axios.post(
-        API_ENDPOINT,
-        { inputs: Prompt },
-        { headers: HEADERS }
-      );
-      return response.data;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Error making request:", error);
-        throw new Error("Error in askComicbot: " + error.message);
-      } else {
-        console.error("An unknown error occurred:", error);
-        throw new Error("Error in askComicbot: An unknown error occurred");
+      // Configure safety settings
+      const safetySettings = [
+        {
+          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+          threshold: HarmBlockThreshold.BLOCK_NONE,
+        },
+        // Add other categories as needed
+      ];
+
+      // Get the generative model with safety settings
+      const model = genAI.getGenerativeModel({
+        model: "gemini-pro",
+        safetySettings,
+      });
+
+      const result = await model.generateContentStream(comedyPrompt);
+
+      let generatedContent = "";
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        console.log("Received chunk:", chunkText);
+        generatedContent += chunkText;
       }
+
+      return { generated_text: generatedContent };
+    } catch (error) {
+      console.error("Error in askComicbot:", error);
+      throw new Error("Error in askComicbot: " + error);
     }
   }, []);
 
@@ -143,16 +166,15 @@ const ComicBot = () => {
     setIsSaved(false);
 
     try {
-      const botResponses = await askComicbot(userInput);
-      if (botResponses && botResponses.length > 0) {
-        const botResponse = botResponses[0].generated_text;
+      const botResponse = await askComicbot(userInput);
+      if (botResponse && botResponse.generated_text) {
         setConversation((prevConversation) => [
           { from: "user", text: userInput },
-          { from: "bot", text: botResponse },
+          { from: "bot", text: botResponse.generated_text },
           ...prevConversation,
         ]);
       } else {
-        console.error("Unexpected response format:", botResponses);
+        console.error("No response from bot");
       }
     } catch (error) {
       console.error("Error in handleSend:", error);
@@ -161,7 +183,7 @@ const ComicBot = () => {
       setIsLoading(false);
       setUserInput("");
     }
-  }, [userInput, conversation, askComicbot]);
+  }, [userInput, askComicbot]);
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
