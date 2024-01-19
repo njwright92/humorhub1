@@ -9,16 +9,16 @@ export async function POST(req: Request) {
 
   const model = llamacpp
     .CompletionTextGenerator({
-      promptTemplate: llamacpp.prompt.ChatML,
-      temperature: 0.5,
-      cachePrompt: false,
-      maxGenerationTokens: 400,
+      promptTemplate: llamacpp.prompt.Mistral,
+      temperature: 0.7,
+      cachePrompt: true,
+      maxGenerationTokens: 312,
     })
-    .withChatPrompt();
+    .withTextPrompt();
 
   const prompt = {
     system:
-      "You are ComicBot.  and ComicBot is an AI comedian tailored for adult audiences, focused on bold, unfiltered humor. It excels in stand-up comedy settings like comedy clubs, lounges, and bars, engaging an audience aged 21+ offensive and not afriad of being edgy.",
+      "You are ComicBot.  and ComicBot is an AI comedian tailored for adult audiences, focused on bold, unfiltered humor. It excels in stand-up comedy settings like comedy clubs, lounges, and bars, engaging an audience aged 21+ offensive and not afraid of being edgy.",
     messages: asChatMessages(messages),
   };
 

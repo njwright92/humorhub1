@@ -20,11 +20,18 @@ import LoadingSpinner from "../components/loading";
 type ConversationMessage = {
   from: string;
   text: string;
+  content: string;
+  role: string;
 };
 
 type Conversation = {
   id: string;
   messages: ConversationMessage[];
+};
+type Message = {
+  // Assuming this is the structure of Message
+  content: string;
+  role: string;
 };
 
 const ComicBot = () => {
@@ -34,22 +41,14 @@ const ComicBot = () => {
   const [userUID, setUserUID] = useState<string | null>(
     auth.currentUser ? auth.currentUser.uid : null
   );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { messages, input, handleInputChange, handleSubmit } = useChat();
 
   const handleSend = useCallback(async () => {
-    setIsLoading(true);
     handleSubmit({
       preventDefault: () => {},
     } as React.FormEvent<HTMLFormElement>);
   }, [handleSubmit]);
-
-  useEffect(() => {
-    if (isLoading && messages.length > 0) {
-      setIsLoading(false);
-    }
-  }, [messages, isLoading]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -85,6 +84,18 @@ const ComicBot = () => {
     fetchConvos();
   }, [fetchConvos]);
 
+  useEffect(() => {
+    // Transform messages to ConversationMessage[] and update the state
+    const transformedMessages = messages.map((msg) => ({
+      from: msg.role === "assistant" ? "bot" : "user", // or however you determine this
+      text: msg.content, // assuming content is equivalent to text
+      content: msg.content,
+      role: msg.role,
+    }));
+
+    setConversation(transformedMessages);
+  }, [messages]);
+
   const saveConversation = useCallback(async () => {
     try {
       const userUID = auth.currentUser?.uid;
@@ -92,14 +103,14 @@ const ComicBot = () => {
         const convoCollection = collection(db, "conversations");
         const docRef = await addDoc(convoCollection, {
           uid: userUID,
-          messages: conversation,
+          messages: conversation.map((msg) => ({
+            content: msg.content,
+            role: msg.role,
+          })),
         });
         setAllConversations((prevConvos) => [
-          {
-            id: docRef.id,
-            messages: conversation,
-          },
           ...prevConvos,
+          { id: docRef.id, messages: conversation },
         ]);
         setIsSaved(true);
       }
@@ -107,7 +118,7 @@ const ComicBot = () => {
     } catch (error) {
       console.error("Error saving conversation: ", error);
     }
-  }, [conversation]);
+  }, [conversation, auth, db]);
 
   const deleteConversation = async (docID: string) => {
     try {
@@ -136,17 +147,14 @@ const ComicBot = () => {
               }
               className="input-field"
               placeholder="Write a funny take on everyday life..."
-              disabled={isLoading}
             />
-            <button onClick={handleSend} disabled={isLoading} className="btn">
+            <button onClick={handleSend} className="btn">
               Send
             </button>
           </div>
 
-          {isLoading && <LoadingSpinner />}
-
           <section className="section-style">
-            {messages.map((message, index) => (
+            {[...messages].reverse().map((message, index) => (
               <article key={index} className="bot-message-container">
                 <span>
                   {message.role === "assistant" ? "ComicBot:.." : "...You"}
@@ -162,30 +170,27 @@ const ComicBot = () => {
 
           <section className="previous-conversations">
             <h2 className="subtitle-style">Previous Conversations</h2>
-            {allConversations
-              .slice()
-              .reverse()
-              .map((convo) => (
-                <React.Fragment key={convo.id}>
-                  {convo.messages.map((message, messageIndex) => (
-                    <article
-                      key={`${convo.id}-message-${messageIndex}`}
-                      className="bot-message-container"
-                    >
-                      <span>
-                        {message.from === "bot" ? "ComicBot:.." : "...You"}
-                      </span>
-                      <p>{message.text}</p>
-                    </article>
-                  ))}
-                  <button
-                    className="btn"
-                    onClick={() => deleteConversation(convo.id)}
+            {allConversations.map((convo) => (
+              <div key={convo.id}>
+                {convo.messages.map((message, messageIndex) => (
+                  <article
+                    key={`${convo.id}-message-${messageIndex}`}
+                    className="bot-message-container"
                   >
-                    Delete
-                  </button>
-                </React.Fragment>
-              ))}
+                    <span>
+                      {message.role === "bot" ? "ComicBot:.." : "...You"}
+                    </span>
+                    <p>{message.content}</p>
+                  </article>
+                ))}
+                <button
+                  className="btn"
+                  onClick={() => deleteConversation(convo.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           </section>
         </section>
       </main>
