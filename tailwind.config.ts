@@ -25,6 +25,18 @@ const config: Config = {
         standardInputBorder: "#d1d5db",
         standardInputBg: "#f9fafb",
         theText: "#4b5563",
+        darkBg: "#121212", // Dark background
+        darkAccent: "#1f1f1f", // Slightly lighter for cards, modals, etc.
+        darkText: "#f5f5f5", // Text color for readability
+        // ... existing colors
+      },
+      boxShadow: {
+        // Neumorphism shadow in dark mode
+        "neu-soft-dark":
+          "4px 4px 8px 0 rgba(0, 0, 0, 0.4), -4px -4px 8px 0 rgba(255, 255, 255, 0.1)",
+        "neu-pressed-dark":
+          "inset 4px 4px 8px 0 rgba(0, 0, 0, 0.4), inset -4px -4px 8px 0 rgba(255, 255, 255, 0.1)",
+        // ... other shadows
       },
     },
   },

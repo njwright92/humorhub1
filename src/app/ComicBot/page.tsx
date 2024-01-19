@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Header from "../components/header";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../../firebase.config";
@@ -13,7 +13,7 @@ import {
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
-
+import { useChat } from "ai/react";
 import Footer from "../components/footer";
 import LoadingSpinner from "../components/loading";
 
@@ -27,64 +27,29 @@ type Conversation = {
   messages: ConversationMessage[];
 };
 
-const {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} = require("@google/generative-ai");
-
 const ComicBot = () => {
   const [allConversations, setAllConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
-  const [userInput, setUserInput] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [userUID, setUserUID] = useState<string | null>(
     auth.currentUser ? auth.currentUser.uid : null
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const genAI = useMemo(() => {
-    return new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
-  }, []);
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
 
-  const askComicbot = useCallback(async (userInput: string) => {
-    // Log the API key for debugging purposes
-    console.log(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+  const handleSend = useCallback(async () => {
+    setIsLoading(true);
+    handleSubmit({
+      preventDefault: () => {},
+    } as React.FormEvent<HTMLFormElement>);
+  }, [handleSubmit]);
 
-    // Define the comedy prompt
-    const comedyPrompt = `You are a witty and humorous AI, known for your sharp and clever comedy. Your style is light-hearted and playful, often finding humor in everyday situations. Here's what someone said: "${userInput}" How would you respond humorously?`;
-
-    try {
-      // Configure safety settings
-      const safetySettings = [
-        {
-          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-          threshold: HarmBlockThreshold.BLOCK_NONE,
-        },
-        // Add other categories as needed
-      ];
-
-      // Get the generative model with safety settings
-      const model = genAI.getGenerativeModel({
-        model: "gemini-pro",
-        safetySettings,
-      });
-
-      const result = await model.generateContentStream(comedyPrompt);
-
-      let generatedContent = "";
-      for await (const chunk of result.stream) {
-        const chunkText = chunk.text();
-        console.log("Received chunk:", chunkText);
-        generatedContent += chunkText;
-      }
-
-      return { generated_text: generatedContent };
-    } catch (error) {
-      console.error("Error in askComicbot:", error);
-      throw new Error("Error in askComicbot: " + error);
+  useEffect(() => {
+    if (isLoading && messages.length > 0) {
+      setIsLoading(false);
     }
-  }, []);
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -98,6 +63,7 @@ const ComicBot = () => {
       unsubscribe();
     };
   }, []);
+
   const fetchConvos = useCallback(async () => {
     if (!userUID) return;
 
@@ -135,6 +101,7 @@ const ComicBot = () => {
           },
           ...prevConvos,
         ]);
+        setIsSaved(true);
       }
       setConversation([]);
     } catch (error) {
@@ -154,43 +121,6 @@ const ComicBot = () => {
     }
   };
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setUserInput(e.target.value);
-    },
-    []
-  );
-
-  const handleSend = useCallback(async () => {
-    setIsLoading(true);
-    setIsSaved(false);
-
-    try {
-      const botResponse = await askComicbot(userInput);
-      if (botResponse && botResponse.generated_text) {
-        setConversation((prevConversation) => [
-          { from: "user", text: userInput },
-          { from: "bot", text: botResponse.generated_text },
-          ...prevConversation,
-        ]);
-      } else {
-        console.error("No response from bot");
-      }
-    } catch (error) {
-      console.error("Error in handleSend:", error);
-      alert("Error please try again");
-    } finally {
-      setIsLoading(false);
-      setUserInput("");
-    }
-  }, [userInput, askComicbot]);
-
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      await handleSend();
-    }
-  };
   return (
     <>
       <Header />
@@ -199,10 +129,11 @@ const ComicBot = () => {
         <section className="card-style">
           <div className="form-container">
             <textarea
-              name="userInput"
-              value={userInput}
+              value={input}
               onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) =>
+                e.key === "Enter" && !e.shiftKey && handleSend()
+              }
               className="input-field"
               placeholder="Write a funny take on everyday life..."
               disabled={isLoading}
@@ -215,13 +146,12 @@ const ComicBot = () => {
           {isLoading && <LoadingSpinner />}
 
           <section className="section-style">
-            {conversation.map((message, index) => (
-              <article
-                key={`${message.from}-${index}`}
-                className="bot-message-container"
-              >
-                <span>{message.from === "bot" ? "ComicBot:.." : "...You"}</span>
-                <p>{message.text}</p>
+            {messages.map((message, index) => (
+              <article key={index} className="bot-message-container">
+                <span>
+                  {message.role === "assistant" ? "ComicBot:.." : "...You"}
+                </span>
+                <p>{message.content}</p>
               </article>
             ))}
           </section>
