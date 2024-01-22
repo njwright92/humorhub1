@@ -118,7 +118,7 @@ const ComicBot = () => {
     } catch (error) {
       console.error("Error saving conversation: ", error);
     }
-  }, [conversation, auth, db]);
+  }, [conversation]);
 
   const deleteConversation = async (docID: string) => {
     try {
@@ -184,7 +184,7 @@ const ComicBot = () => {
                   </article>
                 ))}
                 <button
-                  className="btn"
+                  className="px-4 py-2 mt-4 hover:animate-pulse rounded-soft bg-red-500 hover:bg-red-700 text-gray-100"
                   onClick={() => deleteConversation(convo.id)}
                 >
                   Delete

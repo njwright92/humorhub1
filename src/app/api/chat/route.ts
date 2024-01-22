@@ -9,12 +9,12 @@ export async function POST(req: Request) {
 
   const model = llamacpp
     .CompletionTextGenerator({
-      promptTemplate: llamacpp.prompt.Mistral,
+      promptTemplate: llamacpp.prompt.ChatML,
       temperature: 0.7,
       cachePrompt: true,
       maxGenerationTokens: 312,
     })
-    .withTextPrompt();
+    .withChatPrompt();
 
   const prompt = {
     system:
