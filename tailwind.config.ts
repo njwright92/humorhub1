@@ -38,6 +38,9 @@ const config: Config = {
           "inset 4px 4px 8px 0 rgba(0, 0, 0, 0.4), inset -4px -4px 8px 0 rgba(255, 255, 255, 0.1)",
         // ... other shadows
       },
+      dropShadow: {
+        "custom-green": "0 2px 4px #047857", // green-700 color
+      },
     },
   },
   plugins: [],

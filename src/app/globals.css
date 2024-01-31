@@ -41,15 +41,15 @@ body {
 }
 
 .title {
-  @apply text-4xl mt-10 mb-2;
+  @apply text-4xl mt-10 mb-2 drop-shadow-md;
 }
 
 .title-style {
-  @apply text-2xl mb-2;
+  @apply text-2xl mb-2 drop-shadow-md;
 }
 
 .subtitle-style {
-  @apply text-xl mb-2;
+  @apply text-xl mb-2 drop-shadow-md;
 }
 
 .flex-row-wrap {

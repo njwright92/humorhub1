@@ -15,7 +15,6 @@ import {
 } from "firebase/firestore";
 import { useChat } from "ai/react";
 import Footer from "../components/footer";
-import LoadingSpinner from "../components/loading";
 
 type ConversationMessage = {
   from: string;
@@ -27,11 +26,6 @@ type ConversationMessage = {
 type Conversation = {
   id: string;
   messages: ConversationMessage[];
-};
-type Message = {
-  // Assuming this is the structure of Message
-  content: string;
-  role: string;
 };
 
 const ComicBot = () => {
@@ -87,8 +81,8 @@ const ComicBot = () => {
   useEffect(() => {
     // Transform messages to ConversationMessage[] and update the state
     const transformedMessages = messages.map((msg) => ({
-      from: msg.role === "assistant" ? "bot" : "user", // or however you determine this
-      text: msg.content, // assuming content is equivalent to text
+      from: msg.role === "user" ? "user" : "ComicBot",
+      text: msg.content,
       content: msg.content,
       role: msg.role,
     }));
@@ -157,7 +151,7 @@ const ComicBot = () => {
             {[...messages].reverse().map((message, index) => (
               <article key={index} className="bot-message-container">
                 <span>
-                  {message.role === "assistant" ? "ComicBot:.." : "...You"}
+                  {message.role === "user" ? "...You" : "ComicBot:.."}
                 </span>
                 <p>{message.content}</p>
               </article>
@@ -178,7 +172,7 @@ const ComicBot = () => {
                     className="bot-message-container"
                   >
                     <span>
-                      {message.role === "bot" ? "ComicBot:.." : "...You"}
+                      {message.role === "user" ? "...You" : "ComicBot:.."}
                     </span>
                     <p>{message.content}</p>
                   </article>

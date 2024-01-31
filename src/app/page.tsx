@@ -23,7 +23,7 @@ export default function Home() {
     <>
       <Header />
       <div className="screen-container">
-        <h1 className="title">Humor Hub!</h1>
+        <h1 className="title drop-shadow-md">Humor Hub!</h1>
         <p className="text-xl">
           The go-to platform for comedy. Keep scrolling to see the full benefits
           of this platform!
