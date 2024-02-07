@@ -19,27 +19,30 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     <div className="relative">
       <button
         onClick={() => setInputVisible(!isInputVisible)}
-        className="px-2 py-1 bg-white text-black rounded-full"
+        className={`${
+          isInputVisible ? "hidden" : "flex"
+        } items-center justify-center p-2 bg-white text-black rounded-full z-10`}
         aria-label="Toggle search"
       >
-        <MagnifyingGlassIcon className="h-7 w-7" />
+        <MagnifyingGlassIcon className="h-6 w-6" />
       </button>
 
       {isInputVisible && (
         <form
           onSubmit={handleSearch}
-          className="absolute top-full mt-1 left-0 flex flex-col sm:flex-row items-center w-full"
+          className="flex items-center rounded-lg bg-white shadow-lg z-10  "
         >
           <input
             type="text"
             placeholder="Search city to view events.."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-2 py-1 rounded text-black w-64"
+            className="p-2 text-black rounded-lg shadow-lg w-3/4"
+            autoFocus
           />
           <button
             type="submit"
-            className="mt-1 sm:mt-0 sm:ml-1 px-2 py-1 bg-white text-black rounded"
+            className="px-4 py-2 text-black rounded-lg shadow-lg ml-2 bg-gray-300"
           >
             Search
           </button>

@@ -71,11 +71,11 @@ export default function Header() {
             />
           </Link>
 
+          <SearchBar onSearch={handleSearch} />
+
           <div className="micFinderTitle">
             <h1>Humor Hub!</h1>
           </div>
-
-          <SearchBar onSearch={handleSearch} />
 
           <div className="flex">
             <button onClick={toggleMenu}>

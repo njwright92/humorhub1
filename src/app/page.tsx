@@ -30,71 +30,93 @@ export default function Home() {
         </p>
 
         <section className="card-style" data-aos="fade-up">
-          <h2 className="title-style">Mic Finder!</h2>
+          <h2 className="title-style text-2xl font-bold text-center mb-4">
+            Mic Finder!
+          </h2>
           <p className="text-center mb-4">
             Discover and share open mic events - your stepping stone in the
             world of stand-up comedy and live performances.
           </p>
 
-          <section className="mb-6">
-            <h3 className="subtitle-style">Find Your Stage:</h3>
-            <p>
-              Browse through an array of open mic events tailored to comedians,
-              poets, and musicians. OpenMicFinder is your gateway to
-              experiencing and participating in the thriving local art scene.
-            </p>
-          </section>
+          <div className="space-y-6 mb-6">
+            <h3 className="subtitle-style font-semibold mb-2">
+              Find Your Stage:
+            </h3>
+            <ul className="list-disc list-inside space-y-2 mb-4">
+              <li>
+                Browse through an array of open mic events tailored to
+                comedians, poets, and musicians. OpenMicFinder is your gateway
+                to experiencing and participating in the thriving local art
+                scene.
+              </li>
+            </ul>
 
-          <section className="mb-6">
-            <h3 className="subtitle-style">Connect and Grow:</h3>
-            <p>
-              Join a community of artists and enthusiasts. Share stories, gather
-              insights, and forge connections in a space dedicated to the growth
-              and celebration of live artistic expression.
-            </p>
-          </section>
+            <h3 className="subtitle-style font-semibold mb-2">
+              Connect and Grow:
+            </h3>
+            <ul className="list-disc list-inside space-y-2 mb-4">
+              <li>
+                Join a community of artists and enthusiasts. Share stories,
+                gather insights, and forge connections in a space dedicated to
+                the growth and celebration of live artistic expression.
+              </li>
+            </ul>
 
-          <section className="mb-6">
-            <h3 className="subtitle-style">Promote Your Event:</h3>
-            <p className="mb-2">
-              Got an open mic event? Let OpenMicFinder amplify your reach. With
-              targeted advertising and visibility among a passionate audience,
-              your event is set for greater engagement and success.
-            </p>
-            <p className="mt-2">
-              <Link href="mailto:nitronate@gmail.com">
-                <button className="btn">
-                  Contact me with questions or issues
-                </button>
-              </Link>
-            </p>
-            <EventForm />
-          </section>
+            <h3 className="subtitle-style font-semibold mb-2">
+              Promote Your Event:
+            </h3>
+            <ul className="list-disc list-inside space-y-2 mb-4">
+              <li>
+                Got an open mic event? Let OpenMicFinder amplify your reach.
+                With targeted advertising and visibility among a passionate
+                audience, your event is set for greater engagement and success.
+              </li>
+            </ul>
 
-          <section className="mb-6">
-            <h3 className="subtitle-style">Step into the Spotlight:</h3>
-            <p>
-              Whether you&#39;re a budding comedian, a poet, or a musician,
-              OpenMicFinder is your gateway to visibility. Our platform connects
-              performers with venues hosting open mic events. Showcase your
-              talent, grow your fan base, and network with other artists.
-            </p>
-            <p>
-              Our user-friendly interface allows you to effortlessly search for
-              open mic events based on location, date, and performance type.
-              This ensures that you find the perfect stage that aligns with your
-              artistic style and preferences.
-            </p>
-          </section>
-          <div>
+            <h3 className="subtitle-style font-semibold mb-2">
+              Step into the Spotlight:
+            </h3>
+            <ul className="list-disc list-inside space-y-2 mb-4">
+              <li>
+                Whether you're a budding comedian, a poet, or a musician,
+                OpenMicFinder is your gateway to visibility. Our platform
+                connects performers with venues hosting open mic events.
+                Showcase your talent, grow your fan base, and network with other
+                artists.
+              </li>
+              <li>
+                Our user-friendly interface allows you to effortlessly search
+                for open mic events based on location, date, and performance
+                type. This ensures that you find the perfect stage that aligns
+                with your artistic style and preferences.
+              </li>
+            </ul>
+          </div>
+
+          <EventForm />
+
+          <p className="text-center">
+            <Link href="mailto:nitronate@gmail.com">
+              <button className="btn inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                Contact me with questions or issues
+              </button>
+            </Link>
+          </p>
+
+          <div className="text-center">
             <Link href="/MicFinder">
-              <button className="btn">Explore Mic Finder</button>
+              <button className="btn inline-block bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+                Explore Mic Finder
+              </button>
             </Link>
           </div>
         </section>
+
         <section className="card-style" data-aos="fade-up">
-          <h2 className="title-style">ComicBot</h2>
-          <div className="flex flex-col items-center">
+          <h2 className="title-style text-2xl font-bold text-center mb-4">
+            ComicBot
+          </h2>
+          <div className="text-center items-center">
             <p className="mb-4">
               Your personal comedy bit creation assistant, ComicBot, is powered
               by state-of-the-art GPT technology. It simulates a collaborative
@@ -103,30 +125,34 @@ export default function Home() {
             </p>
             <p className="mb-4">
               Engage in witty and creative dialogues with ComicBot to develop
-              unique and hilarious comedy routines. Whether you&#39;re preparing
-              for a stand-up show or just seeking to enhance your comedic
-              skills, ComicBot is your ideal partner.
+              unique and hilarious comedy routines. Whether you're preparing for
+              a stand-up show or just seeking to enhance your comedic skills,
+              ComicBot is your ideal partner.
             </p>
-
+            <div className="flex justify-center">
+              <Link href="/ComicBot">
+                <Image
+                  src={ComicBot}
+                  alt="comicbot"
+                  width={350}
+                  height={350}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </Link>
+            </div>
             <Link href="/ComicBot">
-              <Image
-                src={ComicBot}
-                alt="comicbot"
-                width={350}
-                height={350}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </Link>
-
-            <Link href="/ComicBot">
-              <button className="btn">Discover ComicBot</button>
+              <button className="btn inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                Discover ComicBot
+              </button>
             </Link>
           </div>
         </section>
 
         <section className="card-style" data-aos="fade-up">
-          <h2 className="title-style">Jokepad</h2>
-          <div className="flex flex-col items-center">
+          <h2 className="title-style text-2xl font-bold text-center mb-4">
+            Jokepad
+          </h2>
+          <div className="text-center">
             <p className="mb-4">
               With Jokepad, immerse yourself in a creative hub designed for
               comedians and writers. Our platform is a sanctuary for your
@@ -140,19 +166,21 @@ export default function Home() {
               interface makes it simple to capture every fleeting thought and
               turn it into comedic gold.
             </p>
-
+            <div className="flex justify-center">
+              <Link href="/JokePad">
+                <Image
+                  src={jokes}
+                  alt="Jokes"
+                  width={350}
+                  height={350}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </Link>
+            </div>
             <Link href="/JokePad">
-              <Image
-                src={jokes}
-                alt="Jokes"
-                width={350}
-                height={350}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            </Link>
-
-            <Link href="/JokePad">
-              <button className="btn">Visit Jokepad</button>
+              <button className="btn inline-block bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+                Visit Jokepad
+              </button>
             </Link>
           </div>
         </section>
