@@ -8,15 +8,22 @@ export async function POST(req: Request) {
   const { messages }: { messages: Message[] } = await req.json();
 
   const refinedMessages = refineMessages(messages);
-  const contextWindowSize = calculateWindowSize(refinedMessages);
-  const maxGenerationTokens = calculateMaxTokens(refinedMessages);
   const prompt = refinedMessages.map((msg) => msg.content).join("\n");
+
+  const api = llamacpp.Api({
+    baseUrl: {
+      host: "127.0.0.1",
+      port: "8080",
+    },
+  });
 
   const model = llamacpp
     .CompletionTextGenerator({
-      temperature: 0.6,
-      contextWindowSize,
-      maxGenerationTokens,
+      api,
+      temperature: 0,
+      cachePrompt: true,
+      contextWindowSize: 512,
+      maxGenerationTokens: 212,
       stopSequences: ["\n```"],
     })
     .withTextPrompt();
@@ -26,13 +33,5 @@ export async function POST(req: Request) {
 }
 
 function refineMessages(messages: Message[]): Message[] {
-  return messages; // No modification made for efficiency
-}
-
-function calculateWindowSize(messages: Message[]): number {
-  return 512; // No modification made for efficiency
-}
-
-function calculateMaxTokens(messages: Message[]): number {
-  return 312; // No modification made for efficiency
+  return messages;
 }
