@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, ChangeEvent } from "react";
 import Header from "../components/header";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../../firebase.config";
@@ -13,7 +13,7 @@ import {
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
-import { useChat } from "ai/react";
+import { SpinnerInfinity } from "spinners-react";
 import Footer from "../components/footer";
 
 type ConversationMessage = {
@@ -35,14 +35,61 @@ const ComicBot = () => {
   const [userUID, setUserUID] = useState<string | null>(
     auth.currentUser ? auth.currentUser.uid : null
   );
+  const [input, setInput] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
+    const { value } = event.target;
+    setInput(value);
+  };
 
   const handleSend = useCallback(async () => {
-    handleSubmit({
-      preventDefault: () => {},
-    } as React.FormEvent<HTMLFormElement>);
-  }, [handleSubmit]);
+    const userInput = input.trim();
+    if (!userInput) {
+      console.warn("Your message is empty. Please enter text to send.");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/completion", {
+        method: "POST",
+        body: JSON.stringify({
+          prompt: userInput,
+          n_predict: 212,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.status}`);
+      }
+
+      // Handle JSON response:
+      const rawResponse = await response.json();
+
+      setConversation((prevConversation) => [
+        ...prevConversation,
+        {
+          from: "You",
+          content: userInput,
+          role: "user",
+          text: userInput,
+        },
+        {
+          from: "ComicBot",
+          content: rawResponse.content,
+          role: "bot",
+          text: rawResponse.content,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error while sending data to the server:", error);
+      // Consider providing user-friendly error feedback here
+    }
+    setIsLoading(false);
+  }, [input]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -77,18 +124,6 @@ const ComicBot = () => {
   useEffect(() => {
     fetchConvos();
   }, [fetchConvos]);
-
-  useEffect(() => {
-    // Transform messages to ConversationMessage[] and update the state
-    const transformedMessages = messages.map((msg) => ({
-      from: msg.role === "user" ? "user" : "ComicBot",
-      text: msg.content,
-      content: msg.content,
-      role: msg.role,
-    }));
-
-    setConversation(transformedMessages);
-  }, [messages]);
 
   const saveConversation = useCallback(async () => {
     try {
@@ -136,9 +171,13 @@ const ComicBot = () => {
             <textarea
               value={input}
               onChange={handleInputChange}
-              onKeyDown={(e) =>
-                e.key === "Enter" && !e.shiftKey && handleSend()
-              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                  setInput("");
+                }
+              }}
               className="input-field"
               placeholder="Write a funny take on everyday life..."
             />
@@ -146,17 +185,28 @@ const ComicBot = () => {
               Send
             </button>
           </div>
-
-          <section className="section-style">
-            {[...messages].reverse().map((message, index) => (
-              <article key={index} className="bot-message-container">
-                <span>
-                  {message.role === "user" ? "...You" : "ComicBot:.."}
-                </span>
-                <p>{message.content}</p>
-              </article>
-            ))}
-          </section>
+          {isLoading ? (
+            <div className="flex justify-center">
+              <div>
+                <SpinnerInfinity
+                  color="green"
+                  size="90"
+                  secondaryColor="gray"
+                />
+                <p>Loading...</p>
+              </div>
+            </div>
+          ) : (
+            <section className="section-style">
+              {/* Render messages including the ones from API */}
+              {[...conversation].reverse().map((message, index) => (
+                <article key={index} className="bot-message-container">
+                  <span>{message.from}:..</span>
+                  <p>{message.content}</p>
+                </article>
+              ))}
+            </section>
+          )}
 
           <button onClick={saveConversation} className="btn" disabled={isSaved}>
             {isSaved ? "Conversation Saved" : "Save Conversation"}
