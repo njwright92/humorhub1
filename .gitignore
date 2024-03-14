@@ -41,3 +41,4 @@ package-lock.json
 firebase.config.js
 package-lock.json
 src/app/components/GoogleMap.tsx
+src/app/models/mistral-comic-v3.gguf

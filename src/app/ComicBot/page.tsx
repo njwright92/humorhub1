@@ -51,42 +51,39 @@ const ComicBot = () => {
     }
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/completion", {
+      const response = await fetch("/api/chat", {
         method: "POST",
-        body: JSON.stringify({
-          prompt: userInput,
-          n_predict: 212,
-        }),
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ prompt: userInput }),
       });
 
       if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.status}`);
+        throw new Error("Network response was not ok");
       }
 
-      // Handle JSON response:
-      const rawResponse = await response.json();
+      // Assuming the server response format is { response: "text" }
+      const jsonResponse = await response.json(); // Parse the JSON response
+      const textResponse = jsonResponse.response; // Extract the text response from the JSON object
 
       setConversation((prevConversation) => [
         ...prevConversation,
         {
           from: "You",
-          content: userInput,
+          content: userInput, // Display the user's input
           role: "user",
-          text: userInput,
+          text: userInput, // Repeat for consistency, consider if only one of content or text is necessary
         },
         {
           from: "ComicBot",
-          content: rawResponse.content,
+          content: textResponse, // Use the extracted text response here
           role: "bot",
-          text: rawResponse.content,
+          text: textResponse, // Repeat for consistency, consider if only one of content or text is necessary
         },
       ]);
     } catch (error) {
-      console.error("Error while sending data to the server:", error);
-      // Consider providing user-friendly error feedback here
+      console.error("Error while generating response:", error);
     }
     setIsLoading(false);
   }, [input]);
