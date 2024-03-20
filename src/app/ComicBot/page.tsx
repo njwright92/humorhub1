@@ -28,6 +28,36 @@ type Conversation = {
   messages: ConversationMessage[];
 };
 
+const fetchStream = async function* (prompt: string) {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ prompt }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  if (!response.body) {
+    throw new Error("Response body is missing");
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let result = "";
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    result += decoder.decode(value, { stream: true });
+    yield result;
+    result = ""; // Reset the result after yielding
+  }
+};
+
 const ComicBot = () => {
   const [allConversations, setAllConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
@@ -49,7 +79,15 @@ const ComicBot = () => {
       console.warn("Your message is empty. Please enter text to send.");
       return;
     }
+  
+    // Append user input with a placeholder for ComicBot response
+    setConversation((prevConversation) => [
+      ...prevConversation,
+      { from: "You", content: userInput, role: "user", text: userInput },
+      { from: "ComicBot", content: "...", role: "bot", text: "..." }, // Placeholder for streaming response
+    ]);
     setIsLoading(true);
+  
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -58,36 +96,54 @@ const ComicBot = () => {
         },
         body: JSON.stringify({ prompt: userInput }),
       });
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
-      // Assuming the server response format is { response: "text" }
-      const jsonResponse = await response.json(); // Parse the JSON response
-      const textResponse = jsonResponse.response; // Extract the text response from the JSON object
-
-      setConversation((prevConversation) => [
-        ...prevConversation,
-        {
-          from: "You",
-          content: userInput, // Display the user's input
-          role: "user",
-          text: userInput, // Repeat for consistency, consider if only one of content or text is necessary
-        },
-        {
-          from: "ComicBot",
-          content: textResponse, // Use the extracted text response here
-          role: "bot",
-          text: textResponse, // Repeat for consistency, consider if only one of content or text is necessary
-        },
-      ]);
+  
+      const reader = response.body?.getReader();
+      if (!reader) {
+        console.error("Response body is null");
+        setIsLoading(false);
+        return;
+      }
+  
+      let accumulatedResponse = ""; // Store accumulated response
+  
+      reader.read().then(async function processText({ done, value }) {
+        if (done) {
+          console.log("Stream complete");
+          setIsLoading(false);
+          return;
+        }
+  
+        if (value) {
+          const chunkText = new TextDecoder().decode(value);
+          console.log(`Received chunk: ${chunkText}`);
+  
+          accumulatedResponse += chunkText;
+  
+          // Update the ComicBot message with accumulated response
+          setConversation((prevConversation) =>
+            prevConversation.map((message, index) =>
+              index === prevConversation.length - 1 // Update last message (ComicBot)
+                ? { ...message, content: accumulatedResponse, text: accumulatedResponse }
+                : message
+            )
+          );
+        }
+  
+        // Read the next chunk
+        reader.read().then(processText);
+      });
     } catch (error) {
       console.error("Error while generating response:", error);
+      setIsLoading(false);
+    } finally {
+      setInput(""); // Clear input field regardless of success/failure
     }
-    setIsLoading(false);
   }, [input]);
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -172,7 +228,6 @@ const ComicBot = () => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   handleSend();
-                  setInput("");
                 }
               }}
               className="input-field"
@@ -182,9 +237,17 @@ const ComicBot = () => {
               Send
             </button>
           </div>
-          {isLoading ? (
-            <div className="flex justify-center">
-              <div>
+          <section className="section-style">
+            {/* Render messages including the ones from API */}
+            {[...conversation].reverse().map((message, index) => (
+              <article key={index} className="bot-message-container">
+                <span>{message.from}:..</span>
+                <p>{message.content}</p>
+              </article>
+            ))}
+            {/* Loading indicator at the end of the conversation list */}
+            {isLoading && (
+              <div className="loading-indicator">
                 <SpinnerInfinity
                   color="green"
                   size="90"
@@ -192,18 +255,8 @@ const ComicBot = () => {
                 />
                 <p>Loading...</p>
               </div>
-            </div>
-          ) : (
-            <section className="section-style">
-              {/* Render messages including the ones from API */}
-              {[...conversation].reverse().map((message, index) => (
-                <article key={index} className="bot-message-container">
-                  <span>{message.from}:..</span>
-                  <p>{message.content}</p>
-                </article>
-              ))}
-            </section>
-          )}
+            )}
+          </section>
 
           <button onClick={saveConversation} className="btn" disabled={isSaved}>
             {isSaved ? "Conversation Saved" : "Save Conversation"}

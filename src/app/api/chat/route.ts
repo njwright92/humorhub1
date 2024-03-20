@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ChatLlamaCpp } from "@langchain/community/chat_models/llama_cpp";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { LlamaModel, LlamaContext, LlamaChatSession } from "node-llama-cpp";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-// Correctly export an async function named after the HTTP method
-export async function POST(request: NextRequest) {
-  if (request.method !== "POST") {
-    return new Response(null, {
-      status: 405,
-      statusText: "Method Not Allowed",
-    });
-  }
 
+export async function POST(req: NextRequest) {
   try {
-    const requestBody = await request.json();
+    const requestBody = await req.json();
     const prompt =
       typeof requestBody?.prompt === "string" ? requestBody.prompt : null;
+
     if (!prompt) {
       return NextResponse.json(
         { error: "Prompt is required and must be a string." },
@@ -25,19 +19,54 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("Prompt received:", prompt);
     const modelPath = join(__dirname, "../../models/mistral-comic-v3.gguf");
+    const model = new ChatLlamaCpp({ modelPath, maxTokens: 212 });
+    const stream = await model.stream(prompt);
+    const encoder = new TextEncoder();
 
-    console.log("Attempting to load model from:", modelPath);
+    const body = new ReadableStream({
+      async start(controller) {
+        let totalTokens = 0;
+        let inBrackets = false;
 
-    const model = new LlamaModel({ modelPath });
-    const context = new LlamaContext({ model });
-    const session = new LlamaChatSession({ context });
+        for await (const chunk of stream) {
+          const content =
+            typeof chunk.content === "string"
+              ? chunk.content
+              : JSON.stringify(chunk.content);
 
-    // Example of handling the prompt and getting a response
-    const response = await session.prompt(prompt);
-    // Handle the response appropriately
+          for (const char of content) {
+            if (char === "[") {
+              inBrackets = true;
+            } else if (char === "]") {
+              inBrackets = false;
+              continue; // Skip the closing bracket
+            }
 
-    return NextResponse.json({ response }); // Ensure the response is structured as needed
+            if (!inBrackets) {
+              if (totalTokens < 212) {
+                controller.enqueue(encoder.encode(char)); // Send character immediately
+                totalTokens++;
+              } else {
+                break; // Stop if token limit is reached
+              }
+            }
+          }
+
+          if (totalTokens >= 212) {
+            break; // Ensure we stop processing the stream if token limit is reached
+          }
+        }
+        controller.close();
+      },
+    });
+
+    return new Response(body, {
+      headers: {
+        "Content-Type": "text/plain;charset=UTF-8",
+      },
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
