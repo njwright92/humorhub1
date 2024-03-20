@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ChatLlamaCpp } from "@langchain/community/chat_models/llama_cpp";
+import { SystemMessage } from "@langchain/core/messages";
+
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
@@ -9,20 +11,32 @@ const __dirname = dirname(__filename);
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
-    const prompt =
+    const userPrompt =
       typeof requestBody?.prompt === "string" ? requestBody.prompt : null;
 
-    if (!prompt) {
+    if (!userPrompt) {
       return NextResponse.json(
         { error: "Prompt is required and must be a string." },
         { status: 400 }
       );
     }
 
-    console.log("Prompt received:", prompt);
-    const modelPath = join(__dirname, "../../models/mistral-comic-v3.gguf");
-    const model = new ChatLlamaCpp({ modelPath, maxTokens: 212 });
-    const stream = await model.stream(prompt);
+    const modelPath = join(
+      __dirname,
+      "../../models/mistral-comedy-3.0-ckpt-1600.Q6_K.gguf"
+    );
+    // Adjust the model parameters including temperature, topK, and topP
+    const model = new ChatLlamaCpp({
+      modelPath,
+      temperature: 0.7,
+      topK: 40,
+      topP: 0.9,
+    });
+
+    const prompt = `You are ComicBot: ComicBot's goal is to assist stand-up comedians in creating content and refining jokes, excelling in settings such as comedy clubs, lounges, and bars, and engaging an audience aged 21+.`;
+    const fullPrompt = `${prompt}\n${userPrompt}`;
+
+    const stream = await model.stream([new SystemMessage(fullPrompt)]);
     const encoder = new TextEncoder();
 
     const body = new ReadableStream({
@@ -31,7 +45,7 @@ export async function POST(req: NextRequest) {
         let inBrackets = false;
 
         for await (const chunk of stream) {
-          const content =
+          let content =
             typeof chunk.content === "string"
               ? chunk.content
               : JSON.stringify(chunk.content);
@@ -45,7 +59,7 @@ export async function POST(req: NextRequest) {
             }
 
             if (!inBrackets) {
-              if (totalTokens < 212) {
+              if (totalTokens < 412) {
                 controller.enqueue(encoder.encode(char)); // Send character immediately
                 totalTokens++;
               } else {
@@ -54,7 +68,7 @@ export async function POST(req: NextRequest) {
             }
           }
 
-          if (totalTokens >= 212) {
+          if (totalTokens >= 412) {
             break; // Ensure we stop processing the stream if token limit is reached
           }
         }
