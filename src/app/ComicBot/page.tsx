@@ -79,7 +79,7 @@ const ComicBot = () => {
       console.warn("Your message is empty. Please enter text to send.");
       return;
     }
-  
+
     // Append user input with a placeholder for ComicBot response
     setConversation((prevConversation) => [
       ...prevConversation,
@@ -87,55 +87,82 @@ const ComicBot = () => {
       { from: "ComicBot", content: "...", role: "bot", text: "..." }, // Placeholder for streaming response
     ]);
     setIsLoading(true);
-  
+
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("http://localhost:8080/completion", {
         method: "POST",
+        body: JSON.stringify({
+          prompt: userInput,
+          n_predict: 212,
+          maxTokens: 212,
+          stream: true,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: userInput }),
       });
-  
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-  
       const reader = response.body?.getReader();
       if (!reader) {
         console.error("Response body is null");
         setIsLoading(false);
         return;
       }
-  
-      let accumulatedResponse = ""; // Store accumulated response
-  
-      reader.read().then(async function processText({ done, value }) {
+
+      let accumulatedResponse = "";
+
+      const processText: (
+        result: ReadableStreamReadResult<Uint8Array>
+      ) => void = async (result) => {
+        const { done, value } = result;
+
         if (done) {
           console.log("Stream complete");
           setIsLoading(false);
           return;
         }
-  
+
         if (value) {
           const chunkText = new TextDecoder().decode(value);
           console.log(`Received chunk: ${chunkText}`);
-  
-          accumulatedResponse += chunkText;
-  
-          // Update the ComicBot message with accumulated response
-          setConversation((prevConversation) =>
-            prevConversation.map((message, index) =>
-              index === prevConversation.length - 1 // Update last message (ComicBot)
-                ? { ...message, content: accumulatedResponse, text: accumulatedResponse }
-                : message
-            )
-          );
+
+          // Check if the chunk starts with "data: "
+          if (chunkText.startsWith("data: ")) {
+            const chunkData = chunkText.slice(6); // Remove the "data: " prefix
+
+            // Check if the chunk data is a valid JSON string
+            try {
+              const chunk = JSON.parse(chunkData);
+              accumulatedResponse += chunk.content;
+
+              // Update the ComicBot message with accumulated response
+              setConversation((prevConversation) =>
+                prevConversation.map((message, index) =>
+                  index === prevConversation.length - 1
+                    ? {
+                        ...message,
+                        content: accumulatedResponse,
+                        text: accumulatedResponse,
+                      }
+                    : message
+                )
+              );
+            } catch (error) {
+              // Ignore non-JSON chunk data
+              console.warn("Received non-JSON chunk data:", chunkData);
+            }
+          }
         }
-  
+
         // Read the next chunk
-        reader.read().then(processText);
-      });
+        const nextResult = await reader.read();
+        return processText(nextResult);
+      };
+
+      reader.read().then(processText);
     } catch (error) {
       console.error("Error while generating response:", error);
       setIsLoading(false);
@@ -143,7 +170,7 @@ const ComicBot = () => {
       setInput(""); // Clear input field regardless of success/failure
     }
   }, [input]);
-  
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
