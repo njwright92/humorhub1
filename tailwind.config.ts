@@ -14,35 +14,58 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        beige: "#f5f5dc",
-        modernInputBorder: "#c0c0c0",
-        modernInputBg: "#e5e0e0",
-        eventItemBorder: "#005eff",
-        modalContainerBg: "#f5f5f5",
-        modalContainerBorder: "#646262",
-        authButtonBg: "#000000",
-        closeButton: "#6b7280",
-        standardInputBorder: "#d1d5db",
-        standardInputBg: "#f9fafb",
-        theText: "#4b5563",
-        darkBg: "#121212", // Dark background
-        darkAccent: "#1f1f1f", // Slightly lighter for cards, modals, etc.
-        darkText: "#f5f5f5", // Text color for readability
-        // ... existing colors
+        // Add your new colors here
+        darkBg: "#121212",
+        darkAccent: "#1f1f1f",
+        darkText: "#f5f5f5",
+        zinc: {
+          900: "#1f2022",
+          200: "#d4d4d8",
+        },
+        orange: {
+          500: "#ff6b6b",
+        },
+      },
+      padding: {
+        // Add any additional padding sizes you need
+        "1.5": "0.375rem",
+        "2.5": "0.625rem",
+        "3.5": "0.875rem",
+        "4.5": "1.125rem",
+        "5.5": "1.375rem",
+        "6.5": "1.625rem",
+        "7.5": "1.875rem",
+        "8.5": "2.125rem",
+        "9.5": "2.375rem",
+      },
+      margin: {
+        // Add any additional margin sizes you need
+        "1.5": "0.375rem",
+        "2.5": "0.625rem",
+        "3.5": "0.875rem",
+        "4.5": "1.125rem",
+        "5.5": "1.375rem",
+        "6.5": "1.625rem",
+        "7.5": "1.875rem",
+        "8.5": "2.125rem",
+        "9.5": "2.375rem",
+      },
+      borderRadius: {
+        // Add any additional border radius sizes you need
+        xl: "0.75rem",
       },
       boxShadow: {
-        // Neumorphism shadow in dark mode
-        "neu-soft-dark":
-          "4px 4px 8px 0 rgba(0, 0, 0, 0.4), -4px -4px 8px 0 rgba(255, 255, 255, 0.1)",
-        "neu-pressed-dark":
-          "inset 4px 4px 8px 0 rgba(0, 0, 0, 0.4), inset -4px -4px 8px 0 rgba(255, 255, 255, 0.1)",
-        // ... other shadows
+        // Add any additional shadows you need
+        md: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
+        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
       },
       dropShadow: {
-        "custom-green": "0 2px 4px #047857", // green-700 color
+        // Add any additional drop shadows you need
+        md: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
       },
     },
   },
   plugins: [],
 };
+
 export default config;
