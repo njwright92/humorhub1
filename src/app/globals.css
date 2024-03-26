@@ -3,53 +3,67 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 10, 10, 10; /* Black */
-  --background-start-rgb: 214, 219, 220; /* Light Beige */
-  --background-end-rgb: 250, 250, 250; /* White */
-  --accent-color: 22, 101, 52;
+  --foreground-rgb: 245, 245, 255;
+  --background-start-rgb: 31, 31, 31;
+  --background-end-rgb: 31, 31, 31;
+  --accent-color: 255, 107, 107;
+  --darkBg: #121212;
+  --darkAccent: #1f1f1f;
+  --darkText: #f5f5f5;
+  --zinc-900: #1f2022;
+  --zinc-200: #d4d4d8;
+  --orange-500: #ff6b6b;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 250, 250, 250; /* White */
-    --background-start-rgb: 10, 10, 10; /* Black */
-    --background-end-rgb: 25, 25, 25; /* Dark Gray/Black */
+    --foreground-rgb: 250, 250, 250;
+    --background-start-rgb: 10, 10, 10;
+    --background-end-rgb: 25, 25, 25;
     --accent-color: 22, 101, 52;
+    --darkBg: #121212;
+    --darkAccent: #1f1f1f;
+    --darkText: #f5f5f5;
+    --zinc-900: #1f2022;
+    --zinc-200: #d4d4d8;
+    --orange-500: #ff6b6b;
   }
 }
 
 body {
-  @apply text-[rgb(var(--foreground-rgb))] bg-gradient-to-b from-transparent to-[rgb(var(--background-start-rgb))] bg-[rgb(var(--background-end-rgb))] font-comic;
+  background-color: #1f2022;
+  color: var(--zinc-200);
+  font-family: comic;
 }
 
 .screen-container {
-  @apply flex flex-col min-h-screen p-8 text-white text-center;
+  @apply flex flex-col min-h-screen p-8 text-zinc-200 text-center;
 }
 
 .card-style {
-  @apply flex-grow bg-black text-white p-4 mt-10 mb-10 border-2 border-[rgb(var(--accent-color))] rounded-soft;
+  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 border-2 border-solid border-orange-500 rounded-xl drop-shadow-md;
 }
 
 .card-style1 {
-  @apply flex-grow bg-black text-black p-4 mt-10 mb-10 border-2 border-[rgb(var(--accent-color))] rounded-soft;
+  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 border-2 border-solid border-orange-500 rounded-xl drop-shadow-md;
 }
 
 .title,
 .title-style,
 .subtitle-style {
-  @apply text-accent font-bold;
+  @apply text-orange-500 font-bold;
 }
 
 .title {
-  @apply text-4xl mt-10 mb-2 drop-shadow-md;
+  @apply text-4xl mt-10 mb-2 rounded-xl drop-shadow-md;
 }
 
 .title-style {
-  @apply text-2xl mb-2 drop-shadow-md;
+  @apply text-2xl mb-2 rounded-xl drop-shadow-md;
 }
 
 .subtitle-style {
-  @apply text-xl mb-2 drop-shadow-md;
+  @apply text-xl mb-2 rounded-xl drop-shadow-md;
 }
 
 .flex-row-wrap {
@@ -61,7 +75,7 @@ body {
 }
 
 .btn {
-  @apply bg-[rgb(var(--accent-color))] text-[rgb(var(--foreground-rgb))] px-2 py-1 m-2 rounded-soft transform transition-transform hover:scale-105;
+  @apply bg-orange-500 text-[rgb(var(--zinc-200))] px-2 py-1 m-2 rounded-soft transform transition-transform hover:scale-105;
 }
 
 .modal-backdrop {
@@ -83,28 +97,28 @@ body {
 .input-field,
 .standard-input,
 .modern-input {
-  @apply border-4 border-gray-600 p-2 bg-white rounded-soft text-black;
+  @apply border-4 border-gray-600 p-2 rounded-soft text-zinc-200;
 }
 
 .close-button {
-  @apply absolute top-2 right-2 text-gray-600 cursor-pointer bg-transparent border-none text-xl hover:text-gray-700;
+  @apply absolute top-2 right-2 text-zinc-200 cursor-pointer bg-transparent border-none text-xl hover:text-zinc-300;
 }
 
 .standard-input:focus,
 .modern-input:focus {
-  @apply outline-none border-blue-500 shadow-md;
+  @apply outline-none border-zinc-300 shadow-md;
 }
 
 .standard-input {
-  @apply border-gray-300 px-4 py-2 bg-gray-100;
+  @apply border-zinc-400 px-4 py-2 bg-zinc-800;
 }
 
 .the-text {
-  @apply block text-gray-600 text-sm font-semibold mb-2;
+  @apply block text-zinc-300 text-sm font-semibold mb-2;
 }
 
 .micFinderTitle {
-  @apply flex justify-center items-center text-3xl font-bold;
+  @apply flex justify-center items-center text-3xl font-bold text-zinc-200;
 }
 
 @media (min-width: 768px) {
@@ -114,7 +128,7 @@ body {
 }
 
 .event-item {
-  @apply p-2 mb-4 border-b-2 border-eventItemBorder text-white;
+  @apply p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200;
 }
 
 .event-item h3 {
@@ -134,10 +148,6 @@ body {
   @apply text-xl align-middle;
 }
 
-.neu-button {
-  @apply text-white px-2 py-1 rounded-lg shadow-md flex items-center justify-center text-2xl transition-all hover:shadow-inner transform hover:scale-105;
-}
-
 .profile-image {
   @apply rounded-full mx-auto;
 }
@@ -148,7 +158,7 @@ body {
 }
 
 .text-accent {
-  color: rgb(var(--accent-color));
+  color: rgb(var(--orange-500));
 }
 
 .font-comic {
@@ -175,27 +185,28 @@ option {
   margin-top: 2rem;
   padding: 0.5rem;
 }
+
 /* Title and line below category title */
 .category-title {
-  font-size: 1.5rem; /* Make the category titles stand out */
-  margin-bottom: 0.5rem; /* Spacing between title and line */
-  text-align: center; /* Center the text */
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 /* Horizontal line below the title */
 .category-title:after {
   content: "";
   display: block;
-  width: 50%; /* Line width */
-  height: 0.125rem; /* Line thickness */
-  background: #46a049; /* Line color */
-  margin: 0.5rem auto 1.5rem; /* Space above, auto center, space below */
+  width: 50%;
+  height: 0.125rem;
+  background: #46a049;
+  margin: 0.5rem auto 1.5rem;
 }
 
 /* Style for the news items */
 .news-item a {
   color: rgb(0, 110, 255);
-  margin: 1rem 0; /* Space between news items */
+  margin: 1rem 0;
   padding: 0.5rem;
   transition: background-color 0.2s ease;
   text-decoration: underline;
@@ -219,24 +230,24 @@ option {
 
 /* Error message styling */
 .error-message {
-  color: #d9534f; /* Red color for errors */
-  margin: 1rem 0; /* Spacing */
+  color: #d9534f;
+  margin: 1rem 0;
   font-weight: bold;
 }
 
 .card {
-  background-color: #f5f5f5; /* Gray background */
-  padding: 0.5rem; /* Padding around the card */
-  border-radius: 0.625rem; /* Rounded corners */
-  text-align: center; /* Center text */
-  margin: 0 auto; /* Center the card horizontally */
-  max-width: 500px; /* Maximum width of the card */
+  background-color: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 0.625rem;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 500px;
   color: rgb(39, 39, 39);
 }
 
 .instructions {
-  margin-bottom: 1rem; /* Space below the instruction text */
-  font-weight: bold; /* Make text bold */
+  margin-bottom: 1rem;
+  font-weight: bold;
   color: rgb(39, 39, 39);
 }
 
@@ -244,7 +255,8 @@ option {
   display: grid;
   border-radius: 0.625rem;
   grid-template-columns: repeat(2, 1fr);
-  justify-items: start; /* Align items to the start of each grid cell */
+  justify-items: start;
+  background-color: #d4d4d8;
 }
 
 .checkbox-wrapper {
@@ -270,17 +282,22 @@ option {
 }
 
 .neu-button {
-  @apply bg-darkAccent text-white rounded-lg shadow-neu-soft-dark hover:shadow-neu-pressed-dark;
+  @apply bg-zinc-900 text-zinc-200 rounded-lg shadow-lg;
   /* Neumorphism effect optimized for dark mode */
 }
-
+.neu-button:hover {
+  @apply animate-pulse;
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: #ff6b6b;
+}
 .glass-effect {
-  @apply bg-darkBg bg-opacity-40 backdrop-blur-md;
+  @apply bg-zinc-900 bg-opacity-40 backdrop-blur-md;
   /* Glassmorphism effect in dark mode */
 }
 
 /* Micro-interaction styles */
 .btn:hover,
 .btn:focus {
-  @apply animate-pulse; /* Tailwind's pulse animation for interactive elements */
+  @apply animate-pulse;
 }
