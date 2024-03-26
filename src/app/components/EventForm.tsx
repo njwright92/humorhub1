@@ -84,7 +84,7 @@ const EventForm: React.FC = () => {
   );
   return (
     <>
-      <button className="btn" onClick={() => setShowModal(true)}>
+      <button className="btn underline" onClick={() => setShowModal(true)}>
         Add Event
       </button>
       <Modal show={showModal} onClose={() => setShowModal(false)}>

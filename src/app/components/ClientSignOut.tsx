@@ -19,7 +19,10 @@ const ClientSignOutButton: React.FC = () => {
   };
 
   return (
-    <button onClick={handleSignOut} className="btn">
+    <button
+      onClick={handleSignOut}
+      className="btn hover:bg-orange-600 transition-colors"
+    >
       Sign Out
     </button>
   );

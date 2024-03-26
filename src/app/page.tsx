@@ -23,13 +23,7 @@ export default function Home() {
     <>
       <Header />
       <div className="screen-container">
-        <h1 className="title drop-shadow-md">Humor Hub!</h1>
-        <p className="text-xl">
-          The go-to platform for comedy. Keep scrolling to see the full benefits
-          of this platform!
-        </p>
-
-        <section className="card-style" data-aos="fade-up">
+        <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md">
           <h2 className="title-style text-2xl font-bold text-center mb-4">
             Mic Finder!
           </h2>
@@ -78,7 +72,7 @@ export default function Home() {
             </h3>
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>
-                Whether you&#39;re a budding comedian, a poet, or a musician,
+                Whether you're a budding comedian, a poet, or a musician,
                 OpenMicFinder is your gateway to visibility. Our platform
                 connects performers with venues hosting open mic events.
                 Showcase your talent, grow your fan base, and network with other
@@ -97,7 +91,7 @@ export default function Home() {
 
           <p className="text-center">
             <Link href="mailto:nitronate@gmail.com">
-              <button className="btn inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+              <button className="btn inline-block bg-blue-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
                 Contact me with questions or issues
               </button>
             </Link>
@@ -105,14 +99,16 @@ export default function Home() {
 
           <div className="text-center">
             <Link href="/MicFinder">
-              <button className="btn inline-block bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+              <button className="btn inline-block bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
                 Explore Mic Finder
               </button>
             </Link>
           </div>
         </section>
-
-        <section className="card-style" data-aos="fade-up">
+        <section
+          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md"
+          data-aos="fade-up"
+        >
           <h2 className="title-style text-2xl font-bold text-center mb-4">
             ComicBot
           </h2>
@@ -125,9 +121,9 @@ export default function Home() {
             </p>
             <p className="mb-4">
               Engage in witty and creative dialogues with ComicBot to develop
-              unique and hilarious comedy routines. Whether you&#39;re preparing
-              for a stand-up show or just seeking to enhance your comedic
-              skills, ComicBot is your ideal partner.
+              unique and hilarious comedy routines. Whether you're preparing for
+              a stand-up show or just seeking to enhance your comedic skills,
+              ComicBot is your ideal partner.
             </p>
             <div className="flex justify-center">
               <Link href="/ComicBot">
@@ -141,14 +137,17 @@ export default function Home() {
               </Link>
             </div>
             <Link href="/ComicBot">
-              <button className="btn inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+              <button className="btn inline-block bg-blue-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
                 Discover ComicBot
               </button>
             </Link>
           </div>
         </section>
 
-        <section className="card-style" data-aos="fade-up">
+        <section
+          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md"
+          data-aos="fade-up"
+        >
           <h2 className="title-style text-2xl font-bold text-center mb-4">
             Jokepad
           </h2>
@@ -178,7 +177,7 @@ export default function Home() {
               </Link>
             </div>
             <Link href="/JokePad">
-              <button className="btn inline-block bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+              <button className="btn inline-block bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
                 Visit Jokepad
               </button>
             </Link>

@@ -96,24 +96,24 @@ const NewsPage = () => {
     <>
       <Header />
       <div className="screen-container">
-        {error && <p className="error-message">{error}</p>}
-        <h1 className="title">News Page</h1>
-        <section className="card-style">
+        {error && <p className="error-message text-zinc-200">{error}</p>}
+        <h1 className="title text-zinc-200">Humor Hub News</h1>
+        <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md">
           <p className="text-center mb-4">
             Welcome to the Humor Hub News Portal. Here you can find the latest
             headlines, comedy, politics, world news, and entertainment. Use the
             options below to select your news category of interest and enter a
             search query to narrow down your results.
           </p>
-          <section className="card">
-            <p className="instructions">
+          <section className="card bg-zinc-900 text-zinc-200 p-4 rounded-xl drop-shadow-md">
+            <p className="instructions text-zinc-200">
               Select your preferred news categories:
             </p>
-            <div className="checkbox-container">
+            <div className="checkbox-container p-2">
               {categories.map((category) => (
                 <label
                   key={category}
-                  className="checkbox-wrapper cursor-pointer"
+                  className="checkbox-wrapper cursor-pointer text-zinc-900"
                 >
                   <input
                     type="checkbox"
@@ -129,17 +129,23 @@ const NewsPage = () => {
             </div>
           </section>
 
-          <button onClick={fetchSelectedNews} className="btn">
+          <button
+            onClick={fetchSelectedNews}
+            className="btn inline-block bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors"
+          >
             Fetch News
           </button>
-          <button onClick={resetNews} className="btn">
+          <button
+            onClick={resetNews}
+            className="btn inline-block bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition-colors"
+          >
             Reset
           </button>
 
           {isNewsFetched &&
             Object.keys(fetchedArticles).map((category) => (
               <section key={category} className="category-container">
-                <h2 className="category-title">
+                <h2 className="category-title text-zinc-200">
                   {category.charAt(0).toUpperCase() + category.slice(1)} News
                 </h2>
 
@@ -150,11 +156,13 @@ const NewsPage = () => {
                         href={article.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="news-link"
+                        className="news-link text-zinc-200"
                       >
                         {article.title}
                       </a>
-                      <p className="news-description">{article.description}</p>
+                      <p className="news-description text-zinc-200">
+                        {article.description}
+                      </p>
                     </article>
                   )
                 )}

@@ -58,8 +58,10 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-green-800 p-2 text-white sticky top-0 z-50">
-        <nav className="flex justify-between items-center">
+      <header
+        className="bg-orange-500 p-2 text-zinc-200 sticky top-0 z-50"
+      >
+        <nav className="flex justify-between items-center ">
           <Link href="/">
             <Image
               src={micFinder}
@@ -74,25 +76,25 @@ export default function Header() {
           <SearchBar onSearch={handleSearch} />
 
           <div className="micFinderTitle">
-            <h1>Humor Hub!</h1>
+            <h1 className="text-zinc-200">Humor Hub!</h1>
           </div>
 
           <div className="flex">
             <button onClick={toggleMenu}>
-              <Bars3Icon className="h-8 w-8" />
+              <Bars3Icon className="h-8 w-8 text-zinc-200" />
               <span className="sr-only">Toggle menu</span>
             </button>
           </div>
 
           <div
-            className={`absolute top-0 right-0 h-screen w-1/2 bg-black bg-opacity-75 z-50 transform ${
+            className={`absolute top-0 right-0 h-screen w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
               isMenuOpen ? "translate-x-0" : "translate-x-full"
-            } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-2`}
+            } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-2 items-center text-3xl`}
           >
             {/* Close Button */}
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="self-end text-white"
+              className="self-end text-zinc-200"
             >
               <XMarkIcon className="h-6 w-6" />
               <span className="sr-only">Close menu</span>
@@ -109,7 +111,7 @@ export default function Header() {
             </Link>
             <Link
               href="/MicFinder"
-              className="neu-button text-white px-2 py-1 rounded-lg shadow-md hover:shadow-inner transition duration-300 flex items-center justify-center"
+              className="neu-button text-zinc-200 px-2 py-1 rounded-lg shadow-md"
             >
               <span>Mic Finder</span>
             </Link>
