@@ -28,36 +28,6 @@ type Conversation = {
   messages: ConversationMessage[];
 };
 
-const fetchStream = async function* (prompt: string) {
-  const response = await fetch("/api/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt }),
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  if (!response.body) {
-    throw new Error("Response body is missing");
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let result = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    result += decoder.decode(value, { stream: true });
-    yield result;
-    result = ""; // Reset the result after yielding
-  }
-};
-
 const ComicBot = () => {
   const [allConversations, setAllConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
@@ -93,12 +63,12 @@ const ComicBot = () => {
         method: "POST",
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 312, // Increased from 212 to generate longer responses
-          maxTokens: 312, // Match n_predict to allow full output
-          temperature: 0.9, // Higher temperature for more creative/random outputs
-          top_k: 40, // Use top_k sampling with k=40
-          top_p: 0.9, // Use top_p sampling with p=0.9
-          repetition_penalty: 1.2, // Add a small repetition penalty
+          n_predict: 312, 
+          maxTokens: 312, 
+          temperature: 0.9, 
+          top_k: 50, 
+          top_p: 1, 
+          repetition_penalty: 1.5, 
           stream: true,
         }),
         headers: {

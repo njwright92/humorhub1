@@ -58,9 +58,7 @@ export default function Header() {
 
   return (
     <>
-      <header
-        className="bg-orange-500 p-2 text-zinc-200 sticky top-0 z-50"
-      >
+      <header className="bg-orange-500 p-2 text-zinc-200 sticky top-0 z-50">
         <nav className="flex justify-between items-center ">
           <Link href="/">
             <Image
@@ -76,7 +74,7 @@ export default function Header() {
           <SearchBar onSearch={handleSearch} />
 
           <div className="micFinderTitle">
-            <h1 className="text-zinc-200">Humor Hub!</h1>
+            <h1 className="text-zinc-200 lg:text-6xl">Humor Hub!</h1>
           </div>
 
           <div className="flex">
