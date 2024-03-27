@@ -93,8 +93,12 @@ const ComicBot = () => {
         method: "POST",
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 212,
-          maxTokens: 212,
+          n_predict: 312, // Increased from 212 to generate longer responses
+          maxTokens: 312, // Match n_predict to allow full output
+          temperature: 0.9, // Higher temperature for more creative/random outputs
+          top_k: 40, // Use top_k sampling with k=40
+          top_p: 0.9, // Use top_p sampling with p=0.9
+          repetition_penalty: 1.2, // Add a small repetition penalty
           stream: true,
         }),
         headers: {
