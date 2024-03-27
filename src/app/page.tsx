@@ -72,7 +72,7 @@ export default function Home() {
             </h3>
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>
-                Whether you're a budding comedian, a poet, or a musician,
+                Whether you&rsquo;re a budding comedian, a poet, or a musician,
                 OpenMicFinder is your gateway to visibility. Our platform
                 connects performers with venues hosting open mic events.
                 Showcase your talent, grow your fan base, and network with other
@@ -121,9 +121,9 @@ export default function Home() {
             </p>
             <p className="mb-4">
               Engage in witty and creative dialogues with ComicBot to develop
-              unique and hilarious comedy routines. Whether you're preparing for
-              a stand-up show or just seeking to enhance your comedic skills,
-              ComicBot is your ideal partner.
+              unique and hilarious comedy routines. Whether you&rsquo;re
+              preparing for a stand-up show or just seeking to enhance your
+              comedic skills, ComicBot is your ideal partner.
             </p>
             <div className="flex justify-center">
               <Link href="/ComicBot">
@@ -161,7 +161,7 @@ export default function Home() {
             <p className="mb-4">
               Never lose a brilliant idea again, as Jokepad securely syncs your
               content to the cloud. This ensures that your jokes and notes are
-              always accessible, anytime and anywhere. Its user-friendly
+              always accessible, anytime and anywhere. It&rsquo;s user-friendly
               interface makes it simple to capture every fleeting thought and
               turn it into comedic gold.
             </p>

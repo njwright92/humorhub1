@@ -97,7 +97,7 @@ body {
 .input-field,
 .standard-input,
 .modern-input {
-  @apply border-4 border-gray-600 p-2 rounded-soft text-zinc-200;
+  @apply border-4 border-gray-600 p-2 rounded-lg shadow-md text-zinc-900;
 }
 
 .close-button {
