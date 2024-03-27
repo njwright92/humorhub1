@@ -75,7 +75,7 @@ body {
 }
 
 .btn {
-  @apply bg-orange-500 text-[rgb(var(--zinc-200))] px-2 py-1 m-2 rounded-soft transform transition-transform hover:scale-105;
+  @apply bg-orange-500 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:text-zinc-200;
 }
 
 .modal-backdrop {

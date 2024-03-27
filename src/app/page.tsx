@@ -23,14 +23,14 @@ export default function Home() {
     <>
       <Header />
       <div className="screen-container">
-        <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md">
-          <h2 className="title-style text-2xl font-bold text-center mb-4">
+        <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md">
+          <h1 className="title-style text-2xl font-bold text-center mb-4 drop-shadow-md">
             Mic Finder!
-          </h2>
-          <p className="text-center mb-4">
+          </h1>
+          <h2 className="text-center mb-4 text-lg">
             Discover and share open mic events - your stepping stone in the
             world of stand-up comedy and live performances.
-          </p>
+          </h2>
 
           <div className="space-y-6 mb-6">
             <h3 className="subtitle-style font-semibold mb-2">
@@ -91,7 +91,7 @@ export default function Home() {
 
           <p className="text-center">
             <Link href="mailto:nitronate@gmail.com">
-              <button className="btn inline-block bg-blue-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+              <button className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors">
                 Contact me with questions or issues
               </button>
             </Link>
@@ -99,14 +99,14 @@ export default function Home() {
 
           <div className="text-center">
             <Link href="/MicFinder">
-              <button className="btn inline-block bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+              <button className="btn inline-block text-lg py-2 px-4 hover:bg-green-700 transition-colors">
                 Explore Mic Finder
               </button>
             </Link>
           </div>
         </section>
         <section
-          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md"
+          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md"
           data-aos="fade-up"
         >
           <h2 className="title-style text-2xl font-bold text-center mb-4">
@@ -137,7 +137,7 @@ export default function Home() {
               </Link>
             </div>
             <Link href="/ComicBot">
-              <button className="btn inline-block bg-blue-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+              <button className="btn inline-block text-lg py-2 px-4  hover:bg-blue-700 transition-colors">
                 Discover ComicBot
               </button>
             </Link>
@@ -145,7 +145,7 @@ export default function Home() {
         </section>
 
         <section
-          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md"
+          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md"
           data-aos="fade-up"
         >
           <h2 className="title-style text-2xl font-bold text-center mb-4">
@@ -177,7 +177,7 @@ export default function Home() {
               </Link>
             </div>
             <Link href="/JokePad">
-              <button className="btn inline-block bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+              <button className="btn inline-block text-lg py-2 px-4 hover:bg-green-700 transition-colors">
                 Visit Jokepad
               </button>
             </Link>

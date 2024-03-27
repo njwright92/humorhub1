@@ -264,10 +264,13 @@ const ComicBot = () => {
               className="input-field"
               placeholder="Write a funny take on everyday life..."
             />
-            <button onClick={handleSend} className="btn">
-              Send
-            </button>
           </div>
+          <button
+            onClick={handleSend}
+            className="bg-orange-500 text-zinc-900 px-12 py-1 m-2 rounded-xl shadow-lg text-lg hover:animate-pulse hover:bg-orange-700 hover:text-zinc-200"
+          >
+            Send
+          </button>
           <section className="section-style">
             {/* Render messages including the ones from API */}
             {[...conversation].reverse().map((message, index) => (
@@ -289,7 +292,11 @@ const ComicBot = () => {
             )}
           </section>
 
-          <button onClick={saveConversation} className="btn" disabled={isSaved}>
+          <button
+            onClick={saveConversation}
+            className="px-4 py-2 mt-4 text-lg rounded-xl shadow-lg text-zinc-900 bg-green-500 hover:animate-pulse hover:bg-green-700  hover:text-zinc-200"
+            disabled={isSaved}
+          >
             {isSaved ? "Conversation Saved" : "Save Conversation"}
           </button>
 
@@ -309,7 +316,7 @@ const ComicBot = () => {
                   </article>
                 ))}
                 <button
-                  className="px-4 py-2 mt-4 hover:animate-pulse rounded-soft bg-red-500 hover:bg-red-700 text-gray-100"
+                  className="px-4 py-2 mt-4 hover:animate-pulse rounded-xl shadow-lg  bg-red-500 hover:bg-red-700 text-zinc-900  hover:text-zinc-200"
                   onClick={() => deleteConversation(convo.id)}
                 >
                   Delete

@@ -27,33 +27,32 @@ export default function Footer() {
   };
 
   return (
-    <footer
-      className="p-6 rounded-lg shadow-lg text-center"
-    >
+    <footer className="p-6 rounded-lg shadow-lg text-center">
       <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
         <div className="lg:w-1/3 mb-6 lg:mb-0">
-          <h2 className="font-bold text-xl mb-2">Contact Us</h2>
+          <h1 className="font-bold text-xl mb-2 text-orange-500">Contact Us</h1>
           <p className="text-md mb-2">contact@humorhub.club</p>
           <a
             href="mailto:nitronate@gmail.com"
-            className=" inline-block bg-orange-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-orange-600 transition-colors"
+            className="btn inline-block py-2 px-4 rounded-xl shadow-lg hover:bg-orange-700 transition-colors"
           >
             Email Me
           </a>
         </div>
 
-        <div className="lg:w-1/3 mb-6 lg:mb-0">
+        <div className="lg:w-1/3 mb-6 lg:mb-1">
+          <h2 className="font-bold text-2xl text-orange-500">Humor Hub!</h2>
           <p className="text-md mb-2">
-            Humor Hub: A synergy of comedy and technology. Engage with ComicBot,
-            create with JokePad, discover with MicFinder, and integrate with our
-            comedy API.
+            A synergy of comedy and technology. Engage with ComicBot, create
+            with JokePad, discover with MicFinder, and integrate with our comedy
+            API.
           </p>
           <p className="italic mb-2">© {new Date().getFullYear()} Humor Hub!</p>
           <p className="italic">
             Made by Nathan Wright visit my{" "}
             <a
               href="https://njwright92.github.io/paper-kit-portfolio/"
-              className="underline hover:bg-orange-600 transition-colors rounded"
+              className="underline text-blue-500 transition-colors rounded-xl shadow-md hover:text-zinc-200"
             >
               Portfolio
             </a>
@@ -70,10 +69,10 @@ export default function Footer() {
           <button
             onClick={scrollToTop}
             aria-label="Back to top"
-            className=" bg-orange-500 text-zinc-200 font-semibold py-2 px-4 rounded-full hover:bg-orange-600 transition-colors mt-4 lg:mt-0"
+            className=" bg-orange-500 text-zinc-900 text-lg px-6  rounded-full shadow-md mt-4 lg:mt-0"
           >
             {/* Ensure ArrowUpCircleIcon is correctly imported and used here */}
-            <ArrowUpCircleIcon className="h-8 w-8" />
+            <ArrowUpCircleIcon className="h-20 w-10" />
           </button>
         </div>
       </div>
