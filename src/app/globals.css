@@ -12,7 +12,7 @@
   --darkText: #f5f5f5;
   --zinc-900: #1f2022;
   --zinc-200: #d4d4d8;
-  --orange-500: #ff6b6b;
+  --orange-500: #f97316;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,7 +26,7 @@
     --darkText: #f5f5f5;
     --zinc-900: #1f2022;
     --zinc-200: #d4d4d8;
-    --orange-500: #ff6b6b;
+    --orange-500: #ff6b6b6;
   }
 }
 
@@ -34,6 +34,24 @@ body {
   background-color: #1f2022;
   color: var(--zinc-200);
   font-family: comic;
+}
+
+.bg-gradient-animation {
+  background: linear-gradient(45deg, #d4d4d8, #ff6b6b, #d4d4d8);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .screen-container {
@@ -289,7 +307,7 @@ option {
   @apply animate-pulse;
   text-decoration-line: underline;
   text-decoration-style: dashed;
-  text-decoration-color: #ff6b6b;
+  text-decoration-color: #f97316;
 }
 .glass-effect {
   @apply bg-zinc-900 bg-opacity-40 backdrop-blur-md;
