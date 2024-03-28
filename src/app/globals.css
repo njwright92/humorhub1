@@ -282,7 +282,7 @@ option {
 }
 
 .neu-button {
-  @apply bg-zinc-900 text-zinc-200 rounded-lg shadow-lg;
+  @apply bg-zinc-900 text-zinc-200 rounded-xl drop-shadow-lg px-2 py-1;
   /* Neumorphism effect optimized for dark mode */
 }
 .neu-button:hover {

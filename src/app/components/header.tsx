@@ -74,12 +74,12 @@ export default function Header() {
           <SearchBar onSearch={handleSearch} />
 
           <div className="micFinderTitle">
-            <h1 className="text-zinc-200 lg:text-6xl">Humor Hub!</h1>
+            <h1 className="text-zinc-900 lg:text-6xl">Humor Hub!</h1>
           </div>
 
           <div className="flex">
             <button onClick={toggleMenu}>
-              <Bars3Icon className="h-8 w-8 text-zinc-200" />
+              <Bars3Icon className="h-8 w-8 text-zinc-900" />
               <span className="sr-only">Toggle menu</span>
             </button>
           </div>
@@ -94,7 +94,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
               className="self-end text-zinc-200"
             >
-              <XMarkIcon className="h-6 w-6" />
+              <XMarkIcon className="h-8 w-8" />
               <span className="sr-only">Close menu</span>
             </button>
             <Link href="/" className="neu-button">
