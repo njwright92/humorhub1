@@ -155,32 +155,44 @@ const NewsPage = () => {
           {isNewsFetched &&
             Object.keys(fetchedArticles).map((category) => (
               <section key={category} className="category-container">
-                <h2 className="category-title text-zinc-200">
-                  {category.charAt(0).toUpperCase() + category.slice(1)} News
-                </h2>
+                <div className="flex flex-col md:flex-row justify-between items-center text-zinc-200">
+                  <h2 className="category-title w-full text-center md:text-center mb-4 md:mb-0">
+                    {category.charAt(0).toUpperCase() + category.slice(1)} News
+                  </h2>
+                  <h3 className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
+                    Send this to ComicBot to get the ball rolling!
+                  </h3>
+                </div>
 
                 {fetchedArticles[category as Category]?.map(
                   (article, index) => (
-                    <article key={index} className="news-item">
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="news-link text-zinc-200"
-                      >
-                        {article.title}
-                      </a>
-                      <p className="news-description text-zinc-200">
-                        {article.description}
-                      </p>
-                      <button
-                        onClick={() =>
-                          handleWriteJoke(article.title, article.description)
-                        }
-                        className="btn inline-block bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition-colors"
-                      >
-                        Write a Joke
-                      </button>
+                    <article
+                      key={index}
+                      className="news-item flex flex-col md:flex-row items-start sm:items-center justify-between"
+                    >
+                      <div className="flex-1">
+                        <a
+                          href={article.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="news-link text-zinc-200"
+                        >
+                          {article.title}
+                        </a>
+                        <p className="news-description text-zinc-200">
+                          {article.description}
+                        </p>
+                      </div>
+                      <div className="mt-4 md:mt-0 md:flex md:flex-col md:items-end">
+                        <button
+                          onClick={() =>
+                            handleWriteJoke(article.title, article.description)
+                          }
+                          className="btn font-semibold py-2 px-4 rounded hover:bg-green-700 hover:text-zinc-200 transition-colors"
+                        >
+                          ComicBot's Take
+                        </button>
+                      </div>
                     </article>
                   )
                 )}
