@@ -1,14 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactJoyride, { CallBackProps, Step } from "react-joyride";
 
 const MyComponent: React.FC = () => {
-  const [run, setRun] = useState<boolean>(true); // Assume you want to auto-start the tour
+  const [run, setRun] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Check if the user has already seen the tour
+    const hasSeenTour = localStorage.getItem("hasSeenTour");
+    if (hasSeenTour === "true") {
+      setRun(false);
+    }
+  }, []);
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+    const finishedStatuses: string[] = ["finished", "skipped"];
+    if (finishedStatuses.includes(status)) {
+      setRun(false);
+      // Store the fact that the user has seen the tour in local storage
+      localStorage.setItem("hasSeenTour", "true");
+    }
+  };
 
   const steps: Step[] = [
     {
       target: ".navbar",
       content: "This is our awesome navbar! You can find everything from here.",
       title: "Welcome!",
+    },
+    {
+      target: ".create-account",
+      content:
+        "Create an account to save your jokes, conversations, and open mic events. Join our community!",
+      title: "Join Us",
     },
     {
       target: ".comicbot-page-link",
@@ -40,22 +64,7 @@ const MyComponent: React.FC = () => {
         'Send your joke to ComicBot and see what it thinks. Just hit the "ComicBot’s Take" button!',
       title: "Share with ComicBot",
     },
-    {
-      target: ".create-account",
-      content:
-        "Create an account to save your jokes, conversations, and open mic events. Join our community!",
-      title: "Join Us",
-    },
   ];
-
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
-    const finishedStatuses: string[] = ["finished", "skipped"];
-
-    if (finishedStatuses.includes(status)) {
-      setRun(false);
-    }
-  };
 
   return (
     <div>
@@ -67,6 +76,11 @@ const MyComponent: React.FC = () => {
         showSkipButton
         steps={steps}
         callback={handleJoyrideCallback}
+        styles={{
+          options: {
+            primaryColor: "#007bff",
+          },
+        }}
       />
     </div>
   );
