@@ -1,6 +1,7 @@
 import "./globals.css";
 import { CityProvider } from "./components/cityContext";
 import { EventProvider } from "./components/eventContext";
+import { HeadlineProvider } from "./components/headlinecontext";
 
 export const metadata = {
   title: "Humor Hub",
@@ -16,7 +17,9 @@ export default function RootLayout({
     <html lang="en">
       <CityProvider>
         <EventProvider>
-          <body>{children}</body>
+          <HeadlineProvider>
+            <body>{children}</body>
+          </HeadlineProvider>
         </EventProvider>
       </CityProvider>
     </html>

@@ -25,7 +25,7 @@ const HumorHubAPISection: React.FC = () => {
     data-aos="fade-up"
   >
     <h1 className="title-style text-2xl font-bold text-center mb-6">
-      Humor Hub API
+      Humor Hub News API
     </h1>
     <p className="text-center mb-6">
       Stay updated with the latest trends and happenings in technology,

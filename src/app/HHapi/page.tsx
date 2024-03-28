@@ -3,6 +3,8 @@
 import React, { useState, useCallback } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
+import { useRouter } from "next/navigation";
+import { useHeadline } from "../components/headlinecontext";
 
 type Category =
   | "business"
@@ -57,6 +59,14 @@ const NewsPage = () => {
   );
   const [error, setError] = useState("");
   const [isNewsFetched, setIsNewsFetched] = useState(false);
+  const { setSelectedHeadline, setSelectedDescription } = useHeadline();
+  const router = useRouter();
+
+  const handleWriteJoke = (title: string, description: string) => {
+    setSelectedHeadline(title);
+    setSelectedDescription(description);
+    router.push("/ComicBot");
+  };
 
   const handleCategoryChange = (category: Category, isChecked: boolean) => {
     setSelectedCategories((prev) =>
@@ -163,6 +173,14 @@ const NewsPage = () => {
                       <p className="news-description text-zinc-200">
                         {article.description}
                       </p>
+                      <button
+                        onClick={() =>
+                          handleWriteJoke(article.title, article.description)
+                        }
+                        className="btn inline-block bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition-colors"
+                      >
+                        Write a Joke
+                      </button>
                     </article>
                   )
                 )}

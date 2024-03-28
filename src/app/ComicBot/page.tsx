@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { SpinnerInfinity } from "spinners-react";
 import Footer from "../components/footer";
+import { useHeadline } from "../components/headlinecontext";
 
 type ConversationMessage = {
   from: string;
@@ -37,6 +38,15 @@ const ComicBot = () => {
   );
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const { selectedHeadline, selectedDescription } = useHeadline();
+
+  useEffect(() => {
+    if (selectedHeadline && selectedDescription) {
+      setInput(
+        `Write an absurd take on the following news: ${selectedHeadline}\n\n ${selectedDescription}`
+      );
+    }
+  }, [selectedHeadline, selectedDescription]);
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
     const { value } = event.target;
@@ -63,12 +73,12 @@ const ComicBot = () => {
         method: "POST",
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 312, 
-          maxTokens: 312, 
-          temperature: 0.9, 
-          top_k: 50, 
-          top_p: 1, 
-          repetition_penalty: 1.5, 
+          n_predict: 312,
+          maxTokens: 312,
+          temperature: 0.9,
+          top_k: 50,
+          top_p: 1,
+          repetition_penalty: 1.5,
           stream: true,
         }),
         headers: {
