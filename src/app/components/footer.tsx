@@ -62,7 +62,7 @@ export default function Footer() {
         <div className="lg:w-1/3 flex flex-col items-center lg:items-end">
           {isUserSignedIn && (
             <div className="mb-4">
-              {/* Ensure ClientSignOutButton is correctly imported and used here */}
+              
               <ClientSignOutButton />
             </div>
           )}
@@ -71,7 +71,7 @@ export default function Footer() {
             aria-label="Back to top"
             className=" bg-orange-500 text-zinc-900 text-lg px-6  rounded-full shadow-md mt-4 lg:mt-0"
           >
-            {/* Ensure ArrowUpCircleIcon is correctly imported and used here */}
+            
             <ArrowUpCircleIcon className="h-20 w-10" />
           </button>
         </div>
