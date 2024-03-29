@@ -104,14 +104,12 @@ const ComicBot = () => {
         const { done, value } = result;
 
         if (done) {
-          console.log("Stream complete");
           setIsLoading(false);
           return;
         }
 
         if (value) {
           const chunkText = new TextDecoder().decode(value);
-          console.log(`Received chunk: ${chunkText}`);
 
           // Check if the chunk starts with "data: "
           if (chunkText.startsWith("data: ")) {
@@ -225,6 +223,24 @@ const ComicBot = () => {
     }
   };
 
+  const sendConversationToJokepad = async (
+    conversation: ConversationMessage[]
+  ) => {
+    if (!userUID) return;
+    try {
+      const jokeCollection = collection(db, "jokes");
+      const conversationText = conversation
+        .map((message) => `${message.from}: ${message.content}`)
+        .join("\n");
+      await addDoc(jokeCollection, {
+        joke: conversationText,
+        uid: userUID,
+      });
+    } catch (error) {
+      console.error("Error sending conversation to Jokepad: ", error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -296,10 +312,16 @@ const ComicBot = () => {
                   </article>
                 ))}
                 <button
-                  className="px-4 py-2 mt-4 hover:animate-pulse rounded-xl shadow-lg  bg-red-500 hover:bg-red-700 text-zinc-900  hover:text-zinc-200"
+                  className="px-4 py-2 mt-4 mr-1 hover:animate-pulse rounded-xl shadow-lg  bg-red-500 hover:bg-red-700 text-zinc-900  hover:text-zinc-200"
                   onClick={() => deleteConversation(convo.id)}
                 >
                   Delete
+                </button>
+                <button
+                  className="px-4 py-2 mt-4 ml-1 hover:animate-pulse rounded-xl shadow-lg  bg-blue-500 hover:bg-blue-700 text-zinc-900  hover:text-zinc-200"
+                  onClick={() => sendConversationToJokepad(convo.messages)}
+                >
+                  Send to Jokepad
                 </button>
               </div>
             ))}
