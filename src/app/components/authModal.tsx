@@ -124,7 +124,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       <div className="modal-container">
         <h2 className="modal-title">{isSignUp ? "Sign Up" : "Sign In"}</h2>
         <form onSubmit={handleAuth} className="form-container">
-          <label htmlFor="email" className="text-black">
+          <label htmlFor="email" className="text-zinc-900">
             Email
           </label>
           <input
@@ -137,7 +137,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             className="input-field"
             autoComplete="email"
           />
-          <label htmlFor="password" className="text-black">
+          <label htmlFor="password" className="text-zinc-900">
             Password
           </label>
           <input
@@ -152,7 +152,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           />
           {isSignUp && (
             <>
-              <label htmlFor="confirmPassword" className="text-black">
+              <label htmlFor="confirmPassword" className="text-zinc-900">
                 Confirm Password
               </label>
               <input
@@ -167,13 +167,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               />
             </>
           )}
-          <button type="submit" className="auth-button">
+          <button type="submit" className="auth-button text-orange-600">
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
         <button
           onClick={() => setIsSignUp(!isSignUp)}
-          className="toggle-button"
+          className="toggle-button text-zinc-900"
         >
           {isSignUp
             ? "Already have an account? Sign In"
