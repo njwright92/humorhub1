@@ -16,7 +16,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" id="search-bar">
       <button
         onClick={() => setInputVisible(!isInputVisible)}
         className={`${

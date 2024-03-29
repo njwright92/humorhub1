@@ -189,6 +189,7 @@ const NewsPage = () => {
                             handleWriteJoke(article.title, article.description)
                           }
                           className="btn font-semibold py-2 px-4 rounded hover:bg-green-700 hover:text-zinc-200 transition-colors"
+                          id="send-joke"
                         >
                           ComicBot's Take
                         </button>

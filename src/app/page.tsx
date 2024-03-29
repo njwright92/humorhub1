@@ -7,22 +7,36 @@ import ComicBot from "../app/Comics.webp";
 import jokes from "../app/jokes.webp";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useCallback, useState } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HumorHubAPISection from "./components/humorHubApi";
+import TourComponent from "./components/joyride";
+import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Home() {
+  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   useEffect(() => {
     AOS.init({
       duration: 1000,
     });
   }, []);
 
+  const handleAuthStateChanged = useCallback((user: User | null) => {
+    setIsUserSignedIn(!!user);
+  }, []);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+    return () => unsubscribe();
+  }, [handleAuthStateChanged]);
+
   return (
     <>
       <Header />
       <div className="screen-container">
+        {!isUserSignedIn && <TourComponent />}
         <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md">
           <h1 className="title-style text-2xl font-bold text-center mb-4 drop-shadow-md">
             Mic Finder!

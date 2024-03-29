@@ -77,7 +77,7 @@ export default function Header() {
             <h1 className="text-zinc-900 lg:text-6xl">Humor Hub!</h1>
           </div>
 
-          <div className="flex">
+          <div className="flex" id="navbar">
             <button onClick={toggleMenu}>
               <Bars3Icon className="h-8 w-8 text-zinc-900" />
               <span className="sr-only">Toggle menu</span>
@@ -114,7 +114,7 @@ export default function Header() {
               <span>Mic Finder</span>
             </Link>
             {isUserSignedIn ? (
-              <Link href="/ComicBot" className="neu-button">
+              <Link href="/ComicBot" className="neu-button" id="comicbot">
                 <span>ComicBot</span>
               </Link>
             ) : (
@@ -127,7 +127,7 @@ export default function Header() {
             )}
 
             {isUserSignedIn ? (
-              <Link href="/JokePad" className="neu-button">
+              <Link href="/JokePad" className="neu-button" id="jokepad">
                 <span>JokePad</span>
               </Link>
             ) : (
@@ -140,7 +140,7 @@ export default function Header() {
             )}
 
             {isUserSignedIn ? (
-              <Link href="/HHapi" className="neu-button">
+              <Link href="/HHapi" className="neu-button" id="news-api">
                 <span>News API</span>
               </Link>
             ) : (
@@ -157,7 +157,7 @@ export default function Header() {
                 <span>Profile</span>
               </Link>
             ) : (
-              <button onClick={toggleAuthModal} className="neu-button">
+              <button onClick={toggleAuthModal} className="neu-button" id="create-account">
                 <span>Sign In/Up</span>
               </button>
             )}
