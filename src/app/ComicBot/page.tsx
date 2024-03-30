@@ -73,12 +73,14 @@ const ComicBot = () => {
         method: "POST",
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 312,
-          maxTokens: 312,
-          temperature: 0.9,
-          top_k: 50,
-          top_p: 1,
-          repetition_penalty: 1.5,
+          n_predict: 312, // Reduce the number of tokens to generate to avoid repetition
+          do_sample: true,
+          typical_p: 0.8,
+          penalty_alpha: 1.5,
+          temperature: 0.7, // Increase temperature to encourage more creative responses
+          top_k: 50, // Reduce top_k to focus on the most relevant options
+          top_p: 1, // Increase top_p to maintain coherence
+          repetition_penalty: 2.0, // Increase repetition penalty to discourage repetition
           stream: true,
         }),
         headers: {
@@ -268,6 +270,18 @@ const ComicBot = () => {
             Send
           </button>
           <section className="section-style">
+            {/* Loading indicator at the end of the conversation list */}
+            {isLoading && (
+              <div className="loading-indicator">
+                <SpinnerInfinity
+                  color="#f97316"
+                  size="90"
+                  secondaryColor="#d4d4d8"
+                  className="items-center"
+                />
+                <p>Loading...</p>
+              </div>
+            )}
             {/* Render messages including the ones from API */}
             {[...conversation].reverse().map((message, index) => (
               <article key={index} className="bot-message-container">
@@ -275,17 +289,6 @@ const ComicBot = () => {
                 <p>{message.content}</p>
               </article>
             ))}
-            {/* Loading indicator at the end of the conversation list */}
-            {isLoading && (
-              <div className="loading-indicator">
-                <SpinnerInfinity
-                  color="green"
-                  size="90"
-                  secondaryColor="gray"
-                />
-                <p>Loading...</p>
-              </div>
-            )}
           </section>
 
           <button

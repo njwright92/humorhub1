@@ -11,7 +11,7 @@ import { useEffect, useCallback, useState } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HumorHubAPISection from "./components/humorHubApi";
-import TourComponent from "./components/joyride";
+// import TourComponent from "./components/joyride";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Home() {
@@ -36,7 +36,7 @@ export default function Home() {
     <>
       <Header />
       <div className="screen-container">
-        {!isUserSignedIn && <TourComponent />}
+        {/* {!isUserSignedIn && <TourComponent />} */}
         <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md">
           <h1 className="title-style text-2xl font-bold text-center mb-4 drop-shadow-md">
             Mic Finder!

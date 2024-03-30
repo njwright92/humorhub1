@@ -54,6 +54,14 @@ body {
   }
 }
 
+.loading-indicator {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center children horizontally in the container */
+  justify-content: center; /* Center children vertically if needed */
+  width: 100%; /* Take full width of its parent to ensure centering */
+}
+
 .screen-container {
   @apply flex flex-col min-h-screen p-8 text-zinc-200 text-center;
 }
