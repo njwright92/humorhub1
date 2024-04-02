@@ -1,97 +1,80 @@
 "use client";
 
-import React, { Suspense, useState, useEffect } from "react";
-import ReactJoyride, { CallBackProps, Step } from "react-joyride";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import "@sjmc11/tourguidejs/src/scss/tour.scss"; // Styles
+import { TourGuideClient } from "@sjmc11/tourguidejs/src/Tour"; // JS
 
-const TourComponent: React.FC = () => {
-  const [run, setRun] = useState<boolean>(true);
-  const [isUserSignedIn, setIsUserSignedIn] = useState<boolean>(false);
+export const startTour = () => {
+  // Initialize the tour with global options
+  const tg = new TourGuideClient({
+    backdropColor: "rgba(20,20,21,0.84)",
+    closeButton: true,
+    nextLabel: "Next",
+    prevLabel: "Back",
+    finishLabel: "Finish",
+    showStepDots: true,
+    showButtons: true,
+    rememberStep: true,
+    exitOnClickOutside: true,
+    exitOnEscape: true,
+    keyboardControls: true,
+  });
 
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status, index } = data;
-    const finishedStatuses: string[] = ["finished", "skipped"];
-
-    if (finishedStatuses.includes(status)) {
-      setRun(false);
-    } else if ((index === 2 || index === 3 || index === 5) && !isUserSignedIn) {
-      // Prompt the user to sign in if they reach a step that requires authentication
-      alert("Please sign in to continue the tour.");
-      setRun(false);
-    }
-  };
-
-  const steps: Step[] = [
+  // Define your tour steps
+  tg.addSteps([
     {
+      content:
+        "Welcome! Let's start by exploring the navbar. Navigate through the options to get familiar.",
+      title: "Navbar",
       target: "#navbar",
-      content: "This is our awesome navbar! You can find everything from here.",
-      title: "Welcome!",
     },
     {
-      target: "#create-account",
-      content:
-        "Create an account to save your jokes, conversations, and open mic events. Join our community!",
-      title: "Join Us",
+      content: "Please sign up or sign in to continue with the tour.",
+      title: "Sign In/Sign Up",
+      target: "#signInSignUp",
     },
     {
-      target: "#comicbot",
-      content:
-        "Click here to start a conversation with ComicBot, your comedic companion.",
-      title: "Meet ComicBot",
+      content: "Click on the ComicBot link to continue.",
+      title: "ComicBot",
+      target: "#comicBot",
     },
     {
-      target: "#jokepad",
-      content:
-        "Here's your JokePad! Write, edit, and save your jokes to perfection.",
-      title: "Your JokePad",
+      content: "Here you can enter your prompt for inspiration. Give it a try!",
+      title: "Enter Prompt",
+      target: "#enterPrompt",
     },
     {
-      target: "#search-bar",
-      content:
-        "Type in your city here to find open mic events near you. Discover where you can share your jokes!",
-      title: "Find Open Mics",
+      content: "Now, let's head over to the JokePad by clicking this link.",
+      title: "JokePad Link",
+      target: "#jokePad",
     },
     {
+      content: "This is the JokePad. Write, edit, and save your jokes here!",
+      title: "JokePad",
+      target: "#joke",
+    },
+    {
+      content: "Let's fetch some news! Click on the News API link to proceed.",
+      title: "Fetch News",
       target: "#news-api",
-      content:
-        "Check out the latest articles here. Stay updated with the comedy world.",
-      title: "Latest Articles",
     },
     {
-      target: "#send-joke",
-      content:
-        'Send your joke to ComicBot and see what it thinks. Just hit the "ComicBot\'s Take" button!',
-      title: "Share with ComicBot",
+      content: "Choose a category to fetch news. Try it out!",
+      title: "News Category",
+      target: "#newsCategory",
     },
-  ];
+    {
+      content: "Use this button to send your selected article to ComicBot.",
+      title: "Send Joke",
+      target: "#send-joke",
+    },
+    {
+      content:
+        "Finally, search for open mic events in your city here. Type in your city and press enter to find events near you.",
+      title: "Search Events",
+      target: "#searchBar",
+    },
+  ]);
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ReactJoyride
-        continuous
-        run={run}
-        scrollToFirstStep
-        showProgress
-        showSkipButton
-        steps={steps}
-        callback={handleJoyrideCallback}
-        styles={{
-          options: {
-            primaryColor: "#007bff",
-          },
-        }}
-      />
-    </Suspense>
-  );
+  // Start the tour
+  tg.start();
 };
-
-export default TourComponent;

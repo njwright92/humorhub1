@@ -10,6 +10,8 @@ import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
 import micFinder from "../../app/micFinder.webp";
 import Image from "next/image";
+import ToggleSwitch from "./toggleSwitch";
+
 
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -19,6 +21,11 @@ export default function Header() {
   const router = useRouter();
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
@@ -70,6 +77,7 @@ export default function Header() {
               priority
             />
           </Link>
+          <ToggleSwitch isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
 
           <SearchBar onSearch={handleSearch} />
 
@@ -157,7 +165,11 @@ export default function Header() {
                 <span>Profile</span>
               </Link>
             ) : (
-              <button onClick={toggleAuthModal} className="neu-button" id="create-account">
+              <button
+                onClick={toggleAuthModal}
+                className="neu-button"
+                id="signInSignUp"
+              >
                 <span>Sign In/Up</span>
               </button>
             )}

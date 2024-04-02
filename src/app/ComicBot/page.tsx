@@ -260,6 +260,7 @@ const ComicBot = () => {
               }}
               className="input-field"
               placeholder="Write a funny take on everyday life..."
+             id="enterPrompt"
             />
           </div>
           <button

@@ -156,7 +156,8 @@ const NewsPage = () => {
             Object.keys(fetchedArticles).map((category) => (
               <section key={category} className="category-container">
                 <div className="flex flex-col md:flex-row justify-between items-center text-zinc-200">
-                  <h2 className="category-title w-full text-center md:text-center mb-4 md:mb-0">
+                  <h2 className="category-title w-full text-center md:text-center mb-4 md:mb-0"
+                  id="newsCategory">
                     {category.charAt(0).toUpperCase() + category.slice(1)} News
                   </h2>
                   <h3 className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
