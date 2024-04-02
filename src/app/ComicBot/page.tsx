@@ -13,8 +13,8 @@ import {
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
-import { SpinnerInfinity } from "spinners-react";
 import Footer from "../components/footer";
+import Loading from "../components/loading";
 import { useHeadline } from "../components/headlinecontext";
 
 type ConversationMessage = {
@@ -73,14 +73,13 @@ const ComicBot = () => {
         method: "POST",
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 312, // Reduce the number of tokens to generate to avoid repetition
+          n_predict: 300, // Reduce the number of tokens to generate to avoid repetition
           do_sample: true,
-          typical_p: 0.8,
           penalty_alpha: 1.5,
-          temperature: 0.7, // Increase temperature to encourage more creative responses
-          top_k: 50, // Reduce top_k to focus on the most relevant options
+          temperature: 0.8, // Increase temperature to encourage more creative responses
+          top_k: 40, // Reduce top_k to focus on the most relevant options
           top_p: 1, // Increase top_p to maintain coherence
-          repetition_penalty: 2.0, // Increase repetition penalty to discourage repetition
+          repetition_penalty: 2.5, // Increase repetition penalty to discourage repetition
           stream: true,
         }),
         headers: {
@@ -273,20 +272,17 @@ const ComicBot = () => {
             {/* Loading indicator at the end of the conversation list */}
             {isLoading && (
               <div className="loading-indicator">
-                <SpinnerInfinity
-                  color="#f97316"
-                  size="90"
-                  secondaryColor="#d4d4d8"
-                  className="items-center"
-                />
-                <p>Loading...</p>
+               <Loading />
               </div>
             )}
             {/* Render messages including the ones from API */}
             {[...conversation].reverse().map((message, index) => (
-              <article key={index} className="bot-message-container">
-                <span>{message.from}:..</span>
-                <p>{message.content}</p>
+              <article
+                key={index}
+                className="bot-message-container text-zinc-200"
+              >
+                <span className="text-zinc-200">{message.from}:..</span>
+                <p className="text-zinc-200">{message.content}</p>
               </article>
             ))}
           </section>
