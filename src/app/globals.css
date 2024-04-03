@@ -7,9 +7,6 @@
   --background-start-rgb: 31, 31, 31;
   --background-end-rgb: 31, 31, 31;
   --accent-color: 255, 107, 107;
-  --darkBg: #121212;
-  --darkAccent: #1f1f1f;
-  --darkText: #f5f5f5;
   --zinc-900: #1f2022;
   --zinc-200: #d4d4d8;
   --orange-500: #f97316;
@@ -21,13 +18,20 @@
     --background-start-rgb: 10, 10, 10;
     --background-end-rgb: 25, 25, 25;
     --accent-color: 22, 101, 52;
-    --darkBg: #121212;
-    --darkAccent: #1f1f1f;
-    --darkText: #f5f5f5;
     --zinc-900: #1f2022;
     --zinc-200: #d4d4d8;
-    --orange-500: #ff6b6b6;
+    --orange-500: #f97316;
   }
+}
+
+.light {
+  --foreground-rgb: 31, 31, 31; /* Dark text for light background */
+  --background-start-rgb: 244, 244, 244; /* Light background */
+  --background-end-rgb: 255, 255, 255; /* Lighter shade for gradient end or solid backgrounds */
+  --accent-color: 107, 107, 255; /* Adjusted accent color for light mode */
+  --zinc-900: #d4d4d8; /* Lighter background for elements styled with zinc-900 */
+  --zinc-200: #1f2022; /* Darker text or elements for contrast */
+  --orange-500: #ff6b6b; /* Keep or adjust your accent colors as needed */
 }
 
 body {
