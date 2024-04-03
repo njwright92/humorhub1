@@ -12,7 +12,6 @@ import micFinder from "../../app/micFinder.webp";
 import Image from "next/image";
 import ToggleSwitch from "./toggleSwitch";
 
-
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -165,12 +164,8 @@ export default function Header() {
                 <span>Profile</span>
               </Link>
             ) : (
-              <button
-                onClick={toggleAuthModal}
-                className="neu-button"
-                id="signInSignUp"
-              >
-                <span>Sign In/Up</span>
+              <button onClick={toggleAuthModal} className="neu-button">
+                <span id="signInSignUp">Sign In/Up</span>
               </button>
             )}
 
