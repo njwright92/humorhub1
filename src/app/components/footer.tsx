@@ -4,9 +4,14 @@ import React, { useEffect, useState, useCallback } from "react";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import ClientSignOutButton from "./ClientSignOut";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import ToggleSwitch from "./toggleSwitch";
 
 export default function Footer() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
@@ -28,6 +33,8 @@ export default function Footer() {
 
   return (
     <footer className="p-6 rounded-lg shadow-lg text-center">
+      <ToggleSwitch isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
+
       <div className="container mx-auto flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
         <div className="lg:w-1/3 mb-6 lg:mb-0">
           <h1 className="font-bold text-xl mb-2 text-orange-500">Contact Us</h1>
@@ -62,7 +69,6 @@ export default function Footer() {
         <div className="lg:w-1/3 flex flex-col items-center lg:items-end">
           {isUserSignedIn && (
             <div className="mb-4">
-              
               <ClientSignOutButton />
             </div>
           )}
@@ -71,7 +77,6 @@ export default function Footer() {
             aria-label="Back to top"
             className=" bg-orange-500 text-zinc-900 text-lg px-6  rounded-full shadow-md mt-4 lg:mt-0"
           >
-            
             <ArrowUpCircleIcon className="h-20 w-10" />
           </button>
         </div>
