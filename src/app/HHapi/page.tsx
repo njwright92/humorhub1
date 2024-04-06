@@ -45,7 +45,19 @@ const fetchCategoryNews = async (category: Category) => {
     }
 
     const data = await response.json();
-    return data.articles;
+    // Filter out articles with "[Removed]" in their title or description
+    const filteredArticles = data.articles.filter(
+      (article: {
+        title: string | string[];
+        description: string | string[];
+      }) => {
+        return (
+          !article.title.includes("[Removed]") &&
+          !article.description.includes("[Removed]")
+        );
+      }
+    );
+    return filteredArticles;
   } catch (error) {
     console.error("Error fetching news for category:", category, error);
     throw new Error("Failed to fetch news");
@@ -117,9 +129,9 @@ const NewsPage = () => {
             more. Dive into a curated selection of the latest headlines spanning
             comedy, politics, world news, and entertainment. Tailor your news
             feed by selecting categories that interest you the most and use our
-            search functionality to hone in on specific topics or events. It&#39;s
-            all here, designed to keep your material fresh and your insights
-            sharp.
+            search functionality to hone in on specific topics or events.
+            It&#39;s all here, designed to keep your material fresh and your
+            insights sharp.
           </p>
           <section className="card bg-zinc-900 text-zinc-200 p-4 rounded-xl drop-shadow-md mb-6">
             <p className="instructions text-zinc-200 mb-4">
