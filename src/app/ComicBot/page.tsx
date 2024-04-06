@@ -225,9 +225,23 @@ const ComicBot = () => {
     <>
       <Header />
       <main className="screen-container flex flex-col">
-        <h1 className="title">ComicBot!</h1>
-        <section className="card-style">
-          <div className="form-container">
+        <h1 className="title text-4xl font-bold text-center mb-4">
+          Welcome to ComicBot!
+        </h1>
+        <p className="mb-6 text-center">
+          Dive into the world of humor with ComicBot, your AI-powered comedy
+          writing assistant. Whether you're crafting jokes, developing sketches,
+          or exploring funny takes on everyday life, ComicBot is here to spark
+          your creativity.
+        </p>
+        <p className="mb-6 text-center italic text-sm">
+          Please note: ComicBots service is a research preview. It only provides
+          limited safety measures and may generate offensive content. It must
+          not be used for any illegal, harmful, violent, racist, or sexual
+          purposes.
+        </p>
+        <section className="card-style p-6 rounded-xl shadow-lg">
+          <div className="form-container mb-4">
             <textarea
               value={input}
               onChange={handleInputChange}
@@ -237,14 +251,14 @@ const ComicBot = () => {
                   handleSend();
                 }
               }}
-              className="input-field"
-              placeholder="Write a funny take on everyday life..."
+              className="input-field w-full h-40 p-4 text-black rounded-xl shadow-inner"
+              placeholder="What funny idea are you exploring today? Type here and press Send to see what ComicBot can add to your comedy..."
               id="enterPrompt"
             />
           </div>
           <button
             onClick={handleSend}
-            className="bg-orange-500 text-zinc-900 px-12 py-1 m-2 rounded-xl shadow-lg text-lg hover:animate-pulse hover:bg-orange-700 hover:text-zinc-200"
+            className="send-button bg-orange-500 hover:bg-orange-700 text-zinc-900 hover:text-zinc-200 text-lg px-12 py-2 rounded-xl shadow-lg transition-all duration-150 ease-in-out hover:animate-pulse"
           >
             Send
           </button>

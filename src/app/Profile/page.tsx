@@ -129,23 +129,41 @@ export default function UserProfile() {
     setIsEditing(true);
   };
 
+  const handleCancel = () => {
+    // Assuming you have initial state values or a way to fetch the original user data
+    // Resetting the form values to their original state or last saved state
+    setName(name);
+    setBio(bio);
+    setProfileImageUrl(profileImageUrl);
+
+    // Exiting the editing mode
+    setIsEditing(false);
+  };
+
   return (
     <>
       <Header />
       <main className="screen-container">
-        <h1 className="title">User Profile</h1>
+        <h1 className="title text-4xl font-bold text-center mb-6">
+          Your Profile
+        </h1>
 
-        <section className="card-style">
+        <section className="card-style p-6 rounded-lg shadow-lg bg-zinc-200 mb-6">
           <div className="mb-6">
             {isEditing ? (
               <>
-                <label htmlFor="profilePicture">Profile Picture:</label>
+                <label
+                  htmlFor="profilePicture"
+                  className="block text-lg font-medium mb-2"
+                >
+                  Profile Picture:
+                </label>
                 <input
                   id="profilePicture"
                   name="profilePicture"
                   type="file"
                   onChange={handleImageChange}
-                  className="standard-input"
+                  className="standard-input mb-4"
                 />
                 {profileImageObjectURL && (
                   <Image
@@ -153,7 +171,7 @@ export default function UserProfile() {
                     alt="Profile Preview"
                     width={300}
                     height={300}
-                    className="profile-image"
+                    className="profile-image rounded-full mx-auto"
                     priority
                   />
                 )}
@@ -165,7 +183,7 @@ export default function UserProfile() {
                   alt="Profile Preview"
                   width={200}
                   height={200}
-                  className="profile-image "
+                  className="profile-image rounded-full mx-auto"
                   unoptimized
                   priority
                 />
@@ -173,69 +191,128 @@ export default function UserProfile() {
             )}
           </div>
 
-          <div className="form-container">
+          <div className="form-container mb-4">
             {isEditing ? (
               <>
-                <label htmlFor="name">Name:</label>
+                <label
+                  htmlFor="name"
+                  style={{ color: "#d4d4d8" }}
+                  className="block text-lg font-medium mb-2"
+                >
+                  Name:
+                </label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  style={{ backgroundColor: "#1f2022", color: "#d4d4d8" }}
                   className="standard-input"
                 />
               </>
             ) : (
-              <p className="subtitle-style">{name}</p>
+              <p
+                className="subtitle-style font-semibold text-xl"
+                style={{ color: "#d4d4d8" }}
+              >
+                {name}
+              </p>
             )}
           </div>
 
-          <div className="form-container">
+          <div className="form-container mb-6">
             {isEditing ? (
               <>
-                <label htmlFor="bio">Bio:</label>
+                <label
+                  htmlFor="bio"
+                  style={{ color: "#d4d4d8" }}
+                  className="block text-lg font-medium mb-2"
+                >
+                  Bio:
+                </label>
                 <textarea
                   id="bio"
                   name="bio"
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="standard-input h-24"
+                  style={{
+                    backgroundColor: "#1f2022",
+                    color: "#d4d4d8",
+                    height: "6rem",
+                  }}
+                  className="standard-input"
                 />
               </>
             ) : (
-              <p className="subtitle-style">{bio}</p>
+              <p
+                className="subtitle-style text-md"
+                style={{ color: "#d4d4d8" }}
+              >
+                {bio}
+              </p>
             )}
           </div>
 
-          <button
-            onClick={isEditing ? handleSubmit : handleEdit}
-            className="btn"
-          >
-            {isEditing ? "Save Changes" : "Edit Profile"}
-          </button>
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={isEditing ? handleSubmit : handleEdit}
+              className="btn bg-orange-500 hover:bg-orange-700 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-150 ease-in-out hover:animate-pulse"
+            >
+              {isEditing ? "Save Changes" : "Edit Profile"}
+            </button>
+
+            {isEditing && (
+              <button
+                onClick={handleCancel}
+                className="btn bg-zinc-500 hover:bg-zinc-700 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-150 ease-in-out hover:animate-pulse"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         </section>
 
         <section className="mb-6">
-          <h2 className="title-style">Saved Events</h2>
-          {savedEvents.map((event) => (
-            <article key={event.id} className="event-item">
-              <h3 className="subtitle-style">{event.name}</h3>
-              <p className="standard-input">Location: {event.location}</p>
-              <div className="details">
-                <span className="the-text">ℹ️ Details:</span>
-                <div dangerouslySetInnerHTML={{ __html: event.details }} />
-              </div>
-              <button
-                className="btn"
-                onClick={() => handleDeleteEvent(event.id)}
+          <h2
+            className="title-style text-3xl font-bold mb-4"
+            style={{ color: "#d4d4d8" }}
+          >
+            Saved Events
+          </h2>
+          {savedEvents.length > 0 ? (
+            savedEvents.map((event) => (
+              <article
+                key={event.id}
+                className="event-item mb-4 p-4 rounded-lg shadow-lg"
+                style={{ backgroundColor: "#1f2022", color: "#d4d4d8" }}
               >
-                Delete
-              </button>
-            </article>
-          ))}
+                <h3 className="subtitle-style text-xl font-semibold">
+                  {event.name}
+                </h3>
+                <p className="text-md mb-2">Location: {event.location}</p>
+                <div className="details mb-2">
+                  <span className="the-text font-medium">ℹ️ Details:</span>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: event.details }}
+                    style={{ color: "#d4d4d8" }}
+                  />
+                </div>
+                <button
+                  className="btn bg-red-500 hover:bg-red-700 text-zinc-200 font-bold py-1 px-3 rounded hover:animate-pulse transition-colors duration-150 ease-in-out"
+                  onClick={() => handleDeleteEvent(event.id)}
+                  style={{ color: "#d4d4d8" }}
+                >
+                  Delete
+                </button>
+              </article>
+            ))
+          ) : (
+            <p style={{ color: "#d4d4d8" }}>No saved events to show.</p>
+          )}
         </section>
       </main>
+
       <Footer />
     </>
   );

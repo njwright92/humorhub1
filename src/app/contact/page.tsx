@@ -49,18 +49,24 @@ const ContactPage: React.FC = () => {
     <>
       <Header />
       <div className="screen-container mx-auto px-4">
-        <section className="bg-gray-300 shadow-lg rounded-lg p-6 mt-10">
-          <h1 className="title">Contact Us</h1>
+        <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
+          <h1 className="title text-3xl font-bold text-center mb-4">
+            We'd Love to Hear From You
+          </h1>
+          <p className="text-center mb-6 mt-8 text-zinc-900">
+            Your thoughts matter to us! Whether you have a question, feedback,
+            or need support, we're all ears. Use the form below to reach out,
+            and we promise to get back to you as swiftly as we can. We&#39;re here
+            to ensure your experience with Humor Hub is nothing short of
+            amazing. Thank you for taking the time to connect with us!
+          </p>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <p className="text-center mb-6 mt-8 text-black">
-              We&apos;re always here to help. If you have any questions,
-              feedback, or need assistance, please fill out the form below. Our
-              team will get back to you as soon as possible. Thank you for
-              reaching out to us!
-            </p>
-            <div className="flex flex-col">
-              <label htmlFor="name" className="mb-2 font-semibold text-black">
-                Name:
+            <div className="flex flex-col mb-4">
+              <label
+                htmlFor="name"
+                className="mb-2 font-semibold text-zinc-900"
+              >
+                Your Name:
               </label>
               <input
                 type="text"
@@ -70,42 +76,49 @@ const ContactPage: React.FC = () => {
                 required
                 value={formState.name}
                 onChange={handleInputChange}
-                className="text-black shadow rounded-lg p-2"
+                className="text-zinc-900 shadow rounded-lg p-2"
               />
-
-              <label htmlFor="email" className="mb-2 text-black font-semibold">
-                Email:
+            </div>
+            <div className="flex flex-col mb-4">
+              <label
+                htmlFor="email"
+                className="mb-2 font-semibold text-zinc-900"
+              >
+                Your Email:
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="Enter your email address"
                 required
                 value={formState.email}
                 onChange={handleInputChange}
-                className="text-black shadow rounded-lg p-2"
+                className="text-zinc-900 shadow rounded-lg p-2"
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mb-6">
               <label
                 htmlFor="message"
-                className="mb-2 font-semibold text-black"
+                className="mb-2 font-semibold text-zinc-900"
               >
-                Message:
+                Your Message:
               </label>
               <textarea
                 id="message"
                 name="message"
-                placeholder="Describe your issue or question"
+                placeholder="How can we help you?"
                 required
                 value={formState.message}
                 onChange={handleInputChange}
-                className="text-black shadow rounded-lg p-2 h-32"
+                className="text-zinc-900 shadow rounded-lg p-2"
               />
             </div>
-            <button id="submit" type="submit" className="btn">
-              Submit
+            <button
+              type="submit"
+              className="btn bg-orange-500 hover:bg-orange-600 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors"
+            >
+              Send Message
             </button>
           </form>
         </section>

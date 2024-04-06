@@ -107,17 +107,35 @@ const NewsPage = () => {
       <Header />
       <div className="screen-container">
         {error && <p className="error-message text-zinc-200">{error}</p>}
-        <h1 className="title text-zinc-200">Humor Hub News</h1>
+        <h1 className="title text-3xl font-bold text-center text-zinc-200 mb-6">
+          Humor Hub News
+        </h1>
         <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md">
           <p className="text-center mb-4">
-            Welcome to the Humor Hub News Portal. Here you can find the latest
-            headlines, comedy, politics, world news, and entertainment. Use the
-            options below to select your news category of interest and enter a
-            search query to narrow down your results.
+            Welcome to the Humor Hub News Portal, your premier destination for
+            staying updated with the pulse of comedy, entertainment, and much
+            more. Dive into a curated selection of the latest headlines spanning
+            comedy, politics, world news, and entertainment. Tailor your news
+            feed by selecting categories that interest you the most and use our
+            search functionality to hone in on specific topics or events. It&#39;s
+            all here, designed to keep your material fresh and your insights
+            sharp.
           </p>
-          <section className="card bg-zinc-900 text-zinc-200 p-4 rounded-xl drop-shadow-md">
+          <section className="card bg-zinc-900 text-zinc-200 p-4 rounded-xl drop-shadow-md mb-6">
+            <p className="instructions text-zinc-200 mb-4">
+              Stay ahead of the curve with Humor Hub News. Choose from our
+              comprehensive categories: Business, Entertainment, General,
+              Health, Science, Sports, and Technology. Each category is updated
+              in real-time, ensuring you have access to the latest and most
+              relevant 5 headlines. Whether you're looking for inspiration,
+              aiming to inject current affairs into your routine, or simply
+              staying informed, our portal is your go-to resource.
+            </p>
             <p className="instructions text-zinc-200">
-              Select your preferred news categories:
+              Select your preferred news categories below to begin exploring the
+              latest in humor and beyond. Our dynamic updates mean you're always
+              in the loop, ready to tackle any topic with timely, informed
+              humor.
             </p>
             <div className="checkbox-container p-2">
               {categories.map((category) => (

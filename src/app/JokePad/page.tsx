@@ -131,22 +131,35 @@ const Jokes = () => {
     <>
       <Header />
       <main className="screen-container flex flex-col">
-        <h1 className="title">JokePad!</h1>
-
-        <section className="card-style">
-          <form onSubmit={handleSubmit} className="form-container">
-            <label htmlFor="joke" className="the-text">
+        <h1 className="title text-4xl font-bold text-center mb-8">
+          Welcome to JokePad!
+        </h1>
+        <p className="text-center mb-6">
+          Your personal digital notebook for jotting down jokes, bits, and
+          comedic ideas. Whether a sudden spark of inspiration or refining a
+          work in progress, JokePad is here to capture and organize your comedic
+          genius.
+        </p>
+        <section className="card-style p-6 rounded-xl shadow-lg bg-gray-300">
+          <form onSubmit={handleSubmit} className="form-container space-y-4">
+            <label
+              htmlFor="joke"
+              className="block text-lg font-semibold text-black mb-2"
+            >
               Write Your Joke/Bit:
             </label>
             <textarea
               id="joke"
               value={newJoke}
               onChange={handleInputChange}
-              placeholder="Write your bit.."
-              className="input-field"
+              placeholder="What's making you laugh today? Share it here..."
+              className="input-field w-full h-40 p-4 text-black rounded-xl shadow-inner"
               required
             />
-            <button type="submit" className="btn">
+            <button
+              type="submit"
+              className="btn bg-orange-500 hover:bg-orange-700 text-zinc-900 hover:text-zinc-200 px-12 py-2 rounded-xl shadow-lg text-lg transition-all duration-150 ease-in-out hover:animate-pulse"
+            >
               Add Joke
             </button>
           </form>

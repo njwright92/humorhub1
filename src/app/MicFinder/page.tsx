@@ -494,19 +494,27 @@ const EventsPage = () => {
     <>
       <Header />
       <div className="screen-container">
-        <h1 className="title">Open Mic Events!</h1>
-        <p className="text-lg md:text-xl text-center mt-4 text-beige">
-          Got an amazing event coming up? Share it here and get the word out to
-          the local community!
+        <h1 className="title text-4xl font-bold text-center mb-6">
+          Discover Open Mic Events!
+        </h1>
+        <p className="text-lg md:text-xl text-center mt-4 mb-6">
+          Hosting or know about an amazing open mic event? This is the perfect
+          spot to share it with the local community and attract a crowd. Whether
+          it&#39;s comedy, poetry, music, or any form of live performance,
+          let&#39;s get the word out and fill the room!
         </p>
-        <div className="text-center mb-2">
+        <div className="text-center mb-8">
           <MemoizedEventForm />
         </div>
-        <h6 className="text-center mt-4">
-          Select your city and date to view events!
-          <br />
-          Or scroll down to see all events!
-        </h6>
+        <h2 className="text-lg font-semibold text-center mt-4 mb-4">
+          Ready to explore? Select your city and date below to discover events
+          near you!
+        </h2>
+        <p className="text-md text-center mb-4">
+          Or simply scroll down to see all upcoming events and find your next
+          stage or audience.
+        </p>
+
         <div className="flex flex-col justify-center items-center mt-2">
           <select
             id="citySelect"

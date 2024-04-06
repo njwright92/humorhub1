@@ -44,21 +44,30 @@ export default function Footer() {
           </a>
         </div>
 
-        <div className="lg:w-1/3 mb-6 lg:mb-1">
-          <h2 className="font-bold text-2xl text-orange-500">Humor Hub!</h2>
+        <div className="lg:w-1/3 mb-6 lg:mb-0">
+          <h2 className="font-bold text-2xl text-orange-500">
+            About Humor Hub
+          </h2>
           <p className="text-md mb-2">
-            A synergy of comedy and technology. Engage with ComicBot, create
-            with JokePad, discover with MicFinder, and integrate with our comedy
-            API.
+            Humor Hub unites the comedic community through technology. From
+            discovering the next big comedy event with MicFinder, to honing your
+            craft with JokePad, or collaborating through ComicBot, our platform
+            is the nexus for all things comedy. Dive into our resources to
+            amplify your comedic journey or integrate seamlessly with our
+            comprehensive comedy API.
           </p>
-          <p className="italic mb-2">© {new Date().getFullYear()} Humor Hub!</p>
+          <p className="italic mb-2">
+            © {new Date().getFullYear()} Humor Hub - Where Comedy Meets
+            Technology.
+          </p>
           <p className="italic">
-            Made by Nathan Wright visit my{" "}
+            Crafted with laughter by Nathan Wright. Explore my creative journey
+            on my{" "}
             <a
               href="https://njwright92.github.io/paper-kit-portfolio/"
-              className="underline text-blue-500 transition-colors rounded-xl shadow-md hover:text-zinc-200"
+              className="underline text-blue-500 transition-colors hover:text-zinc-200"
             >
-              Portfolio
+              Portfolio.
             </a>
           </p>
         </div>
