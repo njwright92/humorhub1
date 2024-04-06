@@ -55,41 +55,39 @@ const ComicBot = () => {
 
   const handleSend = useCallback(async () => {
     const userInput = input.trim();
+
     if (!userInput) {
       console.warn("Your message is empty. Please enter text to send.");
       return;
     }
 
-    // Append user input with a placeholder for ComicBot response
-    setConversation((prevConversation) => [
-      ...prevConversation,
+    // Adding user input and bot's initial response to conversation
+    setConversation((prev) => [
+      ...prev,
       { from: "You", content: userInput, role: "user", text: userInput },
-      { from: "ComicBot", content: "...", role: "bot", text: "..." }, // Placeholder for streaming response
+      { from: "ComicBot", content: "...", role: "bot", text: "..." },
     ]);
     setIsLoading(true);
 
     try {
       const response = await fetch("http://localhost:8080/completion", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 300, // Reduce the number of tokens to generate to avoid repetition
+          n_predict: 300,
           do_sample: true,
           penalty_alpha: 1.5,
-          temperature: 0.8, // Increase temperature to encourage more creative responses
-          top_k: 40, // Reduce top_k to focus on the most relevant options
-          top_p: 1, // Increase top_p to maintain coherence
-          repetition_penalty: 2.5, // Increase repetition penalty to discourage repetition
+          temperature: 1,
+          top_k: 40,
+          top_p: 1,
+          repetition_penalty: 3,
           stream: true,
         }),
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      if (!response.ok) throw new Error("Network response was not ok");
+
       const reader = response.body?.getReader();
       if (!reader) {
         console.error("Response body is null");
@@ -99,58 +97,39 @@ const ComicBot = () => {
 
       let accumulatedResponse = "";
 
-      const processText: (
-        result: ReadableStreamReadResult<Uint8Array>
-      ) => void = async (result) => {
-        const { done, value } = result;
+      // Process stream
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-        if (done) {
-          setIsLoading(false);
-          return;
-        }
-
-        if (value) {
-          const chunkText = new TextDecoder().decode(value);
-
-          // Check if the chunk starts with "data: "
-          if (chunkText.startsWith("data: ")) {
-            const chunkData = chunkText.slice(6); // Remove the "data: " prefix
-
-            // Check if the chunk data is a valid JSON string
-            try {
-              const chunk = JSON.parse(chunkData);
-              accumulatedResponse += chunk.content;
-
-              // Update the ComicBot message with accumulated response
-              setConversation((prevConversation) =>
-                prevConversation.map((message, index) =>
-                  index === prevConversation.length - 1
-                    ? {
-                        ...message,
-                        content: accumulatedResponse,
-                        text: accumulatedResponse,
-                      }
-                    : message
-                )
-              );
-            } catch (error) {
-              // Ignore non-JSON chunk data
-              console.warn("Received non-JSON chunk data:", chunkData);
-            }
+        const chunkText = new TextDecoder().decode(value);
+        if (chunkText.startsWith("data: ")) {
+          const chunkData = chunkText.slice(6);
+          try {
+            const chunk = JSON.parse(chunkData);
+            accumulatedResponse += chunk.content;
+            // Update the last message with new content
+            setConversation((prev) =>
+              prev.map((message, index) =>
+                index === prev.length - 1
+                  ? {
+                      ...message,
+                      content: accumulatedResponse,
+                      text: accumulatedResponse,
+                    }
+                  : message
+              )
+            );
+          } catch (error) {
+            console.warn("Received non-JSON chunk data:", chunkData);
           }
         }
-
-        // Read the next chunk
-        const nextResult = await reader.read();
-        return processText(nextResult);
-      };
-
-      reader.read().then(processText);
+      }
     } catch (error) {
       console.error("Error while generating response:", error);
-      setIsLoading(false);
     } finally {
-      setInput(""); // Clear input field regardless of success/failure
+      setIsLoading(false);
+      setInput("");
     }
   }, [input]);
 
@@ -260,7 +239,7 @@ const ComicBot = () => {
               }}
               className="input-field"
               placeholder="Write a funny take on everyday life..."
-             id="enterPrompt"
+              id="enterPrompt"
             />
           </div>
           <button
@@ -273,7 +252,7 @@ const ComicBot = () => {
             {/* Loading indicator at the end of the conversation list */}
             {isLoading && (
               <div className="loading-indicator">
-               <Loading />
+                <Loading />
               </div>
             )}
             {/* Render messages including the ones from API */}

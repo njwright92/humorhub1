@@ -557,7 +557,7 @@ const EventsPage = () => {
         <section className="card-style">
           <h2
             className="title-style text-center"
-            style={{ borderBottom: "0.15rem solid #005eff" }}
+            style={{ borderBottom: "0.15rem solid #f97316" }}
           >
             Events List:
           </h2>
@@ -604,7 +604,7 @@ const EventsPage = () => {
             <br />
             <button
               onClick={() => handleCityFilterChange("All Cities")}
-              className="city-button m-1 underline text-red-700 font-bold text-lg hover:text-red-500 flex-grow"
+              className="city-button m-1 underline text-orange-400 font-bold text-lg hover:text-orange-300 flex-grow"
             >
               All Cities
             </button>
@@ -612,7 +612,7 @@ const EventsPage = () => {
               <button
                 key={city}
                 onClick={() => handleCityFilterChange(city)}
-                className="city-button m-1 underline text-red-800 hover:text-red-500 flex-grow"
+                className="city-button m-1 underline text-orange-500 hover:text-orange-400 flex-grow"
               >
                 {city}
               </button>

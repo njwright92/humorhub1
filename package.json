@@ -10,9 +10,8 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "1.16.2",
-    "@googlemaps/markerclustererplus": "1.2.10",
+    "@googlemaps/markerclusterer": "^2.5.3",
     "@heroicons/react": "2.1.1",
-    "@sjmc11/tourguidejs": "^0.0.16",
     "aos": "2.3.4",
     "firebase": "10.7.1",
     "firebaseui": "6.1.0",

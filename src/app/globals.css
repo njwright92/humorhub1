@@ -24,16 +24,6 @@
   }
 }
 
-.light {
-  --foreground-rgb: 31, 31, 31; /* Dark text for light background */
-  --background-start-rgb: 244, 244, 244; /* Light background */
-  --background-end-rgb: 255, 255, 255; /* Lighter shade for gradient end or solid backgrounds */
-  --accent-color: 107, 107, 255; /* Adjusted accent color for light mode */
-  --zinc-900: #d4d4d8; /* Lighter background for elements styled with zinc-900 */
-  --zinc-200: #1f2022; /* Darker text or elements for contrast */
-  --orange-500: #ff6b6b; /* Keep or adjust your accent colors as needed */
-}
-
 body {
   background-color: #1f2022;
   color: var(--zinc-200);

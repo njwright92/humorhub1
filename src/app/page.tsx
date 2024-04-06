@@ -7,32 +7,20 @@ import ComicBot from "../app/Comics.webp";
 import jokes from "../app/jokes.webp";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HumorHubAPISection from "./components/humorHubApi";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import { startTour } from "./components/joyride";
+
 
 export default function Home() {
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   useEffect(() => {
     AOS.init({
       duration: 1000,
     });
   }, []);
 
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-      if (!user) {
-        // User is not signed in, start the tour
-        startTour();
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+
   return (
     <>
       <Header />
