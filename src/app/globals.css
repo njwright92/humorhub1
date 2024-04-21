@@ -283,9 +283,8 @@ option {
 }
 
 .instructions {
-  margin-bottom: 1rem;
-  font-weight: bold;
-  color: rgb(39, 39, 39);
+  margin-bottom: .5rem;
+  color: #1f2022;
 }
 
 .checkbox-container {

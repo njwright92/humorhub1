@@ -133,21 +133,21 @@ const NewsPage = () => {
             It&#39;s all here, designed to keep your material fresh and your
             insights sharp.
           </p>
-          <section className="card bg-zinc-900 text-zinc-200 p-4 rounded-xl drop-shadow-md mb-6">
-            <p className="instructions text-zinc-200 mb-4">
+          <section className="card p-4 rounded-xl drop-shadow-md mb-6">
+            <p className="instructions">
               Stay ahead of the curve with Humor Hub News. Choose from our
               comprehensive categories: Business, Entertainment, General,
               Health, Science, Sports, and Technology. Each category is updated
               in real-time, ensuring you have access to the latest and most
-              relevant 5 headlines. Whether you're looking for inspiration,
-              aiming to inject current affairs into your routine, or simply
-              staying informed, our portal is your go-to resource.
+              relevant 5 headlines. Whether you&rsquo;re looking for
+              inspiration, aiming to inject current affairs into your routine,
+              or simply staying informed, our portal is your go-to resource.
             </p>
-            <p className="instructions text-zinc-200">
+            <p className="instructions">
               Select your preferred news categories below to begin exploring the
-              latest in humor and beyond. Our dynamic updates mean you're always
-              in the loop, ready to tackle any topic with timely, informed
-              humor.
+              latest in humor and beyond. Our dynamic updates mean you&rsquo;re
+              always in the loop, ready to tackle any topic with timely,
+              informed humor.
             </p>
             <div className="checkbox-container p-2">
               {categories.map((category) => (

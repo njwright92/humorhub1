@@ -61,7 +61,7 @@ const ComicBot = () => {
       return;
     }
 
-    // Adding user input and bot's initial response to conversation
+    // Adding user input and bot&rsquo;s initial response to conversation
     setConversation((prev) => [
       ...prev,
       { from: "You", content: userInput, role: "user", text: userInput },
@@ -230,7 +230,7 @@ const ComicBot = () => {
         </h1>
         <p className="mb-6 text-center">
           Dive into the world of humor with ComicBot, your AI-powered comedy
-          writing assistant. Whether you're crafting jokes, developing sketches,
+          writing assistant. Whether you&rsquo;re crafting jokes, developing sketches,
           or exploring funny takes on everyday life, ComicBot is here to spark
           your creativity.
         </p>

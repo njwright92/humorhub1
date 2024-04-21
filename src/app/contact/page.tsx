@@ -51,11 +51,11 @@ const ContactPage: React.FC = () => {
       <div className="screen-container mx-auto px-4">
         <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
           <h1 className="title text-3xl font-bold text-center mb-4">
-            We'd Love to Hear From You
+            We&rsquo;d Love to Hear From You
           </h1>
           <p className="text-center mb-6 mt-8 text-zinc-900">
             Your thoughts matter to us! Whether you have a question, feedback,
-            or need support, we're all ears. Use the form below to reach out,
+            or need support, we&rsquo;re all ears. Use the form below to reach out,
             and we promise to get back to you as swiftly as we can. We&#39;re here
             to ensure your experience with Humor Hub is nothing short of
             amazing. Thank you for taking the time to connect with us!

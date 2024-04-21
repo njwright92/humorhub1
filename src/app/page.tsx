@@ -42,9 +42,10 @@ export default function Home() {
               Ready to take the spotlight? Mic Finder is your key to unlocking a
               world brimming with opportunities. We specialize in connecting you
               to an extensive range of open mic events tailored just for artists
-              like you - whether you're a humorist, poet, or musician. Dive into
-              the vibrant local and national art scenes with a tool designed to
-              make your search for the perfect stage as easy as a click.
+              like you - whether you&rsquo;re a humorist, poet, or musician.
+              Dive into the vibrant local and national art scenes with a tool
+              designed to make your search for the perfect stage as easy as a
+              click.
             </p>
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>
@@ -63,9 +64,9 @@ export default function Home() {
               </li>
               <li>
                 Stay ahead of the game with real-time updates on the latest open
-                mic opportunities. Our platform ensures you're always in the
-                loop, ready to make your mark on the stage whenever inspiration
-                strikes.
+                mic opportunities. Our platform ensures you&rsquo;re always in
+                the loop, ready to make your mark on the stage whenever
+                inspiration strikes.
               </li>
             </ul>
 
@@ -88,9 +89,9 @@ export default function Home() {
               </li>
               <li>
                 Discover potential collaborators to broaden your artistic
-                horizon. Whether it's a joint performance or a creative project,
-                Mic Finder makes it easy to connect with like-minded artists and
-                explore new possibilities.
+                horizon. Whether it&rsquo;s a joint performance or a creative
+                project, Mic Finder makes it easy to connect with like-minded
+                artists and explore new possibilities.
               </li>
               <li>
                 Benefit from a culture of feedback and support. Celebrate your
@@ -119,14 +120,14 @@ export default function Home() {
               </li>
               <li>
                 Take advantage of our integrated social media tools to boost
-                your event's profile. Spread the word with ease and watch as
-                your event becomes the talk of the town.
+                your event&rsquo;s profile. Spread the word with ease and watch
+                as your event becomes the talk of the town.
               </li>
               <li>
-                Utilize our analytics features to measure your event's success.
-                Understand your audience better, fine-tune future events based
-                on feedback, and continuously deliver experiences that resonate
-                with your community.
+                Utilize our analytics features to measure your event&rsquo;s
+                success. Understand your audience better, fine-tune future
+                events based on feedback, and continuously deliver experiences
+                that resonate with your community.
               </li>
             </ul>
 
@@ -135,17 +136,17 @@ export default function Home() {
             </h3>
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>
-                Mic Finder is not just a platform; it's a launchpad for talent
-                waiting to be discovered. Whether you're taking your first steps
-                into comedy, music, or poetry, we connect you with venues eager
-                to host new and vibrant artists. Here, your talent gets the
-                recognition it deserves.
+                Mic Finder is not just a platform; it&rsquo;s a launchpad for
+                talent waiting to be discovered. Whether you&rsquo;re taking
+                your first steps into comedy, music, or poetry, we connect you
+                with venues eager to host new and vibrant artists. Here, your
+                talent gets the recognition it deserves.
               </li>
               <li>
-                Utilizing our platform's intuitive navigation, you can find
-                events that perfectly match your artistic style and preferences.
-                It's about making every performance opportunity a stepping stone
-                to greater achievements.
+                Utilizing our platform&rsquo;s intuitive navigation, you can
+                find events that perfectly match your artistic style and
+                preferences. It&rsquo;s about making every performance
+                opportunity a stepping stone to greater achievements.
               </li>
             </ul>
           </div>
@@ -181,21 +182,21 @@ export default function Home() {
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li className="mb-4">
                 Imagine having a co-writer who never sleeps, eats, or takes a
-                break — that's ComicBot for you. Powered by the latest in GPT
-                technology, ComicBot is designed to be your round-the-clock
+                break — that&rsquo;s ComicBot for you. Powered by the latest in
+                GPT technology, ComicBot is designed to be your round-the-clock
                 partner in comedy, ready to help you brainstorm, develop, and
-                polish your sketches until they shine. Whether you're stuck on a
-                punchline or need a fresh set of comedic ideas, ComicBot is
-                always on hand to inspire.
+                polish your sketches until they shine. Whether you&rsquo;re
+                stuck on a punchline or need a fresh set of comedic ideas,
+                ComicBot is always on hand to inspire.
               </li>
               <li className="mb-4">
-                But ComicBot is more than just an assistant; it's a creative
-                collaborator that brings a new level of wit and humor to your
-                writing process. Engage in dynamic, back-and-forth dialogues
-                that challenge you to push the boundaries of your comedic
-                talent. From the seed of an idea to a fully-fledged routine,
-                ComicBot is there to support every step of your creative
-                journey.
+                But ComicBot is more than just an assistant; it&rsquo;s a
+                creative collaborator that brings a new level of wit and humor
+                to your writing process. Engage in dynamic, back-and-forth
+                dialogues that challenge you to push the boundaries of your
+                comedic talent. From the seed of an idea to a fully-fledged
+                routine, ComicBot is there to support every step of your
+                creative journey.
               </li>
               <li className="mb-4">
                 Perfect for stand-up comedians looking to refresh their set,
@@ -219,11 +220,11 @@ export default function Home() {
               </Link>
             </div>
             <p className="mb-4">
-              Don't let writer's block or routine fatigue hold you back. Unlock
-              the full potential of your comedic prowess with ComicBot and bring
-              laughter to the world one joke at a time. Whether you're gearing
-              up for a big show or simply love crafting jokes, ComicBot is the
-              perfect partner in comedy.
+              Don&rsquo;t let writer&rsquo;s block or routine fatigue hold you
+              back. Unlock the full potential of your comedic prowess with
+              ComicBot and bring laughter to the world one joke at a time.
+              Whether you&rsquo;re gearing up for a big show or simply love
+              crafting jokes, ComicBot is the perfect partner in comedy.
             </p>
             <Link href="/ComicBot">
               <button className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors">
@@ -244,12 +245,13 @@ export default function Home() {
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>
                 Discover Jokepad, a comprehensive creative workshop tailored for
-                comedians, writers, and anyone passionate about humor. It's not
-                just a notepad; it's your personal comedy archive.
+                comedians, writers, and anyone passionate about humor.
+                It&rsquo;s not just a notepad; it&rsquo;s your personal comedy
+                archive.
               </li>
               <li>
                 Effortlessly capture spur-of-the-moment inspirations with a
-                platform that's been meticulously designed for humorists.
+                platform that&rsquo;s been meticulously designed for humorists.
                 Jokepad transforms your fleeting thoughts into a meticulously
                 organized library of laughs.
               </li>

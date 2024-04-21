@@ -17,14 +17,14 @@ const HumorHubAPISection: React.FC = () => {
 
   const exampleEntertainmentPosts = [
     {
-      title: "2024's Must-See Comedy Tours",
+      title: "2024&rsquo;s Must-See Comedy Tours",
       content:
-        "Get the lowdown on this year's most awaited comedy tours. From seasoned veterans to rising stars, find out who's hitting the road and where you can catch their performances live.",
+        "Get the lowdown on this year&rsquo;s most awaited comedy tours. From seasoned veterans to rising stars, find out who&rsquo;s hitting the road and where you can catch their performances live.",
     },
     {
       title: "Streaming Laughs: Top Comedy Specials",
       content:
-        "Check out the hottest comedy specials streaming right now. From Netflix to Hulu, we've rounded up specials that are guaranteed to have you in stitches. Don't miss these hilarious acts bringing their best material to your screens.",
+        "Check out the hottest comedy specials streaming right now. From Netflix to Hulu, we&rsquo;ve rounded up specials that are guaranteed to have you in stitches. Don&rsquo;t miss these hilarious acts bringing their best material to your screens.",
     },
   ];
 
@@ -57,7 +57,7 @@ const HumorHubAPISection: React.FC = () => {
       ))}
 
       <h2 className="subtitle-style text-xl font-semibold mb-4">
-        What's New in Entertainment
+        What&rsquo;s New in Entertainment
       </h2>
       {exampleEntertainmentPosts.map((post, index) => (
         <div key={index} className="border border-white p-4 rounded-lg mb-4">
