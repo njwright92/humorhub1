@@ -66,6 +66,13 @@ const cityCoordinates: CityCoordinates = {
   "Seattle WA": { lat: 47.6062, lng: -122.3321 },
   "Spokane Valley WA": { lat: 47.6733, lng: -117.2394 },
   "Spokane WA": { lat: 47.6588, lng: -117.426 },
+  "phoenix AZ": { lat: 33.4484, lng: -112.074 },
+  "tacoma WA": { lat: 47.2529, lng: -122.4443 },
+  "minneapolis MN": { lat: 44.9778, lng: -93.265 },
+  "detroit MI": { lat: 42.3314, lng: -83.0458 },
+  "new orleans LA": { lat: 29.9511, lng: -90.0715 },
+  "los vegas NV": { lat: 36.1699, lng: -115.1398 },
+  "oklahoma city OK": { lat: 35.4676, lng: -97.5164 },
 };
 
 const mockEvents: Event[] = [
@@ -284,12 +291,14 @@ const EventsPage = () => {
     return Array.from(
       new Set(
         allEvents
-          .map((event) => {
-            const locationParts = event.location.split(",");
-            if (locationParts.length > 1) {
-              return locationParts[1].trim();
+          .flatMap((event) => {
+            if (event.location) {
+              const locationParts = event.location.split(",");
+              if (locationParts.length > 1) {
+                return locationParts[1].trim();
+              }
             }
-            return ""; // Return an empty string if there's no second part
+            return [];
           })
           .filter((city) => city !== "")
       )
@@ -308,10 +317,14 @@ const EventsPage = () => {
     return filterCity === "All Cities"
       ? allEvents
       : allEvents.filter((event) => {
-          const locationParts = event.location.split(",");
-          return (
-            locationParts.length > 1 && locationParts[1].trim() === filterCity
-          );
+          const location = event.location;
+          if (location && typeof location === "string") {
+            const locationParts = location.split(",");
+            return (
+              locationParts.length > 1 && locationParts[1].trim() === filterCity
+            );
+          }
+          return false;
         });
   }, [filterCity, allEvents]);
 
@@ -332,18 +345,19 @@ const EventsPage = () => {
   }, []);
 
   const fetchEvents = useCallback(async () => {
-    const querySnapshot = await getDocs(collection(db, "events"));
+    const querySnapshot = await getDocs(collection(db, "userEvents"));
     const fetchedEvents = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       location: doc.data().location,
       name: doc.data().name,
-      date: doc.data().date.toDate().toLocaleDateString(),
+      date: doc.data().date, // Assuming date is already a formatted string
       details: doc.data().details,
       lat: doc.data().lat,
       lng: doc.data().lng,
       isRecurring: doc.data().isRecurring,
     }));
 
+    console.log("All Events:", fetchedEvents);
     setAllEvents(mockEvents.concat(fetchedEvents));
   }, []);
 
@@ -524,28 +538,18 @@ const EventsPage = () => {
             className="modern-input max-w-xs mx-auto"
           >
             <option value="">Select a City</option>
-            <option value="Los Angeles CA">Los Angeles, CA</option>
-            <option value="San Diego CA">San Diego, CA</option>
-            <option value="San Francisco CA">San Francisco, CA</option>
-            <option value="Miami FL">Miami, FL</option>
-            <option value="Maui HA">Maui, HA</option>
-            <option value="Boise ID">Boise, ID</option>
-            <option value="Coeur D&#39;Alene ID">Coeur D&#39;Alene, ID</option>
-            <option value="Hayden ID">Hayden, ID</option>
-            <option value="Moscow ID">Moscow, ID</option>
-            <option value="Post Falls ID">Post Falls, ID</option>
-            <option value="Sandpoint ID">Sandpoint, ID</option>
-            <option value="Boston MA">Boston, MA</option>
-            <option value="New York City NY">New York City, NY</option>
-            <option value="Portland OR">Portland, OR</option>
-            <option value="Austin TX">Austin, TX</option>
-            <option value="Salt Lake City UT">Salt Lake City, UT</option>
-            <option value="Cheney WA">Cheney, WA</option>
-            <option value="Medical Lake WA">Medical Lake, WA</option>
-            <option value="Seattle WA">Seattle, WA</option>
-            <option value="Spokane Valley WA">Spokane Valley, WA</option>
-            <option value="Spokane WA">Spokane, WA</option>
+            {Object.keys(cityCoordinates).map((city) => (
+              <option key={city} value={city}>
+                {city
+                  .replace(
+                    /(ID|CA|FL|HA|MA|NY|OR|TX|UT|WA|AZ|MN|MI|LA|NV|OK)/g,
+                    ""
+                  )
+                  .trim()}
+              </option>
+            ))}
           </select>
+
           <div className="relative mt-2">
             <ReactDatePicker
               ref={datePickerRef}

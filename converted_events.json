@@ -1,0 +1,2132 @@
+[
+  {
+    "id": "1",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Goody Bar and Grill 8712 E SPRAGUE AVE #1000, Spokane Valley WA",
+    "date": "Monday",
+    "lat": 47.656721,
+    "lng": -117.2902616,
+    "details": "Every other monday. Hosted by Anthony Singleton, welcoming all talents including musicians, comedians, spoken word, and improv. Contact: 509-557-3999 or visit <a href=\"https://www.lyyv.tv\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">lyyv.tv</a> for more info. <a href=\"https://www.google.com/maps/place/The+Goody+Bar+And+Grill/@47.6567246,-117.2902616,17z/data=!3m1!4b1!4m6!3m5!1s0x549e21c949eed8cb:0xbd4d1292f17e8c43!8m2!3d47.656721!4d-117.2876867!16s%2Fg%2F1trrcxqj?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "2",
+    "isRecurring": true,
+    "name": "New Talent Tuesday!",
+    "location": "Spokane Comedy Club, Spokane WA",
+    "date": "Tuesday",
+    "lat": 47.65703,
+    "lng": -117.4352294,
+    "details": "Every Tuesday, Featuring: Amateur and Professional comedians trying out new material. Free admission. Shows starting at 9:30pm or later are 21+, earlier shows are 18+ with valid ID. Visit <a href=\"https://www.spokanecomedyclub.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Spokane Comedy Club</a> for more info. <a href=\"https://www.google.com/maps/place/Spokane+Comedy+Club/@47.657017,-117.4193719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1861e8e0198d:0xba09c4ee88e9b25e!8m2!3d47.657017!4d-117.416797!16s%2Fg%2F11cm6j1zpw?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "3",
+    "isRecurring": true,
+    "name": "T'S ON A TUESDAY",
+    "location": "T's Lounge, Spokane WA",
+    "date": "Tuesday",
+    "lat": 47.6636398,
+    "lng": -117.4294504,
+    "details": "Signup in person at 7:45pm. starts at 8pm usually 9ish on New Talent Nights. What's a comedy scene without a dive bar mic? T's On A Tuesday has been going strong for years and is the perfect place to test out your newest material. There is usually a large caravan of comics who come to T's after New Talent is done, and offers the type of stage where you can really let your hair down. Anything can (and likely will) happen at this mic, and it's never not a good time, but only if you enjoy telling jokes. <a href=\"https://tsspokane.com/\">tsspokane.com</a> <a href=\"https://www.google.com/maps/place/T's+Lounge/@47.6636398,-117.4294504,17z/data=!3m1!4b1!4m6!3m5!1s0x549e185ed5817429:0x475d58f4a48ae52b!8m2!3d47.6636398!4d-117.4268755!16s%2Fg%2F11c5ss4c1c?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>"
+  },
+  {
+    "id": "4",
+    "isRecurring": true,
+    "name": "QUEER COMEDY NIGHT",
+    "location": "nYne Bar & Bistro, Spokane WA",
+    "date": "Tuesday",
+    "lat": 47.6573563,
+    "lng": -117.4147831,
+    "details": "Signup in person at 7:30pm. starts at 8pm. nYne is one of our local gay bars, so any and all comics who identify as LGBTQIA+ are strongly encouraged to go. This open mic is one of 3 that are on Tuesday nights, so if you're looking to string performances together, don't miss it! Queer allies are also welcome! <a href=\"https://www.nynebar.com/\">nynebar.com</a> <a href=\"https://www.google.com/maps/place/nYne+Bar+%26+Bistro/@47.6573563,-119.1693299,8z/data=!4m10!1m2!2m1!1sn9ne+bistro!3m6!1s0x549e188a0e23298d:0xe96a55dc6ee16314!8m2!3d47.6573563!4d-117.4147831!15sCgtuOW5lIGJpc3Ryb1oNIgtuOW5lIGJpc3Ryb5IBDmdheV9uaWdodF9jbHVimgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU56Y1hOdU0zRlJSUkFC4AEA!16s%2Fg%2F1vzv3cvm?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>"
+  },
+  {
+    "id": "5",
+    "isRecurring": true,
+    "name": "Open Mic Night!",
+    "location": "Spokane Comedy Club, Spokane WA",
+    "date": "Wednesday",
+    "lat": 47.65703,
+    "lng": -117.4352294,
+    "details": "Every Wednesday, A night with professional and first-time comedians. Free admission. Happy hour all night. Sign-up for comedians available at <a href=\"https://www.barkentertainment.com/open-mic\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">openmicer.com</a>. <a href=\"https://www.google.com/maps/place/Spokane+Comedy+Club/@47.657017,-117.4193719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1861e8e0198d:0xba09c4ee88e9b25e!8m2!3d47.657017!4d-117.416797!16s%2Fg%2F11cm6j1zpw?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "6",
+    "isRecurring": true,
+    "name": "Open Mic Night..",
+    "location": "Tervan Tavern 411 Cedar St, Sandpoint ID",
+    "date": "Wednesday",
+    "lat": 48.2759385,
+    "lng": -116.6349728,
+    "details": "Open Mic Night. Bring your talent in front of a live audience with a chill vibe. Be it song, instrument, comedy, improv, or magic, come show it off. Hosted by the Tervan Tavern, 411 Cedar St. starting at 6:00(ish) p.m. on Wednesdays. Visit <a href=\"https://tervantavern.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Tervan Tavern</a> for more info. <a href=\"https://www.google.com/maps/dir//411+Cedar+St,+Sandpoint,+ID+83864/@48.2759385,-116.6349728,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x5363d6c8c06638a5:0x9a6ea93138ab0076!2m2!1d-116.5525742!2d48.2759868?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "7",
+    "isRecurring": true,
+    "name": "Open Mic Stand Up Comedy!",
+    "location": "The Draft Zone, Post Falls ID",
+    "date": "Thursday",
+    "lat": 47.7057509,
+    "lng": -117.0270137,
+    "details": "Weekly open mic stand-up comedy event. Every Thursday through 1/24. Free admission. Visit <a href=\"https://draftzonepf.com\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Draft Zone </a> for more info. <a href=\"https://www.google.com/maps/place/The+Draft+Zone/@47.7057509,-117.0270137,15z/data=!3m1!4b1!4m6!3m5!1s0x5361ddbc4da8868b:0xc1f752f8c519f0f4!8m2!3d47.7057379!4d-117.0085598!16s%2Fg%2F11gy3bsw8c?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "8",
+    "isRecurring": true,
+    "name": "Quincy Belt Tournament of Champions!",
+    "location": "The Draft Zone, Post Falls ID",
+    "date": "Thursday",
+    "lat": 47.7057509,
+    "lng": -117.0270137,
+    "details": "Post Falls, ID. Entry: Online/In Person. Free entry, no content restrictions. Qualify by winning the \"Quincy Belt\" at the open mic (Thursdays) or via video submission by 12/14. Semifinals: 2/3/24, 3/2/24, 4/6/24, 5/4/24. Finals: 6/1/24. Prizes: 1st - $1000, 2nd - $500, 3rd/4th - $250 each. Email: jaybergcomedy@gmail.com for details and entries. visit <a href=\"https://draftzonepf.com\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Draft Zone </a> for more info. <a href=\"https://www.google.com/maps/place/The+Draft+Zone/@47.7057509,-117.0270137,15z/data=!3m1!4b1!4m6!3m5!1s0x5361ddbc4da8868b:0xc1f752f8c519f0f4!8m2!3d47.7057379!4d-117.0085598!16s%2Fg%2F11gy3bsw8c?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "9",
+    "isRecurring": true,
+    "name": "LITTLE NEVADA COMEDY OPEN MIC",
+    "location": "Little Nevada Restaurant and Lounge, Spokane WA",
+    "date": "Thursday",
+    "lat": 47.7015451,
+    "lng": -117.3999719,
+    "details": "Signup in person at 6:00pm starts 6:30pm-ishThe Little Nevada Comedy Open Mic is Spokane's newest open mic! Located in the northern-ish part of Spokane, this spot (and every other one, for that matter) is only as good as you make it, so get to writing! <a href=\"https://www.facebook.com/thelittlenevada/about\"> little nevada Facebook</a> <a href=\"https://www.google.com/maps/place/The+Little+Nevada+Restaurant+%26+Lounge/@47.7015451,-117.3999719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e19133302e643:0x1f7e41b2e502ce4!8m2!3d47.7015452!4d-117.3953585!16s%2Fg%2F11h5rcfc77?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "10",
+    "isRecurring": true,
+    "name": "3RD THURSDAY COMEDY OPEN MIC",
+    "location": "Fox Hole Bar and Grill, Medical Lake WA",
+    "date": "Thursday",
+    "lat": 47.5725708,
+    "lng": -117.6844563,
+    "details": "Signup in person or DM starts at 7:00pm sharp Happens on the 3RD THURSDAY OF THE MONTH. It is an open mic with a 20-min feature act at the end. Comics get the light when they have 1 min remaining. If you're looking to perform at the Fox Hole and DZ, let Chris know so he can put you towards the front of the lineup. Every comic that performs gets an even cut of tips @ the end of the show, so it pays (at least a little bit) to be (at least a little bit) funny. <a href=\"https://www.facebook.com/thefoxholemedicallake/\"> foxholemedicallake Facebook</a> <a href=\"https://www.google.com/maps/place/The+Foxhole+Bar+and+Grill/@47.5725708,-117.6844563,17z/data=!3m1!4b1!4m6!3m5!1s0x549e6b079450a8a7:0x706aa4e325b9b6cd!8m2!3d47.5725708!4d-117.6818814!16s%2Fg%2F11syxzl8hk?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "11",
+    "isRecurring": true,
+    "name": "Open Mic Night at The Grain Shed",
+    "location": "The Grain Shed Taproom, Spokane WA",
+    "date": "Friday",
+    "lat": 47.6561077,
+    "lng": -117.4348802,
+    "details": "Hosted by Anthony Singleton. Open Mic Night for music and comedy. Every Friday from 5:30 PM to 8:30ish PM. All ages welcome. Clean mic. Free admission. <a href=\"https://www.google.com/maps/place/The+Grain+Shed+Taproom/@47.6561077,-117.4348802,17z/data=!3m2!4b1!5s0x549e18680a2601e7:0x1a13f3af47308d34!4m6!3m5!1s0x549e194b26b6f1a1:0x6df1cdc8cd28c935!8m2!3d47.6561041!4d-117.4323053!16s%2Fg%2F11thk6c6yx?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "12",
+    "isRecurring": true,
+    "name": "FRIDAY FUNNIES",
+    "location": "The Garland Drinkery, Spokane WA",
+    "date": "Friday",
+    "lat": 47.693665,
+    "lng": -117.4268169,
+    "details": "The Garland Drinkery is one of the newer mics in the area, and offers a fun space to perform in Spokane's Historic Garland District. Snag some grub at the Milk Bottle before your set and get those laughs on! This mic happens EVERY OTHER FRIDAY. Be sure to check our calendar so you know which Fridays those are! <a href=\"https://www.facebook.com/drinkerynation/\"> drinkerynation Facebook</a> <a href=\"https://www.google.com/maps/place/Garland+Drinkery/@47.693665,-117.4268169,17z/data=!3m1!4b1!4m6!3m5!1s0x549e191702e19759:0xb7c159246af19ef8!8m2!3d47.693665!4d-117.424242!16s%2Fg%2F1tdwptks?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "13",
+    "isRecurring": true,
+    "name": "Stand Up Comedy Open Mic",
+    "location": "Spikes on 718 E Francis, Spokane WA",
+    "date": "Saturday",
+    "lat": 47.7147076,
+    "lng": -117.4008385,
+    "details": "Hosted by Anthony Singleton. Every Saturday at 7:00 PM. For more information follow @AnthonySingleton on social media. <a href=\"https://www.google.com/maps/place/Spike's+Spokane/@47.7147076,-117.4008385,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1eb3e673dd89:0xb506914f6e09b6e2!8m2!3d47.7147076!4d-117.3982638!16s%2Fg%2F11d2j5c86h?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "14",
+    "isRecurring": true,
+    "name": "Open Mic Night at Emerge",
+    "location": "Emerge downtown, Coeur D'Alene ID",
+    "date": "Thursday",
+    "lat": 47.6742323,
+    "lng": -116.7842855,
+    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like!\n\nOpen Mic is sponsored by Emerge CDA and North Idaho Pride Alliance.\n\nFREE. RSVP is recommended, but not required. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+  },
+  {
+    "id": "15",
+    "isRecurring": true,
+    "name": "Good Vibe Monday by Ally Noel",
+    "location": "Comedy Blvd 7924 Beverly Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 5:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://slotted.co/comedyblvdsignup/"
+  },
+  {
+    "id": "16",
+    "isRecurring": true,
+    "name": "Lucky 7 Mic",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "17",
+    "isRecurring": true,
+    "name": "Girls And Gays Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "18",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "L.A. School Of Comedy 10835 Santa Monica Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: http://laschoolofcomedy.com/"
+  },
+  {
+    "id": "19",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Badger And Jam 8265 Sunset Blvd Suite 200, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: http://slotted.co/badgerandjam"
+  },
+  {
+    "id": "20",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Boomtown Brewery 700 Jackson St, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/boomtown-brewery-los-angeles"
+  },
+  {
+    "id": "21",
+    "isRecurring": true,
+    "name": "Dollar Mic",
+    "location": "Def Noodles Comedy Club 7426 Sunset Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/def-noodles-comedy-club-los-angeles"
+  },
+  {
+    "id": "22",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Tao Comedy Studio 131 S. Western Avenue, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/tao-comedy-studio-los-angeles-2"
+  },
+  {
+    "id": "23",
+    "isRecurring": true,
+    "name": "Comedy Cookies LA",
+    "location": "The Escondite 410 Boyd St, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.instagram.com/comedycookies_la/"
+  },
+  {
+    "id": "24",
+    "isRecurring": true,
+    "name": "Crowd Work Mic",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "25",
+    "isRecurring": true,
+    "name": "Murder The Mic",
+    "location": "The Platform Shop 1056 Main St, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://theplatformshop.com/"
+  },
+  {
+    "id": "26",
+    "isRecurring": true,
+    "name": "Comedy Night",
+    "location": "Lyric Hyperion 2106 Hyperion Ave, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-lyric-hyperion-los-angeles-3"
+  },
+  {
+    "id": "27",
+    "isRecurring": true,
+    "name": "Leg Room",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "28",
+    "isRecurring": true,
+    "name": "Midnight Madness",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Monday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "29",
+    "isRecurring": true,
+    "name": "Melrose Comedy School",
+    "location": "Pauhaus 5235 Melrose Ave, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 2:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://pauhausgallery.com/"
+  },
+  {
+    "id": "30",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Laugh Factory 8001 Sunset Blvd., Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 4:30pm\nFrequency: Weekly\nCost: Paid\nURL: http://www.laughfactory.com/"
+  },
+  {
+    "id": "31",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Hollywood Improv 8162 Melrose Avenue, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 5:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/improv-comedy-club-hollywood"
+  },
+  {
+    "id": "32",
+    "isRecurring": true,
+    "name": "Testing Testing Tuesday Mic",
+    "location": "Comedy Blvd 7924 Beverly Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 5:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.instagram.com/testingtuesdaymic/"
+  },
+  {
+    "id": "33",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "Canter's Deli 419 N. Fairfax Ave, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/canters-deli-los-angeles-5"
+  },
+  {
+    "id": "34",
+    "isRecurring": true,
+    "name": "Gimme Space",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "35",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mexican Village Restaurant 3668 Beverly Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-mexican-village-restaurant-los-angeles-2"
+  },
+  {
+    "id": "36",
+    "isRecurring": true,
+    "name": "Comedy College",
+    "location": "Irish Times Bar and Restaurant 3267 Motor Avenue, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://instagram.com/comedian_joshy"
+  },
+  {
+    "id": "37",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Roost Cocktails 3100 Los Feliz Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-roost-los-angeles"
+  },
+  {
+    "id": "38",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "39",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Molly Malone's Irish Pub 575 S Fairfax Ave, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/molly-malones-los-angeles"
+  },
+  {
+    "id": "40",
+    "isRecurring": true,
+    "name": "Courtyard Comedy",
+    "location": "Prince Of Venice 1091 Broxton Ave, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://slotted.co/courtyardcomedy"
+  },
+  {
+    "id": "41",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Tao Comedy Studio 131 S. Western Avenue, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/tao-comedy-studio-los-angeles-2"
+  },
+  {
+    "id": "42",
+    "isRecurring": true,
+    "name": "Mad About Tarot",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "43",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Accidental Chaos 1041 N Orange Dr, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 9:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.instagram.com/accidentalchaos/"
+  },
+  {
+    "id": "44",
+    "isRecurring": true,
+    "name": "Demons Dungeon",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "45",
+    "isRecurring": true,
+    "name": "Midnight Madness",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Tuesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "46",
+    "isRecurring": true,
+    "name": "Melrose Comedy School",
+    "location": "Pauhaus 5235 Melrose Ave, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 2:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://pauhausgallery.com/"
+  },
+  {
+    "id": "47",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Hollywood Improv 8162 Melrose Avenue, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/improv-comedy-club-hollywood"
+  },
+  {
+    "id": "48",
+    "isRecurring": true,
+    "name": "On The Count",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "49",
+    "isRecurring": true,
+    "name": "The Weird Girl Mic",
+    "location": "Third Wheel Hollywood 5176 Santa Monica Blvd Suite 102, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/third-wheel-comedy-los-angeles"
+  },
+  {
+    "id": "50",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Clubhouse 1607 North Vermont Ave, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/the-clubhouse-los-angeles"
+  },
+  {
+    "id": "51",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "L.A. School Of Comedy 10835 Santa Monica Blvd., Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: http://laschoolofcomedy.com/"
+  },
+  {
+    "id": "52",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "53",
+    "isRecurring": true,
+    "name": "QT Queer Trans Mic",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "54",
+    "isRecurring": true,
+    "name": "Mid-week Mic",
+    "location": "Tao Comedy Studio 131 S. Western Avenue, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/tao-comedy-studio-los-angeles-2"
+  },
+  {
+    "id": "55",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Accidental Chaos 1041 N Orange Dr, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 9:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.instagram.com/accidentalchaos/"
+  },
+  {
+    "id": "56",
+    "isRecurring": true,
+    "name": "The Jump Off Show",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "57",
+    "isRecurring": true,
+    "name": "Midnight Madness",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Wednesday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "58",
+    "isRecurring": true,
+    "name": "The Good Mic",
+    "location": "Lyric Hyperion 2106 Hyperion Ave, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 12:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-lyric-hyperion-los-angeles-3"
+  },
+  {
+    "id": "59",
+    "isRecurring": true,
+    "name": "Melrose Comedy School",
+    "location": "Pauhaus 5235 Melrose Ave, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 2:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://pauhausgallery.com/"
+  },
+  {
+    "id": "60",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fanatic Salon Theater 3815 Sawtelle Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://fanaticsalon.com/"
+  },
+  {
+    "id": "61",
+    "isRecurring": true,
+    "name": "Comedy Corner",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "62",
+    "isRecurring": false,
+    "name": "Open Mic",
+    "location": "The Living Room 2636 Crenshaw Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Bi-Weekly\nCost: Free\nURL: https://www.instagram.com/living_room_bar_la/"
+  },
+  {
+    "id": "63",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Dude's Brewing Company 6615 Hollywood Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-dudes-brewing-company-hollywood-los-angeles"
+  },
+  {
+    "id": "64",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "65",
+    "isRecurring": true,
+    "name": "Ego Death",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "66",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Accidental Chaos 1041 N Orange Dr, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 9:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.instagram.com/accidentalchaos/"
+  },
+  {
+    "id": "67",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Yalla Hookah 8332 Sepulveda Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/yalla-hookah-los-angeles"
+  },
+  {
+    "id": "68",
+    "isRecurring": true,
+    "name": "Fun Mug",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "69",
+    "isRecurring": true,
+    "name": "Midnight Madness",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Thursday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "70",
+    "isRecurring": true,
+    "name": "The High Key Weekend",
+    "location": "The Hudson Theatres 6539 Santa Monica Blvd., Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 4:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/the-hudson-theatres-los-angeles"
+  },
+  {
+    "id": "71",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Hollywood Comedy 5871 Melrose Avenue, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://slotted.co/thehollywoodcomedy/"
+  },
+  {
+    "id": "72",
+    "isRecurring": true,
+    "name": "Jenga Mic",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "73",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "L.A. School Of Comedy 10835 Santa Monica Blvd, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: http://laschoolofcomedy.com/"
+  },
+  {
+    "id": "74",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "75",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Tao Comedy Studio 131 S. Western Avenue, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/tao-comedy-studio-los-angeles-2"
+  },
+  {
+    "id": "76",
+    "isRecurring": true,
+    "name": "Premise Run",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "77",
+    "isRecurring": true,
+    "name": "Das Wassup",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Friday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "78",
+    "isRecurring": true,
+    "name": "Serving Up Comedy",
+    "location": "Melody Bar And Grill 9132 S. Sepulveda Blvd., Los Angeles CA",
+    "date": "Saturday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 2:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/melody-bar-and-grill-los-angeles-2"
+  },
+  {
+    "id": "79",
+    "isRecurring": true,
+    "name": "Bucket Mic",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Saturday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "80",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Saturday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "81",
+    "isRecurring": true,
+    "name": "Gator Tales Story Telling",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Saturday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.conm/"
+  },
+  {
+    "id": "82",
+    "isRecurring": true,
+    "name": "Fresh Popcorn",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Saturday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.conm/"
+  },
+  {
+    "id": "83",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Tao Comedy Studio 131 S. Western Avenue, Los Angeles CA",
+    "date": "Sunday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 5:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/tao-comedy-studio-los-angeles-2"
+  },
+  {
+    "id": "84",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fourth Wall Cafe 5220 Hollywood Blvd, Los Angeles CA",
+    "date": "Sunday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/fourth-wall-comedy-cafe-los-angeles"
+  },
+  {
+    "id": "85",
+    "isRecurring": true,
+    "name": "Liberty Laughter Open Mic",
+    "location": "The Pack Theater 1078 Lillian Way, Los Angeles CA",
+    "date": "Sunday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 10:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-pack-theater-los-angeles"
+  },
+  {
+    "id": "86",
+    "isRecurring": true,
+    "name": "Midnight Madness",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd, Los Angeles CA",
+    "date": "Sunday",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://thirdwheelcomedy.com/"
+  },
+  {
+    "id": "87",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Lestats Coffee House 3343 Adams Avenue, San Diego CA",
+    "date": "Monday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/lestats-coffee-house-san-diego"
+  },
+  {
+    "id": "88",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Monday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "89",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Kensington Club 4079 Adams Ave., San Diego CA",
+    "date": "Monday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 9:00pm\nFrequency: Monthly\nCost: Free\nURL: http://www.yelp.com/biz/kensington-club-san-diego"
+  },
+  {
+    "id": "90",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The American Comedy Co. 818 B 6th Ave., San Diego CA",
+    "date": "Tuesday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-american-comedy-co-san-diego"
+  },
+  {
+    "id": "91",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Tuesday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "92",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Laugh Factory 432 F St, San Diego CA",
+    "date": "Wednesday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://yelp.com/biz/laugh-factory-san-diego-2"
+  },
+  {
+    "id": "93",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Wednesday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 9:45pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "94",
+    "isRecurring": false,
+    "name": "Open Mic",
+    "location": "Queen Bees 3925 Ohio St., San Diego CA",
+    "date": "Thursday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Bi-Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/queen-bees-san-diego"
+  },
+  {
+    "id": "95",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Bogey's Pub and Grill 9522 Miramar Rd, San Diego CA",
+    "date": "Thursday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/bogeys-pub-and-grill-san-diego"
+  },
+  {
+    "id": "96",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Thursday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 9:45pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "97",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Friday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "98",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Saturday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 11:45pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "99",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Blarney Stone Pub 5617 Balboa Ave., San Diego CA",
+    "date": "Sunday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/blarney-stone-pub-san-diego-6"
+  },
+  {
+    "id": "100",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "date": "Sunday",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "details": "Time: 9:45pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+  },
+  {
+    "id": "101",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Mutiny Radio 2781 21st Street, San Francisco CA",
+    "date": "Monday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/mutiny-radio-san-francisco"
+  },
+  {
+    "id": "102",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Hotel Utah Saloon 500 Fourth Street, San Francisco CA",
+    "date": "Monday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/hotel-utah-saloon-san-francisco"
+  },
+  {
+    "id": "103",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Club OMG 43 6th St., San Francisco CA",
+    "date": "Tuesday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/omg-san-francisco"
+  },
+  {
+    "id": "104",
+    "isRecurring": true,
+    "name": "Hysteria Comedy",
+    "location": "Martuni's 4 Valencia Street, San Francisco CA",
+    "date": "Tuesday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/martunis-san-francisco"
+  },
+  {
+    "id": "105",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "La Roccas Corner 957 Columbus Ave, San Francisco CA",
+    "date": "Tuesday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/la-roccas-corner-san-francisco"
+  },
+  {
+    "id": "106",
+    "isRecurring": true,
+    "name": "Free Feature Salon",
+    "location": "Neck Of The Woods 406 Clement, San Francisco CA",
+    "date": "Wednesday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/neck-of-the-woods-san-francisco"
+  },
+  {
+    "id": "107",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Mayes Oyster House 1233 Polk St, San Francisco CA",
+    "date": "Wednesday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/mayes-oyster-house-san-francisco"
+  },
+  {
+    "id": "108",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Mutiny Radio 2781 21st Street, San Francisco CA",
+    "date": "Friday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/mutiny-radio-san-francisco"
+  },
+  {
+    "id": "109",
+    "isRecurring": true,
+    "name": "Miraloma Mic",
+    "location": "Miraloma Club 749 Portola Dr, San Francisco CA",
+    "date": "Sunday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/miraloma-club-san-francisco"
+  },
+  {
+    "id": "110",
+    "isRecurring": true,
+    "name": "The Church Of Comedy",
+    "location": "Club OMG 43 6th St., San Francisco CA",
+    "date": "Sunday",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/omg-san-francisco"
+  },
+  {
+    "id": "111",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Shake A Leg Miami 2620 S Bayshore Dr, Miami FL",
+    "date": "Tuesday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/shake-a-leg-miami-coconut-grove"
+  },
+  {
+    "id": "112",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Villain Theater 5865 NE 2nd Ave, Miami FL",
+    "date": "Tuesday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/villain-theater-miami-2"
+  },
+  {
+    "id": "113",
+    "isRecurring": true,
+    "name": "Comedy Night",
+    "location": "Sweet Caroline Karaoke Bar 1111 SW 1st Ave #107, Miami FL",
+    "date": "Tuesday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/sweet-caroline-karaoke-bar-miami"
+  },
+  {
+    "id": "114",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Union Beer Store 1547 SW. 8th St., Miami FL",
+    "date": "Wednesday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/union-beer-store-miami"
+  },
+  {
+    "id": "115",
+    "isRecurring": false,
+    "name": "Free Comedy Show",
+    "location": "Eddie\u2019s Place 12606 SW 8 St, Miami FL",
+    "date": "Wednesday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 9:00pm\nFrequency: Bi-Weekly\nCost: Free\nURL: https://www.yelp.com/biz/eddies-place-miami"
+  },
+  {
+    "id": "116",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Sand Bar + Kitchen 6752 Collins Ave, Miami FL",
+    "date": "Wednesday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/sand-bar-kitchen-miami-beach"
+  },
+  {
+    "id": "117",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Artistic Vibes Miami 12986 SW 89 Ave, Miami FL",
+    "date": "Thursday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/artistic-vibes-miami-2"
+  },
+  {
+    "id": "118",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Taurus 3540 Main Hwy C103, Miami FL",
+    "date": "Thursday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/taurus-miami-3"
+  },
+  {
+    "id": "119",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Speakfridays 404 NW 26th St, Miami FL",
+    "date": "Friday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/speakfridays-miami"
+  },
+  {
+    "id": "120",
+    "isRecurring": true,
+    "name": "Free Comedy Show",
+    "location": "Smokes Up Miami 15652 SW 72nd St, Miami FL",
+    "date": "Sunday",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "details": "Time: 8:00pm\nFrequency: Monthly\nCost: Free\nURL: https://www.yelp.com/biz/smokes-up-miami-miami"
+  },
+  {
+    "id": "121",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Will B's Saloon 12505 W Chinden, Boise ID",
+    "date": "Tuesday",
+    "lat": 43.615,
+    "lng": -116.2023,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/willi-bs-saloon-boise"
+  },
+  {
+    "id": "122",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "Liquid Lounge 405 S. 8th Street, Boise ID",
+    "date": "Wednesday",
+    "lat": 43.615,
+    "lng": -116.2023,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/liquid-lounge-boise"
+  },
+  {
+    "id": "123",
+    "isRecurring": true,
+    "name": "Brew Ha Ha Comedy Open Mic",
+    "location": "Mad Swede Brew Hall 816 W Bannock St, Boise ID",
+    "date": "Thursday",
+    "lat": 43.615,
+    "lng": -116.2023,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/mad-swede-brew-hall-boise-3"
+  },
+  {
+    "id": "124",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Rants And Raves Brewery 308 N. Jackson, Moscow ID",
+    "date": "Wednesday",
+    "lat": 46.7324,
+    "lng": -117.0002,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/rants-and-raves-brewery-moscow"
+  },
+  {
+    "id": "125",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Green Dragon 11 Marshall Street, Boston MA",
+    "date": "Monday",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-green-dragon-tavern-boston-2"
+  },
+  {
+    "id": "126",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "The Bebop 1116 Boylston Street, Boston MA",
+    "date": "Tuesday",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-bebop-boston"
+  },
+  {
+    "id": "127",
+    "isRecurring": true,
+    "name": "The Local Connection: Open Mic",
+    "location": "Lorettas Last Call 1 Landsdowne Street, Boston MA",
+    "date": "Saturday",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "details": "Time: 12:00pm\nFrequency: Monthly\nCost: Free\nURL: http://www.nextgenerationconcerts.com/"
+  },
+  {
+    "id": "128",
+    "isRecurring": true,
+    "name": "Sunday Funday Open Mic",
+    "location": "Jacques' Cabaret 79 Broadway St, Boston MA",
+    "date": "Sunday",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/jacques-cabaret-boston"
+  },
+  {
+    "id": "129",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "GrandTen Distilling 383 Dorchester Ave, Boston MA",
+    "date": "Sunday",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.grandten.com/"
+  },
+  {
+    "id": "130",
+    "isRecurring": true,
+    "name": "El Oh Hell",
+    "location": "Dante's 350 W Burnside St, Portland OR",
+    "date": "Monday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 4:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/dantes-portland-2"
+  },
+  {
+    "id": "131",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Craft Factory 4555 N Williams Ave, Portland OR",
+    "date": "Monday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-craft-factory-portland"
+  },
+  {
+    "id": "132",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Helium Comedy Club Portland 1510 SE 9th Ave, Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/helium-comedy-club-portland"
+  },
+  {
+    "id": "133",
+    "isRecurring": false,
+    "name": "Open Mic",
+    "location": "SOMA Kombucha Taproom 3777 SE Belmont St, Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 6:00pm\nFrequency: Bi-Weekly\nCost: Free\nURL: https://www.yelp.com/biz/soma-kombucha-taproom-portland-3"
+  },
+  {
+    "id": "134",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "Montavilla Station 417 SE 80th Ave, Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/montavilla-station-portland"
+  },
+  {
+    "id": "135",
+    "isRecurring": true,
+    "name": "Exceptionally Gay Open Mic",
+    "location": "Escape Bar And Grill 9004 NE Sandy Blvd., Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 7:30pm\nFrequency: Monthly\nCost: Free\nURL: https://www.yelp.com/biz/escape-bar-and-grill-portland"
+  },
+  {
+    "id": "136",
+    "isRecurring": true,
+    "name": "Screwed Part Deux",
+    "location": "The Firkin Tavern 1937 SE 11th Ave., Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-firkin-tavern-portland"
+  },
+  {
+    "id": "137",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Nest Lounge 2715 SE Belmont Street, Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://instagram.com/thenestopenmic/"
+  },
+  {
+    "id": "138",
+    "isRecurring": true,
+    "name": "The Real Comedy Spot Open Mic",
+    "location": "Eastside Bar And Grill 2530 NE 82nd Ave., Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/eastside-bar-and-grill-portland"
+  },
+  {
+    "id": "139",
+    "isRecurring": true,
+    "name": "Suki's Mic",
+    "location": "Suki's Bar 2401 SW 4th Avenue, Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/sukis-bar-and-grill-portland"
+  },
+  {
+    "id": "140",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Misfits Bar + Lounge 2530 NE 82nd Ave, Portland OR",
+    "date": "Tuesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/misfits-bar-lounge-portland"
+  },
+  {
+    "id": "141",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "EastBurn 1800 E. Burnside St., Portland OR",
+    "date": "Wednesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/eastburn-public-house-portland"
+  },
+  {
+    "id": "142",
+    "isRecurring": true,
+    "name": "Comedy Night",
+    "location": "Arrowood 5846 NE Sandy Blvd, Portland OR",
+    "date": "Wednesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/arrowood-portland"
+  },
+  {
+    "id": "143",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Cider Mill And Fryer Tuck Chicken 6712 SW Capitol Hwy., Portland OR",
+    "date": "Wednesday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/fryer-tuck-chicken-portland"
+  },
+  {
+    "id": "144",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Kelly\u2019s Olympian 426 SW Washington St, Portland OR",
+    "date": "Thursday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 5:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/kellys-olympian-portland"
+  },
+  {
+    "id": "145",
+    "isRecurring": true,
+    "name": "Beer Belly Laughs",
+    "location": "Brewery 26 818 SE Ankeny St., Portland OR",
+    "date": "Thursday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/brewery-26-portland"
+  },
+  {
+    "id": "146",
+    "isRecurring": true,
+    "name": "Pass The Mic",
+    "location": "LoLo Pass 1616 E Burnside St., Portland OR",
+    "date": "Thursday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/lolo-pass-restaurant-portland"
+  },
+  {
+    "id": "147",
+    "isRecurring": true,
+    "name": "Laughing Stock",
+    "location": "Funhouse Lounge 2432 SE 11th Ave., Portland OR",
+    "date": "Thursday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/funhouse-lounge-portland"
+  },
+  {
+    "id": "148",
+    "isRecurring": true,
+    "name": "Casual Friday Comedy Open Mic",
+    "location": "Turn Turn Turn 8 NE Killingsworth, Portland OR",
+    "date": "Friday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 5:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/turn-turn-turn-portland-2"
+  },
+  {
+    "id": "149",
+    "isRecurring": true,
+    "name": "Mp5sac Presents: Open Mic",
+    "location": "Milepost 5 Studios: Chapel Theatre 850 NE 81st Ave, Portland OR",
+    "date": "Friday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: http://facebook.com/mp5studiosac"
+  },
+  {
+    "id": "150",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "My Father's Place 523 SE Grand Ave., Portland OR",
+    "date": "Friday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/my-fathers-place-portland"
+  },
+  {
+    "id": "151",
+    "isRecurring": false,
+    "name": "Tits Up",
+    "location": "Alberta Street Pub 1036 NE Alberta St, Portland OR",
+    "date": "Friday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 9:00pm\nFrequency: Bi-Weekly\nCost: Free\nURL: https://www.yelp.com/biz/alberta-street-pub-portland"
+  },
+  {
+    "id": "152",
+    "isRecurring": true,
+    "name": "Midnight Mic",
+    "location": "Funhouse Lounge 2432 SE 11th Ave., Portland OR",
+    "date": "Friday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 11:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/funhouse-lounge-portland"
+  },
+  {
+    "id": "153",
+    "isRecurring": true,
+    "name": "Early Comedy Open Mic",
+    "location": "Kellys Olympian 426 Washington Street, Portland OR",
+    "date": "Sunday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 4:00pm\nFrequency: Weekly\nCost: Free\nURL: https://kellysolympian.com/shows/"
+  },
+  {
+    "id": "154",
+    "isRecurring": true,
+    "name": "Still Riffin",
+    "location": "Unlimited IPA 6350 SE Foster Rd, Portland OR",
+    "date": "Sunday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/nwipa-portland"
+  },
+  {
+    "id": "155",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "Paddy's Bar and Grill 65 SW Yamhill St, Portland OR",
+    "date": "Sunday",
+    "lat": 45.5051,
+    "lng": -122.675,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/paddys-bar-and-grill-portland"
+  },
+  {
+    "id": "156",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Sunset Strip Comedy Club 214 E 6th St Unit C, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 5:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/sunset-strip-atx-austin"
+  },
+  {
+    "id": "157",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Comedy Mothership 320 E 6th St, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/comedy-mothership-austin"
+  },
+  {
+    "id": "158",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Speakeasy 412 Congress Ave, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/speakeasy-austin"
+  },
+  {
+    "id": "159",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Fallout Theater 616 Lavaca St, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.co.nz/biz/fallout-theater-formerly-the-new-movement-austin?start=80"
+  },
+  {
+    "id": "160",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Lefty's Brick Bar 1813 C E 6th St, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/leftys-brick-bar-austin"
+  },
+  {
+    "id": "161",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Lustre Pearl East 114 Linden St, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/little-woodrows-southpark-meadows-austin-2"
+  },
+  {
+    "id": "162",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Creek and The Cave 611 E 7th St, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-creek-and-the-cave-austin"
+  },
+  {
+    "id": "163",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Axis 519 W 37th St, Austin TX",
+    "date": "Monday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/axis-austin"
+  },
+  {
+    "id": "164",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Opa! 2050 S Lamar Blvd, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/opa-coffee-and-wine-bar-austin"
+  },
+  {
+    "id": "165",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Friends and Allies Brewing 979 Springdale #124 Rd, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/friends-and-allies-brewing-austin"
+  },
+  {
+    "id": "166",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Cactus Cafe 2308 Whitis Ave, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/cactus-cafe-austin"
+  },
+  {
+    "id": "167",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Rozco's Comedy Club 1805 E 7th St, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.rozcoscomedy.com/"
+  },
+  {
+    "id": "168",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Buzz Mill 1505 Town Creek Dr, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-buzz-mill-austin-5"
+  },
+  {
+    "id": "169",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Rozco's Comedy Club 1805 E 7th St, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.rozcoscomedy.com/"
+  },
+  {
+    "id": "170",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Anderson Mill Pub 10401 Anderson Mill Rd Unit 121, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/anderson-mill-pub-austin"
+  },
+  {
+    "id": "171",
+    "isRecurring": true,
+    "name": "The Meta Mic",
+    "location": "Mr. Tramps Sports Pub 8565 Research Boulevard, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 10:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/mister-tramps-sports-pub-and-caf%C3%A9-austin-3"
+  },
+  {
+    "id": "172",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Creek and The Cave 611 E 7th St, Austin TX",
+    "date": "Tuesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 11:59pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-creek-and-the-cave-austin"
+  },
+  {
+    "id": "173",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Lucky Duck 1300 E 6th St, Austin TX",
+    "date": "Wednesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-lucky-duck-austin"
+  },
+  {
+    "id": "174",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Austin Garden & Studio 1209 E 6th St, Austin TX",
+    "date": "Wednesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/volstead-lounge-austin"
+  },
+  {
+    "id": "175",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Wanderlust Wine Collective 702 Shady Ln, Austin TX",
+    "date": "Wednesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/wanderlust-wine-shady-lane-austin"
+  },
+  {
+    "id": "176",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Kick Butt Coffee 5775 Airport Boulevard Suite 725, Austin TX",
+    "date": "Wednesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/kick-butt-caf%C3%A9-austin"
+  },
+  {
+    "id": "177",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Yard 523 Thompson Ln C, Austin TX",
+    "date": "Wednesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://texashempreporter.com/meet-the-high-flyers-club/"
+  },
+  {
+    "id": "178",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Creek and The Cave 611 E 7th St, Austin TX",
+    "date": "Wednesday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 11:59pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-creek-and-the-cave-austin"
+  },
+  {
+    "id": "179",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Austin Beerworks 3001 Industrial Terrace, Austin TX",
+    "date": "Thursday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Monthly\nCost: Free\nURL: https://www.yelp.com/biz/austin-beerworks-austin"
+  },
+  {
+    "id": "180",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Volstead Lounge 1500 E 6th St, Austin TX",
+    "date": "Thursday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/volstead-lounge-austin"
+  },
+  {
+    "id": "181",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Creek and The Cave 611 E 7th St, Austin TX",
+    "date": "Thursday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 11:59pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-creek-and-the-cave-austin"
+  },
+  {
+    "id": "182",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Big Tex Gym 1921 Cedar Bend Dr A 130, Austin TX",
+    "date": "Friday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/big-tex-gym-austin-6"
+  },
+  {
+    "id": "183",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Roppolo\u2019s Pizzeria 316 E 6th St, Austin TX",
+    "date": "Friday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 9:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/roppolos-pizzeria-austin"
+  },
+  {
+    "id": "184",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Madrone Coffee 6266 US-290, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 3:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/madrone-coffee-co-austin"
+  },
+  {
+    "id": "185",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Freddo ATX 2336 S Congress Ave, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 5:45pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/freddo-atx-austin-2"
+  },
+  {
+    "id": "186",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "San Jac Saloon 300 E 6th St, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/san-jac-saloon-austin"
+  },
+  {
+    "id": "187",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Kick Butt Coffee 5775 Airport Boulevard Suite 725, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/kick-butt-caf%C3%A9-austin"
+  },
+  {
+    "id": "188",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Comedy Mothership 320 E 6th St, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/comedy-mothership-austin"
+  },
+  {
+    "id": "189",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Creek And The Cave 611 E 7th St, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-creek-and-the-cave-austin"
+  },
+  {
+    "id": "190",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Creek And The Cave 611 E 7th St, Austin TX",
+    "date": "Sunday",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "details": "Time: 10:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-creek-and-the-cave-austin"
+  },
+  {
+    "id": "191",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Mestizo Coffee House 631 West North Temple, Salt Lake City UT",
+    "date": "Wednesday",
+    "lat": 40.7608,
+    "lng": -111.891,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/mestizo-coffeehouse-salt-lake-city"
+  },
+  {
+    "id": "192",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Wiseguys Comedy Club 194 400 W, Salt Lake City UT",
+    "date": "Wednesday",
+    "lat": 40.7608,
+    "lng": -111.891,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://www.yelp.com/biz/wiseguys-comedy-salt-lake-city-4"
+  },
+  {
+    "id": "193",
+    "isRecurring": true,
+    "name": "Bedhead Open Mic",
+    "location": "West Seattle Church Of The Nazarene 4201 SW Juneau, Seattle WA",
+    "date": "Monday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/west-seattle-church-of-the-nazarene-seattle"
+  },
+  {
+    "id": "194",
+    "isRecurring": true,
+    "name": "Queers To The Front",
+    "location": "Capitol Hill Comedy / Bar 210 Broadway E, Seattle WA",
+    "date": "Monday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Paid\nURL: http://instagram.com/queerstothefrontcomedy"
+  },
+  {
+    "id": "195",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Otter on the Rocks 4210 SW Admiral Way, Seattle WA",
+    "date": "Tuesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/otter-on-the-rocks-seattle"
+  },
+  {
+    "id": "196",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Woodsky's 303 N 36th St, Seattle WA",
+    "date": "Tuesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/woodskys-seattle"
+  },
+  {
+    "id": "197",
+    "isRecurring": true,
+    "name": "Comedy Nest",
+    "location": "The Rendezvous 2322 2nd Ave, Seattle WA",
+    "date": "Tuesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-rendezvous-seattle"
+  },
+  {
+    "id": "198",
+    "isRecurring": true,
+    "name": "Show Up/Go Up Open Mic",
+    "location": "Capitol Hill Comedy / Bar 210 Broadway E, Seattle WA",
+    "date": "Tuesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/capitol-hill-comedy-bar-seattle"
+  },
+  {
+    "id": "199",
+    "isRecurring": true,
+    "name": "Community Open Mic",
+    "location": "Couth Buzzard Books 8310 Greenwood Ave N, Seattle WA",
+    "date": "Wednesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/couth-buzzard-books-espresso-buono-seattle"
+  },
+  {
+    "id": "200",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Blue Moon 712 NE 45th St., Seattle WA",
+    "date": "Wednesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/blue-moon-tavern-seattle"
+  },
+  {
+    "id": "201",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Club Comedy Seattle 328 15th Ave E, Seattle WA",
+    "date": "Wednesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/club-comedy-seattle-seattle"
+  },
+  {
+    "id": "202",
+    "isRecurring": true,
+    "name": "Duo Improv Showcase",
+    "location": "Market Theater 1428 Post Alley, Seattle WA",
+    "date": "Wednesday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Paid\nURL: https://unexpectedproductions.org/shows-2/"
+  },
+  {
+    "id": "203",
+    "isRecurring": true,
+    "name": "Cheat Day",
+    "location": "The Rendezvous 2322 2nd Ave, Seattle WA",
+    "date": "Thursday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://yelp.com/biz/the-rendezvous-seattle"
+  },
+  {
+    "id": "204",
+    "isRecurring": false,
+    "name": "Open Mic",
+    "location": "The Whit's End 6510 Phinney Ave N, Seattle WA",
+    "date": "Thursday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:00pm\nFrequency: Bi-Weekly\nCost: Free\nURL: https://www.yelp.com/biz/the-whits-end-seattle"
+  },
+  {
+    "id": "205",
+    "isRecurring": true,
+    "name": "Bomb Shelter",
+    "location": "4B's Tavern 4300 NW Leary Wy, Seattle WA",
+    "date": "Thursday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/ballard-grill-and-ale-house-seattle"
+  },
+  {
+    "id": "206",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Bickersons Brewhouse 1514 Leary Wy NW, Seattle WA",
+    "date": "Friday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/bickersons-brewhouse-seattle-2"
+  },
+  {
+    "id": "207",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Friday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/north-star-diner-and-shanghai-room-seattle"
+  },
+  {
+    "id": "208",
+    "isRecurring": true,
+    "name": "Late Night Open Mic",
+    "location": "Capitol Hill Comedy / Bar 210 Broadway E, Seattle WA",
+    "date": "Friday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 9:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/capitol-hill-comedy-bar-seattle"
+  },
+  {
+    "id": "209",
+    "isRecurring": true,
+    "name": "Naked Brunch",
+    "location": "The Rendezvous 2322 2nd Ave, Seattle WA",
+    "date": "Saturday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 5:00pm\nFrequency: Weekly\nCost: Free\nURL: https://yelp.com/biz/the-rendezvous-seattle"
+  },
+  {
+    "id": "210",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Saturday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/north-star-diner-and-shanghai-room-seattle"
+  },
+  {
+    "id": "211",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Sunday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 7:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/north-star-diner-and-shanghai-room-seattle"
+  },
+  {
+    "id": "212",
+    "isRecurring": true,
+    "name": "Off the Top",
+    "location": "Comedysportz Seattle 3509 Fremont Ave N, Seattle WA",
+    "date": "Sunday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/csz-seattle-home-of-comedysportz-seattle"
+  },
+  {
+    "id": "213",
+    "isRecurring": true,
+    "name": "Sunday Bucket Night",
+    "location": "Capitol Hill Comedy / Bar 210 Broadway E, Seattle WA",
+    "date": "Sunday",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/capitol-hill-comedy-bar-seattle"
+  }
+]
