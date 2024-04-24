@@ -18,6 +18,7 @@ import { db, auth } from "../../../firebase.config";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { onAuthStateChanged } from "firebase/auth";
+import { FixedSizeList as List } from "react-window";
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
@@ -97,6 +98,20 @@ const EventsPage = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
+  const [loadedItems, setLoadedItems] = useState(5);
+
+  const handleOnItemsRendered = ({
+    overscanStopIndex,
+  }: {
+    overscanStopIndex: number;
+  }) => {
+    if (
+      overscanStopIndex >= loadedItems - 1 &&
+      loadedItems < eventsByCity.length
+    ) {
+      setLoadedItems(loadedItems + 5);
+    }
+  };
 
   const uniqueCities = useMemo(() => {
     return Array.from(
@@ -310,6 +325,28 @@ const EventsPage = () => {
   const MemoizedGoogleMap = React.memo(GoogleMap);
   const MemoizedEventForm = React.memo(EventForm);
 
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const event = eventsByCity[index];
+
+    return (
+      <div style={style}>
+        <h3 className="text-lg font-semibold">{event.name}</h3>
+        <p className="font-bold">📅 Date: {event.date}</p>
+        <p className="font-bold">📍 Location: {event.location}</p>
+        <div className="details font-bold">
+          <span className="details-label">ℹ️ Details:</span>
+          <div dangerouslySetInnerHTML={{ __html: event.details }} />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <Header />
@@ -444,17 +481,15 @@ const EventsPage = () => {
               ? "All Events"
               : `All Events in ${filterCity}`}
           </h2>
-          {eventsByCity.map((event) => (
-            <div key={event.id} className="event-item">
-              <h3 className="text-lg font-semibold">{event.name}</h3>
-              <p className="font-bold">📅 Date: {event.date}</p>
-              <p className="font-bold">📍 Location: {event.location}</p>
-              <div className="details font-bold">
-                <span className="details-label">ℹ️ Details:</span>
-                <div dangerouslySetInnerHTML={{ __html: event.details }} />
-              </div>
-            </div>
-          ))}
+          <List
+            height={500}
+            itemCount={eventsByCity.length}
+            itemSize={200}
+            width="100%"
+            onItemsRendered={handleOnItemsRendered}
+          >
+            {Row}
+          </List>
         </section>
       </div>
       <Footer />
