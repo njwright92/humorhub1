@@ -61,7 +61,6 @@ const ComicBot = () => {
       return;
     }
 
-    // Adding user input and bot&rsquo;s initial response to conversation
     setConversation((prev) => [
       ...prev,
       { from: "You", content: userInput, role: "user", text: userInput },
@@ -75,12 +74,12 @@ const ComicBot = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: userInput,
-          n_predict: 300,
+          n_predict: 400,
           do_sample: true,
           penalty_alpha: 1.5,
-          temperature: 1,
+          temperature: 0.8,
           top_k: 40,
-          top_p: 1,
+          top_p: 0.9,
           repetition_penalty: 3,
           stream: true,
         }),
@@ -230,15 +229,14 @@ const ComicBot = () => {
         </h1>
         <p className="mb-6 text-center">
           Dive into the world of humor with ComicBot, your AI-powered comedy
-          writing assistant. Whether you&rsquo;re crafting jokes, developing sketches,
-          or exploring funny takes on everyday life, ComicBot is here to spark
-          your creativity.
+          writing assistant. Whether you&rsquo;re crafting jokes, developing
+          sketches, or exploring funny takes on everyday life, ComicBot is here
+          to spark your creativity.
         </p>
         <p className="mb-6 text-center italic text-sm">
-          Please note: ComicBots service is a research preview. It only provides
-          limited safety measures and may generate offensive content. It must
-          not be used for any illegal, harmful, violent, racist, or sexual
-          purposes.
+          Please note: ComicBots service is a research preview. It may generate
+          offensive content. It must not be used for any illegal, harmful,
+          violent, racist, or sexual purposes.
         </p>
         <section className="card-style p-6 rounded-xl shadow-lg">
           <div className="form-container mb-4">

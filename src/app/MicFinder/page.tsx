@@ -463,19 +463,25 @@ const EventsPage = () => {
             >
               All Cities
             </button>
-            {uniqueCities.map((city) => (
-              <button
-                key={city}
-                onClick={() => handleCityFilterChange(city)}
-                className="city-button m-1 underline text-orange-500 hover:text-orange-400 flex-grow"
-              >
-                {city}
-              </button>
-            ))}
+            {uniqueCities
+              .sort((a, b) => a.localeCompare(b))
+              .map((city) => (
+                <button
+                  key={city}
+                  onClick={() => handleCityFilterChange(city)}
+                  className="city-button m-1 underline text-orange-500 hover:text-orange-400 flex-grow"
+                >
+                  {city}
+                </button>
+              ))}
           </div>
           <h2
             className="title-style text-center"
-            style={{ borderBottom: "0.15rem solid #f97316" }}
+            style={{
+              borderBottom: "0.15rem solid #f97316",
+              borderTop: "0.15rem solid #f97316",
+              margin: ".5rem",
+            }}
           >
             {filterCity === "All Cities"
               ? "All Events"
@@ -483,7 +489,13 @@ const EventsPage = () => {
           </h2>
           <List
             height={500}
-            itemCount={eventsByCity.length}
+            itemCount={
+              eventsByCity.sort((a, b) => {
+                const cityA = a.location.split(", ")[1].trim();
+                const cityB = b.location.split(", ")[1].trim();
+                return cityA.localeCompare(cityB);
+              }).length
+            }
             itemSize={200}
             width="100%"
             onItemsRendered={handleOnItemsRendered}

@@ -130,13 +130,10 @@ export default function UserProfile() {
   };
 
   const handleCancel = () => {
-    // Assuming you have initial state values or a way to fetch the original user data
-    // Resetting the form values to their original state or last saved state
     setName(name);
     setBio(bio);
     setProfileImageUrl(profileImageUrl);
 
-    // Exiting the editing mode
     setIsEditing(false);
   };
 
@@ -312,7 +309,6 @@ export default function UserProfile() {
           )}
         </section>
       </main>
-
       <Footer />
     </>
   );

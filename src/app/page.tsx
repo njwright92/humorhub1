@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import EventForm from "./components/EventForm";
 import ComicBot from "../app/Comics.webp";
 import jokes from "../app/jokes.webp";
 import AOS from "aos";
@@ -11,6 +10,10 @@ import { useEffect } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HumorHubAPISection from "./components/humorHubApi";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+
+const EventForm = dynamic(() => import("./components/EventForm"));
 
 export default function Home() {
   useEffect(() => {
@@ -150,7 +153,9 @@ export default function Home() {
               </li>
             </ul>
           </div>
-          <EventForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <EventForm />
+          </Suspense>
 
           <p className="text-center">
             <Link href="mailto:nitronate@gmail.com">
@@ -262,9 +267,9 @@ export default function Home() {
                 inspiration strikes.
               </li>
               <li>
-                Jokepad’s user-friendly interface ensures that no idea is too
-                small or fleeting. Every thought counts, and with Jokepad, each
-                one is a potential comedic gem.
+                Jokepad&rsquo;s user-friendly interface ensures that no idea is
+                too small or fleeting. Every thought counts, and with Jokepad,
+                each one is a potential comedic gem.
               </li>
               <li>
                 Beyond just storage, Jokepad offers tools for refining and
