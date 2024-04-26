@@ -253,7 +253,8 @@ const EventsPage = () => {
     return events.filter((event) => {
       // Check if the event matches the selected city
       const isInSelectedCity =
-        selectedCity === "" || event.location.includes(selectedCity);
+        selectedCity === "" ||
+        (event.location && event.location.includes(selectedCity));
 
       // Check if the event matches the selected date
       const eventDate = new Date(event.date);
@@ -267,7 +268,8 @@ const EventsPage = () => {
       // Check if the event matches the search term
       const matchesSearchTerm = searchTerm
         ? event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.location.toLowerCase().includes(searchTerm.toLowerCase())
+          (event.location &&
+            event.location.toLowerCase().includes(searchTerm.toLowerCase()))
         : true;
 
       return isInSelectedCity && isOnSelectedDate && matchesSearchTerm;
@@ -489,11 +491,16 @@ const EventsPage = () => {
           <List
             height={500}
             itemCount={
-              eventsByCity.sort((a, b) => {
-                const cityA = a.location.split(", ")[1].trim();
-                const cityB = b.location.split(", ")[1].trim();
-                return cityA.localeCompare(cityB);
-              }).length
+              eventsByCity
+                .filter(
+                  (event) =>
+                    event.location && typeof event.location === "string"
+                )
+                .sort((a, b) => {
+                  const cityA = a.location.split(", ")[1]?.trim();
+                  const cityB = b.location.split(", ")[1]?.trim();
+                  return cityA.localeCompare(cityB);
+                }).length
             }
             itemSize={200}
             width="100%"

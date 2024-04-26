@@ -53,11 +53,12 @@ const cityCoordinates: CityCoordinates = {
 };
 
 // Function to extract city names from cityCoordinates
+// Function to extract city names from cityCoordinates
 const extractCityNames = (coordinates: CityCoordinates) => {
   const cityNames: CityCoordinates = {};
-  Object.keys(coordinates).forEach((key) => {
+  Object.keys(coordinates).map((key) => {
     const cityName = key.split(",")[0].trim(); // Extract city name and trim any extra spaces
-    cityNames[cityName] = coordinates[key];
+    return (cityNames[cityName] = coordinates[key]);
   });
   return cityNames;
 };
@@ -75,6 +76,8 @@ export const useCity = () => {
 };
 
 // Create the CityProvider component
+import PropTypes from "prop-types";
+
 export const CityProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
@@ -83,4 +86,8 @@ export const CityProvider: React.FC<{ children: ReactNode }> = ({
       {children}
     </CityContext.Provider>
   );
+};
+
+CityProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

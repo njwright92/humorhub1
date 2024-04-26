@@ -14,9 +14,8 @@ type AuthModalProps = {
   onClose: () => void;
 };
 
-const emailRegex = /\S+@\S+\.\S+/;
-const passwordRegex = /.{6,}/;
-
+const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+const passwordRegex = /^.{6,}$/;
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [ui, setUi] = useState<firebaseui.auth.AuthUI | null>(null);
   const [email, setEmail] = useState<string>("");

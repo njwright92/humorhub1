@@ -6,6 +6,7 @@ import React, {
   useEffect,
   ReactNode,
   useContext,
+  useMemo,
 } from "react";
 import { getAuth } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -105,9 +106,11 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     }
   };
 
+  const savedEventsMemo = useMemo(() => savedEvents, [savedEvents]);
+
   return (
     <EventContext.Provider
-      value={{ savedEvents, saveEvent, deleteEvent: deleteEventFromFirestore }}
+      value={{ savedEvents: savedEventsMemo, saveEvent, deleteEvent: deleteEventFromFirestore }}
     >
       {children}
     </EventContext.Provider>

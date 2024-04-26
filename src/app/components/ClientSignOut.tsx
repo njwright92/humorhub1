@@ -1,13 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 const ClientSignOutButton: React.FC = () => {
   const router = useRouter(); // Initialize the router
+  const [loading, setLoading] = useState(false);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
+    setLoading(true);
     const auth = getAuth();
     try {
       await signOut(auth);
@@ -19,15 +21,29 @@ const ClientSignOutButton: React.FC = () => {
       } else {
         alert("Unknown error occurred");
       }
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        router.push("/"); // Redirect to the home screen
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   return (
     <button
       onClick={handleSignOut}
+      disabled={loading}
       className="btn hover:bg-rrange-600 transition-colors"
     >
-      Sign Out
+      {loading ? "Signing Out..." : "Sign Out"}
     </button>
   );
 };
