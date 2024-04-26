@@ -478,8 +478,7 @@ const EventsPage = () => {
           <h2
             className="title-style text-center"
             style={{
-              borderBottom: "0.15rem solid #f97316",
-              borderTop: "0.15rem solid #f97316",
+              border: "0.15rem solid #f97316",
               margin: ".5rem",
             }}
           >
