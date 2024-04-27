@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { db } from "../../../firebase.config";
@@ -12,12 +12,18 @@ type ContactFormState = {
   message: string;
 };
 
+const collectionRef = collection(db, "contacts");
+
 const ContactPage: React.FC = () => {
   const [formState, setFormState] = useState<ContactFormState>({
     name: "",
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
+    null
+  );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,23 +32,22 @@ const ContactPage: React.FC = () => {
     setFormState({ ...formState, [name]: value });
   };
 
-  const collectionRef = useMemo(() => collection(db, "contacts"), []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      const docRef = await addDoc(collectionRef, formState);
-      console.log("Document written with ID: ", docRef.id);
-      alert("Form submitted successfully!");
+      await addDoc(collectionRef, formState);
+      setSubmitStatus("success");
+      setFormState({
+        name: "",
+        email: "",
+        message: "",
+      });
     } catch (error) {
       console.error("Error adding document: ", error);
-      alert("Error submitting form. Please try again.");
+      setSubmitStatus("error");
     }
-    setFormState({
-      name: "",
-      email: "",
-      message: "",
-    });
+    setIsSubmitting(false);
   };
 
   return (
@@ -55,13 +60,23 @@ const ContactPage: React.FC = () => {
           </h1>
           <p className="text-center mb-6 mt-8 text-zinc-900">
             Your thoughts matter to us! Whether you have a question, feedback,
-            or need support, we&rsquo;re all ears. Use the form below to reach out,
-            and we promise to get back to you as swiftly as we can. We&#39;re here
-            to ensure your experience with Humor Hub is nothing short of
-            amazing. Thank you for taking the time to connect with us!
+            or need support, we&rsquo;re all ears. Use the form below to reach
+            out, and we promise to get back to you as swiftly as we can.
+            We&#39;re here to ensure your experience with Humor Hub is nothing
+            short of amazing. Thank you for taking the time to connect with us!
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-col mb-4">
+          {submitStatus === "success" && (
+            <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg mb-4">
+              Form submitted successfully!
+            </div>
+          )}
+          {submitStatus === "error" && (
+            <div className="bg-red-100 text-red-800 px-4 py-2 rounded-lg mb-4">
+              Error submitting form. Please try again.
+            </div>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex flex-col">
               <label
                 htmlFor="name"
                 className="mb-2 font-semibold text-zinc-900"
@@ -77,9 +92,10 @@ const ContactPage: React.FC = () => {
                 value={formState.name}
                 onChange={handleInputChange}
                 className="text-zinc-900 shadow rounded-lg p-2"
+                aria-label="Name"
               />
             </div>
-            <div className="flex flex-col mb-4">
+            <div className="flex flex-col">
               <label
                 htmlFor="email"
                 className="mb-2 font-semibold text-zinc-900"
@@ -95,6 +111,7 @@ const ContactPage: React.FC = () => {
                 value={formState.email}
                 onChange={handleInputChange}
                 className="text-zinc-900 shadow rounded-lg p-2"
+                aria-label="Email"
               />
             </div>
             <div className="flex flex-col mb-6">
@@ -112,18 +129,20 @@ const ContactPage: React.FC = () => {
                 value={formState.message}
                 onChange={handleInputChange}
                 className="text-zinc-900 shadow rounded-lg p-2"
+                aria-label="Message"
               />
             </div>
             <button
               type="submit"
               className="btn bg-orange-500 hover:bg-orange-600 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors"
+              disabled={isSubmitting}
+              aria-label="Send Message"
             >
               Send Message
             </button>
           </form>
         </section>
       </div>
-
       <Footer />
     </>
   );

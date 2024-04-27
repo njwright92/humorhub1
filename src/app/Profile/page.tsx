@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import Image from "next/image";
 import { EventContext, Event } from "../components/eventContext";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
@@ -20,6 +27,7 @@ export default function UserProfile() {
   const auth = getAuth();
   const storage = getStorage();
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const uidRef = useRef<string | null>(null);
 
   const profileImageObjectURL = useMemo(() => {
     return profileImage ? URL.createObjectURL(profileImage) : null;
@@ -28,24 +36,27 @@ export default function UserProfile() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
+      if (user) {
+        uidRef.current = user.uid;
+      } else {
+        uidRef.current = null;
+      }
     });
 
     return () => unsubscribe();
   }, [auth]);
 
-  useEffect(() => {
-    const fetchUserDataAndEvents = async (user: User) => {
+  const fetchUserDataAndEvents = useCallback(
+    async (user: User) => {
       try {
         const userRef = doc(db, "users", user.uid);
         const userEventsRef = doc(db, "userEvents", user.uid);
 
-        // Fetch both user data and events in parallel
         const [userDocSnap, userEventsDocSnap] = await Promise.all([
           getDoc(userRef),
           getDoc(userEventsRef),
         ]);
 
-        // Process user data
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
           setName(userData.name);
@@ -53,7 +64,6 @@ export default function UserProfile() {
           setProfileImageUrl(userData.profileImageUrl);
         }
 
-        // Process user events
         if (userEventsDocSnap.exists() && userEventsDocSnap.data().events) {
           const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
           eventsFromFirestore.forEach((event) => {
@@ -65,8 +75,11 @@ export default function UserProfile() {
       } catch (error) {
         console.error("Error fetching user data and events:", error);
       }
-    };
+    },
+    [saveEvent, savedEvents]
+  );
 
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         fetchUserDataAndEvents(user);
@@ -74,23 +87,24 @@ export default function UserProfile() {
     });
 
     return () => unsubscribe();
-  }, [auth, saveEvent, savedEvents]);
+  }, [auth, fetchUserDataAndEvents]);
 
-  const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setProfileImage(file);
+  const handleImageChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        const file = event.target.files[0];
+        setProfileImage(file);
 
-      const storageRef = ref(storage, `profileImages/${auth.currentUser?.uid}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      setProfileImageUrl(url);
-    }
-  };
+        const storageRef = ref(storage, `profileImages/${uidRef.current}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        setProfileImageUrl(url);
+      }
+    },
+    [storage]
+  );
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const user = auth.currentUser;
     if (user) {
       try {
@@ -109,33 +123,36 @@ export default function UserProfile() {
         console.error("Error updating/creating profile:", error);
       }
     }
-  };
+  }, [auth, name, bio, profileImageUrl]);
 
-  const handleDeleteEvent = async (eventId: string) => {
-    try {
-      await deleteEvent(eventId);
-      alert("Event deleted successfully");
-    } catch (error) {
-      console.error("Error deleting event:", error);
-      alert("Failed to delete the event. Please try again.");
-    }
-  };
+  const handleDeleteEvent = useCallback(
+    async (eventId: string) => {
+      try {
+        await deleteEvent(eventId);
+        alert("Event deleted successfully");
+      } catch (error) {
+        console.error("Error deleting event:", error);
+        alert("Failed to delete the event. Please try again.");
+      }
+    },
+    [deleteEvent]
+  );
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     if (!isUserSignedIn) {
       alert("You must be signed in to edit your profile.");
       return;
     }
     setIsEditing(true);
-  };
+  }, [isUserSignedIn]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setName(name);
     setBio(bio);
     setProfileImageUrl(profileImageUrl);
 
     setIsEditing(false);
-  };
+  }, [name, bio, profileImageUrl]);
 
   return (
     <>
