@@ -80,7 +80,7 @@ const ComicBot = () => {
           temperature: 0.8,
           top_k: 40,
           top_p: 0.9,
-          repetition_penalty: 3,
+          repetition_penalty: 1.2,
           stream: true,
         }),
       });
@@ -256,14 +256,14 @@ const ComicBot = () => {
           </div>
           <button
             onClick={handleSend}
-            className="send-button bg-orange-500 hover:bg-orange-700 text-zinc-900 hover:text-zinc-200 text-lg px-12 py-2 rounded-xl shadow-lg transition-all duration-150 ease-in-out hover:animate-pulse"
+            className="send-button bg-orange-500 hover:bg-orange-700 text-zinc-900 hover:text-zinc-200 text-lg px-12 py-2 rounded-xl shadow-lg transition-all duration-150 ease-in-out hover:animate-pulse mb-2"
           >
             Send
           </button>
           <section className="section-style">
             {/* Loading indicator at the end of the conversation list */}
             {isLoading && (
-              <div className="loading-indicator">
+              <div className="loading-indicator m-1">
                 <Loading />
               </div>
             )}
