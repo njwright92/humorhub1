@@ -81,6 +81,7 @@ const ComicBot = () => {
           top_k: 40,
           top_p: 0.9,
           repetition_penalty: 1.2,
+          ctx_size: 2048,
           stream: true,
         }),
       });
