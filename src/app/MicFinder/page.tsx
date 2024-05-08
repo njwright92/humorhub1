@@ -113,11 +113,14 @@ const EventsPage = () => {
     }
   };
 
-  const normalizeCityName = (name: string) => {
+  const normalizeCityName = useCallback((name: string) => {
     return name
-      .replace(/(ID|CA|FL|HA|MA|NY|OR|TX|UT|WA|AZ|MN|MI|LA|NV|OK)/g, "")
+      .replace(
+        /\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/g,
+        ""
+      )
       .trim();
-  };
+  }, []);
 
   // Then apply this in your handleCityFilterChange and anywhere else necessary:
   const handleCityFilterChange = useCallback(
@@ -126,7 +129,7 @@ const EventsPage = () => {
       setFilterCity(normalizedCity);
       setSelectedCity(normalizedCity);
     },
-    [setFilterCity, setSelectedCity]
+    [setFilterCity, setSelectedCity, normalizeCityName]
   );
 
   const uniqueCities = useMemo(() => {
@@ -145,7 +148,7 @@ const EventsPage = () => {
           .filter((city) => city !== "")
       )
     );
-  }, [events]);
+  }, [events, normalizeCityName]);
 
   // Filter events based on the selected city
   const eventsByCity = useMemo(() => {
@@ -399,7 +402,7 @@ const EventsPage = () => {
               <option key={city} value={city}>
                 {city
                   .replace(
-                    /(ID|CA|FL|HA|MA|NY|OR|TX|UT|WA|AZ|MN|MI|LA|NV|OK)/g,
+                    /\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/g,
                     ""
                   )
                   .trim()}
