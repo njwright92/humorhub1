@@ -113,6 +113,22 @@ const EventsPage = () => {
     }
   };
 
+  const normalizeCityName = (name: string) => {
+    return name
+      .replace(/(ID|CA|FL|HA|MA|NY|OR|TX|UT|WA|AZ|MN|MI|LA|NV|OK)/g, "")
+      .trim();
+  };
+
+  // Then apply this in your handleCityFilterChange and anywhere else necessary:
+  const handleCityFilterChange = useCallback(
+    (city: string) => {
+      const normalizedCity = normalizeCityName(city);
+      setFilterCity(normalizedCity);
+      setSelectedCity(normalizedCity);
+    },
+    [setFilterCity, setSelectedCity]
+  );
+
   const uniqueCities = useMemo(() => {
     return Array.from(
       new Set(
@@ -121,7 +137,7 @@ const EventsPage = () => {
             if (event.location) {
               const locationParts = event.location.split(",");
               if (locationParts.length > 1) {
-                return locationParts[1].trim();
+                return normalizeCityName(locationParts[1].trim());
               }
             }
             return [];
@@ -130,13 +146,6 @@ const EventsPage = () => {
       )
     );
   }, [events]);
-
-  const handleCityFilterChange = useCallback(
-    (city: string) => {
-      setFilterCity(city);
-    },
-    [setFilterCity]
-  ); // If setFilterCity doesn't change, you can omit it from the dependencies array
 
   // Filter events based on the selected city
   const eventsByCity = useMemo(() => {
@@ -147,12 +156,13 @@ const EventsPage = () => {
           if (location && typeof location === "string") {
             const locationParts = location.split(",");
             return (
-              locationParts.length > 1 && locationParts[1].trim() === filterCity
+              locationParts.length > 1 &&
+              normalizeCityName(locationParts[1].trim()) === filterCity
             );
           }
           return false;
         });
-  }, [filterCity, events]);
+  }, [filterCity, events, normalizeCityName]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -304,9 +314,11 @@ const EventsPage = () => {
 
   const handleCityChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedCity(event.target.value);
+      const normalizedCity = normalizeCityName(event.target.value);
+      setSelectedCity(normalizedCity);
+      setFilterCity(normalizedCity); // Also update the filterCity
     },
-    []
+    [setSelectedCity, setFilterCity, normalizeCityName]
   );
 
   const handleDateChange = useCallback((date: Date | null) => {
