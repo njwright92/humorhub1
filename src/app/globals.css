@@ -225,7 +225,7 @@ option {
 
 /* Title and line below category title */
 .category-title {
-  font-size: 1.5rem;
+  font-size: 1.55rem;
   margin-bottom: 0.5rem;
   text-align: center;
 }
@@ -240,29 +240,31 @@ option {
   margin: 0.5rem auto 1.5rem;
 }
 
-/* Style for the news items */
-.news-item a {
-  color: rgb(0, 110, 255);
-  margin: 1rem 0;
-  padding: 0.5rem;
-  transition: background-color 0.2s ease;
-  text-decoration: underline;
-  margin-top: 1.5rem;
+.news-item {
+  border-bottom: 1px solid #ccc; /* Light grey border for separation */
+  margin-bottom: 20px; /* Space between articles */
+  padding-bottom: 15px; /* Padding below each article */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  text-align: center;
 }
 
-.news-item a:hover {
-  background-color: #bcbcbc;
-  cursor: pointer;
-  border-radius: 0.625rem;
-  text-decoration: none;
+.news-item:last-child {
+  border-bottom: none; /* Remove border for the last item */
+}
+
+.news-description,
+.news-link {
+  display: block; /* Ensure each is on a new line */
+  margin-top: 5px; /* Spacing between title, description, and link */
+  text-align: center;
 }
 
 .news-description {
-  color: #dedede;
-  padding: 0.5rem;
+  padding: 0.25rem;
   transition: background-color 0.2s ease;
   text-decoration: none;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1 rem;
+  text-align: center;
 }
 
 /* Error message styling */
@@ -283,7 +285,7 @@ option {
 }
 
 .instructions {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   color: #1f2022;
 }
 

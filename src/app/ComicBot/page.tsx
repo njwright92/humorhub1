@@ -73,12 +73,11 @@ const ComicBot = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: `ComicBot's funny take on: ${userInput}`,
+          prompt: `an abusrd funny take on: ${userInput}`,
           n_predict: 400,
-          top_p: 0.95,
           temperature: 0.9,
           repetition_penalty: 1.2,
-          ctx_size: 2048,
+          ctx_size: 1024,
           stream: true,
         }),
       });

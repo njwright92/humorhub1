@@ -70,20 +70,25 @@ const NewsPage = () => {
     {}
   );
   const [error, setError] = useState("");
+  const [expandedArticle, setExpandedArticle] = useState<string | null>(null); // New state to track expanded articles
   const [isNewsFetched, setIsNewsFetched] = useState(false);
   const { setSelectedHeadline, setSelectedDescription } = useHeadline();
   const router = useRouter();
 
-  const handleWriteJoke = (title: string, description: string) => {
-    setSelectedHeadline(title);
-    setSelectedDescription(description);
-    router.push("/ComicBot");
+  const handleToggleArticle = (title: string) => {
+    setExpandedArticle((prev) => (prev === title ? null : title)); // Toggle article visibility
   };
 
   const handleCategoryChange = (category: Category, isChecked: boolean) => {
     setSelectedCategories((prev) =>
       isChecked ? [...prev, category] : prev.filter((cat) => cat !== category)
     );
+  };
+
+  const handleWriteJoke = (title: string, description: string) => {
+    setSelectedHeadline(title);
+    setSelectedDescription(description);
+    router.push("/ComicBot");
   };
 
   const fetchSelectedNews = useCallback(async () => {
@@ -112,6 +117,7 @@ const NewsPage = () => {
     setFetchedArticles({});
     setIsNewsFetched(false);
     setError("");
+    setExpandedArticle(null); // Reset expanded article
   };
 
   return (
@@ -181,7 +187,6 @@ const NewsPage = () => {
           >
             Reset
           </button>
-
           {isNewsFetched &&
             Object.keys(fetchedArticles).map((category) => (
               <section key={category} className="category-container">
@@ -204,17 +209,27 @@ const NewsPage = () => {
                       className="news-item flex flex-col md:flex-row items-start sm:items-center justify-between"
                     >
                       <div className="flex-1">
-                        <a
-                          href={article.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="news-link text-zinc-200"
+                        <h3
+                          onClick={() => handleToggleArticle(article.title)}
+                          className="cursor-pointer text-zinc-400 text-xl"
                         >
                           {article.title}
-                        </a>
-                        <p className="news-description text-zinc-200">
-                          {article.description}
-                        </p>
+                        </h3>
+                        {expandedArticle === article.title && (
+                          <>
+                            <p className="news-description text-zinc-200">
+                              {article.description}
+                            </p>
+                            <a
+                              href={article.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="news-link text-blue-500 underline"
+                            >
+                              Read full article
+                            </a>
+                          </>
+                        )}
                       </div>
                       <div className="mt-4 md:mt-0 md:flex md:flex-col md:items-end">
                         <button
