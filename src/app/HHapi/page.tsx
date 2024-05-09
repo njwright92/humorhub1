@@ -14,6 +14,7 @@ type Category =
   | "science"
   | "sports"
   | "technology";
+
 const categories: Category[] = [
   "business",
   "entertainment",
@@ -37,7 +38,6 @@ type ArticlesByCategory = {
 const fetchCategoryNews = async (category: Category) => {
   try {
     const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=5&apiKey=a45f6ec6576a496c9fe1c30f7b819207`;
-
     const response = await fetch(newsApiUrl);
 
     if (!response.ok) {
@@ -45,18 +45,18 @@ const fetchCategoryNews = async (category: Category) => {
     }
 
     const data = await response.json();
-    // Filter out articles with "[Removed]" in their title or description
+    console.log(`${category} category data:`, data); // Log the data to see the structure
+
     const filteredArticles = data.articles.filter(
-      (article: {
-        title: string | string[];
-        description: string | string[];
-      }) => {
+      (article: { title: string; description: string }) => {
+        const title = article.title || "";
+        const description = article.description || "";
         return (
-          !article.title.includes("[Removed]") &&
-          !article.description.includes("[Removed]")
+          !title.includes("[Removed]") && !description.includes("[Removed]")
         );
       }
     );
+
     return filteredArticles;
   } catch (error) {
     console.error("Error fetching news for category:", category, error);
@@ -200,6 +200,9 @@ const NewsPage = () => {
                   <h3 className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
                     Send this to ComicBot to get the ball rolling!
                   </h3>
+                  <p className="text-zinc-400 text-center mb-4">
+                    Click article titles to view more details.
+                  </p>
                 </div>
 
                 {fetchedArticles[category as Category]?.map(
