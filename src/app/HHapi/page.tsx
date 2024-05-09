@@ -197,10 +197,10 @@ const NewsPage = () => {
                   >
                     {category.charAt(0).toUpperCase() + category.slice(1)} News
                   </h2>
-                  <h3 className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
+                  <p className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
                     Send this to ComicBot to get the ball rolling!
-                  </h3>
-                  <p className="text-zinc-400 text-center mb-4">
+                  </p>
+                  <p className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-left text-zinc-200 md:order-first">
                     Click article titles to view more details.
                   </p>
                 </div>
