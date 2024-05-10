@@ -12,11 +12,12 @@
   --orange-500: #f97316;
 }
 
-@media (prefers-color-scheme: dark) {
+@media /* Dark mode preferences */
+(prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 250, 250, 250;
-    --background-start-rgb: 10, 10, 10;
-    --background-end-rgb: 25, 25, 25;
+    --background-start-rgb: 10, 10, 10; /* zinc-900 equivalent */
+    --background-end-rgb: 25, 25, 25; /* zinc-700 equivalent */
     --accent-color: 22, 101, 52;
     --zinc-900: #1f2022;
     --zinc-200: #d4d4d8;
@@ -25,7 +26,8 @@
 }
 
 body {
-  background-color: #1f2022;
+  /* Create a gradient background from zinc-900 to zinc-700 */
+  background-image: linear-gradient(to bottom, var(--zinc-900), #2d3748);
   color: var(--zinc-200);
   font-family: comic;
 }
@@ -137,7 +139,7 @@ body {
 }
 
 .modal-container {
-  @apply bg-zinc-100 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
+  @apply bg-zinc-300 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
 }
 
 .modal-title {
@@ -145,7 +147,7 @@ body {
 }
 
 .form-container {
-  @apply flex flex-col gap-1;
+  @apply flex flex-col gap-1 bg-zinc-300;
 }
 
 .input-field,

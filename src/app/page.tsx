@@ -77,8 +77,8 @@ export default function Home() {
                 <Image
                   src={ComicBot}
                   alt="ComicBot - Your Comedy Genius Assistant"
-                  width={200}
-                  height={200}
+                  width={250}
+                  height={250}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </Link>
@@ -121,8 +121,8 @@ export default function Home() {
                 <Image
                   src={jokes}
                   alt="Jokepad - Your Ultimate Comedy Workshop"
-                  width={200}
-                  height={200}
+                  width={250}
+                  height={250}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </Link>

@@ -132,24 +132,6 @@ const EventsPage = () => {
     [setFilterCity, setSelectedCity, normalizeCityName]
   );
 
-  const uniqueCities = useMemo(() => {
-    return Array.from(
-      new Set(
-        events
-          .flatMap((event) => {
-            if (event.location) {
-              const locationParts = event.location.split(",");
-              if (locationParts.length > 1) {
-                return normalizeCityName(locationParts[1].trim());
-              }
-            }
-            return [];
-          })
-          .filter((city) => city !== "")
-      )
-    );
-  }, [events, normalizeCityName]);
-
   // Filter events based on the selected city
   const eventsByCity = useMemo(() => {
     return filterCity === "All Cities"
@@ -324,6 +306,25 @@ const EventsPage = () => {
     [setSelectedCity, setFilterCity, normalizeCityName]
   );
 
+  // useMemo to derive uniqueCities from events, now incorporating the searchTerm to filter cities
+  const uniqueCities = useMemo(() => {
+    const citySet = new Set<string>(); // Explicitly type the Set as string
+    events.forEach((event) => {
+      if (event.location) {
+        const parts = event.location.split(", ");
+        if (parts.length > 1) {
+          const normalizedCity = normalizeCityName(parts[1].trim());
+          if (normalizedCity.toLowerCase().includes(searchTerm.toLowerCase())) {
+            citySet.add(normalizedCity);
+          }
+        }
+      }
+    });
+    // Now the sort function explicitly knows that 'a' and 'b' are strings
+    return Array.from(citySet).sort((a, b) => a.localeCompare(b));
+  }, [events, searchTerm, normalizeCityName]);
+  
+
   const handleDateChange = useCallback((date: Date | null) => {
     if (date) {
       setSelectedDate(date);
@@ -471,37 +472,28 @@ const EventsPage = () => {
         </section>
 
         <section className="card-style">
+          {/* Updated City Filter Section */}
           <div className="city-filter flex flex-wrap">
-            <br />
-            <br />
             <button
               onClick={() => handleCityFilterChange("All Cities")}
-              className="city-button m-1 underline text-orange-400 font-bold text-lg hover:text-orange-300 flex-grow"
+              className="city-button m-1 underline flex-grow"
             >
               All Cities
             </button>
-            {uniqueCities
-              .sort((a, b) => a.localeCompare(b))
-              .map((city) => (
-                <button
-                  key={city}
-                  onClick={() => handleCityFilterChange(city)}
-                  className="city-button m-1 underline text-orange-500 hover:text-orange-400 flex-grow"
-                >
-                  {city}
-                </button>
-              ))}
+            {uniqueCities.map((city) => (
+              <button
+                key={city}
+                onClick={() => handleCityFilterChange(city)}
+                className="city-button m-1 underline flex-grow"
+              >
+                {city}
+              </button>
+            ))}
           </div>
-          <h2
-            className="title-style text-center"
-            style={{
-              border: "0.15rem solid #f97316",
-              margin: ".5rem",
-            }}
-          >
+          <h2 className="title-style text-center">
             {filterCity === "All Cities"
               ? "All Events"
-              : `All Events in ${filterCity}`}
+              : `Events in ${filterCity}`}
           </h2>
           <List
             height={500}

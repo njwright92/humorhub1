@@ -100,7 +100,7 @@ const EventForm: React.FC = () => {
             Please fill in all fields correctly. Then submit, and your event
             will be added!
           </p>
-          <label htmlFor="eventName" className="the-text">
+          <label htmlFor="eventName" className="text-zinc-900">
             Event Name:
           </label>
           <input
@@ -109,12 +109,12 @@ const EventForm: React.FC = () => {
             name="name"
             value={event.name}
             onChange={handleChange}
-            className="standard-input"
+            className="text-zinc-900 shadow-xl rounded-lg p-2"
             required
             autoComplete="off"
           />
 
-          <label htmlFor="location" className="the-text">
+          <label htmlFor="location" className="text-zinc-900">
             Location must include city state abbr ex(Spokane WA):
           </label>
           <input
@@ -123,11 +123,11 @@ const EventForm: React.FC = () => {
             name="location"
             value={event.location}
             onChange={handleChange}
-            className="standard-input"
+            className="text-zinc-900 shadow-xl rounded-lg p-2"
             required
           />
 
-          <label htmlFor="details" className="the-text">
+          <label htmlFor="details" className="text-zinc-900">
             Details:
           </label>
           <textarea
@@ -135,12 +135,12 @@ const EventForm: React.FC = () => {
             name="details"
             value={event.details}
             onChange={handleChange}
-            className="standard-input"
+            className="text-zinc-900 shadow-xl rounded-lg p-2"
             required
             autoComplete="off"
           />
 
-          <label htmlFor="latitude" className="the-text">
+          <label htmlFor="latitude" className="text-zinc-900">
             Latitude **Get coordinates from Google Maps**:
           </label>
           <input
@@ -149,12 +149,12 @@ const EventForm: React.FC = () => {
             name="lat"
             value={event.lat}
             onChange={handleChange}
-            className="standard-input"
+            className="text-zinc-900 shadow-xl rounded-lg p-2"
             autoComplete="off"
             required
           />
 
-          <label htmlFor="longitude" className="the-text">
+          <label htmlFor="longitude" className="text-zinc-900">
             Longitude **Get coordinates from Google Maps**:
           </label>
           <input
@@ -163,17 +163,17 @@ const EventForm: React.FC = () => {
             name="lng"
             value={event.lng}
             onChange={handleChange}
-            className="standard-input"
+            className="text-zinc-900 shadow-xl rounded-lg p-2"
             required
             autoComplete="off"
           />
-          <h6 className="the-text">Is it a recurring event?:</h6>
+          <h6 className="text-zinc-900">Is it a recurring event?:</h6>
           <p className="text-red-500">
             If yes specify day of the week in details.
           </p>
           <div className="flex flex-row">
             <div className="flex flex-col items-center mr-4">
-              <label htmlFor="isRecurringYes" className="the-text">
+              <label htmlFor="isRecurringYes" className="text-zinc-900">
                 Yes
               </label>
               <input
@@ -182,12 +182,12 @@ const EventForm: React.FC = () => {
                 name="isRecurring"
                 checked={event.isRecurring === true}
                 onChange={() => setEvent({ ...event, isRecurring: true })}
-                className="standard-input"
+                className="text-zinc-900 shadow-xl rounded-lg p-2"
               />
             </div>
 
             <div className="flex flex-col items-center">
-              <label htmlFor="isRecurringNo" className="the-text">
+              <label htmlFor="isRecurringNo" className="text-zinc-900">
                 No
               </label>
               <input
@@ -196,12 +196,12 @@ const EventForm: React.FC = () => {
                 name="isRecurring"
                 checked={event.isRecurring === false}
                 onChange={() => setEvent({ ...event, isRecurring: false })}
-                className="standard-input"
+                className="text-zinc-900 shadow-xl rounded-lg p-2"
               />
             </div>
           </div>
 
-          <label htmlFor="date" className="the-text mt-2">
+          <label htmlFor="date" className="text-zinc-900 mt-2">
             Date:
           </label>
           <DatePicker
@@ -209,8 +209,8 @@ const EventForm: React.FC = () => {
             selected={event.date ? new Date(event.date) : null}
             onChange={(date: Date | null) => setEvent({ ...event, date })}
             placeholderText={`📅 ${new Date().toLocaleDateString()}`}
-            className="standard-input text-black"
-          />
+            className="text-zinc-900 shadow-xl rounded-xl p-2"
+            />
 
           <button type="submit" className="btn">
             Submit Event

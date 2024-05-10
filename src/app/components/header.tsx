@@ -48,7 +48,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-2 text-zinc-200 sticky top-0 z-50 bg-gradient-animation">
+      <header className="p-1 text-zinc-200 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex justify-between items-center">
           <Link href="/">
             <Image
