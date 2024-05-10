@@ -381,12 +381,12 @@ const EventsPage = () => {
           <MemoizedEventForm />
         </div>
         <h2 className="text-lg font-semibold text-center mt-4 mb-4">
-          Ready to explore? Select your city and date below to discover events
-          near you!
+          Ready to explore? Select your city and date to find local events!
         </h2>
+
         <p className="text-md text-center mb-4">
-          Or simply scroll down to see all upcoming events and find your next
-          stage or audience.
+          Scroll to see all upcoming events and discover your next stage or
+          audience.
         </p>
 
         <div className="flex flex-col justify-center items-center mt-2">

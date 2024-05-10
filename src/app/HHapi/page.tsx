@@ -6,6 +6,7 @@ import Header from "../components/header";
 import { useRouter } from "next/navigation";
 import { useHeadline } from "../components/headlinecontext";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
+
 type Category =
   | "business"
   | "entertainment"
@@ -124,15 +125,11 @@ const NewsPage = () => {
           Humor Hub News
         </h1>
         <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md">
-          <p className="text-center mb-4">
-            Welcome to the Humor Hub News Portal, your premier destination for
-            staying updated with the pulse of comedy, entertainment, and much
-            more. Dive into a curated selection of the latest headlines spanning
-            comedy, politics, world news, and entertainment. Tailor your news
-            feed by selecting categories that interest you the most and use our
-            search functionality to hone in on specific topics or events.
-            It&#39;s all here, designed to keep your material fresh and your
-            insights sharp.
+          <h2> Welcome to Humor Hub News Portal</h2>
+          <p className="text-center mb-4 text-lg drop-shadow-xl">
+            Your gateway to the latest in comedy, politics, and beyond.
+            Customize your news experience with targeted categories and dynamic
+            search to keep your insights fresh and focused.
           </p>
 
           <select

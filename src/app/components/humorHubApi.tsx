@@ -1,5 +1,7 @@
 import React from "react";
 import Link from "next/link";
+import news from "../../app/news.webp";
+import Image from "next/image";
 
 const HumorHubAPISection: React.FC = () => {
   const exampleTechnologyPosts = [
@@ -30,74 +32,43 @@ const HumorHubAPISection: React.FC = () => {
 
   return (
     <div
-      className="card-style p-6 rounded-lg shadow-lg my-8 bg-zinc-900 text-zinc-200"
+      className="Screen-container card-style p-6 rounded-lg shadow-lg my-8 bg-zinc-900 text-zinc-200"
       data-aos="fade-up"
     >
       <h1 className="title-style text-3xl font-bold text-center mb-6">
         Humor Hub News: Your Go-To Source for the Latest Trends
       </h1>
-      <p className="text-center mb-6">
-        In the fast-evolving world of humor and entertainment, staying updated
-        is key. The Humor Hub News API provides a curated feed of the latest
-        news across seven crucial categories: Business, Entertainment, General,
-        Health, Science, Sports, and Technology. This wealth of information
-        ensures your material is not only current but also diverse and engaging.
-      </p>
-      <p className="mb-4">
-        <em>Examples:</em>
-      </p>
-      <h2 className="subtitle-style text-xl font-semibold mb-4">
-        Dive Into the Latest in Technology
-      </h2>
-      {exampleTechnologyPosts.map((post, index) => (
-        <div key={index} className="border border-white p-4 rounded-lg mb-4">
-          <h4 className="font-bold text-zinc-200">{post.title}</h4>
-          <p className="text-zinc-200">{post.content}</p>
+      <div
+        className="card-style p-6 rounded-lg shadow-lg my-8 bg-zinc-900 text-zinc-200 flex flex-col md:flex-row items-center"
+        data-aos="fade-up"
+      >
+        <div className="flex-1 text-center md:text-left md:max-w-md">
+          <h1 className="title-style text-3xl font-bold mb-6">
+            Humor Hub News: Your Go-To Source for the Latest Trends
+          </h1>
+          <p className="mb-4">
+            Dive into the latest trends in humor and entertainment with Humor
+            Hub News, your premier destination for curated, insightful updates
+            across various categories.
+          </p>
+          <div className="text-center md:text-left mb-6">
+            <Link href="/HHapi">
+              <button className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
+                Discover More Here
+              </button>
+            </Link>
+          </div>
         </div>
-      ))}
-
-      <h2 className="subtitle-style text-xl font-semibold mb-4">
-        What&rsquo;s New in Entertainment
-      </h2>
-      {exampleEntertainmentPosts.map((post, index) => (
-        <div key={index} className="border border-white p-4 rounded-lg mb-4">
-          <h4 className="font-bold text-zinc-200">{post.title}</h4>
-          <p className="text-zinc-200">{post.content}</p>
+        <div className="md:w-1/2 flex items-start  mb-4 md:mb-0">
+          <Image
+            src={news}
+            alt="Visual Representation of Humor Hub News"
+            width={200} // Specify width
+            height={200} // Specify height
+            className="rounded-lg shadow-lg"
+            layout="responsive" // This makes the image responsive
+          />
         </div>
-      ))}
-
-      <h2 className="subtitle-style text-xl font-semibold my-4">
-        Explore More Categories:
-      </h2>
-      <ul className="list-disc list-inside space-y-2 mb-4">
-        <li>
-          Business: Get the scoop on the economic forces shaping the comedy
-          scene.
-        </li>
-        <li>
-          General: Stay informed with a broad spectrum of news relevant to
-          humorists.
-        </li>
-        <li>
-          Health: Discover how wellness trends can influence comedy and
-          performance.
-        </li>
-        <li>
-          Science: Find inspiration in the latest scientific discoveries for
-          your skits and jokes.
-        </li>
-        <li>
-          Sports: Inject your comedy with the latest updates from the sports
-          world.
-        </li>
-      </ul>
-
-      <div className="text-center mt-8">
-        <Link href="/HHapi">
-          <button className="btn inline-block bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors">
-            Discover More on Here
-          </button>
-        </Link>
       </div>
     </div>
   );
