@@ -50,19 +50,19 @@ export default function Header() {
     <>
       <header className="p-2 text-zinc-200 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex justify-between items-center">
-          <button onClick={toggleMenu} className="text-zinc-900">
-            <Bars3Icon className="h-8 w-8" />
-          </button>
-          <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub!</h1>
           <Link href="/">
             <Image
               src={hh}
               alt="Mic"
               width={70}
               height={70}
-              className="rounded-full"
+              className="rounded-full mr-2"
             />
           </Link>
+          <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub!</h1>
+          <button onClick={toggleMenu} className="text-zinc-900">
+            <Bars3Icon className="h-8 w-8 ml-2" />
+          </button>
         </nav>
         <div
           className={`absolute top-0 left-0 h-screen w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
@@ -74,23 +74,41 @@ export default function Header() {
             <span className="sr-only">Close menu</span>
           </button>
           <SearchBar onSearch={handleSearch} />
-          <Link href="/" className="text-zinc-200 text-lg">
-            Home
+          <Link href="/">
+            <Image
+              src={hh}
+              alt="Mic"
+              width={60}
+              height={60}
+              className="rounded-full"
+            />
           </Link>
           {isUserSignedIn ? (
-            <>
-              <Link href="/MicFinder">Mic Finder</Link>
-              <Link href="/ComicBot">ComicBot</Link>
-              <Link href="/JokePad">JokePad</Link>
-              <Link href="/HHapi">News</Link>
-              <Link href="/Profile">Profile</Link>
-            </>
+            <div className="nav-links">
+              <Link href="/MicFinder">
+                <span className="nav-link">Mic Finder</span>
+              </Link>
+              <Link href="/ComicBot">
+                <span className="nav-link">ComicBot</span>
+              </Link>
+              <Link href="/JokePad">
+                <span className="nav-link">JokePad</span>
+              </Link>
+              <Link href="/HHapi">
+                <span className="nav-link">News</span>
+              </Link>
+              <Link href="/Profile">
+                <span className="nav-link">Profile</span>
+              </Link>
+              <Link href="/contact">
+                <span className="nav-link">Contact</span>
+              </Link>
+            </div>
           ) : (
             <button onClick={toggleAuthModal} className="text-lg">
               Sign In/Up
             </button>
           )}
-          <Link href="/contact">Contact</Link>
         </div>
       </header>
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />

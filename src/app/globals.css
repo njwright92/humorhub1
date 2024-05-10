@@ -78,11 +78,11 @@ body {
 }
 
 .card-style {
-  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 border-2 border-solid border-orange-500 rounded-xl drop-shadow-md;
+  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-20 mb-20 rounded-xl drop-shadow-md;
 }
 
 .card-style1 {
-  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 border-2 border-solid border-orange-500 rounded-xl drop-shadow-md;
+  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-20 mb-20 rounded-xl drop-shadow-md;
 }
 
 .title,
@@ -109,6 +109,23 @@ body {
 
 .section-style {
   @apply mb-6;
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the links horizontally */
+  padding: 0.8rem;
+  margin: 0.4rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  text-decoration: none; /* Removes underline from links */
+  color: inherit; /* Inherits text color from parent */
+  font-size: 1.7rem; /* Adjust the size as needed */
+}
+
+.nav-link:hover {
+  transform: scale(1.25);
 }
 
 .btn {
