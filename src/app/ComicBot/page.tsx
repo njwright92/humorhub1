@@ -300,13 +300,13 @@ const ComicBot = () => {
                   </article>
                 ))}
                 <button
-                  className="px-4 py-2 mt-4 mr-1 hover:animate-pulse rounded-xl shadow-lg  bg-red-500 hover:bg-red-700 text-zinc-900  hover:text-zinc-200"
+                  className="px-4 py-2 mt-4 mr-1 hover:animate-pulse rounded-xl shadow-lg  bg-red-500 hover:bg-red-700 text-zinc-900  hover:text-zinc-200 mb-2"
                   onClick={() => deleteConversation(convo.id)}
                 >
                   Delete
                 </button>
                 <button
-                  className="px-4 py-2 mt-4 ml-1 hover:animate-pulse rounded-xl shadow-lg  bg-blue-500 hover:bg-blue-700 text-zinc-900  hover:text-zinc-200"
+                  className="px-4 py-2 mt-4 ml-1 hover:animate-pulse rounded-xl shadow-lg  bg-blue-500 hover:bg-blue-700 text-zinc-900  hover:text-zinc-200 mb-2 "
                   onClick={() => sendConversationToJokepad(convo.messages)}
                 >
                   Send to Jokepad

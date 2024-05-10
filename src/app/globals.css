@@ -120,7 +120,7 @@ body {
 }
 
 .modal-container {
-  @apply bg-gray-100 p-8 border-4 border-gray-600 rounded-lg shadow-lg relative max-w-sm;
+  @apply bg-zinc-100 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
 }
 
 .modal-title {
@@ -134,7 +134,7 @@ body {
 .input-field,
 .standard-input,
 .modern-input {
-  @apply border-4 border-gray-600 p-2 rounded-lg shadow-md text-zinc-900;
+  @apply border-4 border-zinc-600 p-2 rounded-lg shadow-md text-zinc-900;
 }
 
 .close-button {
@@ -203,11 +203,11 @@ body {
 }
 
 select {
-  color: gray;
+  color: #d4d4d8;
 }
 
 select:required:invalid {
-  color: gray;
+  color: #d4d4d8;
 }
 
 option[value=""][disabled] {
@@ -225,7 +225,7 @@ option {
 
 /* Title and line below category title */
 .category-title {
-  font-size: 1.55rem;
+  font-size: 1.75rem;
   margin-bottom: 0.5rem;
   text-align: center;
 }
@@ -236,14 +236,14 @@ option {
   display: block;
   width: 50%;
   height: 0.125rem;
-  background: #46a049;
+  background: #f97316;
   margin: 0.5rem auto 1.5rem;
 }
 
 .news-item {
-  border-bottom: 1px solid #ccc; /* Light grey border for separation */
-  margin-bottom: 20px; /* Space between articles */
-  padding-bottom: 15px; /* Padding below each article */
+  border-bottom: 0.125rem solid #d4d4d8; /* Light grey border for separation */
+  margin-bottom: 4rem; /* Space between articles */
+  padding-bottom: 3rem; /* Padding below each article */
   transition: background-color 0.3s; /* Smooth transition for hover effect */
   text-align: center;
 }

@@ -94,7 +94,7 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
               className="self-end text-zinc-200"
             >
-              <XMarkIcon className="h-8 w-8" />
+              <XMarkIcon className="h-9 w-9" />
               <span className="sr-only">Close menu</span>
             </button>
             <Link href="/" className="neu-button">
@@ -141,14 +141,14 @@ export default function Header() {
 
             {isUserSignedIn ? (
               <Link href="/HHapi" className="neu-button" id="news-api">
-                <span>News API</span>
+                <span>News</span>
               </Link>
             ) : (
               <span
                 className="neu-button opacity-50 cursor-not-allowed"
                 onClick={handleClick}
               >
-                <span>News API</span>
+                <span>News</span>
               </span>
             )}
 
