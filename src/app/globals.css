@@ -12,8 +12,7 @@
   --orange-500: #f97316;
 }
 
-@media /* Dark mode preferences */
-(prefers-color-scheme: dark) {
+@media /* Dark mode preferences */ (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 250, 250, 250;
     --background-start-rgb: 10, 10, 10; /* zinc-900 equivalent */
@@ -24,6 +23,44 @@
     --orange-500: #f97316;
   }
 }
+
+/* Add this in your global.css or component CSS module */
+.gif-button img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.gif-button:hover img {
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50; /* Ensure it's above other content */
+}
+
+@media (min-width: 768px) {
+  /* md screens and up */
+  .video-modal video {
+    width: 500px; /* Standard TikTok video size */
+    height: auto;
+  }
+}
+
+.guide-container {
+  position: fixed;
+  right: 3rem; /* 3rem from the right */
+  bottom: 3rem; /* 3rem from the bottom */
+  z-index: 1000; /* high z-index to stay on top */
+}
+
 
 body {
   /* Create a gradient background from zinc-900 to zinc-700 */

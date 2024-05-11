@@ -60,17 +60,14 @@ export default function Footer() {
               </h2>
               <ul className="text-zinc-200">
                 <li className="mb-4">
-                  <a href="https://flowbite.com/" className="hover:underline">
-                    Flowbite
-                  </a>
+                  <Link href="/about" className="hover:underline">
+                    About
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="https://tailwindcss.com/"
-                    className="hover:underline"
-                  >
-                    Tailwind CSS
-                  </a>
+                  <Link href="/contact" className="hover:underline">
+                    Contact us
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -80,13 +77,19 @@ export default function Footer() {
               </h2>
               <ul className="text-zinc-200">
                 <li className="mb-4">
-                  <a href="https://github.com/" className="hover:underline">
+                  <a
+                    href="https://github.com/njwright92"
+                    className="hover:underline"
+                  >
                     Github
                   </a>
                 </li>
                 <li>
-                  <a href="https://discord.com/" className="hover:underline">
-                    Discord
+                  <a
+                    href="https://twitter.com/naterbug321"
+                    className="hover:underline"
+                  >
+                    Twitter
                   </a>
                 </li>
               </ul>
@@ -95,18 +98,10 @@ export default function Footer() {
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
                 Legal
               </h2>
-              <ul className="text-zinc-200">
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:underline">
-                    Terms & Conditions
-                  </a>
-                </li>
-              </ul>
+              <div className="text-zinc-200 flex flex-col">
+                <Link href="/userAgreement">User Agreement</Link>
+                <Link href="/privacyPolicy">Privacy Policy</Link>
+              </div>
             </div>
           </div>
         </div>

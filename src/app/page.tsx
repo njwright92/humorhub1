@@ -13,6 +13,7 @@ import HumorHubAPISection from "./components/humorHubApi";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
+import Guide from "./components/guide";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 
@@ -43,7 +44,7 @@ export default function Home() {
               </Suspense>
             </div>
             <div className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0">
-              <Link href="/micFinder">
+              <Link href="/MicFinder">
                 <Image
                   src={micFinder}
                   alt="Mic Finder Image"
@@ -52,7 +53,7 @@ export default function Home() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </Link>
-              <Link href="/micfinder">
+              <Link href="/MicFinder">
                 <button className="btn inline-block text-lg py-2 px-4 mt-6 hover:bg-blue-700 transition-colors">
                   Find My Mic
                 </button>
@@ -146,7 +147,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-
+        <Guide />
         <section data-aos="fade-up">
           <HumorHubAPISection />
         </section>
