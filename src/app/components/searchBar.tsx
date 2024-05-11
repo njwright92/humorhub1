@@ -24,7 +24,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         } items-center justify-center p-2 bg-white text-black rounded-full z-10`}
         aria-label="Toggle search"
       >
-        <MagnifyingGlassIcon className="h-6 w-6" />
+        <MagnifyingGlassIcon className="h-8 w-8" />
       </button>
 
       {isInputVisible && (

@@ -78,30 +78,33 @@ export default function Header() {
             <Image
               src={hh}
               alt="Mic"
-              width={60}
-              height={60}
+              width={70}
+              height={70}
               className="rounded-full"
             />
           </Link>
           {isUserSignedIn ? (
             <div className="nav-links">
               <Link href="/MicFinder">
-                <span className="nav-link">Mic Finder</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Mic Finder</span>
               </Link>
               <Link href="/ComicBot">
-                <span className="nav-link">ComicBot</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Comic Bot</span>
               </Link>
               <Link href="/JokePad">
-                <span className="nav-link">JokePad</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Joke Pad</span>
               </Link>
               <Link href="/HHapi">
-                <span className="nav-link">News</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">News</span>
               </Link>
               <Link href="/Profile">
-                <span className="nav-link">Profile</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Profile</span>
               </Link>
               <Link href="/contact">
-                <span className="nav-link">Contact</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Contact</span>
+              </Link>
+              <Link href="/about">
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">About</span>
               </Link>
             </div>
           ) : (
