@@ -86,7 +86,7 @@ export default function Home() {
             </div>
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Elevate your comedy with ComicBot, your AI co-writer that’s
+                Elevate your comedy with ComicBot, your AI co-writer that&#34;s
                 always ready to brainstorm and enhance your sketches, helping
                 you perfect your punchlines and creative ideas at any moment.
               </p>

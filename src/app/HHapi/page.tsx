@@ -143,24 +143,6 @@ const NewsPage = () => {
               </option>
             ))}
           </select>
-
-          <section className="card p-4 rounded-xl drop-shadow-md mb-6">
-            <p className="instructions">
-              Stay ahead of the curve with Humor Hub News. Choose from our
-              comprehensive categories: Business, Entertainment, General,
-              Health, Science, Sports, and Technology. Each category is updated
-              in real-time, ensuring you have access to the latest and most
-              relevant 5 headlines. Whether you&rsquo;re looking for
-              inspiration, aiming to inject current affairs into your routine,
-              or simply staying informed, our portal is your go-to resource.
-            </p>
-            <p className="instructions">
-              Select your preferred news categories below to begin exploring the
-              latest in humor and beyond. Our dynamic updates mean you&rsquo;re
-              always in the loop, ready to tackle any topic with timely,
-              informed humor.
-            </p>
-          </section>
           <button
             onClick={resetNews}
             className="btn inline-block bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition-colors"
@@ -177,9 +159,7 @@ const NewsPage = () => {
                   <p className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
                     Send this to ComicBot to get the ball rolling!
                   </p>
-                  <p className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-left text-zinc-200 md:order-first">
-                    Click article titles to view more details.
-                  </p>
+                  
                 </div>
                 {fetchedArticles[category as Category]?.map(
                   (article, index) => (

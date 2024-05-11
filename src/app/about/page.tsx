@@ -18,7 +18,7 @@ const About: React.FC = () => {
           <p className="mt-4">
             Mic Finder is a comprehensive tool tailored specifically for
             performers seeking live performance opportunities across the United
-            States. Whether you're a seasoned comedian touring different cities
+            States. Whether you&#34;re a seasoned comedian touring different cities
             or a newcomer aiming to break into the world of stand-up comedy, Mic
             Finder provides an essential service for discovering and connecting
             with live venues.
@@ -61,10 +61,10 @@ const About: React.FC = () => {
             comedy club, Mic Finder equips you with the knowledge to succeed.
           </p>
           <p className="mt-4">
-            Ultimately, Mic Finder is more than just a tool; it's a partner in
+            Ultimately, Mic Finder is more than just a tool; it&#34;s a partner in
             your comedy career. It supports your growth as a performer by
             providing resources that help you navigate the complexities of the
-            entertainment industry. Whether it's finding the right stage,
+            entertainment industry. Whether it&#34;s finding the right stage,
             connecting with the audience, or planning a multi-city tour, Mic
             Finder is dedicated to enhancing your visibility and success in the
             competitive world of comedy.
@@ -78,9 +78,9 @@ const About: React.FC = () => {
           <p className="mt-4">
             ComicBot is an innovative AI-powered assistant designed to help
             comedians and aspiring humorists enhance their creative processes.
-            Unlike a joke-writing service, it's more of an idea generator that
+            Unlike a joke-writing service, it&#34;s more of an idea generator that
             serves as a brainstorming partner to jumpstart your creativity and
-            help you refine your material. Whether you're a seasoned comic or a
+            help you refine your material. Whether you&#34;re a seasoned comic or a
             novice honing your craft, ComicBot provides limitless potential as a
             tool for improving your comedic delivery.
           </p>
@@ -95,10 +95,10 @@ const About: React.FC = () => {
           </p>
           <p className="mt-4">
             The real beauty of ComicBot lies in its versatility. It can offer
-            prompts that align with a comedian's unique style or suggest new
+            prompts that align with a comedian&#34;s unique style or suggest new
             directions that may not have been considered. For traveling comics
             looking to liven up sets in unfamiliar venues or beginners just
-            starting out, it's an indispensable tool for experimenting with bits
+            starting out, it&#34;s an indispensable tool for experimenting with bits
             and new formats in a supportive, pressure-free environment.
           </p>
           <p className="mt-4">
@@ -107,10 +107,10 @@ const About: React.FC = () => {
             uncensored jokes to get the crowd roaring, while a writer looking
             for inspiration might add a touch of humor to their blog or podcast.
             The possibilities are endless, with ComicBot helping to generate new
-            material that's both relevant and unique.
+            material that&#34;s both relevant and unique.
           </p>
           <p className="mt-4">
-            One of ComicBot's standout features is its seamless integration with
+            One of ComicBot&#34;s standout features is its seamless integration with
             Jokepad, your digital comedy notebook. You can send saved
             conversations directly to Jokepad for further editing and
             refinement, making it easy to organize your comedic thoughts and
@@ -119,12 +119,12 @@ const About: React.FC = () => {
             idea generation and structured writing.
           </p>
           <p className="mt-4">
-            Ultimately, ComicBot isn't just a tool—it's a creative partner. It
-            supports you when you're stuck on a joke or need a spark to start
-            building your next big hit. Whether you're preparing for an open
+            Ultimately, ComicBot isn&#34;t just a tool—it&#34;s a creative partner. It
+            supports you when you&#34;re stuck on a joke or need a spark to start
+            building your next big hit. Whether you&#34;re preparing for an open
             mic, a headline show, or a private event, ComicBot is your go-to
             resource for bringing a new edge to your comedic pursuits. With this
-            AI assistant, you'll always be one step ahead in crafting the next
+            AI assistant, you&#34;ll always be one step ahead in crafting the next
             punchline or storytelling masterpiece.
           </p>
         </section>
@@ -136,16 +136,16 @@ const About: React.FC = () => {
           <p className="mt-4">
             Jokepad transcends the limits of a traditional notebook, serving as
             your all-in-one digital platform to capture, refine, and organize
-            your comedic material. It's your ultimate workshop for developing
+            your comedic material. It&#34;s your ultimate workshop for developing
             jokes, sketches, and routines with an intuitive, feature-rich
             interface designed to support every stage of your creative process.
-            With Jokepad, you're empowered to turn spontaneous thoughts into
+            With Jokepad, you&#34;re empowered to turn spontaneous thoughts into
             polished punchlines and keep track of your comedic growth over time.
           </p>
           <p className="mt-4">
             This platform provides tag-based sorting that lets you categorize
             jokes and routines in a way that aligns with your style and comedic
-            vision. Whether it's for late-night sets, improv sessions, or sketch
+            vision. Whether it&#34;s for late-night sets, improv sessions, or sketch
             comedy shows, Jokepad ensures that every joke finds its right place.
             The tag-based system makes it simple to locate your material
             whenever inspiration strikes or when revising for upcoming
@@ -169,10 +169,10 @@ const About: React.FC = () => {
             comedians who thrive on continuous improvement.
           </p>
           <p className="mt-4">
-            Ultimately, Jokepad is more than just a digital notebook. It's your
+            Ultimately, Jokepad is more than just a digital notebook. It&#34;s your
             virtual comedy coach that helps you organize your ideas, identify
             your strengths, and elevate your routines to the next level. No
-            matter if you're a veteran comic or an emerging talent looking to
+            matter if you&#34;re a veteran comic or an emerging talent looking to
             break into the scene, Jokepad is an essential companion that will
             keep you focused, motivated, and prepared to bring down the house.
           </p>
@@ -186,7 +186,7 @@ const About: React.FC = () => {
             Humor Hub News keeps you informed with up-to-the-minute updates
             across a wide range of categories, including Business,
             Entertainment, General, Health, Science, Sports, and Technology.
-            With our meticulously curated news feed, you'll receive the most
+            With our meticulously curated news feed, you&#34;ll receive the most
             relevant and engaging content that not only keeps you ahead of the
             curve but also inspires your next comedy routine. Stay informed on
             trending topics, uncover hidden gems, and discover new angles for
@@ -194,9 +194,9 @@ const About: React.FC = () => {
           </p>
           <p className="mt-4">
             Our comprehensive selection of news categories makes it simple to
-            choose the content that aligns with your interests. Whether you're
+            choose the content that aligns with your interests. Whether you&#34;re
             brainstorming material for your next stand-up set or simply staying
-            in the loop, Humor Hub News ensures you're equipped with timely
+            in the loop, Humor Hub News ensures you&#34;re equipped with timely
             information and a keen understanding of current events. The dynamic,
             real-time updates empower you to tackle any topic with fresh,
             well-informed humor.
@@ -205,15 +205,15 @@ const About: React.FC = () => {
             For a unique comedic perspective, you can send any article title and
             details directly to ComicBot, your AI comedy assistant. ComicBot
             analyzes the news and helps generate humorous takes and creative
-            insights to make your jokes stand out. Whether you're crafting sharp
+            insights to make your jokes stand out. Whether you&#34;re crafting sharp
             one-liners, developing satirical commentary, or need a clever quip
             for your next sketch, ComicBot offers a humorous spin that can be
             tailored to your audience.
           </p>
           <p className="mt-4">
-            Don't miss out on the chance to blend the latest headlines with your
+            Don&#34;t miss out on the chance to blend the latest headlines with your
             comedic flair. With Humor Hub News and ComicBot working together,
-            you'll have all the tools needed to transform any story into a
+            you&#34;ll have all the tools needed to transform any story into a
             source of laughter. Dive into the latest news, explore new comedic
             angles, and let your creativity shine.
           </p>
@@ -226,13 +226,13 @@ const About: React.FC = () => {
           <p className="mt-4">
             As a passionate tech-savvy comedy enthusiast, I created this app
             with one primary goal: to empower comedians at all stages of their
-            careers. Whether you're just starting out, looking for open mic
+            careers. Whether you&#34;re just starting out, looking for open mic
             events to practice your bits, or an established comedian on the
             road, this platform is designed with you in mind.
           </p>
           <p className="mt-4">
             I know firsthand how challenging it can be to get your comedic
-            material out there and find suitable venues. That's why I built Mic
+            material out there and find suitable venues. That&#34;s why I built Mic
             Finder to be the ultimate resource, providing performers with a
             curated database of stages across major cities in the U.S. ComicBot
             and Jokepad are here to help comedians brainstorm ideas, refine
@@ -241,10 +241,10 @@ const About: React.FC = () => {
             lot more fun.
           </p>
           <p className="mt-4">
-            I'm always eager to connect with fellow comedians, learn about your
+            I&#34;m always eager to connect with fellow comedians, learn about your
             unique needs, and improve the platform to better support you.
             Whether you have a question, suggestion, or just want to share your
-            comedic experiences, I'm here to help!
+            comedic experiences, I&#34;m here to help!
           </p>
           <div className="mt-6">
             <a
