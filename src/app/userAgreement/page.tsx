@@ -5,19 +5,25 @@ import Link from "next/link";
 
 const UserAgreement: React.FC = () => {
   return (
-    <div style={{ backgroundColor: "white", color: "black", padding: "20px" }}>
-      <h1>User Agreement (Terms of Use)</h1>
+    <div
+      style={{
+        backgroundColor: "zinc-100",
+        color: "zinc-900",
+        padding: "3rem",
+      }}
+    >
+      <h1 className="title text-center">User Agreement (Terms of Use)</h1>
       <p>
         <strong>Last updated:</strong> 4/10/24
       </p>
 
-      <h2>Acceptance of Terms</h2>
+      <h2 className="subtitle-style p-2">UserAcceptance of Terms</h2>
       <p>
         By using this platform, you agree to the following Terms of Use. If you
         do not agree with these terms, please discontinue use immediately.
       </p>
 
-      <h2>Open Source and MIT License</h2>
+      <h2 className="subtitle-style p-2">UserOpen Source and MIT License</h2>
       <p>
         This project is open source and available under the MIT License, meaning
         that:
@@ -33,7 +39,7 @@ const UserAgreement: React.FC = () => {
         </li>
       </ol>
 
-      <h2>Responsibilities</h2>
+      <h2 className="subtitle-style p-2">UserResponsibilities</h2>
       <ol>
         <li>
           <strong>Content:</strong> You are responsible for any content or
@@ -50,27 +56,27 @@ const UserAgreement: React.FC = () => {
         </li>
       </ol>
 
-      <h2>Disclaimer of Warranties</h2>
+      <h2 className="subtitle-style p-2">UserDisclaimer of Warranties</h2>
       <p>
         The software is provided "as is," without warranties or guarantees of
         any kind. The platform operators disclaim any implied warranties of
         merchantability, fitness for a particular purpose, or non-infringement.
       </p>
 
-      <h2>Limitation of Liability</h2>
+      <h2 className="subtitle-style p-2">UserLimitation of Liability</h2>
       <p>
         In no event shall the platform operators or contributors be liable for
         any direct, indirect, incidental, or consequential damages arising from
         the use or inability to use the software.
       </p>
 
-      <h2>Changes to This Agreement</h2>
+      <h2 className="subtitle-style p-2">UserChanges to This Agreement</h2>
       <p>
         We may update this agreement periodically. Your continued use of the
         platform constitutes acceptance of the new terms.
       </p>
 
-      <h2>Contact Information</h2>
+      <h2 className="subtitle-style p-2">UserContact Information</h2>
       <p>
         For questions or feedback, contact us at{" "}
         <a

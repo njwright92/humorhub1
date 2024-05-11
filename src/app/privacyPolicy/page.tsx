@@ -5,8 +5,14 @@ import Link from "next/link";
 
 const PrivacyPolicy: React.FC = () => {
   return (
-    <div style={{ backgroundColor: "white", color: "black", padding: "20px" }}>
-      <h1>Privacy Policy</h1>
+    <div
+      style={{
+        backgroundColor: "zinc-100",
+        color: "zinc-900",
+        padding: "3rem",
+      }}
+    >
+      <h1 className="title text-center">Privacy Policy</h1>
       <p>
         <strong>Last updated:</strong> 4/10/24
       </p>
@@ -17,7 +23,7 @@ const PrivacyPolicy: React.FC = () => {
         use it, and your rights regarding your data.
       </p>
 
-      <h2>Information We Collect</h2>
+      <h2 className="subtitle-style p-2">Information We Collect</h2>
       <ol>
         <li>
           <strong>Personal Information:</strong> When you interact with our
@@ -35,35 +41,35 @@ const PrivacyPolicy: React.FC = () => {
         </li>
       </ol>
 
-      <h2>How We Use Information</h2>
+      <h2 className="subtitle-style p-2">How We Use Information</h2>
       <ol>
         <li>Improve user experience and services.</li>
         <li>Analyze usage patterns for platform optimization.</li>
         <li>Respond to user inquiries and support requests.</li>
       </ol>
 
-      <h2>Data Sharing</h2>
+      <h2 className="subtitle-style p-2">Data Sharing</h2>
       <ol>
         <li>To comply with legal obligations.</li>
         <li>To protect our rights, users, and third parties.</li>
         <li>In connection with a merger or acquisition.</li>
       </ol>
 
-      <h2>Your Rights</h2>
+      <h2 className="subtitle-style p-2">Your Rights</h2>
       <ol>
         <li>Access, correct, or delete your data.</li>
         <li>Withdraw consent where we rely on it for data processing.</li>
         <li>Opt-out of any marketing communications.</li>
       </ol>
 
-      <h2>Changes to This Policy</h2>
+      <h2 className="subtitle-style p-2">Changes to This Policy</h2>
       <p>
         We may update this policy periodically. Any changes will be communicated
         on our platform, and your continued use indicates acceptance of the new
         terms.
       </p>
 
-      <h2>Contact Us</h2>
+      <h2 className="subtitle-style p-2">Contact Us</h2>
       <p>
         For questions or concerns, reach out to us at{" "}
         <a href="mailto:njwright92@gmail.com">njwright92@gmail.com</a>.
