@@ -50,18 +50,20 @@ export default function Header() {
     <>
       <header className="p-1 text-zinc-200 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex justify-between items-center">
-          <Link href="/">
-            <Image
-              src={hh}
-              alt="Mic"
-              width={70}
-              height={70}
-              className="rounded-full mr-2"
-            />
-          </Link>
+          <div className="mr-6">
+            <Link href="/">
+              <Image
+                src={hh}
+                alt="Mic"
+                width={70}
+                height={70}
+                className="rounded-full"
+              />
+            </Link>
+          </div>
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub!</h1>
-          <button onClick={toggleMenu} className="text-zinc-900">
-            <Bars3Icon className="h-8 w-8 ml-2" />
+          <button onClick={toggleMenu} className="text-zinc-900 ml-6">
+            <Bars3Icon className="h-8 w-8 " />
           </button>
         </nav>
         <div
@@ -86,25 +88,39 @@ export default function Header() {
           {isUserSignedIn ? (
             <div className="nav-links">
               <Link href="/MicFinder">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Mic Finder</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  Mic Finder
+                </span>
               </Link>
               <Link href="/ComicBot">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Comic Bot</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  Comic Bot
+                </span>
               </Link>
               <Link href="/JokePad">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Joke Pad</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  Joke Pad
+                </span>
               </Link>
               <Link href="/HHapi">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">News</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  News
+                </span>
               </Link>
               <Link href="/Profile">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Profile</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  Profile
+                </span>
               </Link>
               <Link href="/contact">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">Contact</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  Contact
+                </span>
               </Link>
               <Link href="/about">
-                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">About</span>
+                <span className="nav-link bg-black rounded-xl p-2 shadow-lg">
+                  About
+                </span>
               </Link>
             </div>
           ) : (

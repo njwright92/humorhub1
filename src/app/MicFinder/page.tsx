@@ -122,7 +122,6 @@ const EventsPage = () => {
       .trim();
   }, []);
 
-  // Then apply this in your handleCityFilterChange and anywhere else necessary:
   const handleCityFilterChange = useCallback(
     (city: string) => {
       const normalizedCity = normalizeCityName(city);
@@ -306,9 +305,8 @@ const EventsPage = () => {
     [setSelectedCity, setFilterCity, normalizeCityName]
   );
 
-  // useMemo to derive uniqueCities from events, now incorporating the searchTerm to filter cities
   const uniqueCities = useMemo(() => {
-    const citySet = new Set<string>(); // Explicitly type the Set as string
+    const citySet = new Set<string>();
     events.forEach((event) => {
       if (event.location) {
         const parts = event.location.split(", ");
@@ -320,10 +318,8 @@ const EventsPage = () => {
         }
       }
     });
-    // Now the sort function explicitly knows that 'a' and 'b' are strings
     return Array.from(citySet).sort((a, b) => a.localeCompare(b));
   }, [events, searchTerm, normalizeCityName]);
-  
 
   const handleDateChange = useCallback((date: Date | null) => {
     if (date) {

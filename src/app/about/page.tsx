@@ -7,12 +7,12 @@ const About: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="p-10 m-6 text-center">
-        <h1 className="text-4xl text-center mb-6 text-orange-500">
+      <div className="screen-container p-2 m-2 text-center">
+        <h1 className="title text-4xl text-center mb-6 text-orange-500">
           About Us
         </h1>
         <section className="mb-10">
-          <h2 className="text-2xl mb-4 text-orange-500">
+          <h2 className="subtitle text-2xl mb-4 text-orange-500">
             Mic Finder
           </h2>
           <p className="mt-4">
