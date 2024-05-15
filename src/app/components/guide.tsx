@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 
 const Guide = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +12,7 @@ const Guide = () => {
     <div className="guide-container">
       <button className="gif-button" onClick={toggleVideo}>
         {/* Replace 'path_to_gif.gif' with your actual gif path */}
-        <img
+        <Image
           src="path_to_gif.gif"
           alt="Open Guide"
           className="w-16 h-16 rounded-full"

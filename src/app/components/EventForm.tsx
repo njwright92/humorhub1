@@ -1,29 +1,30 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, ChangeEvent, FormEvent } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import Modal from "./modal";
-
-const submitEvent = async (eventData: EventData) => {
-  try {
-    await addDoc(collection(db, "events"), eventData);
-  } catch (error) {
-    console.error("Error adding event: ", error);
-  }
-};
+import { getLatLng } from "../utils/geocode";
 
 interface EventData {
   name: string;
   location: string;
   date: Date | null;
-  lat: number;
-  lng: number;
   details: string;
   isRecurring: boolean;
+  lat?: number;
+  lng?: number;
 }
+
+const submitEvent = async (eventData: EventData) => {
+  try {
+    await addDoc(collection(db, "userEvents"), eventData);
+  } catch (error) {
+    console.error("Error adding event: ", error);
+  }
+};
 
 const EventForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -31,8 +32,6 @@ const EventForm: React.FC = () => {
     name: "",
     location: "",
     date: null,
-    lat: 0,
-    lng: 0,
     details: "",
     isRecurring: false,
   });
@@ -42,7 +41,7 @@ const EventForm: React.FC = () => {
   const memoizedEvent = useMemo(() => event, [event]);
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: FormEvent) => {
       e.preventDefault();
       if (
         !memoizedEvent.name ||
@@ -53,35 +52,53 @@ const EventForm: React.FC = () => {
         setFormErrors("Please fill in all required fields.");
         return;
       }
+      const isError = (error: unknown): error is Error => {
+        return (error as Error).message !== undefined;
+      };
 
       setFormErrors("");
       try {
-        await submitEvent(memoizedEvent);
+        // Convert the address to lat/lng
+        const { lat, lng } = await getLatLng(memoizedEvent.location);
+
+        // Prepare the event data with lat/lng
+        const eventData: EventData = {
+          ...memoizedEvent,
+          lat,
+          lng,
+        };
+
+        await submitEvent(eventData);
         setShowModal(false);
         alert(
           "Event has been added successfully! Check the events page to view! Email me with any issues."
         );
       } catch (error) {
-        console.error("Error adding event: ", error);
-        setFormErrors("Failed to add the event. Please try again.");
+        if (
+          isError(error) &&
+          error.message.includes("Failed to get latitude and longitude")
+        ) {
+          setFormErrors(
+            "Could not find the location. Please enter a full and correct address, including the city and state."
+          );
+        } else {
+          setFormErrors(
+            "An unexpected error occurred. Please try again later."
+          );
+        }
       }
     },
     [memoizedEvent]
   );
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-
-      if (name === "lat" || name === "lng") {
-        const numberValue = value === "" ? 0 : parseFloat(value);
-        setEvent((prevEvent) => ({ ...prevEvent, [name]: numberValue }));
-      } else {
-        setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
-      }
+      setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
     },
     []
   );
+
   return (
     <>
       <button className="btn underline" onClick={() => setShowModal(true)}>
@@ -115,7 +132,7 @@ const EventForm: React.FC = () => {
           />
 
           <label htmlFor="location" className="text-zinc-900">
-            Location must include city state abbr ex(Spokane WA):
+            Location must include full address:
           </label>
           <input
             type="text"
@@ -140,33 +157,6 @@ const EventForm: React.FC = () => {
             autoComplete="off"
           />
 
-          <label htmlFor="latitude" className="text-zinc-900">
-            Latitude **Get coordinates from Google Maps**:
-          </label>
-          <input
-            type="number"
-            id="latitude"
-            name="lat"
-            value={event.lat}
-            onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2"
-            autoComplete="off"
-            required
-          />
-
-          <label htmlFor="longitude" className="text-zinc-900">
-            Longitude **Get coordinates from Google Maps**:
-          </label>
-          <input
-            type="number"
-            id="longitude"
-            name="lng"
-            value={event.lng}
-            onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2"
-            required
-            autoComplete="off"
-          />
           <h6 className="text-zinc-900">Is it a recurring event?:</h6>
           <p className="text-red-500">
             If yes specify day of the week in details.
@@ -210,7 +200,7 @@ const EventForm: React.FC = () => {
             onChange={(date: Date | null) => setEvent({ ...event, date })}
             placeholderText={`📅 ${new Date().toLocaleDateString()}`}
             className="text-zinc-900 shadow-xl rounded-xl p-2"
-            />
+          />
 
           <button type="submit" className="btn">
             Submit Event

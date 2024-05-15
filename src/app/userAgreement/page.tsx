@@ -34,7 +34,7 @@ const UserAgreement: React.FC = () => {
           software with or without modification, free of charge.
         </li>
         <li>
-          The software is provided "as is," without warranty of any kind. Use at
+          The software is provided &#34;as is,&#34; without warranty of any kind. Use at
           your own risk.
         </li>
       </ol>
@@ -58,7 +58,7 @@ const UserAgreement: React.FC = () => {
 
       <h2 className="subtitle-style p-2">UserDisclaimer of Warranties</h2>
       <p>
-        The software is provided "as is," without warranties or guarantees of
+        The software is provided &#34;as is,&#34; without warranties or guarantees of
         any kind. The platform operators disclaim any implied warranties of
         merchantability, fitness for a particular purpose, or non-infringement.
       </p>
