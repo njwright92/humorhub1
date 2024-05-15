@@ -12,10 +12,12 @@ const Guide = () => {
     <div className="guide-container">
       <button className="gif-button" onClick={toggleVideo}>
         {/* Replace 'path_to_gif.gif' with your actual gif path */}
-        <Image
+        <img
           src="path_to_gif.gif"
           alt="Open Guide"
-          className="w-16 h-16 rounded-full"
+          height={20}
+          width={20}
+          className="shadown-xl rounded-full"
         />
       </button>
 

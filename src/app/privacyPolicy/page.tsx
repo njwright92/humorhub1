@@ -75,8 +75,9 @@ const PrivacyPolicy: React.FC = () => {
         <a href="mailto:njwright92@gmail.com">njwright92@gmail.com</a>.
       </p>
 
-      <div style={{ marginTop: "20px" }}>
-        <Link href="/">Go back to Home</Link>
+      <div style={{ marginTop: "4rem" }}>
+      <Link className="btn hover:underline hover:text-blue-500" href="/">
+          Go back to Home</Link>
       </div>
     </div>
   );

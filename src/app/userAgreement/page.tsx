@@ -88,8 +88,8 @@ const UserAgreement: React.FC = () => {
         .
       </p>
 
-      <div style={{ marginTop: "20px" }}>
-        <Link className="hover:underline hover:text-blue-500" href="/">
+      <div style={{ marginTop: "4rem" }}>
+        <Link className="btn hover:underline hover:text-blue-500" href="/">
           Go back to Home
         </Link>
       </div>
