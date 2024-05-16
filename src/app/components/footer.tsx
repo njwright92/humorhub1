@@ -99,8 +99,12 @@ export default function Footer() {
                 Legal
               </h2>
               <div className="text-zinc-200 flex flex-col">
-                <Link href="/userAgreement">User Agreement</Link>
-                <Link href="/privacyPolicy">Privacy Policy</Link>
+                <Link className="hover:underline" href="/userAgreement">
+                  User Agreement
+                </Link>
+                <Link className="hover:underline" href="/privacyPolicy">
+                  Privacy Policy
+                </Link>
               </div>
             </div>
           </div>
