@@ -158,7 +158,7 @@ export default function UserProfile() {
     <>
       <Header />
       <main className="screen-container">
-        <h1 className="title text-4xl font-bold text-center mb-6">
+        <h1 className="title text-2xl font-bold text-center mb-6">
           Your Profile
         </h1>
 
@@ -205,14 +205,10 @@ export default function UserProfile() {
             )}
           </div>
 
-          <div className="form-container mb-4">
+          <div className="mb-4">
             {isEditing ? (
               <>
-                <label
-                  htmlFor="name"
-                  style={{ color: "#d4d4d8" }}
-                  className="block text-lg font-medium mb-2"
-                >
+                <label htmlFor="name" className="block text-xl mb-2">
                   Name:
                 </label>
                 <input
@@ -235,13 +231,12 @@ export default function UserProfile() {
             )}
           </div>
 
-          <div className="form-container mb-6">
+          <div className="mb-6">
             {isEditing ? (
               <>
                 <label
                   htmlFor="bio"
-                  style={{ color: "#d4d4d8" }}
-                  className="block text-lg font-medium mb-2"
+                  className="block text-lg text-zinc-200 mb-2"
                 >
                   Bio:
                 </label>
