@@ -124,48 +124,57 @@ const NewsPage = () => {
         <h1 className="title text-3xl font-bold text-center text-zinc-200 mb-6">
           Humor Hub News
         </h1>
-        <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl drop-shadow-md">
-          <h2> Welcome to Humor Hub News Portal</h2>
-          <p className="text-center mb-4 text-lg drop-shadow-xl">
-            Your gateway to the latest in comedy, politics, and beyond.
-            Customize your news experience with targeted categories and dynamic
-            search to keep your insights fresh and focused.
-          </p>
+        <div className="min-h-screen bg-zinc-900 flex flex-col items-center p-4">
+          <section className="bg-zinc-200 text-zinc-900 p-8 rounded-xl drop-shadow-md max-w-md w-full mx-2 mb-4">
+            <h2 className="text-center text-2xl font-bold mb-4">
+              Welcome to Humor Hub News Portal
+            </h2>
+            <p className="text-center mb-4 text-lg">
+              Your gateway to the latest in comedy, politics, and beyond.
+              Customize your news experience with targeted categories and
+              dynamic search to keep your insights fresh and focused.
+            </p>
+            <select
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              className="mb-4 p-2 rounded-xl shadow-lg bg-zinc text-zinc-900 w-full"
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </option>
+              ))}
+            </select>
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={resetNews}
+                className="btn bg-red-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-red-600 transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+          </section>
 
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="mb-4 p-2 rounded-xl shadow-lg bg-zinc-200 text-zinc-900"
-          >
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={resetNews}
-            className="btn inline-block bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition-colors"
-          >
-            Reset
-          </button>
           {isNewsFetched &&
             Object.keys(fetchedArticles).map((category) => (
-              <section key={category} className="category-container">
-                <div className="flex flex-col md:flex-row justify-between items-center text-zinc-200">
-                  <h2 className="category-title w-full text-center md:text-center mb-4 md:mb-0">
+              <section
+                key={category}
+                className="category-container mb-8 w-full"
+              >
+                <div className="flex flex-col md:flex-row md:items-center text-zinc-200 mb-4">
+                  <h2 className="category-title text-center text-2xl font-bold mb-2 md:mb-0 w-full">
                     {category.charAt(0).toUpperCase() + category.slice(1)} News
                   </h2>
-                  <p className="w-full md:w-auto sm:mb-4 md:mb-0 md:text-right text-zinc-200 md:order-last">
+                  <p className="text-center md:text-right text-zinc-200 w-full md:w-auto md:ml-4">
                     Send this to ComicBot to get the ball rolling!
                   </p>
-                  
                 </div>
+
                 {fetchedArticles[category as Category]?.map(
                   (article, index) => (
                     <article
                       key={index}
-                      className="news-item flex flex-col md:flex-row items-center justify-between"
+                      className="news-item flex flex-col md:flex-row items-center justify-between bg-zinc-800 p-4 rounded-lg mb-4"
                     >
                       <div className="flex-1 flex items-center">
                         <button
@@ -222,9 +231,8 @@ const NewsPage = () => {
                 )}
               </section>
             ))}
-        </section>
+        </div>
       </div>
-
       <Footer />
     </>
   );
