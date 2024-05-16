@@ -148,7 +148,7 @@ const NewsPage = () => {
             <div className="flex justify-center mt-4">
               <button
                 onClick={resetNews}
-                className="btn bg-red-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-red-600 transition-colors"
+                className=" bg-red-500 text-zinc-200 font-semibold py-2 px-4 rounded-2xl shadow-xl hover:bg-red-600 transition-colors"
               >
                 Reset
               </button>
