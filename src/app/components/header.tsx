@@ -35,11 +35,20 @@ export default function Header() {
 
   const handleSearch = async (searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-    const matchingCity = Object.keys(cityContext).find(
-      (city) =>
-        city.toLowerCase().startsWith(normalizedSearchTerm) ||
-        city.toLowerCase().includes(normalizedSearchTerm)
+
+    // First, check for an exact match
+    let matchingCity = Object.keys(cityContext).find(
+      (city) => city.toLowerCase() === normalizedSearchTerm
     );
+
+    // If no exact match is found, check for partial matches
+    if (!matchingCity) {
+      matchingCity = Object.keys(cityContext).find(
+        (city) =>
+          city.toLowerCase().startsWith(normalizedSearchTerm) ||
+          city.toLowerCase().includes(normalizedSearchTerm)
+      );
+    }
 
     if (matchingCity) {
       router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
