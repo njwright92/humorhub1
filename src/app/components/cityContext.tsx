@@ -1,7 +1,7 @@
 "use client";
+
 import React, { createContext, useContext, ReactNode } from "react";
 
-// Define the CityContext and its initial value
 const CityContext = createContext<any>(null);
 
 type CityCoordinates = {
@@ -55,7 +55,7 @@ const cityCoordinates: CityCoordinates = {
 const extractCityNames = (coordinates: CityCoordinates) => {
   const cityNames: CityCoordinates = {};
   Object.keys(coordinates).map((key) => {
-    const cityName = key.split(",")[0].trim(); // Extract city name and trim any extra spaces
+    const cityName = key.split(",")[0].trim();
     return (cityNames[cityName] = coordinates[key]);
   });
   return cityNames;

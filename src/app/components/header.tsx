@@ -10,6 +10,8 @@ import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
 import hh from "../../app/hh.webp";
 import Image from "next/image";
+import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
+import { db } from "../../../firebase.config";
 
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -31,7 +33,7 @@ export default function Header() {
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
-  const handleSearch = (searchTerm: string) => {
+  const handleSearch = async (searchTerm: string) => {
     const normalizedSearchTerm = searchTerm.toLowerCase().trim();
     const matchingCity = Object.keys(cityContext).find(
       (city) =>
@@ -43,6 +45,16 @@ export default function Header() {
       router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
     } else {
       alert("No matching cities found, adding more cities check back soon.");
+
+      try {
+        await addDoc(collection(db, "searchedCities"), {
+          city: searchTerm,
+          timestamp: new Date(),
+        });
+        console.log("Searched city logged successfully");
+      } catch (error) {
+        console.error("Error logging searched city: ", error);
+      }
     }
   };
 
@@ -50,20 +62,19 @@ export default function Header() {
     <>
       <header className="p-1 text-zinc-200 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex justify-between items-center">
-          <div className="mr-6">
-            <Link href="/">
-              <Image
-                src={hh}
-                alt="Mic"
-                width={70}
-                height={70}
-                className="rounded-full"
-              />
-            </Link>
-          </div>
+          <Link href="/">
+            <Image
+              src={hh}
+              alt="Mic"
+              width={70}
+              height={70}
+              className="rounded-full"
+            />
+          </Link>
+
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub!</h1>
-          <button onClick={toggleMenu} className="text-zinc-900 ml-6">
-            <Bars3Icon className="h-8 w-8 " />
+          <button onClick={toggleMenu} className="text-zinc-900">
+            <Bars3Icon className="h-8 w-8" />
           </button>
         </nav>
         <div

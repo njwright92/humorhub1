@@ -130,8 +130,8 @@ const Jokes = () => {
   return (
     <>
       <Header />
-      <main className="screen-container flex flex-col">
-        <h1 className="title text-4xl font-bold text-center mb-8">
+      <main className="flex flex-col">
+        <h1 className="title text-2xl font-bold text-center mb-8">
           Welcome to JokePad!
         </h1>
         <p className="text-center mb-6">
@@ -140,11 +140,11 @@ const Jokes = () => {
           work in progress, JokePad is here to capture and organize your comedic
           genius.
         </p>
-        <section className="card-style p-6 rounded-xl shadow-lg bg-gray-300">
-          <form onSubmit={handleSubmit} className="form-container space-y-4">
+        <section className="p-6 rounded-xl shadow-lg">
+          <form onSubmit={handleSubmit}>
             <label
               htmlFor="joke"
-              className="block text-lg font-semibold text-black mb-2"
+              className="block text-lg font-semibold text-zinc-200 text-center mb-2"
             >
               Write Your Joke/Bit:
             </label>
@@ -153,57 +153,61 @@ const Jokes = () => {
               value={newJoke}
               onChange={handleInputChange}
               placeholder="What's making you laugh today? Share it here..."
-              className="input-field w-full h-40 p-4 text-black rounded-xl shadow-inner"
+              className="input-field w-full h-35 p-4 text-zinc-900 rounded-xl shadow-inner"
               required
             />
-            <button
-              type="submit"
-              className="btn bg-orange-500 hover:bg-orange-700 text-zinc-900 hover:text-zinc-200 px-12 py-2 rounded-xl shadow-lg text-lg transition-all duration-150 ease-in-out hover:animate-pulse"
-            >
-              Add Joke
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-orange-500 hover:bg-orange-700 text-zinc-200 px-4 py-2 rounded-xl shadow-lg text-md transition-all duration-150 ease-in-out hover:animate-pulse"
+              >
+                Add Joke
+              </button>
+            </div>
           </form>
-
-          <section className="jokes-list">
-            {jokes.map((joke) => (
-              <article key={joke.id} className="event-item">
-                {editingJokeId === joke.id ? (
-                  <>
-                    <textarea
-                      value={joke.joke}
-                      onChange={(e) => handleEditChange(e, joke.id)}
-                      className="input-field flex-grow mb-2 w-full"
-                    />
-                    <div className="button-container flex justify-start">
-                      <button
-                        className="btn mr-2"
-                        onClick={() => handleEditSubmit(joke.id)}
-                      >
-                        Save
-                      </button>
-                      <button className="btn" onClick={handleCancelEdit}>
-                        Cancel
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex justify-between items-center w-full">
-                    <p className="flex-grow">{joke.joke}</p>
-                    <div className="icon-container flex-shrink-0 flex">
-                      <PencilIcon
-                        className="h-6 w-6 mr-2 cursor-pointer"
-                        onClick={() => handleEditClick(joke.id)}
-                      />
-                      <TrashIcon
-                        className="h-6 w-6 cursor-pointer"
-                        onClick={() => handleDelete(joke.id)}
-                      />
-                    </div>
+        </section>
+        <section className="jokes-list p-4">
+          {jokes.map((joke) => (
+            <article key={joke.id} className="event-item">
+              {editingJokeId === joke.id ? (
+                <>
+                  <textarea
+                    value={joke.joke}
+                    onChange={(e) => handleEditChange(e, joke.id)}
+                    className="input-field w-full h-35 p-4 text-zinc-900 rounded-xl shadow-inner"
+                  />
+                  <div className="button-container flex justify-start">
+                    <button
+                      className="bg-green-500 hover:bg-green-700 text-zinc-200 px-2 py-1 rounded-xl shadow-lg text-md transition-all duration-150 ease-in-out hover:animate-pulse mr-2"
+                      onClick={() => handleEditSubmit(joke.id)}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="bg-red-500 hover:bg-red-700 text-zinc-200 px-2 py-1 rounded-xl shadow-lg text-md transition-all duration-150 ease-in-out hover:animate-pulse"
+                      onClick={handleCancelEdit}
+                    >
+                      Cancel
+                    </button>
                   </div>
-                )}
-              </article>
-            ))}
-          </section>
+                </>
+              ) : (
+                <div className="flex justify-between items-center w-full">
+                  <p className="flex-grow">{joke.joke}</p>
+                  <div className="icon-container flex-shrink-0 flex">
+                    <PencilIcon
+                      className="h-6 w-6 m-2 cursor-pointer text-green-500"
+                      onClick={() => handleEditClick(joke.id)}
+                    />
+                    <TrashIcon
+                      className="h-6 w-6 m-2 cursor-pointer text-red-500"
+                      onClick={() => handleDelete(joke.id)}
+                    />
+                  </div>
+                </div>
+              )}
+            </article>
+          ))}
         </section>
       </main>
       <Footer />
