@@ -40,7 +40,4 @@ package-lock.json
 # firebase
 firebase.config.js
 package-lock.json
-src/app/components/GoogleMap.tsx
-src/app/models/mistral-comic-v3.gguf
-src/app/models/mistral-comedy-3.0-ckpt-1600.Q6_K.gguf
 humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json
