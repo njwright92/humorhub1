@@ -127,8 +127,9 @@ const EventsPage = () => {
       const normalizedCity = normalizeCityName(city);
       setFilterCity(normalizedCity);
       setSelectedCity(normalizedCity);
+      setSearchTerm(normalizedCity);
     },
-    [setFilterCity, setSelectedCity, normalizeCityName]
+    [setFilterCity, setSelectedCity, normalizeCityName, setSearchTerm]
   );
 
   // Filter events based on the selected city
@@ -155,6 +156,7 @@ const EventsPage = () => {
 
     if (city) {
       setSelectedCity(city);
+      setFilterCity(city);
     }
 
     if (queryTerm) {
@@ -167,7 +169,7 @@ const EventsPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "userEvents")); // Change "events" to "userEvents"
+        const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = [];
         querySnapshot.forEach((doc) => {
           fetchedEvents.push(doc.data() as Event);
@@ -300,9 +302,10 @@ const EventsPage = () => {
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       const normalizedCity = normalizeCityName(event.target.value);
       setSelectedCity(normalizedCity);
-      setFilterCity(normalizedCity); // Also update the filterCity
+      setFilterCity(normalizedCity);
+      setSearchTerm(normalizedCity);
     },
-    [setSelectedCity, setFilterCity, normalizeCityName]
+    [setSelectedCity, setFilterCity, normalizeCityName, setSearchTerm]
   );
 
   const uniqueCities = useMemo(() => {
