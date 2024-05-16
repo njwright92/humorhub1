@@ -41,3 +41,5 @@ package-lock.json
 firebase.config.js
 package-lock.json
 humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json
+src/app/components/GoogleMap.tsx
+src/app/utils/geocode.js
