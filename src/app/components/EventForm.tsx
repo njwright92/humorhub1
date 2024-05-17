@@ -7,7 +7,6 @@ import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import Modal from "./modal";
 import { getLatLng } from "../utils/geocode";
-
 interface EventData {
   name: string;
   location: string;
