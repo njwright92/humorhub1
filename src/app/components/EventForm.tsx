@@ -7,6 +7,7 @@ import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import Modal from "./modal";
 import { getLatLng } from "../utils/geocode";
+
 interface EventData {
   name: string;
   location: string;
@@ -39,6 +40,16 @@ const EventForm: React.FC = () => {
 
   const memoizedEvent = useMemo(() => event, [event]);
 
+  const resetForm = () => {
+    setEvent({
+      name: "",
+      location: "",
+      date: null,
+      details: "",
+      isRecurring: false,
+    });
+  };
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -51,10 +62,6 @@ const EventForm: React.FC = () => {
         setFormErrors("Please fill in all required fields.");
         return;
       }
-      const isError = (error: unknown): error is Error => {
-        return (error as Error).message !== undefined;
-      };
-
       setFormErrors("");
       try {
         // Convert the address to lat/lng
@@ -68,22 +75,26 @@ const EventForm: React.FC = () => {
         };
 
         await submitEvent(eventData);
+        resetForm();
         setShowModal(false);
         alert(
           "Event has been added successfully! Check the events page to view! Email me with any issues."
         );
       } catch (error) {
-        if (
-          isError(error) &&
-          error.message.includes("Failed to get latitude and longitude")
-        ) {
-          setFormErrors(
-            "Could not find the location. Please enter a full and correct address, including the city and state."
+        console.error("Geocoding error: ", error); // Log the original error
+
+        // Attempt to submit the event without lat/lng to the searchedCities collection
+        try {
+          await addDoc(collection(db, "searchedCities"), memoizedEvent);
+          resetForm();
+          alert(
+            "Location could not be verified. We'll review it manually. Check events page in 24 hours. Email me with any issues."
           );
-        } else {
-          setFormErrors(
-            "An unexpected error occurred. Please try again later."
-          );
+          setShowModal(false); // Close the modal after displaying the message
+        } catch (dbError) {
+          console.error("Error saving to searchedCities: ", dbError);
+          setFormErrors("Failed to save event for manual review.");
+          setShowModal(false); // Close the modal even if there's an error
         }
       }
     },
