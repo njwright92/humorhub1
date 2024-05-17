@@ -204,7 +204,10 @@ const ComicBot = () => {
   const sendConversationToJokepad = async (
     conversation: ConversationMessage[]
   ) => {
-    if (!userUID) return;
+    if (!userUID) {
+      alert("User is not signed in.");
+      return;
+    }
     try {
       const jokeCollection = collection(db, "jokes");
       const conversationText = conversation
@@ -214,8 +217,10 @@ const ComicBot = () => {
         joke: conversationText,
         uid: userUID,
       });
+      alert("Joke successfully sent to Jokepad!"); // This line provides user feedback
     } catch (error) {
       console.error("Error sending conversation to Jokepad: ", error);
+      alert("Failed to send joke to Jokepad."); // Provide feedback on failure
     }
   };
 

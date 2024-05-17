@@ -360,12 +360,18 @@ const EventsPage = () => {
 
     return (
       <div style={style}>
-        <h3 className="text-lg font-semibold">{event.name}</h3>
+        <h3 className="text-lg font-semibold mt-4">{event.name}</h3>
         <p className="font-bold">📅 Date: {event.date}</p>
         <p className="font-bold">📍 Location: {event.location}</p>
         <div className="details font-bold">
           <span className="details-label">ℹ️ Details:</span>
           <div dangerouslySetInnerHTML={{ __html: event.details }} />
+          <button
+            className="btn mt-2 mb-2 px-2 py-1"
+            onClick={() => handleEventSave(event)}
+          >
+            Save Event
+          </button>
         </div>
       </div>
     );
@@ -444,7 +450,7 @@ const EventsPage = () => {
             <p>Please select a city to see today&#39;s events.</p>
           ) : filteredEvents.length > 0 ? (
             filteredEvents.map((event) => (
-              <div key={event.id} className="event-item">
+              <div key={event.id} className="event-item mt-2">
                 <h3 className="text-lg font-semibold">{event.name}</h3>
                 <p className="details-label">📅 Date: {event.date}</p>
                 <p className="details-label">📍 Location: {event.location}</p>
@@ -453,7 +459,7 @@ const EventsPage = () => {
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
                 </div>
                 <button
-                  className="btn mt-1 px-1 py-1"
+                  className="btn mt-1 mb-1 px-2 py-1"
                   onClick={() => handleEventSave(event)}
                 >
                   Save Event
