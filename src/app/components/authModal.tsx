@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+import { XMarkIcon } from "@heroicons/react/16/solid";
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -146,7 +147,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="input-field"
+            className="input-field "
             autoComplete={isSignUp ? "new-password" : "current-password"}
           />
           {isSignUp && (
@@ -172,15 +173,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         </form>
         <button
           onClick={() => setIsSignUp(!isSignUp)}
-          className="toggle-button text-zinc-900"
+          className="toggle-button hover:underline text-blue-500"
         >
           {isSignUp
             ? "Already have an account? Sign In"
             : "Need an account? Sign Up"}
         </button>
         <div id="firebaseui-auth-container"></div>
-        <button onClick={onClose} className="close-button">
-          &times;
+        <button
+          onClick={onClose}
+          className="close-button bg-zinc-900 hover:cursor-pointer text-white"
+        >
+          <XMarkIcon className="h-9 w-9 text-zinc-900" />
         </button>
       </div>
     </div>

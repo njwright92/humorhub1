@@ -85,82 +85,100 @@ export default function Header() {
           <button onClick={toggleMenu} className="text-zinc-900">
             <Bars3Icon className="h-9 w-9" />
           </button>
-        </nav>
-        <div
-          className={`absolute top-0 left-0 h-screen w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
-            isMenuOpen ? "translate-x-0" : "-translate-x-full"
-          } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
-        >
-          <button onClick={() => setIsMenuOpen(false)} className="self-end">
-            <XMarkIcon className="h-9 w-9 text-zinc-200" />
-            <span className="sr-only">Close menu</span>
-          </button>
-          <SearchBar onSearch={handleSearch} />
-          <Link href="/">
-            <Image
-              src={hh}
-              alt="Mic"
-              width={70}
-              height={70}
-              className="rounded-full mb-2"
-            />
-          </Link>
-          <div className="nav-links">
-            <div
-              onClick={() =>
-                isUserSignedIn
-                  ? (location.href = "/HHapi")
-                  : alert("Please sign in to access this page")
-              }
-            >
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                {isUserSignedIn ? "News" : "News"}
-              </span>
+
+          <div
+            className={`absolute top-0 left-0 h-screen w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
+              isMenuOpen ? "translate-x-0" : "-translate-x-full"
+            } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
+          >
+            <button onClick={() => setIsMenuOpen(false)} className="self-end">
+              <XMarkIcon className="h-9 w-9 text-zinc-200" />
+              <span className="sr-only">Close menu</span>
+            </button>
+            <SearchBar onSearch={handleSearch} />
+            <Link href="/">
+              <Image
+                src={hh}
+                alt="Mic"
+                width={70}
+                height={70}
+                className="rounded-full mb-2"
+              />
+            </Link>
+            <div className="nav-links">
+              <div
+                onClick={() =>
+                  isUserSignedIn
+                    ? (location.href = "/HHapi")
+                    : alert("Please sign in to access this page")
+                }
+              >
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  {isUserSignedIn ? "News" : "News"}
+                </span>
+              </div>
+              <div
+                onClick={() =>
+                  isUserSignedIn
+                    ? (location.href = "/ComicBot")
+                    : alert("Please sign in to access this page")
+                }
+              >
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
+                </span>
+              </div>
+              <div
+                onClick={() =>
+                  isUserSignedIn
+                    ? (location.href = "/JokePad")
+                    : alert("Please sign in to access this page")
+                }
+              >
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
+                </span>
+              </div>
+              <Link href="/MicFinder">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  Mic Finder
+                </span>
+              </Link>
+
+              <div
+                onClick={() =>
+                  isUserSignedIn
+                    ? (location.href = "/Profile")
+                    : alert("Please sign in to access this page")
+                }
+              >
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  {isUserSignedIn ? "Profile" : "Profile"}
+                </span>
+              </div>
+              <Link href="/contact">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  Contact
+                </span>
+              </Link>
+              <Link href="/about">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                  About
+                </span>
+              </Link>
+              <button
+                onClick={toggleAuthModal}
+                className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100"
+                style={{
+                  margin: "0 auto",
+                  display: "block",
+                }}
+              >
+                Sign In/Up
+              </button>
             </div>
-            <div
-              onClick={() =>
-                isUserSignedIn
-                  ? (location.href = "/ComicBot")
-                  : alert("Please sign in to access this page")
-              }
-            >
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
-              </span>
-            </div>
-            <div
-              onClick={() =>
-                isUserSignedIn
-                  ? (location.href = "/JokePad")
-                  : alert("Please sign in to access this page")
-              }
-            >
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
-              </span>
-            </div>
-            <Link href="/MicFinder">
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                Mic Finder
-              </span>
-            </Link>
-            <Link href="/Profile">
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                Profile
-              </span>
-            </Link>
-            <Link href="/contact">
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                Contact
-              </span>
-            </Link>
-            <Link href="/about">
-              <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                About
-              </span>
-            </Link>
           </div>
-        </div>
+        </nav>
       </header>
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />
     </>

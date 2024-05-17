@@ -17,7 +17,7 @@ import Footer from "../components/footer";
 import Loading from "../components/loading";
 import { useHeadline } from "../components/headlinecontext";
 import logo from "../../app/comicLogo.webp";
-import comic from "../../app/comic.png";
+import comic from "../../app/icon.png";
 import Image from "next/image";
 type ConversationMessage = {
   from: string;
