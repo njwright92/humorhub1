@@ -27,8 +27,8 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="screen-container p-10 m-6">
-        <section className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md flex flex-col items-center">
+      <div className="screen-container">
+        <section className="card-style bg-zinc-900 text-zinc-200 p-4 rounded-xl shadow-md flex flex-col items-center">
           <h1 className="title-style text-2xl font-bold mb-4 text-center drop-shadow-md">
             Mic Finder!
           </h1>
@@ -43,7 +43,7 @@ export default function Home() {
                 <EventForm />
               </Suspense>
             </div>
-            <div className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0">
+            <div className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-2">
               <Link href="/MicFinder">
                 <Image
                   src={micFinder}
@@ -64,7 +64,7 @@ export default function Home() {
 
         <section
           data-aos="fade-up"
-          className="card-style flex flex-col items-center w-full p-8"
+          className="card-style flex flex-col items-center w-full p-4"
         >
           <h2 className="title-style text-3xl font-bold mb-4 text-center">
             Meet ComicBot
@@ -107,7 +107,7 @@ export default function Home() {
 
         <section
           data-aos="fade-up"
-          className="card-style bg-zinc-900 text-zinc-200 p-8 rounded-xl shadow-md flex flex-col items-center"
+          className="card-style bg-zinc-900 text-zinc-200 p-4 rounded-xl shadow-md flex flex-col items-center"
         >
           <h2 className="title-style text-3xl font-bold mb-6 text-center">
             Jokepad

@@ -16,8 +16,8 @@ import {
 import Footer from "../components/footer";
 import Loading from "../components/loading";
 import { useHeadline } from "../components/headlinecontext";
-import logo from "app/comicLogo.webp";
-import comic from "app/comic.png";
+import logo from "../../app/comicLogo.webp";
+import comic from "../../app/comic.png";
 import Image from "next/image";
 type ConversationMessage = {
   from: string;
@@ -232,8 +232,23 @@ const ComicBot = () => {
           sketches, or exploring funny takes on everyday life, ComicBot is here
           to spark your creativity.
         </p>
-     
-        <p className="mb-6 text-center italic text-sm">
+        <div className="flex flex-row justify-center items-center space-x-4 md:space-x-6 mb-6">
+          <Image
+            src={comic}
+            alt="Comic Image"
+            className="rounded-2xl shadow-lg"
+            width={150}
+            height={150}
+          />
+          <Image
+            src={logo}
+            alt="Comic Logo"
+            className="rounded-full shadow-lg"
+            width={150}
+            height={150}
+          />
+        </div>
+        <p className="mb-2 text-center italic text-sm text-red-500">
           Please note: ComicBots service is a research preview. It may generate
           offensive content. It must not be used for any illegal, harmful,
           violent, racist, or sexual purposes.

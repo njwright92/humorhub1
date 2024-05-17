@@ -113,7 +113,7 @@ body {
 }
 
 .screen-container {
-  @apply flex flex-col min-h-screen p-8 text-zinc-200 text-center;
+  @apply flex flex-col min-h-screen p-4 text-zinc-200 text-center;
 }
 
 .card-style {
