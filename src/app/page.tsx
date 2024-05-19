@@ -22,17 +22,16 @@ const EventForm = dynamic(() => import("./components/EventForm"));
 export default function Home() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
+  const handleAuthStateChanged = useCallback((user: User | null) => {
+    setIsUserSignedIn(!!user);
+  }, []);
   useEffect(() => {
     AOS.init({
       duration: 1000,
     });
     const auth = getAuth();
     return onAuthStateChanged(auth, handleAuthStateChanged);
-  }, []);
-
-  const handleAuthStateChanged = useCallback((user: User | null) => {
-    setIsUserSignedIn(!!user);
-  }, []);
+  }, [handleAuthStateChanged]);
 
   return (
     <>
@@ -71,7 +70,7 @@ export default function Home() {
 
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Elevate your comedy with ComicBot, your AI co-writer that's
+                Elevate your comedy with ComicBot, your AI co-writer that&#39;s
                 always ready to brainstorm and enhance your sketches, helping
                 you perfect your punchlines and creative ideas at any moment.
               </p>
