@@ -36,11 +36,11 @@ type ArticlesByCategory = {
   [key in Category]?: Article[];
 };
 
-let NEWS_API_KEY: string | undefined = process.env.NEXT_PUBLIC_NEWS_API_KEY;
+let NEWS_API: string | undefined = process.env.NEXT_PUBLIC_NEWS_API;
 
 const fetchCategoryNews = async (category: Category) => {
   try {
-    const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=10&apiKey=${NEWS_API_KEY}`;
+    const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=10&apiKey=${NEWS_API}`;
     const response = await fetch(newsApiUrl);
 
     if (!response.ok) {
