@@ -51,7 +51,7 @@ export default function Home() {
           <h3 className="text-xl font-semibold mb-6">
             Your Comedy Genius Assistant!
           </h3>
-          <div className="md:flex-row flex flex-col-reverse md:items-center md:justify-center w-full">
+          <div className="md:flex-row flex flex-col md:items-center md:justify-center w-full">
             <div
               className="md:w-1/2 flex justify-center mb-4 md:mb-0"
               onClick={() =>
@@ -65,6 +65,7 @@ export default function Home() {
                 alt="ComicBot - Your Comedy Genius Assistant"
                 width={250}
                 height={250}
+                className="rounded-xl shadow-lg"
               />
             </div>
 
@@ -120,6 +121,7 @@ export default function Home() {
                 alt="Jokepad - Your Ultimate Comedy Workshop"
                 width={250}
                 height={250}
+                className="rounded-xl shadow-lg"
               />
               <button
                 onClick={() => {
@@ -171,7 +173,7 @@ export default function Home() {
                   alt="Mic Finder Image"
                   width={200}
                   height={200}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="rounded-xl shadow-lg"
                 />
               </Link>
               <Link href="/MicFinder">

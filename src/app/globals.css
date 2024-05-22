@@ -117,11 +117,11 @@ body {
 }
 
 .card-style {
-  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-20 mb-20 rounded-xl drop-shadow-md;
+  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 rounded-xl drop-shadow-md;
 }
 
 .card-style1 {
-  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-20 mb-20 rounded-xl drop-shadow-md;
+  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 rounded-xl drop-shadow-md;
 }
 
 .title,
@@ -235,6 +235,8 @@ body {
 .event-item .details {
   @apply align-middle;
 }
+
+
 
 .event-item h3::before,
 .event-item p::before {

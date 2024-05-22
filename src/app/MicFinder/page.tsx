@@ -360,14 +360,16 @@ const EventsPage = () => {
 
     return (
       <div style={style}>
-        <h3 className="text-lg font-semibold mt-4">{event.name}</h3>
-        <p className="font-bold">📅 Date: {event.date}</p>
-        <p className="font-bold">📍 Location: {event.location}</p>
-        <div className="details font-bold">
-          <span className="details-label">ℹ️ Details:</span>
-          <div dangerouslySetInnerHTML={{ __html: event.details }} />
+        <div key={event.id} className="event-item mt-2">
+          <h3 className="text-lg font-semibold">{event.name}</h3>
+          <p className="details-label">📅 Date: {event.date}</p>
+          <p className="details-label">📍 Location: {event.location}</p>
+          <div className="details-label">
+            <span className="details-label">ℹ️ Details:</span>
+            <div dangerouslySetInnerHTML={{ __html: event.details }} />
+          </div>
           <button
-            className="btn mt-2 mb-2 px-2 py-1"
+            className="btn mt-1 mb-1 px-2 py-1"
             onClick={() => handleEventSave(event)}
           >
             Save Event
@@ -508,7 +510,7 @@ const EventsPage = () => {
               : `Events in ${filterCity}`}
           </h2>
           <List
-            height={500}
+            height={600}
             itemCount={
               eventsByCity
                 .filter(
@@ -521,7 +523,7 @@ const EventsPage = () => {
                   return cityA.localeCompare(cityB);
                 }).length
             }
-            itemSize={200}
+            itemSize={385}
             width="100%"
             onItemsRendered={handleOnItemsRendered}
           >
