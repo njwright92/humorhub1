@@ -87,9 +87,10 @@ export default function Header() {
           </button>
 
           <div
-            className={`absolute top-0 left-0 h-screen w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
+            className={`absolute top-0 left-0 w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
               isMenuOpen ? "translate-x-0" : "-translate-x-full"
             } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
+            style={{ maxHeight: "100vh", overflowY: "auto" }} // Applied scrollability to the dropdown
           >
             <button onClick={() => setIsMenuOpen(false)} className="self-end">
               <XMarkIcon className="h-9 w-9 text-zinc-200" />
@@ -102,10 +103,10 @@ export default function Header() {
                 alt="Mic"
                 width={70}
                 height={70}
-                className="rounded-full mb-2"
+                className="rounded-full mb-2 mt-2"
               />
             </Link>
-            <div className="nav-links">
+            <div className="nav-link">
               <div
                 onClick={() =>
                   isUserSignedIn
@@ -145,17 +146,14 @@ export default function Header() {
                 </span>
               </Link>
 
-              <div
-                onClick={() =>
-                  isUserSignedIn
-                    ? (location.href = "/Profile")
-                    : alert("Please sign in to access this page")
-                }
-              >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
-                  {isUserSignedIn ? "Profile" : "Profile"}
-                </span>
-              </div>
+              {isUserSignedIn && (
+                <Link href="/Profile">
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    Profile
+                  </span>
+                </Link>
+              )}
+
               <Link href="/contact">
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
                   Contact
@@ -166,16 +164,18 @@ export default function Header() {
                   About
                 </span>
               </Link>
-              <button
-                onClick={toggleAuthModal}
-                className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100"
-                style={{
-                  margin: "0 auto",
-                  display: "block",
-                }}
-              >
-                Sign In/Up
-              </button>
+              {!isUserSignedIn && (
+                <button
+                  onClick={toggleAuthModal}
+                  className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100"
+                  style={{
+                    margin: "0 auto",
+                    display: "block",
+                  }}
+                >
+                  Sign In/Up
+                </button>
+              )}
             </div>
           </div>
         </nav>

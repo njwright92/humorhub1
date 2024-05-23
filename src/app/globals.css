@@ -61,7 +61,6 @@
   z-index: 1000; /* high z-index to stay on top */
 }
 
-
 body {
   /* Create a gradient background from zinc-900 to zinc-700 */
   background-image: linear-gradient(to bottom, var(--zinc-900), #2d3748);
@@ -154,13 +153,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center; /* Centers the links horizontally */
-  padding: 0.8rem;
-  margin: 0.4rem;
+  padding: 0.7rem;
+  margin: 0.2rem;
   cursor: pointer;
   transition: transform 0.3s ease;
   text-decoration: none; /* Removes underline from links */
   color: inherit; /* Inherits text color from parent */
-  font-size: 1.7rem; /* Adjust the size as needed */
+  font-size: 1.5rem; /* Adjust the size as needed */
 }
 
 .nav-link:hover {
@@ -235,8 +234,6 @@ body {
 .event-item .details {
   @apply align-middle;
 }
-
-
 
 .event-item h3::before,
 .event-item p::before {
