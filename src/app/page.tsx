@@ -155,8 +155,8 @@ export default function Home() {
           <h1 className="title-style text-2xl font-bold mb-4 text-center drop-shadow-md">
             Mic Finder!
           </h1>
-          <div className="flex flex-col md:flex-row items-center w-full">
-            <div className="flex-1 text-center md:text-left">
+          <div className="flex flex-col md:flex-row-reverse items-center w-full">
+            <div className="flex-1 text-center items-center md:text-right">
               <h2 className="mb-4 text-xl">
                 Discover and share stages for comedy, music, and poetry with Mic
                 Finder, your ultimate platform to connect talent with live
@@ -166,7 +166,7 @@ export default function Home() {
                 <EventForm />
               </Suspense>
             </div>
-            <div className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-2">
+            <div className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0">
               <Link href="/MicFinder">
                 <Image
                   src={micFinder}
@@ -177,7 +177,7 @@ export default function Home() {
                 />
               </Link>
               <Link href="/MicFinder">
-                <span className="btn inline-block text-lg py-2 px-4 mt-6 hover:bg-blue-700 transition-colors">
+                <span className="btn inline-block text-lg items-center py-2 px-4 mt-6 hover:bg-blue-700 transition-colors">
                   Find My Mic
                 </span>
               </Link>

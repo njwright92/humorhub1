@@ -28,7 +28,7 @@ const HumorHubAPISection: React.FC = () => {
 
       {/* Main Content Section with Image and Text */}
       <div
-        className="card-style rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row items-center justify-center p-4"
+        className="card-style rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row-reverse items-center justify-center p-4"
         data-aos="fade-up"
       >
         <div
@@ -45,7 +45,7 @@ const HumorHubAPISection: React.FC = () => {
             alt="Visual Representation of Humor Hub News"
             width={250}
             height={250}
-            className="rounded-xl shadow-lg -mt-10 md:mr-4 mb-4 md:mb-0"
+            className="rounded-xl shadow-lg -mt-10 md:ml-4 mb-4 md:mb-0"
           />
         </div>
 
