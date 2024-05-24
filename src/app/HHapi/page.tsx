@@ -7,23 +7,20 @@ import { useRouter } from "next/navigation";
 import { useHeadline } from "../components/headlinecontext";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 
-type Category =
-  | "business"
-  | "entertainment"
-  | "general"
-  | "health"
-  | "science"
-  | "sports"
-  | "technology";
+type Category = "top_stories" | "all_news";
 
-const categories: Category[] = [
-  "business",
-  "entertainment",
+const categories: Category[] = ["top_stories", "all_news"];
+const subcategories = [
   "general",
-  "health",
   "science",
   "sports",
-  "technology",
+  "business",
+  "health",
+  "entertainment",
+  "tech",
+  "politics",
+  "food",
+  "travel",
 ];
 
 type Article = {
@@ -36,31 +33,54 @@ type ArticlesByCategory = {
   [key in Category]?: Article[];
 };
 
-let NEWS_API: string | undefined = process.env.NEXT_PUBLIC_NEWS_API;
+let NEWS_API_TOKEN: string | undefined = process.env.NEXT_PUBLIC_NEWS_API;
 
-const fetchCategoryNews = async (category: Category) => {
+const fetchCategoryNews = async (category: Category, subcategory: string) => {
   try {
-    const newsApiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&language=en&country=us&pageSize=10&apiKey=${NEWS_API}`;
-    const response = await fetch(newsApiUrl);
+    const requestOptions = {
+      method: "GET",
+    };
+
+    const params = {
+      api_token: NEWS_API_TOKEN,
+      locale: "us,ca",
+      language: "en",
+      limit: "10",
+      categories: subcategory,
+    };
+
+    const query = Object.keys(params)
+      .map(
+        (k) =>
+          `${encodeURIComponent(k)}=${encodeURIComponent(
+            params[k as keyof typeof params] as string
+          )}`
+      )
+      .join("&");
+
+    let endpoint = "";
+
+    switch (category) {
+      case "top_stories":
+        endpoint = `https://api.thenewsapi.com/v1/news/top`;
+        break;
+      case "all_news":
+      default:
+        endpoint = `https://api.thenewsapi.com/v1/news/all`;
+        break;
+    }
+
+    const response = await fetch(`${endpoint}?${query}`, requestOptions);
 
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log(`${category} category data:`, data); // Log the data to see the structure
 
-    const filteredArticles = data.articles.filter(
-      (article: { title: string; description: string }) => {
-        const title = article.title || "";
-        const description = article.description || "";
-        return (
-          !title.includes("[Removed]") && !description.includes("[Removed]")
-        );
-      }
-    );
-
-    return filteredArticles;
+    return data.data.filter(
+      (article: Article) => article.title && article.description
+    ); // Filter out articles without titles or descriptions
   } catch (error) {
     console.error("Error fetching news for category:", category, error);
     throw new Error("Failed to fetch news");
@@ -68,26 +88,57 @@ const fetchCategoryNews = async (category: Category) => {
 };
 
 const NewsPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("general");
+  const [selectedCategory, setSelectedCategory] =
+    useState<Category>("all_news");
+  const [selectedSubcategory, setSelectedSubcategory] =
+    useState<string>("general");
   const [fetchedArticles, setFetchedArticles] = useState<ArticlesByCategory>(
     {}
   );
   const [error, setError] = useState("");
-  const [expandedArticle, setExpandedArticle] = useState<string | null>(null); // New state to track expanded articles
+  const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
   const [isNewsFetched, setIsNewsFetched] = useState(false);
   const { setSelectedHeadline, setSelectedDescription } = useHeadline();
   const router = useRouter();
 
   const handleToggleArticle = (title: string) => {
-    setExpandedArticle((prev) => (prev === title ? null : title)); // Toggle article visibility
+    setExpandedArticle((prev) => (prev === title ? null : title));
   };
 
-  const handleCategoryChange = async (event: { target: { value: any } }) => {
-    const category = event.target.value;
+  const handleCategoryChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const category = event.target.value as Category;
     setSelectedCategory(category);
-    const fetchedArticles = await fetchCategoryNews(category);
-    setFetchedArticles({ [category]: fetchedArticles });
-    setExpandedArticle(null); // Reset expanded article on category change
+    try {
+      const fetchedArticles = await fetchCategoryNews(
+        category,
+        selectedSubcategory
+      );
+      setFetchedArticles({ [category]: fetchedArticles });
+      setExpandedArticle(null);
+    } catch (error) {
+      console.error("Error while fetching articles:", error);
+      setError("Failed to fetch articles");
+    }
+  };
+
+  const handleSubcategoryChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const subcategory = event.target.value;
+    setSelectedSubcategory(subcategory);
+    try {
+      const fetchedArticles = await fetchCategoryNews(
+        selectedCategory,
+        subcategory
+      );
+      setFetchedArticles({ [selectedCategory]: fetchedArticles });
+      setExpandedArticle(null);
+    } catch (error) {
+      console.error("Error while fetching articles:", error);
+      setError("Failed to fetch articles");
+    }
   };
 
   const handleWriteJoke = (title: string, description: string) => {
@@ -98,9 +149,12 @@ const NewsPage = () => {
 
   useEffect(() => {
     const fetchNews = async () => {
+      setIsNewsFetched(false);
       try {
-        setIsNewsFetched(false);
-        const fetchedArticles = await fetchCategoryNews(selectedCategory);
+        const fetchedArticles = await fetchCategoryNews(
+          selectedCategory,
+          selectedSubcategory
+        );
         setFetchedArticles({ [selectedCategory]: fetchedArticles });
         setIsNewsFetched(true);
       } catch (error) {
@@ -110,10 +164,11 @@ const NewsPage = () => {
     };
 
     fetchNews();
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedSubcategory]);
 
   const resetNews = () => {
-    setSelectedCategory("general"); // Automatically triggers useEffect to fetch news
+    setSelectedCategory("all_news");
+    setSelectedSubcategory("general");
     setExpandedArticle(null);
     setError("");
   };
@@ -136,21 +191,38 @@ const NewsPage = () => {
               Customize your news experience with targeted categories and
               dynamic search to keep your insights fresh and focused.
             </p>
-            <select
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-              className="mb-4 p-2 rounded-xl shadow-lg bg-zinc text-zinc-900 w-full"
-            >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </option>
-              ))}
-            </select>
+            <div className="mb-4 w-full">
+              <label className="block mb-2">Choose Category:</label>
+              <select
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className="mb-4 p-2 rounded-xl shadow-lg bg-zinc text-zinc-900 w-full"
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category.replace("_", " ").toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4 w-full">
+              <label className="block mb-2">Choose Subcategory:</label>
+              <select
+                value={selectedSubcategory}
+                onChange={handleSubcategoryChange}
+                className="mb-4 p-2 rounded-xl shadow-lg bg-zinc text-zinc-900 w-full"
+              >
+                {subcategories.map((subcategory) => (
+                  <option key={subcategory} value={subcategory}>
+                    {subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="flex justify-center mt-4">
               <button
                 onClick={resetNews}
-                className=" bg-red-500 text-zinc-200 font-semibold py-2 px-4 rounded-2xl shadow-xl hover:bg-red-600 transition-colors"
+                className="bg-red-500 text-zinc-200 font-semibold py-2 px-4 rounded-2xl shadow-xl hover:bg-red-600 transition-colors"
               >
                 Reset
               </button>
@@ -165,7 +237,7 @@ const NewsPage = () => {
               >
                 <div className="flex flex-col md:flex-row md:items-center text-zinc-200 mb-4">
                   <h2 className="category-title text-center text-2xl font-bold mb-2 md:mb-0 w-full">
-                    {category.charAt(0).toUpperCase() + category.slice(1)} News
+                    {category.replace("_", " ").toUpperCase()} News
                   </h2>
                   <p className="text-center md:text-right text-zinc-200 w-full md:w-auto md:ml-4">
                     Send this to ComicBot to get the ball rolling!

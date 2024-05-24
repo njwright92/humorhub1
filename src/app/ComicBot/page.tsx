@@ -55,10 +55,6 @@ const ComicBot = () => {
     setInput(value);
   };
 
-  const API_URL =
-    "https://api-inference.huggingface.co/models/njwright92/ComicBotv.02";
-  const API_TOKEN = process.env.REACT_APP_API_TOKEN;
-
   const handleSend = useCallback(async () => {
     const userInput = input.trim();
 
@@ -133,7 +129,7 @@ const ComicBot = () => {
       setIsLoading(false);
       setInput("");
     }
-  }, [input, API_TOKEN]);
+  }, [input]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
