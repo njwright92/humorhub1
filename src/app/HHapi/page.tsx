@@ -6,6 +6,7 @@ import Header from "../components/header";
 import { useRouter } from "next/navigation";
 import { useHeadline } from "../components/headlinecontext";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
+import Loading from "../components/loading";
 
 type Category = "top_stories" | "all_news";
 
@@ -97,7 +98,7 @@ const NewsPage = () => {
   );
   const [error, setError] = useState("");
   const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
-  const [isNewsFetched, setIsNewsFetched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { setSelectedHeadline, setSelectedDescription } = useHeadline();
   const router = useRouter();
 
@@ -110,17 +111,7 @@ const NewsPage = () => {
   ) => {
     const category = event.target.value as Category;
     setSelectedCategory(category);
-    try {
-      const fetchedArticles = await fetchCategoryNews(
-        category,
-        selectedSubcategory
-      );
-      setFetchedArticles({ [category]: fetchedArticles });
-      setExpandedArticle(null);
-    } catch (error) {
-      console.error("Error while fetching articles:", error);
-      setError("Failed to fetch articles");
-    }
+    fetchNews(category, selectedSubcategory);
   };
 
   const handleSubcategoryChange = async (
@@ -128,16 +119,20 @@ const NewsPage = () => {
   ) => {
     const subcategory = event.target.value;
     setSelectedSubcategory(subcategory);
+    fetchNews(selectedCategory, subcategory);
+  };
+
+  const fetchNews = async (category: Category, subcategory: string) => {
+    setIsLoading(true);
     try {
-      const fetchedArticles = await fetchCategoryNews(
-        selectedCategory,
-        subcategory
-      );
-      setFetchedArticles({ [selectedCategory]: fetchedArticles });
+      const fetchedArticles = await fetchCategoryNews(category, subcategory);
+      setFetchedArticles({ [category]: fetchedArticles });
       setExpandedArticle(null);
     } catch (error) {
       console.error("Error while fetching articles:", error);
       setError("Failed to fetch articles");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -148,22 +143,7 @@ const NewsPage = () => {
   };
 
   useEffect(() => {
-    const fetchNews = async () => {
-      setIsNewsFetched(false);
-      try {
-        const fetchedArticles = await fetchCategoryNews(
-          selectedCategory,
-          selectedSubcategory
-        );
-        setFetchedArticles({ [selectedCategory]: fetchedArticles });
-        setIsNewsFetched(true);
-      } catch (error) {
-        console.error(`Error fetching news for ${selectedCategory}:`, error);
-        setError("Failed to fetch news");
-      }
-    };
-
-    fetchNews();
+    fetchNews(selectedCategory, selectedSubcategory);
   }, [selectedCategory, selectedSubcategory]);
 
   const resetNews = () => {
@@ -228,8 +208,9 @@ const NewsPage = () => {
               </button>
             </div>
           </section>
-
-          {isNewsFetched &&
+          {isLoading ? (
+            <Loading />
+          ) : (
             Object.keys(fetchedArticles).map((category) => (
               <section
                 key={category}
@@ -237,7 +218,7 @@ const NewsPage = () => {
               >
                 <div className="flex flex-col md:flex-row md:items-center text-zinc-200 mb-4">
                   <h2 className="category-title text-center text-2xl font-bold mb-2 md:mb-0 w-full">
-                    {category.replace("_", " ").toUpperCase()} News
+                    {category.replace("_", " ").toUpperCase()}
                   </h2>
                   <p className="text-center md:text-right text-zinc-200 w-full md:w-auto md:ml-4">
                     Send this to ComicBot to get the ball rolling!
@@ -304,7 +285,8 @@ const NewsPage = () => {
                   )
                 )}
               </section>
-            ))}
+            ))
+          )}
         </div>
       </div>
       <Footer />

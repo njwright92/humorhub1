@@ -22,7 +22,7 @@ export default function Loading() {
           </clipPath>
         </defs>
       </svg>
-      <span className="sr-only">Loading...</span>
+      <span>Loading...</span>
     </div>
   );
 }
