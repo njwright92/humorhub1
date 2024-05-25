@@ -41,7 +41,7 @@ const ClientSignOutButton: React.FC = () => {
     <button
       onClick={handleSignOut}
       disabled={loading}
-      className="btn hover:bg-rrange-600 transition-colors text:no-wrap"
+      className="btn hover:bg-red-600 transition-colors text:no-wrap"
     >
       {loading ? "Signing Out..." : "Sign Out"}
     </button>
