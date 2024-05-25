@@ -22,14 +22,13 @@ const HumorHubAPISection: React.FC = () => {
       <h1 className="title-style text-3xl font-bold text-center drop-shadow-md">
         Humor Hub News
       </h1>
-      <h2 className="text-center text-lg">
-        Your Go-To Source for the Latest Trends
+      <h2 className="text-center text-lg mb-6 p-2">
+        Your Go-To Source for the Latest News
       </h2>
 
       {/* Main Content Section with Image and Text */}
       <div
-        className="card-style rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row-reverse items-center justify-center p-4"
-        data-aos="fade-up"
+        className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row-reverse items-center justify-center p-4"
       >
         <div
           onClick={() => {
