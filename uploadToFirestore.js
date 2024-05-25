@@ -19,11 +19,7 @@ updatedEvents.forEach((updatedEvent) => {
       if (!areEventsEqual(existingEvent, updatedEvent)) {
         docRef
           .update(updatedEvent)
-          .then(() => {
-            console.log(
-              `Event with ID ${updatedEvent.id} updated in Firestore`
-            );
-          })
+          .then(() => {})
           .catch((error) => {
             console.error(
               `Error updating event with ID ${updatedEvent.id}:`,
@@ -32,9 +28,6 @@ updatedEvents.forEach((updatedEvent) => {
           });
       }
     } else {
-      console.log(
-        `Event with ID ${updatedEvent.id} does not exist in Firestore, skipping`
-      );
     }
   });
 });

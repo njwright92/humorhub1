@@ -60,7 +60,6 @@ export default function Header() {
           city: searchTerm,
           timestamp: new Date(),
         });
-        console.log("Searched city logged successfully");
       } catch (error) {
         console.error("Error logging searched city: ", error);
       }
@@ -77,7 +76,8 @@ export default function Header() {
               alt="Mic"
               width={70}
               height={70}
-              className="rounded-full"
+              className="rounded-full cursor-pointer"
+              loading="eager"
             />
           </Link>
 
