@@ -82,7 +82,11 @@ export default function Header() {
           </Link>
 
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub!</h1>
-          <button onClick={toggleMenu} className="text-zinc-900 cursor-pointer">
+          <button
+            onClick={toggleMenu}
+            className="text-zinc-900 cursor-pointer"
+            aria-label="Toggle menu"
+          >
             <Bars3Icon className="h-9 w-9" />
           </button>
 
@@ -92,9 +96,13 @@ export default function Header() {
             } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
             style={{ maxHeight: "100vh", overflowY: "auto" }}
           >
-            <button onClick={() => setIsMenuOpen(false)} className="self-end cursor-pointer">
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="self-end cursor-pointer"
+              aria-label="close menu"
+            >
               <XMarkIcon className="h-9 w-9 text-zinc-200" />
-              <span className="sr-only ">Close menu</span>
+              <span className="sr-only">Close menu</span>
             </button>
             <SearchBar onSearch={handleSearch} />
             <Link href="/">
