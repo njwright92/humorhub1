@@ -216,11 +216,18 @@ const NewsPage = () => {
                 key={category}
                 className="category-container mb-8 w-full"
               >
-                <div className="flex flex-col md:flex-row md:items-center text-zinc-200 mb-4">
-                  <h2 className="category-title text-center text-2xl font-bold mb-2 md:mb-0 w-full">
-                    {category.replace("_", " ").toUpperCase()}
-                  </h2>
-                  <p className="text-center md:text-right text-zinc-200 w-full md:w-auto md:ml-4">
+                <div className="flex flex-col text-zinc-200 mb-4 md:flex-row md:items-center">
+                  <div className="flex-grow">
+                    <h2 className="category-title text-center text-3xl font-bold mb-2 w-full">
+                      {category.replace("_", " ").toUpperCase()}
+                    </h2>
+                    <h3 className="text-center text-xl font-bold mb-2 w-full underline underline-offset-4 decoration-orange-500 decoration-[0.125rem]">
+                      {selectedSubcategory.charAt(0).toUpperCase() +
+                        selectedSubcategory.slice(1)}{" "}
+                      News
+                    </h3>
+                  </div>
+                  <p className="text-center md:text-right text-zinc-200 w-full md:w-auto mt-4 md:mt-0">
                     Send this to ComicBot to get the ball rolling!
                   </p>
                 </div>
