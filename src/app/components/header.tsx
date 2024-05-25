@@ -82,7 +82,7 @@ export default function Header() {
           </Link>
 
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub!</h1>
-          <button onClick={toggleMenu} className="text-zinc-900">
+          <button onClick={toggleMenu} className="text-zinc-900 cursor-pointer">
             <Bars3Icon className="h-9 w-9" />
           </button>
 
@@ -90,11 +90,11 @@ export default function Header() {
             className={`absolute top-0 left-0 w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
               isMenuOpen ? "translate-x-0" : "-translate-x-full"
             } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
-            style={{ maxHeight: "100vh", overflowY: "auto" }} // Applied scrollability to the dropdown
+            style={{ maxHeight: "100vh", overflowY: "auto" }}
           >
-            <button onClick={() => setIsMenuOpen(false)} className="self-end">
+            <button onClick={() => setIsMenuOpen(false)} className="self-end cursor-pointer">
               <XMarkIcon className="h-9 w-9 text-zinc-200" />
-              <span className="sr-only">Close menu</span>
+              <span className="sr-only ">Close menu</span>
             </button>
             <SearchBar onSearch={handleSearch} />
             <Link href="/">
@@ -103,7 +103,7 @@ export default function Header() {
                 alt="Mic"
                 width={70}
                 height={70}
-                className="rounded-full mb-2 mt-2"
+                className="rounded-full mt-2 cursor-pointer"
               />
             </Link>
             <div className="nav-link">
@@ -114,7 +114,7 @@ export default function Header() {
                     : alert("Please sign in to access this page")
                 }
               >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   {isUserSignedIn ? "News" : "News"}
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function Header() {
                     : alert("Please sign in to access this page")
                 }
               >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
                 </span>
               </div>
@@ -136,12 +136,12 @@ export default function Header() {
                     : alert("Please sign in to access this page")
                 }
               >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
                 </span>
               </div>
               <Link href="/MicFinder">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   Mic Finder
                 </span>
               </Link>
@@ -155,19 +155,19 @@ export default function Header() {
               )}
 
               <Link href="/contact">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   Contact
                 </span>
               </Link>
               <Link href="/about">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   About
                 </span>
               </Link>
               {!isUserSignedIn && (
                 <button
                   onClick={toggleAuthModal}
-                  className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100"
+                  className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100 cursor-pointer"
                   style={{
                     margin: "0 auto",
                     display: "block",

@@ -18,6 +18,7 @@ import Loading from "../components/loading";
 import { useHeadline } from "../components/headlinecontext";
 import logo from "../../app/comicLogo.webp";
 import comic from "../../app/icon.png";
+import { sendGAEvent } from '@next/third-parties/google';
 import Image from "next/image";
 type ConversationMessage = {
   from: string;
@@ -129,6 +130,7 @@ const ComicBot = () => {
       setIsLoading(false);
       setInput("");
     }
+    sendGAEvent({ event: 'buttonClicked', value: 'sendButton' });
   }, [input]);
 
   useEffect(() => {
