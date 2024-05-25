@@ -81,7 +81,7 @@ export default function Header() {
             />
           </Link>
 
-          <h1 className="text-zinc-900 xs:text-3xl md:text-4xl mx-auto">Humor Hub</h1>
+          <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>
           <button
             onClick={toggleMenu}
             className="text-zinc-900 cursor-pointer"
