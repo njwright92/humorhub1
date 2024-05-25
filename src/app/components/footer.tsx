@@ -49,7 +49,7 @@ export default function Footer() {
                 alt="Mic"
                 width={70}
                 height={70}
-                className="rounded-full mr-2"
+                className="rounded-full mr-2 cursor-pointer"
               />
             </Link>
           </div>
@@ -60,12 +60,12 @@ export default function Footer() {
               </h2>
               <ul className="text-zinc-200">
                 <li className="mb-4">
-                  <Link href="/about" className="hover:underline">
+                  <Link href="/about" className="hover:underline cursor-pointer">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:underline">
+                  <Link href="/contact" className="hover:underline cursor-pointer">
                     Contact us
                   </Link>
                 </li>
@@ -79,7 +79,7 @@ export default function Footer() {
                 <li className="mb-4">
                   <a
                     href="https://github.com/njwright92"
-                    className="hover:underline"
+                    className="hover:underline cursor-pointer"
                   >
                     Github
                   </a>
@@ -87,7 +87,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="https://twitter.com/naterbug321"
-                    className="hover:underline"
+                    className="hover:underline cursor-pointer"
                   >
                     Twitter
                   </a>
@@ -99,10 +99,10 @@ export default function Footer() {
                 Legal
               </h2>
               <div className="text-zinc-200 flex flex-col">
-                <Link className="cursor-pointer" href="/userAgreement">
+                <Link className="cursor-pointer mb-1" href="/userAgreement">
                   User Agreement
                 </Link>
-                <Link className="cursor-pointer" href="/privacyPolicy">
+                <Link className="cursor-pointer mt-1" href="/privacyPolicy">
                   Privacy Policy
                 </Link>
               </div>
