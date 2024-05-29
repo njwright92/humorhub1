@@ -1,3 +1,5 @@
+[![Website Status](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://thehumorhub.com/)
+
 # Humor Hub
 
 Humor Hub is an all-in-one comedy platform designed to elevate your comedic creativity and streamline the process of finding performance opportunities. This platform combines various tools and features to assist comedians, writers, and performers in crafting and refining their material, discovering open mic events, and staying updated with the latest comedy news.
