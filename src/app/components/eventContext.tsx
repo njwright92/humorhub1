@@ -45,21 +45,15 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
 
   const saveEventToFirestore = async (event: Event) => {
-    const eventAlreadySaved = savedEvents.some((e) => e.id === event.id);
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) return;
 
-    if (eventAlreadySaved) {
-      alert("You have already saved this event.");
-      return;
-    }
+    const userEventsRef = doc(db, "userEvents", user.uid);
+    const updatedEvents = [...savedEvents, event];
 
-    try {
-      await saveEventToFirestore(event);
-    } catch (error) {
-      console.error("Error saving event:", error);
-      alert(
-        "Oops! Something went wrong while saving the event. Please try again later."
-      );
-    }
+    await setDoc(userEventsRef, { events: updatedEvents }, { merge: true });
+    setSavedEvents(updatedEvents);
   };
 
   const deleteEventFromFirestore = async (eventId: string) => {
@@ -105,9 +99,14 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     }
 
     try {
+      console.log("saveEvent called in EventProvider");
       await saveEventToFirestore(event);
+      alert("Event saved to your profile successfully!"); // Keep alert here
     } catch (error) {
       console.error("Error saving event:", error);
+      alert(
+        "Oops! Something went wrong while saving the event. Please try again."
+      );
     }
   };
 
@@ -125,6 +124,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     </EventContext.Provider>
   );
 };
+
 export const useEvents = () => {
   const context = useContext(EventContext);
   if (!context) {

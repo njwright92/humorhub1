@@ -298,6 +298,7 @@ const EventsPage = () => {
       }
 
       try {
+        console.log("Calling saveEvent from EventsPage");
         await saveEvent(event);
         alert("Event saved to your profile successfully!");
       } catch (error) {
