@@ -19,7 +19,9 @@ const HeadlineContext = createContext<{
 export const useHeadline = () => {
   const context = useContext(HeadlineContext);
   if (!context) {
-    throw new Error("useHeadline must be used within a HeadlineProvider");
+    throw new Error(
+      "Oops! It looks like you're trying to use the headline context outside of its provider. Please make sure your component is wrapped in a HeadlineProvider."
+    );
   }
   return context;
 };

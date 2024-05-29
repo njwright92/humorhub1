@@ -60,12 +60,18 @@ export default function Footer() {
               </h2>
               <ul className="text-zinc-200">
                 <li className="mb-4">
-                  <Link href="/about" className="hover:underline cursor-pointer">
+                  <Link
+                    href="/about"
+                    className="hover:underline cursor-pointer"
+                  >
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:underline cursor-pointer">
+                  <Link
+                    href="/contact"
+                    className="hover:underline cursor-pointer"
+                  >
                     Contact us
                   </Link>
                 </li>
@@ -110,31 +116,33 @@ export default function Footer() {
           </div>
         </div>
         <div className="sm:flex sm:items-center sm:justify-between mt-4">
-          <span className="text-sm  sm:text-center">
-            © {new Date().getFullYear()} Humor Hub™. All Rights Reserved.
-          </span>
-          <p className="italic">
-            Crafted with laughter by Nathan Wright.
-            <a
-              href="https://njwright92.github.io/paper-kit-portfolio/"
-              className="underline text-blue-500 transition-colors hover:text-zinc-200"
-            >
-              Portfolio.
-            </a>
-          </p>
-          <div className="flex mt-4 sm:justify-center sm:mt-0">
+          <div className="flex flex-col items-center sm:items-start sm:flex-row-reverse sm:justify-between sm:w-full">
             {isUserSignedIn && (
-              <div className="mb-4">
+              <div className="mb-4 sm:mb-0 sm:ml-4">
                 <ClientSignOutButton />
               </div>
             )}
             <button
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="bg-orange-500 text-zinc-900 text-lg px-4 rounded-full shadow-md m-4 lg:mt-0"
+              className="bg-orange-500 text-zinc-900 text-lg px-2 rounded-full shadow-md m-2 sm:m-0 sm:ml-4"
             >
               <ArrowUpCircleIcon className="h-20 w-10" />
             </button>
+            <div className="text-center sm:text-left">
+              <span className="text-sm sm:text-center block sm:inline">
+                © {new Date().getFullYear()} Humor Hub™. All Rights Reserved.
+              </span>
+              <p className="italic block sm:inline mt-2 sm:mt-0 sm:ml-4">
+                Crafted with laughter by Nathan Wright.
+                <a
+                  href="https://njwright92.github.io/paper-kit-portfolio/"
+                  className="underline text-blue-500 transition-colors hover:text-zinc-200"
+                >
+                  Portfolio.
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

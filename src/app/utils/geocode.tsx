@@ -17,10 +17,14 @@ export const getLatLng = async (address: string | number | boolean) => {
       const { lat, lng } = response.data.results[0].geometry.location;
       return { lat, lng };
     } else {
-      throw new Error("Failed to get latitude and longitude");
+      throw new Error(
+        "We couldn't retrieve the location details for the provided address. Please check the address and try again."
+      );
     }
   } catch (error) {
     console.error("Error fetching geocode data:", error);
-    throw error;
+    throw new Error(
+      "Oops! Something went wrong while fetching the location data. Please try again later."
+    );
   }
 };

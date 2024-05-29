@@ -45,17 +45,20 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
 
   const saveEventToFirestore = async (event: Event) => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) return;
-
     const eventAlreadySaved = savedEvents.some((e) => e.id === event.id);
 
-    if (!eventAlreadySaved) {
-      const userEventsRef = doc(db, "userEvents", user.uid);
-      const newEvents = [...savedEvents, event];
-      await setDoc(userEventsRef, { events: newEvents }, { merge: true });
-      setSavedEvents(newEvents);
+    if (eventAlreadySaved) {
+      alert("You have already saved this event.");
+      return;
+    }
+
+    try {
+      await saveEventToFirestore(event);
+    } catch (error) {
+      console.error("Error saving event:", error);
+      alert(
+        "Oops! Something went wrong while saving the event. Please try again later."
+      );
     }
   };
 
@@ -68,10 +71,12 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       const userEventsRef = doc(db, "userEvents", user.uid);
       await setDoc(userEventsRef, { events: updatedEvents }, { merge: true });
       setSavedEvents(updatedEvents);
-      alert("Event deleted successfully.");
+      alert("The event has been successfully removed from your saved list.");
     } catch (error) {
       console.error("Error deleting event:", error);
-      alert("Error deleting event.");
+      alert(
+        "Oops! Something went wrong while trying to remove the event. Please try again later."
+      );
     }
   };
 
@@ -110,7 +115,11 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
 
   return (
     <EventContext.Provider
-      value={{ savedEvents: savedEventsMemo, saveEvent, deleteEvent: deleteEventFromFirestore }}
+      value={{
+        savedEvents: savedEventsMemo,
+        saveEvent,
+        deleteEvent: deleteEventFromFirestore,
+      }}
     >
       {children}
     </EventContext.Provider>
@@ -119,7 +128,9 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
 export const useEvents = () => {
   const context = useContext(EventContext);
   if (!context) {
-    throw new Error("useEvents must be used within an EventProvider");
+    throw new Error(
+      "Oops! It looks like you are trying to access events outside of their provider. Please make sure your component is wrapped in an EventProvider."
+    );
   }
   return context;
 };

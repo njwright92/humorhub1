@@ -61,6 +61,7 @@ const ComicBot = () => {
 
     if (!userInput) {
       console.warn("Your message is empty. Please enter text to send.");
+      alert("Please enter a message before sending.");
       return;
     }
 
@@ -76,7 +77,7 @@ const ComicBot = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: `an abusrd funny take on: ${userInput}`,
+          prompt: `an absurd funny take on: ${userInput}`,
           n_predict: 400,
           temperature: 0.9,
           repetition_penalty: 1.2,
@@ -90,6 +91,9 @@ const ComicBot = () => {
       const reader = response.body?.getReader();
       if (!reader) {
         console.error("Response body is null");
+        alert(
+          "Oops! Something went wrong while processing your request. Please try again."
+        );
         setIsLoading(false);
         return;
       }
@@ -121,11 +125,17 @@ const ComicBot = () => {
             );
           } catch (error) {
             console.warn("Received non-JSON chunk data:", chunkData);
+            alert(
+              "Received unexpected data from the server. Please try again."
+            );
           }
         }
       }
     } catch (error) {
       console.error("Error while generating response:", error);
+      alert(
+        "Oops! Something went wrong while generating the response. Please try again."
+      );
     } finally {
       setIsLoading(false);
       setInput("");
@@ -188,6 +198,9 @@ const ComicBot = () => {
       setConversation([]);
     } catch (error) {
       console.error("Error saving conversation: ", error);
+      alert(
+        "Oops! Something went wrong while saving the conversation. Please try again."
+      );
     }
   }, [conversation]);
 
@@ -200,6 +213,9 @@ const ComicBot = () => {
       );
     } catch (error) {
       console.error("Error deleting document: ", error);
+      alert(
+        "Oops! Something went wrong while deleting the conversation. Please try again."
+      );
     }
   };
 
@@ -219,10 +235,12 @@ const ComicBot = () => {
         joke: conversationText,
         uid: userUID,
       });
-      alert("Joke successfully sent to Jokepad!"); // This line provides user feedback
+      alert("Joke successfully sent to Jokepad!");
     } catch (error) {
       console.error("Error sending conversation to Jokepad: ", error);
-      alert("Failed to send joke to Jokepad."); // Provide feedback on failure
+      alert(
+        "Oops! Something went wrong while sending the joke to Jokepad. Please try again."
+      );
     }
   };
 

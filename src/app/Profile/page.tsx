@@ -74,6 +74,9 @@ export default function UserProfile() {
         }
       } catch (error) {
         console.error("Error fetching user data and events:", error);
+        alert(
+          "Oops! We couldn't load your profile data and events. Please try again later."
+        );
       }
     },
     [saveEvent, savedEvents]
@@ -121,6 +124,9 @@ export default function UserProfile() {
         setIsEditing(false);
       } catch (error) {
         console.error("Error updating/creating profile:", error);
+        alert(
+          "Oops! Something went wrong while saving your profile. Please try again."
+        );
       }
     }
   }, [auth, name, bio, profileImageUrl]);
@@ -132,7 +138,9 @@ export default function UserProfile() {
         alert("Event deleted successfully");
       } catch (error) {
         console.error("Error deleting event:", error);
-        alert("Failed to delete the event. Please try again.");
+        alert(
+          "Oops! Something went wrong while deleting the event. Please try again."
+        );
       }
     },
     [deleteEvent]

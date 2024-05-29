@@ -23,6 +23,9 @@ const submitEvent = async (eventData: EventData) => {
     await addDoc(collection(db, "userEvents"), eventData);
   } catch (error) {
     console.error("Error adding event: ", error);
+    alert(
+      "Oops! Something went wrong while adding your event. Please try again later."
+    );
   }
 };
 
@@ -59,7 +62,9 @@ const EventForm: React.FC = () => {
         !memoizedEvent.date ||
         !memoizedEvent.details
       ) {
-        setFormErrors("Please fill in all required fields.");
+        setFormErrors(
+          "Please fill in all the required fields to submit your event."
+        );
         return;
       }
       setFormErrors("");
@@ -78,7 +83,7 @@ const EventForm: React.FC = () => {
         resetForm();
         setShowModal(false);
         alert(
-          "Event has been added successfully! Check the events page to view! Email me with any issues."
+          "Your event has been added successfully! You can view it on the events page. If you encounter any issues, feel free to email us."
         );
       } catch (error) {
         console.error("Geocoding error: ", error); // Log the original error
@@ -88,12 +93,14 @@ const EventForm: React.FC = () => {
           await addDoc(collection(db, "searchedCities"), memoizedEvent);
           resetForm();
           alert(
-            "Location could not be verified. We'll review it manually. Check events page in 24 hours. Email me with any issues."
+            "We couldn't verify the location. We'll review it manually and it should appear on the events page within 24 hours. If you encounter any issues, feel free to email us."
           );
           setShowModal(false); // Close the modal after displaying the message
         } catch (dbError) {
           console.error("Error saving to searchedCities: ", dbError);
-          setFormErrors("Failed to save event for manual review.");
+          setFormErrors(
+            "We couldn't save your event for manual review. Please try again later."
+          );
           setShowModal(false); // Close the modal even if there's an error
         }
       }

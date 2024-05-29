@@ -183,6 +183,9 @@ const EventsPage = () => {
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching events: ", error);
+        alert(
+          "Oops! We couldn't load the events at the moment. Please try again later."
+        );
       }
     };
 
@@ -290,16 +293,18 @@ const EventsPage = () => {
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
-        alert("You must be signed in to save events.");
+        alert("Please sign in to save events to your profile.");
         return;
       }
 
       try {
         await saveEvent(event);
-        alert("Event saved to your profile!");
+        alert("Event saved to your profile successfully!");
       } catch (error) {
         console.error("Error saving event:", error);
-        alert("There was a problem saving the event.");
+        alert(
+          "Oops! Something went wrong while saving the event. Please try again."
+        );
       }
     },
     [saveEvent, isUserSignedIn]

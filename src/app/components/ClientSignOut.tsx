@@ -5,7 +5,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 const ClientSignOutButton: React.FC = () => {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleSignOut = useCallback(async () => {
@@ -14,10 +14,10 @@ const ClientSignOutButton: React.FC = () => {
     try {
       await signOut(auth);
       alert("Signed out successfully");
-      router.push("/"); // Redirect to the home screen
+      router.push("/");
     } catch (e) {
       if (e instanceof Error) {
-        alert(`Error signing out: ${e.message}`);
+        alert(`Error signing out`);
       } else {
         alert("Unknown error occurred");
       }
@@ -30,7 +30,7 @@ const ClientSignOutButton: React.FC = () => {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
-        router.push("/"); // Redirect to the home screen
+        router.push("/");
       }
     });
 

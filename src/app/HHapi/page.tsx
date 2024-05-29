@@ -130,7 +130,9 @@ const NewsPage = () => {
       setExpandedArticle(null);
     } catch (error) {
       console.error("Error while fetching articles:", error);
-      setError("Failed to fetch articles");
+      setError(
+        "Oops! We couldn't fetch the articles at the moment. Please try again later."
+      );
     } finally {
       setIsLoading(false);
     }

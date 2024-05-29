@@ -30,27 +30,35 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       const auth = getAuth();
 
       if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address.");
+        alert(
+          "Oops! That doesn't look like a valid email address. Please try again."
+        );
         return;
       }
 
       if (!passwordRegex.test(password)) {
-        alert("Password must be at least 6 characters.");
+        alert(
+          "Your password needs to be at least 6 characters long. Please try again."
+        );
         return;
       }
 
       if (isSignUp && password !== confirmPassword) {
-        alert("Passwords do not match.");
+        alert(
+          "The passwords you entered don't match. Please check and try again."
+        );
         return;
       }
 
       try {
         if (isSignUp) {
           await createUserWithEmailAndPassword(auth, email, password);
-          alert("Signed up successfully! Please update your profile.");
+          alert(
+            "Welcome aboard! You've successfully signed up. Please update your profile."
+          );
         } else {
           await signInWithEmailAndPassword(auth, email, password);
-          alert("Signed in successfully!");
+          alert("Welcome back! You've successfully signed in.");
         }
         onClose();
       } catch (error) {
@@ -58,14 +66,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           switch ((error as AuthError).code) {
             case "auth/email-already-in-use":
               alert(
-                "Email already in use. Please sign in or use a different email."
+                "This email is already in use. Try signing in or use a different email."
               );
               break;
             case "auth/wrong-password":
-              alert("Incorrect password. Please try again.");
+              alert("The password you entered is incorrect. Please try again.");
               break;
             default:
-              alert(`Error: ${error.message}`);
+              alert(
+                `Something went wrong: ${error.message}. Please try again later.`
+              );
           }
         }
       }
@@ -103,8 +113,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         signInFlow: "popup",
         signInSuccessUrl: "/",
         signInOptions: [GoogleAuthProvider.PROVIDER_ID],
-        tosUrl: "<your-tos-url>",
-        privacyPolicyUrl: "<your-privacy-policy-url>",
+        tosUrl: "https://thehumorhub.com/userAgreement",
+        privacyPolicyUrl: "https://thehumorhub.com/privacyPolicy",
       };
 
       uiInstance.start("#firebaseui-auth-container", uiConfig);
@@ -167,7 +177,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               />
             </>
           )}
-          <button type="submit" className="auth-button text-orange-600">
+          <button type="submit" className="btn auth-button text-orange-600">
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>

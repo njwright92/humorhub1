@@ -27,13 +27,13 @@ const HumorHubAPISection: React.FC = () => {
       </h2>
 
       {/* Main Content Section with Image and Text */}
-      <div
-        className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row-reverse items-center justify-center p-4"
-      >
+      <div className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row-reverse items-center justify-center p-4">
         <div
           onClick={() => {
             if (!isUserSignedIn) {
-              alert("Please sign in to access this page");
+              alert(
+                "Oops! You need to be signed in to access this page. Please sign in or create an account to continue."
+              );
             } else {
               location.href = "/HHapi";
             }
@@ -58,7 +58,9 @@ const HumorHubAPISection: React.FC = () => {
           <button
             onClick={() => {
               if (!isUserSignedIn) {
-                alert("Please sign in to access this page");
+                alert(
+                  "Oops! You need to be signed in to access this page. Please sign in or create an account to continue."
+                );
               } else {
                 location.href = "/HHapi";
               }

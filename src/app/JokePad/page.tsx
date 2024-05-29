@@ -81,6 +81,9 @@ const Jokes = () => {
       setNewJoke("");
     } catch (error) {
       console.error("Error adding joke: ", error);
+      alert(
+        "Oops! Something went wrong while adding your joke. Please try again."
+      );
     }
   };
 
@@ -114,6 +117,9 @@ const Jokes = () => {
       setEditingJokeId(null); // Reset the editing state
     } catch (error) {
       console.error("Error updating joke: ", error);
+      alert(
+        "Oops! Something went wrong while updating your joke. Please try again."
+      );
     }
   };
 
@@ -124,6 +130,9 @@ const Jokes = () => {
       setJokes(jokes.filter((joke) => joke.id !== jokeId));
     } catch (error) {
       console.error("Error deleting joke: ", error);
+      alert(
+        "Oops! Something went wrong while deleting your joke. Please try again."
+      );
     }
   };
 

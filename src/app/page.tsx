@@ -57,7 +57,9 @@ export default function Home() {
               onClick={() =>
                 isUserSignedIn
                   ? (location.href = "/ComicBot")
-                  : alert("Please sign in to access this page")
+                  : alert(
+                      "You need to be signed in to access this page. Please sign in or create an account."
+                    )
               }
             >
               <Image
@@ -84,7 +86,9 @@ export default function Home() {
               <button
                 onClick={() => {
                   if (!isUserSignedIn) {
-                    alert("Please sign in to access this page");
+                    alert(
+                      "You need to be signed in to access this page. Please sign in or create an account."
+                    );
                   } else {
                     location.href = "/ComicBot";
                   }
@@ -113,7 +117,9 @@ export default function Home() {
               onClick={() =>
                 isUserSignedIn
                   ? (location.href = "/JokePad")
-                  : alert("Please sign in to access this page")
+                  : alert(
+                      "You need to be signed in to access this page. Please sign in or create an account."
+                    )
               }
             >
               <Image
@@ -126,7 +132,9 @@ export default function Home() {
               <button
                 onClick={() => {
                   if (!isUserSignedIn) {
-                    alert("Please sign in to access this page");
+                    alert(
+                      "You need to be signed in to access this page. Please sign in or create an account."
+                    );
                   } else {
                     location.href = "/JokePad";
                   }

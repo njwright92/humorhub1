@@ -53,7 +53,9 @@ export default function Header() {
     if (matchingCity) {
       router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
     } else {
-      alert("No matching cities found, adding more cities check back soon.");
+      alert(
+        "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!"
+      );
 
       try {
         await addDoc(collection(db, "searchedCities"), {
@@ -61,7 +63,9 @@ export default function Header() {
           timestamp: new Date(),
         });
       } catch (error) {
-        console.error("Error logging searched city: ", error);
+        console.error(
+          "Oops! Something went wrong while logging your search. Please try again later."
+        );
       }
     }
   };
