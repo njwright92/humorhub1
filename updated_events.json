@@ -1,5 +1,115 @@
 [
   {
+    "id": "700",
+    "isRecurring": true,
+    "name": "Not the Apollo Open Mic",
+    "location": "1739 Amsterdam Ave, New York, NY",
+    "date": "Thursday",
+    "lat": 40.821834,
+    "lng": -73.950892,
+    "details": "Time: 5:30pm\nFrequency: Weekly\nCost: 3 min free or 5 min if you buy an item from the bar (it's happy hour!)\nURL: N/A"
+  },
+  {
+    "id": "701",
+    "isRecurring": true,
+    "name": "Williamsburg Open Mic",
+    "location": "308 Bedford Ave, the Rear, Brooklyn, NY 11249",
+    "date": "Monday, Tuesday",
+    "lat": 38.9808749,
+    "lng": -77.9922457,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: $5 (Drink included)\nURL: N/A\nDescription: Where comedy begins"
+  },
+  {
+    "id": "702",
+    "isRecurring": true,
+    "name": "Comedy Open Mic at Bar XIII",
+    "location": "1706 Philadelphia Pike, Wilmington, DE 19809",
+    "date": "Wednesday",
+    "lat": 39.76912,
+    "lng": -75.501671,
+    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: N/A\nDescription: Delaware's longest running comedy open mic"
+  },
+  {
+    "id": "703",
+    "isRecurring": true,
+    "name": "Wednesday Night Comedy Dynamic",
+    "location": "Producers Club, 358 West 44th, New York, NY",
+    "date": "Wednesday",
+    "lat": 40.759545,
+    "lng": -73.991498,
+    "details": "Time: 7:00pm - 9:00pm\nFrequency: Weekly\nCost: $5\nURL: @micdupnyc"
+  },
+  {
+    "id": "704",
+    "isRecurring": true,
+    "name": "Top Mic",
+    "location": "Producers Club, 358 West 44th, New York, NY",
+    "date": "Thursday",
+    "lat": 40.759545,
+    "lng": -73.991498,
+    "details": "Time: 7:30pm\nFrequency: Weekly\nCost: $5\nURL: @micdupnyc"
+  },
+  {
+    "id": "705",
+    "isRecurring": true,
+    "name": "Mic Club",
+    "location": "Pubkey Bar, 85 Washington Pl, New York, NY",
+    "date": "Sunday",
+    "lat": 40.7322184,
+    "lng": -74.0026048,
+    "details": "Time: 6:00pm\nFrequency: Weekly\nCost: No fee\nURL: N/A"
+  },
+  {
+    "id": "706",
+    "isRecurring": true,
+    "name": "Open Mic Comedy at Harlem Nights",
+    "location": "2361 7th Ave, New York, NY",
+    "date": "Monday",
+    "lat": 40.8172185,
+    "lng": -73.9445609,
+    "details": "Time: Sign up at 5:30pm\nFrequency: Weekly\nCost: $5 cover\nURL: N/A\nDescription: Purchase one food or drink item to perform"
+  },
+  {
+    "id": "707",
+    "isRecurring": true,
+    "name": "Uptown Open Mic",
+    "location": "Teddy's F&B, 2171 Second Ave, New York, NY",
+    "date": "Tuesday",
+    "lat": 40.7942394,
+    "lng": -73.9426329,
+    "details": "Time: 8:00pm (Sign up at 7:30pm)\nFrequency: Weekly\nCost: Purchase food, beer, or liquor to perform\nURL: N/A"
+  },
+  {
+    "id": "708",
+    "isRecurring": true,
+    "name": "Football Bat Open Mic",
+    "location": "Old Man Hustle Brooklyn Comedy Club, 308 Bedford Ave, Brooklyn, NY",
+    "date": "Sunday",
+    "lat": 40.7138616,
+    "lng": -73.964485,
+    "details": "Time: 4:00pm\nFrequency: Weekly\nCost: Bring an audience member to pick your spot\nURL: N/A"
+  },
+  {
+    "id": "709",
+    "isRecurring": true,
+    "name": "New Jokes Times",
+    "location": "Down and Out, 503 E 6th Ave, New York, NY",
+    "date": "Tuesday",
+    "lat": 40.7254542,
+    "lng": -73.9860194,
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free\nURL: N/A"
+  },
+  {
+    "id": "710",
+    "isRecurring": true,
+    "name": "Ugly Pancake Productions Weekly Comedy Open Mic",
+    "location": "Whiskey Cellar, 77 E 7th Ave, New York, NY",
+    "date": "Tuesday",
+    "lat": 40.7274423,
+    "lng": -73.9888852,
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: N/A"
+  },
+  {
     "id": "1",
     "isRecurring": true,
     "name": "Open Mic",

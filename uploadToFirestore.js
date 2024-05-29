@@ -10,7 +10,7 @@ const db = admin.firestore();
 // Load the updated JSON file
 const updatedEvents = require("./updated_events.json");
 
-// Update only the events that exist in Firestore and have changed
+// Update or add only the events that do not exist in Firestore
 updatedEvents.forEach((updatedEvent) => {
   const docRef = db.collection("userEvents").doc(updatedEvent.id);
   docRef.get().then((doc) => {
@@ -19,7 +19,11 @@ updatedEvents.forEach((updatedEvent) => {
       if (!areEventsEqual(existingEvent, updatedEvent)) {
         docRef
           .update(updatedEvent)
-          .then(() => {})
+          .then(() => {
+            console.log(
+              `Event with ID ${updatedEvent.id} updated successfully.`
+            );
+          })
           .catch((error) => {
             console.error(
               `Error updating event with ID ${updatedEvent.id}:`,
@@ -28,6 +32,18 @@ updatedEvents.forEach((updatedEvent) => {
           });
       }
     } else {
+      // If the event does not exist, add it
+      docRef
+        .set(updatedEvent)
+        .then(() => {
+          console.log(`Event with ID ${updatedEvent.id} added successfully.`);
+        })
+        .catch((error) => {
+          console.error(
+            `Error adding event with ID ${updatedEvent.id}:`,
+            error
+          );
+        });
     }
   });
 });
