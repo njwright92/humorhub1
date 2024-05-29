@@ -53,7 +53,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     const updatedEvents = [...savedEvents, event];
 
     await setDoc(userEventsRef, { events: updatedEvents }, { merge: true });
-    setSavedEvents(updatedEvents);
+    setSavedEvents(updatedEvents); // Update the state after saving to Firestore
   };
 
   const deleteEventFromFirestore = async (eventId: string) => {
@@ -101,7 +101,6 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     try {
       console.log("saveEvent called in EventProvider");
       await saveEventToFirestore(event);
-      alert("Event saved to your profile successfully!"); // Keep alert here
     } catch (error) {
       console.error("Error saving event:", error);
       alert(

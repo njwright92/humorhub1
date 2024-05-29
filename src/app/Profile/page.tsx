@@ -68,7 +68,7 @@ export default function UserProfile() {
           const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
           eventsFromFirestore.forEach((event) => {
             if (!savedEvents.some((e) => e.id === event.id)) {
-              saveEvent(event);
+              saveEvent(event); // Make sure saveEvent here doesn't trigger an alert
             }
           });
         }
@@ -88,7 +88,7 @@ export default function UserProfile() {
         fetchUserDataAndEvents(user);
       }
     });
-
+  
     return () => unsubscribe();
   }, [auth, fetchUserDataAndEvents]);
 
