@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json"); // Updated Firebase Admin SDK path
+const serviceAccount = require("./humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -10,43 +10,29 @@ const db = admin.firestore();
 // Load the updated JSON file
 const updatedEvents = require("./updated_events.json");
 
-// Update or add only the events that do not exist in Firestore
-updatedEvents.forEach((updatedEvent) => {
-  const docRef = db.collection("userEvents").doc(updatedEvent.id);
-  docRef.get().then((doc) => {
+// Update only the events that already exist in Firestore
+const updateEvents = async () => {
+  const batch = db.batch();
+
+  for (const updatedEvent of updatedEvents) {
+    const docRef = db.collection("userEvents").doc(updatedEvent.id);
+    const doc = await docRef.get();
+
     if (doc.exists) {
       const existingEvent = doc.data();
       if (!areEventsEqual(existingEvent, updatedEvent)) {
-        docRef
-          .update(updatedEvent)
-          .then(() => {
-            console.log(
-              `Event with ID ${updatedEvent.id} updated successfully.`
-            );
-          })
-          .catch((error) => {
-            console.error(
-              `Error updating event with ID ${updatedEvent.id}:`,
-              error
-            );
-          });
+        batch.update(docRef, updatedEvent);
+        console.log(`Queued update for event with ID ${updatedEvent.id}.`);
       }
     } else {
-      // If the event does not exist, add it
-      docRef
-        .set(updatedEvent)
-        .then(() => {
-          console.log(`Event with ID ${updatedEvent.id} added successfully.`);
-        })
-        .catch((error) => {
-          console.error(
-            `Error adding event with ID ${updatedEvent.id}:`,
-            error
-          );
-        });
+      console.log(`Event with ID ${updatedEvent.id} does not exist. Skipping.`);
     }
-  });
-});
+  }
+
+  // Commit the batch
+  await batch.commit();
+  console.log("Batch update completed.");
+};
 
 // Helper function to compare two events
 function areEventsEqual(event1, event2) {
@@ -59,3 +45,8 @@ function areEventsEqual(event1, event2) {
     event1.lng === event2.lng
   );
 }
+
+// Run the update function
+updateEvents().catch((error) => {
+  console.error("Error updating events:", error);
+});

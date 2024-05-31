@@ -1,5 +1,15 @@
 [
   {
+    "id": "712",
+    "isRecurring": true,
+    "name": "Open Mic at Jackson Street Bar",
+    "location": "Jackson Street Bar 2436 N Astor St, Spokane, WA 99207",
+    "date": "Sunday",
+    "lat": 47.6804963,
+    "lng": -117.4068332,
+    "details": "Time: 7pm\nFrequency: Weekly\nCost: Best act gets $25\nURL: N/A"
+  },
+  {
     "id": "700",
     "isRecurring": true,
     "name": "Not the Apollo Open Mic",
@@ -13,7 +23,7 @@
     "id": "701",
     "isRecurring": true,
     "name": "Williamsburg Open Mic",
-    "location": "308 Bedford Ave, the Rear, Brooklyn, NY 11249",
+    "location": "308 Bedford Ave the Rear, Brooklyn, NY 11249",
     "date": "Monday, Tuesday",
     "lat": 38.9808749,
     "lng": -77.9922457,
@@ -33,7 +43,7 @@
     "id": "703",
     "isRecurring": true,
     "name": "Wednesday Night Comedy Dynamic",
-    "location": "Producers Club, 358 West 44th, New York, NY",
+    "location": "Producers Club 358 West 44th, New York, NY",
     "date": "Wednesday",
     "lat": 40.759545,
     "lng": -73.991498,
@@ -43,7 +53,7 @@
     "id": "704",
     "isRecurring": true,
     "name": "Top Mic",
-    "location": "Producers Club, 358 West 44th, New York, NY",
+    "location": "Producers Club 358 West 44th, New York, NY",
     "date": "Thursday",
     "lat": 40.759545,
     "lng": -73.991498,
@@ -53,7 +63,7 @@
     "id": "705",
     "isRecurring": true,
     "name": "Mic Club",
-    "location": "Pubkey Bar, 85 Washington Pl, New York, NY",
+    "location": "Pubkey Bar 85 Washington Pl, New York, NY",
     "date": "Sunday",
     "lat": 40.7322184,
     "lng": -74.0026048,
@@ -73,7 +83,7 @@
     "id": "707",
     "isRecurring": true,
     "name": "Uptown Open Mic",
-    "location": "Teddy's F&B, 2171 Second Ave, New York, NY",
+    "location": "Teddy's F&B 2171 Second Ave, New York, NY",
     "date": "Tuesday",
     "lat": 40.7942394,
     "lng": -73.9426329,
@@ -83,7 +93,7 @@
     "id": "708",
     "isRecurring": true,
     "name": "Football Bat Open Mic",
-    "location": "Old Man Hustle Brooklyn Comedy Club, 308 Bedford Ave, Brooklyn, NY",
+    "location": "Old Man Hustle Brooklyn Comedy Club 308 Bedford Ave, Brooklyn, NY",
     "date": "Sunday",
     "lat": 40.7138616,
     "lng": -73.964485,
@@ -93,7 +103,7 @@
     "id": "709",
     "isRecurring": true,
     "name": "New Jokes Times",
-    "location": "Down and Out, 503 E 6th Ave, New York, NY",
+    "location": "Down and Out 503 E 6th Ave, New York, NY",
     "date": "Tuesday",
     "lat": 40.7254542,
     "lng": -73.9860194,
@@ -103,7 +113,7 @@
     "id": "710",
     "isRecurring": true,
     "name": "Ugly Pancake Productions Weekly Comedy Open Mic",
-    "location": "Whiskey Cellar, 77 E 7th Ave, New York, NY",
+    "location": "Whiskey Cellar 77 E 7th Ave, New York, NY",
     "date": "Tuesday",
     "lat": 40.7274423,
     "lng": -73.9888852,
@@ -147,7 +157,7 @@
     "date": "Tuesday",
     "lat": 47.6573563,
     "lng": -117.4147831,
-    "details": "Signup in person at 7:30pm. starts at 8pm. nYne is one of our local gay bars, so any and all comics who identify as LGBTQIA+ are strongly encouraged to go. This open mic is one of 3 that are on Tuesday nights, so if you're looking to string performances together, don't miss it! Queer allies are also welcome! <a href=\"https://www.nynebar.com/\">nynebar.com</a> <a href=\"https://www.google.com/maps/place/nYne+Bar+%26+Bistro/@47.6573563,-119.1693299,8z/data=!4m10!1m2!2m1!1sn9ne+bistro!3m6!1s0x549e188a0e23298d:0xe96a55dc6ee16314!8m2!3d47.6573563!4d-117.4147831!15sCgtuOW5lIGJpc3Ryb1oNIgtuOW5lIGJpc3Ryb5IBDmdheV9uaWdodF9jbHVimgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU56Y1hOdU0zRlJSUkFC4AEA!16s%2Fg%2F1vzv3cvm?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>"
+    "details": "Signup in person at 7:30pm. starts at 8pm. nYne is one of our local gay bars, so any and all comics who identify as LGBTQIA+ are strongly encouraged to go.  <a href=\"https://www.nynebar.com/\">nynebar.com</a> <a href=\"https://www.google.com/maps/place/nYne+Bar+%26+Bistro/@47.6573563,-119.1693299,8z/data=!4m10!1m2!2m1!1sn9ne+bistro!3m6!1s0x549e188a0e23298d:0xe96a55dc6ee16314!8m2!3d47.6573563!4d-117.4147831!15sCgtuOW5lIGJpc3Ryb1oNIgtuOW5lIGJpc3Ryb5IBDmdheV9uaWdodF9jbHVimgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU56Y1hOdU0zRlJSUkFC4AEA!16s%2Fg%2F1vzv3cvm?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>"
   },
   {
     "id": "5",
@@ -167,7 +177,7 @@
     "date": "Wednesday",
     "lat": 48.275897,
     "lng": -116.552568,
-    "details": "Open Mic Night. Bring your talent in front of a live audience with a chill vibe. Be it song, instrument, comedy, improv, or magic, come show it off. Hosted by the Tervan Tavern, 411 Cedar St. starting at 6:00(ish) p.m. on Wednesdays. Visit <a href=\"https://tervantavern.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Tervan Tavern</a> for more info. <a href=\"https://www.google.com/maps/dir//411+Cedar+St,+Sandpoint,+ID+83864/@48.2759385,-116.6349728,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x5363d6c8c06638a5:0x9a6ea93138ab0076!2m2!1d-116.5525742!2d48.2759868?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+    "details": "Open Mic Night. Bring your talent in front of a live audience with a chill vibe. Be it song, instrument, comedy, improv, or magic, come show it off.  starting at 6:00(ish) p.m. on Wednesdays. Visit <a href=\"https://tervantavern.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Tervan Tavern</a> for more info. <a href=\"https://www.google.com/maps/dir//411+Cedar+St,+Sandpoint,+ID+83864/@48.2759385,-116.6349728,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x5363d6c8c06638a5:0x9a6ea93138ab0076!2m2!1d-116.5525742!2d48.2759868?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
   },
   {
     "id": "7",
@@ -207,7 +217,7 @@
     "date": "Thursday",
     "lat": 47.582831,
     "lng": -117.668619,
-    "details": "Signup in person or DM starts at 7:00pm sharp Happens on the 3RD THURSDAY OF THE MONTH. It is an open mic with a 20-min feature act at the end. Comics get the light when they have 1 min remaining. If you're looking to perform at the Fox Hole and DZ, let Chris know so he can put you towards the front of the lineup. Every comic that performs gets an even cut of tips @ the end of the show, so it pays (at least a little bit) to be (at least a little bit) funny. <a href=\"https://www.facebook.com/thefoxholemedicallake/\"> foxholemedicallake Facebook</a> <a href=\"https://www.google.com/maps/place/The+Foxhole+Bar+and+Grill/@47.5725708,-117.6844563,17z/data=!3m1!4b1!4m6!3m5!1s0x549e6b079450a8a7:0x706aa4e325b9b6cd!8m2!3d47.5725708!4d-117.6818814!16s%2Fg%2F11syxzl8hk?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+    "details": "Signup in person or DM starts at 7:00pm sharp Happens on the 3RD THURSDAY OF THE MONTH. It is an open mic with a 20-min feature act at the end. Comics get the light when they have 1 min remaining. If you're looking to perform at the Fox Hole and DZ, let Chris know so he can put you towards the front of the lineup. <a href=\"https://www.facebook.com/thefoxholemedicallake/\"> foxholemedicallake Facebook</a> <a href=\"https://www.google.com/maps/place/The+Foxhole+Bar+and+Grill/@47.5725708,-117.6844563,17z/data=!3m1!4b1!4m6!3m5!1s0x549e6b079450a8a7:0x706aa4e325b9b6cd!8m2!3d47.5725708!4d-117.6818814!16s%2Fg%2F11syxzl8hk?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
   },
   {
     "id": "11",
@@ -218,16 +228,6 @@
     "lat": 47.66264,
     "lng": -117.435997,
     "details": "Hosted by Anthony Singleton. Open Mic Night for music and comedy. Every Friday from 5:30 PM to 8:30ish PM. All ages welcome. Clean mic. Free admission. <a href=\"https://www.google.com/maps/place/The+Grain+Shed+Taproom/@47.6561077,-117.4348802,17z/data=!3m2!4b1!5s0x549e18680a2601e7:0x1a13f3af47308d34!4m6!3m5!1s0x549e194b26b6f1a1:0x6df1cdc8cd28c935!8m2!3d47.6561041!4d-117.4323053!16s%2Fg%2F11thk6c6yx?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
-  },
-  {
-    "id": "12",
-    "isRecurring": true,
-    "name": "FRIDAY FUNNIES",
-    "location": "The Garland Drinkery, Spokane WA",
-    "date": "Friday",
-    "lat": 47.761067,
-    "lng": -117.393881,
-    "details": "The Garland Drinkery is one of the newer mics in the area, and offers a fun space to perform in Spokane's Historic Garland District. Snag some grub at the Milk Bottle before your set and get those laughs on! This mic happens EVERY OTHER FRIDAY. Be sure to check our calendar so you know which Fridays those are! <a href=\"https://www.facebook.com/drinkerynation/\"> drinkerynation Facebook</a> <a href=\"https://www.google.com/maps/place/Garland+Drinkery/@47.693665,-117.4268169,17z/data=!3m1!4b1!4m6!3m5!1s0x549e191702e19759:0xb7c159246af19ef8!8m2!3d47.693665!4d-117.424242!16s%2Fg%2F1tdwptks?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
   },
   {
     "id": "13",
@@ -247,7 +247,7 @@
     "date": "Thursday",
     "lat": 47.691736,
     "lng": -116.654109,
-    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like!\n\nOpen Mic is sponsored by Emerge CDA and North Idaho Pride Alliance.\n\nFREE. RSVP is recommended, but not required. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
+    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>."
   },
   {
     "id": "15",
@@ -5161,16 +5161,6 @@
     "details": "Time: 7:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/spokane-comedy-club-spokane-2"
   },
   {
-    "id": "506",
-    "isRecurring": true,
-    "name": "Open Mic",
-    "location": "Spokane Comedy Club 315 W Sprague Ave, Spokane WA",
-    "date": "Thursday",
-    "lat": 47.657039,
-    "lng": -117.416884,
-    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/spokane-comedy-club-spokane-2"
-  },
-  {
     "id": "507",
     "isRecurring": true,
     "name": "Open Mic",
@@ -5554,7 +5544,7 @@
     "id": "545",
     "isRecurring": false,
     "name": "Open Mic",
-    "location": "ReBar 1225 S Main St., Las Vegas NV",
+    "location": "ReBar 1225 S Main St, Las Vegas NV",
     "date": "Wednesday",
     "lat": 36.157102,
     "lng": -115.153525,
@@ -5644,7 +5634,7 @@
     "id": "554",
     "isRecurring": true,
     "name": "Open Mic",
-    "location": "Happy Earth Market 900 Karen Ave., D-102, Las Vegas NV",
+    "location": "Happy Earth Market 900 Karen Ave. D-102, Las Vegas NV",
     "date": "Friday",
     "lat": 36.140663,
     "lng": -115.142675,
@@ -5904,7 +5894,7 @@
     "id": "580",
     "isRecurring": true,
     "name": "Open Mic Night",
-    "location": "Don Quixote's 3030 N. Portland Ave., Oklahoma City OK",
+    "location": "Don Quixote's 3030 N Portland Ave, Oklahoma City OK",
     "date": "Friday",
     "lat": 35.498531,
     "lng": -97.582188,
