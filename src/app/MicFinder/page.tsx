@@ -87,6 +87,8 @@ const CityCoordinates = {
   "Spokane Valley": { lat: 47.6733, lng: -117.2394 },
   Tacoma: { lat: 47.2529, lng: -122.4443 },
   "Washington DC": { lat: 38.9072, lng: -77.0369 },
+  "Spring City PA": { lat: 40.1804829, lng: -75.5506116 },
+  "Forest Park GA": { lat: 33.62601, lng: -84.4012734 },
 };
 
 const EventsPage = () => {

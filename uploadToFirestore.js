@@ -10,7 +10,7 @@ const db = admin.firestore();
 // Load the updated JSON file
 const updatedEvents = require("./updated_events.json");
 
-// Update only the events that already exist in Firestore
+// Update or add events in Firestore
 const updateEvents = async () => {
   const batch = db.batch();
 
@@ -25,18 +25,21 @@ const updateEvents = async () => {
         console.log(`Queued update for event with ID ${updatedEvent.id}.`);
       }
     } else {
-      console.log(`Event with ID ${updatedEvent.id} does not exist. Skipping.`);
+      // If the event does not exist, add it
+      batch.set(docRef, updatedEvent);
+      console.log(`Queued addition for event with ID ${updatedEvent.id}.`);
     }
   }
 
   // Commit the batch
   await batch.commit();
-  console.log("Batch update completed.");
+  console.log("Batch write completed.");
 };
 
 // Helper function to compare two events
 function areEventsEqual(event1, event2) {
   return (
+    event1.isRecurring === event2.isRecurring &&
     event1.name === event2.name &&
     event1.location === event2.location &&
     event1.date === event2.date &&

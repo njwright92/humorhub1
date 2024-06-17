@@ -5899,5 +5899,45 @@
     "lat": 35.498531,
     "lng": -97.582188,
     "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/don-quixote-club-oklahoma-city"
+  },
+  {
+    "id": "800",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Champagnes, Las Vegas NV",
+    "date": "Tuesday",
+    "lat": 36.1248612,
+    "lng": -115.1403141,
+    "details": "Time: Midnight\nFrequency: Weekly\nHost: Bruce Leonard\nCost: Free"
+  },
+  {
+    "id": "801",
+    "isRecurring": true,
+    "name": "The Junkyard Drink & Eats Open Mic",
+    "location": "6412 East Trent Ave, Spokane Valley WA",
+    "date": "Tuesday",
+    "lat": 47.6745476,
+    "lng": -117.3365041,
+    "details": "Time: 5:30pm\nFrequency: Weekly\nHost: Anthony Singleton\nCost: Free\nSign-up: 5pm\nLive music and comedy"
+  },
+  {
+    "id": "802",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "Tuned Up Brewery, 135 N Main St, Spring City PA 19475",
+    "date": "Wednesday",
+    "lat": 40.1804829,
+    "lng": -75.5506116,
+    "details": "Time: 6-7:20pm\nFrequency: Weekly\nHost: Eric Preston\nCost: Free"
+  },
+  {
+    "id": "803",
+    "isRecurring": true,
+    "name": "Open Mic Night",
+    "location": "King of Diamonds, 4730 Frontage Road, Forest Park GA",
+    "date": "Wednesday",
+    "lat": 33.62601,
+    "lng": -84.4012734,
+    "details": "Time: 8pm\nFrequency: Weekly\nHost: Derek Nicholson\nCost: Free"
   }
 ]
