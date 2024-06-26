@@ -5924,7 +5924,7 @@
     "id": "802",
     "isRecurring": true,
     "name": "Comedy Open Mic",
-    "location": "Tuned Up Brewery, 135 N Main St, Spring City PA 19475",
+    "location": "Tuned Up Brewery 135 N Main St, Spring City PA",
     "date": "Wednesday",
     "lat": 40.1804829,
     "lng": -75.5506116,
@@ -5934,10 +5934,110 @@
     "id": "803",
     "isRecurring": true,
     "name": "Open Mic Night",
-    "location": "King of Diamonds, 4730 Frontage Road, Forest Park GA",
+    "location": "King of Diamonds 4730 Frontage Road, Forest Park GA",
     "date": "Wednesday",
     "lat": 33.62601,
     "lng": -84.4012734,
     "details": "Time: 8pm\nFrequency: Weekly\nHost: Derek Nicholson\nCost: Free"
-  }
+  },
+  {
+    "id": "804",
+    "isRecurring": true,
+    "name": "The King of Comedy",
+    "location": "Mola Blvd, Elmwood Park NJ",
+    "date": "Monday",
+    "lat": 40.9045405,
+    "lng": -74.1205676,
+    "details": "Time: 9pm\nFrequency: Weekly\nHost: Anthony Crescenzo\nCost: Free"
+  },
+  {
+    "id": "807",
+    "isRecurring": true,
+    "name": "Joking Off Hump Day Improv Open Mic",
+    "location": "71 Oakman Blvd, Highland Park MI",
+    "date": "Wednesday",
+    "lat": 42.4035053,
+    "lng": -83.1125465,
+    "details": "Time: 9pm-12am\nFrequency: Weekly\nCost: $10 entry\nFood & Drink\n420 Friendly\nFree Parking"
+  },
+  {
+    "id": "808",
+    "isRecurring": true,
+    "name": "Shakedown Open Mic Comedy",
+    "location": "8850 Stanford Blvd, Columbia MD",
+    "date": "Wednesday",
+    "lat": 39.1901561,
+    "lng": -76.8175023,
+    "details": "Time: 9pm\nFrequency: Weekly\nLadies Night: Half Off Drinks\nHost: Dion Barnes"
+  },
+  {
+    "id": "809",
+    "isRecurring": true,
+    "name": "Tournament of Rouses Comedy Competition and Open Mic",
+    "location": "Funny Farm Comedy Club 1201 Youngstown Warren Rd, Niles OH",
+    "date": "Wednesday",
+    "lat": 41.2030337,
+    "lng": -80.7385968,
+    "details": "Time: 7pm\nFrequency: Weekly\nEvery 4th Wednesday of the month is Finals"
+  },
+  {
+    "id": "810",
+    "isRecurring": true,
+    "name": "The Nerd Bar Comedy Show Open Mic Variety Show",
+    "location": "The Nerd Bar 450 Fremont St #250, Las Vegas NV",
+    "date": "Wednesday",
+    "lat": 36.1702893,
+    "lng": -115.1432711,
+    "details": "Time: 7pm\nFrequency: Weekly"
+  },
+  {
+    "id": "811",
+    "isRecurring": true,
+    "name": "Sin City Seafood Black Ice Production Presents Open Mic",
+    "location": "Sin City Seafood Kitchen and Lounge 353 E Bonneville Ave, Las Vegas NV",
+    "date": "Thursday",
+    "lat": 36.1642218,
+    "lng": -115.149246,
+    "details": "Time: 7:30pm\nFrequency: Weekly"
+  },
+  {
+    "id": "813",
+    "isRecurring": true,
+    "name": "Deathrow Comedy Tuesday Open Mic Night",
+    "location": "Streamline Hotel 140 S Atlantic Ave, Daytona Beach FL",
+    "date": "Tuesday",
+    "lat": 29.2235327,
+    "lng": -81.0094693,
+    "details": "Time: Sign-up at 7pm, Starts at 7:30pm\nFrequency: Weekly\nURL: streamlinehotel.com"
+  },
+  {
+    "id": "814",
+    "isRecurring": true,
+    "name": "Stand-Up Comedy Open Mic!!",
+    "location": "58 Below, 504 58th Street - Kenosh 504 58th St, Kenosha WI",
+    "date": "Wednesday",
+    "lat": 42.5835732,
+    "lng": -87.819903,
+    "details": "Time: Every third Wednesday\nFrequency: Monthly"
+  },
+  {
+    "id": "815",
+    "isRecurring": true,
+    "name": "Comedy Open Mic at Soft Machine Gallery",
+    "location": "soft machine gallery, Allentown PA",
+    "date": "Sunday",
+    "lat": 40.6077573,
+    "lng": -75.4611807,
+    "details": "Time: 1st and 3rd Sunday every month\nFrequency: Bi-Monthly\nHost: Samuel Grim\nBYOB with ID required"
+  },
+  {
+    "id": "816",
+    "isRecurring": true,
+    "name": "Open Mic Night",
+    "location": "1012 Little Britain Rd, New Windsor NY",
+    "date": "Tuesday",
+    "lat": 41.4867627,
+    "lng": -74.0957725,
+    "details": "Time: Every last Tuesday of the month\nFrequency: Monthly\nSign-up: 6:30pm, Start: 7:00pm\nNo cover charge, 1 item minimum"
+  }  
 ]

@@ -49,9 +49,17 @@ const cityCoordinates: CityCoordinates = {
   Spokane: { lat: 47.6588, lng: -117.426 },
   "Spokane Valley": { lat: 47.6733, lng: -117.2394 },
   Tacoma: { lat: 47.2529, lng: -122.4443 },
-  "Washington DC": { lat: 38.9072, lng: -77.0369 },
-  "Spring City PA": { lat: 40.1804829, lng: -75.5506116 },
-  "Forest Park GA": { lat: 33.62601, lng: -84.4012734 }
+  WashingtonDC: { lat: 38.9072, lng: -77.0369 },
+  "Spring City": { lat: 40.1804829, lng: -75.5506116 },
+  "Forest Park": { lat: 33.62601, lng: -84.4012734 },
+  Allentown: { lat: 40.6077573, lng: -75.4611807 },
+  Kenosha: { lat: 42.5835732, lng: -87.819903 },
+  "Daytona Beach": { lat: 29.2235327, lng: -81.0094693 },
+  "New Windsor": { lat: 41.4867627, lng: -74.0957725 },
+  "Elmwood Park": { lat: 40.9045405, lng: -74.1205676 },
+  "Highland Park": { lat: 42.4035053, lng: -83.1125465 },
+  Columbia: { lat: 39.1901561, lng: -76.8175023 },
+  Niles: { lat: 41.2030337, lng: -80.7385968 },
 };
 
 const extractCityNames = (coordinates: CityCoordinates) => {

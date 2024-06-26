@@ -23,7 +23,7 @@ const GoogleMap = ({ lat, lng, events }) => {
       if (mapContainerRef.current) {
         const map = new google.maps.Map(mapContainerRef.current, {
           center: { lat, lng },
-          zoom: 11,
+          zoom: 12,
           mapId: "DEMO_MAP_ID", // Add a map ID (required for advanced markers)
         });
 
