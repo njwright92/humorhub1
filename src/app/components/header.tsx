@@ -152,6 +152,11 @@ export default function Header() {
                   {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
                 </span>
               </div>
+              <Link href="/comedians">
+                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                  Comedians
+                </span>
+              </Link>
               <Link href="/MicFinder">
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   Mic Finder
