@@ -73,64 +73,56 @@ const ComicBot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/completion", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `an absurd funny take on: ${userInput}`,
-          n_predict: 400,
-          temperature: 0.9,
-          repetition_penalty: 1.2,
-          ctx_size: 1024,
-          stream: true,
-        }),
-      });
+      const response = await fetch(
+        "https://q2macz4blgtsktoc.us-east-1.aws.endpoints.huggingface.cloud",
 
-      if (!response.ok) throw new Error("Network response was not ok");
-
-      const reader = response.body?.getReader();
-      if (!reader) {
-        console.error("Response body is null");
-        alert(
-          "Oops! Something went wrong while processing your request. Please try again."
-        );
-        setIsLoading(false);
-        return;
-      }
-
-      let accumulatedResponse = "";
-
-      // Process stream
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunkText = new TextDecoder().decode(value);
-        if (chunkText.startsWith("data: ")) {
-          const chunkData = chunkText.slice(6);
-          try {
-            const chunk = JSON.parse(chunkData);
-            accumulatedResponse += chunk.content;
-            // Update the last message with new content
-            setConversation((prev) =>
-              prev.map((message, index) =>
-                index === prev.length - 1
-                  ? {
-                      ...message,
-                      content: accumulatedResponse,
-                      text: accumulatedResponse,
-                    }
-                  : message
-              )
-            );
-          } catch (error) {
-            console.warn("Received non-JSON chunk data:", chunkData);
-            alert(
-              "Received unexpected data from the server. Please try again."
-            );
-          }
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_API}`,
+          },
+          method: "POST",
+          body: JSON.stringify({
+            inputs: `an absurd funny take on: ${userInput}`,
+            parameters: {
+              max_new_tokens: 100,
+              temperature: 0.7,
+              return_full_text: false,
+            },
+          }),
         }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(
+          `Network response was not ok: ${response.status} ${response.statusText}`
+        );
       }
+
+      const responseData = await response.json(); // Parse response as JSON
+
+      // Ensure responseData is properly structured
+      if (!responseData || !responseData.generated_text) {
+        throw new Error("Invalid response data format");
+      }
+
+      const generatedText = responseData.generated_text;
+
+      // Update the last message with new content
+      setConversation((prev) =>
+        prev.map((message, index) =>
+          index === prev.length - 1
+            ? {
+                ...message,
+                content: generatedText,
+                text: generatedText,
+              }
+            : message
+        )
+      );
     } catch (error) {
       console.error("Error while generating response:", error);
       alert(
