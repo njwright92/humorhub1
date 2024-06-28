@@ -6039,5 +6039,25 @@
     "lat": 41.4867627,
     "lng": -74.0957725,
     "details": "Time: Every last Tuesday of the month\nFrequency: Monthly\nSign-up: 6:30pm, Start: 7:00pm\nNo cover charge, 1 item minimum"
+  },
+  {
+    "id": "817",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "Zoe's Coffee 'The Local Gathering Place' 11225 Decatur St #200, Westminster CO",
+    "date": "Friday",
+    "lat": 39.9002205,
+    "lng": -105.0264316,
+    "details": "Time: Every Friday 7-9pm\nFrequency: Weekly\nCoffee, Beer, Wine, Fun\nURL: zoescoffeewestminster.com"
+  },
+  {
+    "id": "818",
+    "isRecurring": true,
+    "name": "Super Funny Tuesday",
+    "location": "Nate Jackson's Super Funny Comedy Club 8402 S Hosmer St, Tacoma WA",
+    "date": "Tuesday",
+    "lat": 47.1801807,
+    "lng": -122.466593,
+    "details": "Time: Every Tuesday 7pm\nFrequency: Weekly\n21+\n50 cash prize for best set of the night"
   }  
 ]

@@ -97,6 +97,7 @@ const CityCoordinates = {
   "Highland Park": { lat: 42.4035053, lng: -83.1125465 },
   Columbia: { lat: 39.1901561, lng: -76.8175023 },
   Niles: { lat: 41.2030337, lng: -80.7385968 },
+  Westminster: { lat: 39.8934345, lng: -105.1591677 },
 };
 
 const EventsPage = () => {
