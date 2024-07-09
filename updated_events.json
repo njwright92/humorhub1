@@ -6059,5 +6059,65 @@
     "lat": 47.1801807,
     "lng": -122.466593,
     "details": "Time: Every Tuesday 7pm\nFrequency: Weekly\n21+\n50 cash prize for best set of the night"
-  }  
+  },
+  {
+    "id": "820",
+    "isRecurring": true,
+    "name": "Hottest Monday Stand Up Comedy Open Mic",
+    "location": "41601B Cherry, St Murrieta CA",
+    "date": "Monday",
+    "lat": 33.5255672,
+    "lng": -117.1772874,
+    "details": "Sign-up: 6:30pm, Start: After 6:20pm\nPresented by: KAWmedy Entertainment\nFood vendor: Temecula Grilled Cheese Co\nFree sign-up"
+  },
+  {
+    "id": "819",
+    "isRecurring": true,
+    "name": "Tarpons Got Talent Open Mic Stand Up Competition",
+    "location": "533 Athens St, Tarpon Springs FL",
+    "date": "Wednesday",
+    "lat": 28.154735,
+    "lng": -82.7630273,
+    "details": "Every 2nd and 4th Wednesday\nTime: 7:30pm - 9:30pm\nWin $350 and an awesome trophy\nFree entry"
+  },
+  {
+    "id": "821",
+    "isRecurring": true,
+    "name": "Smokes n Jokes",
+    "location": "919 E Colfax Ave, Denver CO",
+    "date": "Thursday",
+    "lat": 39.7402087,
+    "lng": -104.9780828,
+    "details": "Thursday nights open mic comedy\n7 PM to close\nCapital Cigars"
+  },
+  {
+    "id": "822",
+    "isRecurring": true,
+    "name": "Open Mic Comedy Night",
+    "location": "310 S Front St, Steelton PA",
+    "date": "Saturday",
+    "lat": 40.2312095,
+    "lng": -76.8375965,
+    "details": "Hosted by Matt Harley\nFree entry\nSign up 7 PM, show 8 PM"
+  },
+  {
+    "id": "823",
+    "isRecurring": true,
+    "name": "Laugh and Putt Comedy Show",
+    "location": "3655 N Halsted St, Chicago IL",
+    "date": "Thursday",
+    "lat": 41.9489124,
+    "lng": -87.6517178,
+    "details": "Show starts at 7:30 PM"
+  },
+  {
+    "id": "824",
+    "isRecurring": true,
+    "name": "Open Mic Night",
+    "location": "7466 Blackmon Rd Suite C, Columbus GA",
+    "date": "Monday",
+    "lat": 37.0729361,
+    "lng": -91.5481569,
+    "details": "Every Monday\nDance, hookah, food and drink specials\nAll performance types\nHideaway Lounge"
+  }
 ]

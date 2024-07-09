@@ -59,6 +59,8 @@ const ComicBot = () => {
   const handleSend = useCallback(async () => {
     const userInput = input.trim();
 
+    console.log("User input:", userInput);
+
     if (!userInput) {
       console.warn("Your message is empty. Please enter text to send.");
       alert("Please enter a message before sending.");
@@ -68,31 +70,39 @@ const ComicBot = () => {
     setConversation((prev) => [
       ...prev,
       { from: "You", content: userInput, role: "user", text: userInput },
-      { from: "ComicBot", content: "...", role: "bot", text: "..." },
+      { from: "ComicBot", content: "", role: "bot", text: "" },
     ]);
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://q2macz4blgtsktoc.us-east-1.aws.endpoints.huggingface.cloud",
+      const requestBody = JSON.stringify({
+        inputs: `an absurd funny take on: ${userInput}`,
+        parameters: {
+          max_new_tokens: 256,
+          temperature: 0.8,
+          repetition_penalty: 1.1,
+          do_sample: true,
+          stream: true,
+        },
+      });
 
+      console.log("Request body:", requestBody);
+
+      const response = await fetch(
+        "https://bdcd91puxhzzutt3.us-east-1.aws.endpoints.huggingface.cloud",
         {
           headers: {
-            Accept: "application/json",
+            Accept: "text/event-stream",
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_API}`,
           },
           method: "POST",
-          body: JSON.stringify({
-            inputs: `an absurd funny take on: ${userInput}`,
-            parameters: {
-              max_new_tokens: 100,
-              temperature: 0.7,
-              return_full_text: false,
-            },
-          }),
+          body: requestBody,
         }
       );
+
+      console.log("Response status:", response.status);
+      console.log("Response headers:", Object.fromEntries(response.headers));
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -102,29 +112,44 @@ const ComicBot = () => {
         );
       }
 
-      const responseData = await response.json(); // Parse response as JSON
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
 
-      // Ensure responseData is properly structured
-      if (!responseData || !responseData.generated_text) {
-        throw new Error("Invalid response data format");
+      if (!reader) {
+        throw new Error("Unable to read response");
       }
 
-      const generatedText = responseData.generated_text;
+      let accumulatedText = "";
 
-      // Update the last message with new content
-      setConversation((prev) =>
-        prev.map((message, index) =>
-          index === prev.length - 1
-            ? {
-                ...message,
-                content: generatedText,
-                text: generatedText,
-              }
-            : message
-        )
-      );
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        console.log("Received chunk:", chunk);
+        accumulatedText += chunk;
+
+        // Update the last message with new content
+        setConversation((prev) =>
+          prev.map((message, index) =>
+            index === prev.length - 1
+              ? {
+                  ...message,
+                  content: accumulatedText,
+                  text: accumulatedText,
+                }
+              : message
+          )
+        );
+      }
+
+      console.log("Final accumulated text:", accumulatedText);
     } catch (error) {
       console.error("Error while generating response:", error);
+      if (error instanceof Response) {
+        const errorText = await error.text();
+        console.error("Error response body:", errorText);
+      }
       alert(
         "Oops! Something went wrong while generating the response. Please try again."
       );

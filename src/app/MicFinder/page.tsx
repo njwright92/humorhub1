@@ -98,6 +98,10 @@ const CityCoordinates = {
   Columbia: { lat: 39.1901561, lng: -76.8175023 },
   Niles: { lat: 41.2030337, lng: -80.7385968 },
   Westminster: { lat: 39.8934345, lng: -105.1591677 },
+  Murrieta: { lat: 33.5539143, lng: -117.2139232 },
+  Columbus: { lat: 32.4609764, lng: -84.9877094 },
+  Steelton: { lat: 40.2359312, lng: -76.8324723 },
+  Denver: { lat: 39.7392358, lng: -104.990251 },
 };
 
 const EventsPage = () => {
@@ -296,6 +300,12 @@ const EventsPage = () => {
       if (event.id === "1") {
         const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
         return weekOfMonth === 2 || weekOfMonth === 4;
+      }
+
+      if (event.id === "819") {
+        // 2nd and 4th Wednesday of the month
+        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
+        return selectedDay === 3 && (weekOfMonth === 2 || weekOfMonth === 4);
       }
 
       return true;
