@@ -102,6 +102,9 @@ const CityCoordinates = {
   Columbus: { lat: 32.4609764, lng: -84.9877094 },
   Steelton: { lat: 40.2359312, lng: -76.8324723 },
   Denver: { lat: 39.7392358, lng: -104.990251 },
+  "New Bedford": { lat: 41.6350481, lng: -70.9286609 },
+  Decatur: { lat: 39.8406241, lng: -88.9756177 },
+  Southfield: { lat: 42.5042688, lng: -83.3189533 },
 };
 
 const EventsPage = () => {
