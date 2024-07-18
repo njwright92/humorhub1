@@ -68,6 +68,9 @@ const cityCoordinates: CityCoordinates = {
   "New Bedford": { lat: 41.6350481, lng: -70.9286609 },
   Decatur: { lat: 39.8406241, lng: -88.9756177 },
   Southfield: { lat: 42.5042688, lng: -83.3189533 },
+  Vancouver: { lat: 45.6387281, lng: -122.6614861 },
+  Salem: { lat: 44.9428975, lng: -123.0350963 },
+  Beaverton: { lat: 45.4870617, lng: -122.8037102 },
 };
 
 const extractCityNames = (coordinates: CityCoordinates) => {
