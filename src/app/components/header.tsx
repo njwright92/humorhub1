@@ -12,6 +12,7 @@ import hh from "../../app/hh.webp";
 import Image from "next/image";
 import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
 import { db } from "../../../firebase.config";
+import ComicBotModal from "./comicBotModal";
 
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -19,6 +20,7 @@ export default function Header() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const cityContext = useCity();
   const router = useRouter();
+  const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
 
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -131,11 +133,13 @@ export default function Header() {
                 </span>
               </div>
               <div
-                onClick={() =>
-                  isUserSignedIn
-                    ? (location.href = "/ComicBot")
-                    : alert("Please sign in to access this page")
-                }
+                onClick={() => {
+                  if (isUserSignedIn) {
+                    setIsComicBotModalOpen(true);
+                  } else {
+                    alert("Please sign in to access this page");
+                  }
+                }}
               >
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
@@ -198,6 +202,10 @@ export default function Header() {
         </nav>
       </header>
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />
+      <ComicBotModal
+        isOpen={isComicBotModalOpen}
+        onClose={() => setIsComicBotModalOpen(false)}
+      />
     </>
   );
 }

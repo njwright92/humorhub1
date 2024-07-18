@@ -5,22 +5,22 @@ import ComicBot from "../app/Comics.webp";
 import jokes from "../app/jokes.webp";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import HumorHubAPISection from "./components/humorHubApi";
-import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
-import Guide from "./components/guide";
+// import Guide from "./components/guide";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { useCallback, useState } from "react";
+import ComicBotModal from "./components/comicBotModal";
 import Link from "next/link";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 
 export default function Home() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false); // State for modal visibility
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
@@ -54,26 +54,28 @@ export default function Home() {
           <div className="md:flex-row flex flex-col md:items-center md:justify-center w-full">
             <div
               className="md:w-1/2 flex justify-center mb-4 md:mb-0"
-              onClick={() =>
-                isUserSignedIn
-                  ? (location.href = "/ComicBot")
-                  : alert(
-                      "You need to be signed in to access this page. Please sign in or create an account."
-                    )
-              }
+              onClick={() => {
+                if (isUserSignedIn) {
+                  setIsComicBotModalOpen(true);
+                } else {
+                  alert(
+                    "You need to be signed in to access this feature. Please sign in or create an account."
+                  );
+                }
+              }}
             >
               <Image
                 src={ComicBot}
                 alt="ComicBot - Your Comedy Genius Assistant"
                 width={250}
                 height={250}
-                className="rounded-xl shadow-lg"
+                className="rounded-xl shadow-lg cursor-pointer"
               />
             </div>
 
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Elevate your comedy with ComicBot, your AI co-writer that&#39;s
+                Elevate your comedy with ComicBot, your AI co-writer that's
                 always ready to brainstorm and enhance your sketches, helping
                 you perfect your punchlines and creative ideas at any moment.
               </p>
@@ -85,12 +87,12 @@ export default function Home() {
               </p>
               <button
                 onClick={() => {
-                  if (!isUserSignedIn) {
-                    alert(
-                      "You need to be signed in to access this page. Please sign in or create an account."
-                    );
+                  if (isUserSignedIn) {
+                    setIsComicBotModalOpen(true);
                   } else {
-                    location.href = "/ComicBot";
+                    alert(
+                      "You need to be signed in to access this feature. Please sign in or create an account."
+                    );
                   }
                 }}
                 className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors"
@@ -192,8 +194,11 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <Guide />
+        <ComicBotModal
+          isOpen={isComicBotModalOpen}
+          onClose={() => setIsComicBotModalOpen(false)}
+        />
+        {/* <Guide /> */}
       </div>
       <Footer />
     </>
