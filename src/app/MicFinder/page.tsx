@@ -286,23 +286,6 @@ const EventsPage = () => {
         return diffInDays % 14 < 7;
       }
 
-      if (event.id === "10" || event.id === "14") {
-        const thirdThursday = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          1
-        );
-        let thursdayCount = 0;
-        while (thursdayCount < 3) {
-          if (thirdThursday.getDay() === 4) {
-            thursdayCount++;
-            if (thursdayCount === 3) break;
-          }
-          thirdThursday.setDate(thirdThursday.getDate() + 1);
-        }
-        return selectedDate.getDate() === thirdThursday.getDate();
-      }
-
       if (event.id === "1") {
         const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
         return weekOfMonth === 2 || weekOfMonth === 4;
