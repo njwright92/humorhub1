@@ -5293,8 +5293,8 @@
   {
     "id": "521",
     "isRecurring": true,
-    "name": "Open Mic Tuesday",
-    "location": "Super Funny Comedy Club 8402 S Hosmer St Annex Building, Tacoma WA",
+    "name": "Super Funny Tuesday",
+    "location": "Nate jasksons Super Funny Comedy Club 8402 S Hosmer St Annex Building, Tacoma WA",
     "date": "Tuesday",
     "lat": 47.180134,
     "lng": -122.463784,
@@ -6479,5 +6479,75 @@
     "lat": 45.5167557,
     "lng": -122.5819074,
     "details": "Mic follows weekly 9PM showcase. In-person signups at 9:30, Mic at 10pm. Hosted by Aaron Thomas."
+  },
+  {
+    "id": "865",
+    "isRecurring": true,
+    "name": "Calling All Comedians",
+    "location": "410 4th St, Augusta GA",
+    "date": "Monday",
+    "lat": 33.4690703,
+    "lng": -81.9598198,
+    "details": "Signups start at 7 PM, show starts at 8 PM. All styles welcome. It's a weekly competition for a cash prize."
+  },
+  {
+    "id": "866",
+    "isRecurring": true,
+    "name": "Flight Path Funnies Comedy Open Mic",
+    "location": "1832 S 120th St, Burien WA",
+    "date": "Wednesday",
+    "lat": 47.4960309,
+    "lng": -122.3112501,
+    "details": "Signups start at 8 PM, show starts at 8:30 PM. Free entry."
+  },
+  {
+    "id": "867",
+    "isRecurring": true,
+    "name": "Comedy Night at UnderBar",
+    "location": "1701 1/2 Broadway St, Vancouver WA",
+    "date": "Monday",
+    "lat": 45.6342628,
+    "lng": -122.6727875,
+    "details": "Open mic comedy. Show starts at 8 PM Free entry."
+  },
+  {
+    "id": "868",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Friday",
+    "lat": 47.6922971,
+    "lng": -122.3576151,
+    "details": "Open mic comedy. Signups start at 6:30 PM, show starts at 7 PM."
+  },
+  {
+    "id": "869",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Sunday",
+    "lat": 47.6922971,
+    "lng": -122.3576151,
+    "details": "Open mic comedy. Signups start at 6:30 PM, show starts at 7 PM."
+  },
+  {
+    "id": "870",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Saturday",
+    "lat": 47.6922971,
+    "lng": -122.3576151,
+    "details": "Open mic comedy. Signups start at 6:30 PM, show starts at 7 PM."
+  },
+  {
+    "id": "871",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "The Shanghai Room 8580 Greenwood Ave N, Seattle WA",
+    "date": "Wednesday",
+    "lat": 47.6922971,
+    "lng": -122.3576151,
+    "details": "Open mic comedy. Signups start at 6:30 PM, show starts at 7 PM."
   }
 ]

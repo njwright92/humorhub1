@@ -101,6 +101,14 @@ const NewsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setSelectedHeadline, setSelectedDescription } = useHeadline();
   const router = useRouter();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const handleButtonClick = () => {
+    if (!isButtonDisabled) {
+      alert("ComicBot coming soon!");
+      setIsButtonDisabled(true);
+    }
+  };
 
   const handleToggleArticle = (title: string) => {
     setExpandedArticle((prev) => (prev === title ? null : title));
@@ -281,11 +289,14 @@ const NewsPage = () => {
                       </div>
                       <div className="mt-4 md:mt-0 md:flex md:flex-col md:items-end">
                         <button
-                          onClick={() =>
-                            handleWriteJoke(article.title, article.description)
-                          }
-                          className="btn font-semibold py-2 px-4 rounded hover:bg-green-700 hover:text-zinc-200 transition-colors"
+                          onClick={handleButtonClick}
+                          className={`btn font-semibold py-2 px-4 rounded hover:bg-green-700 hover:text-zinc-200 transition-colors ${
+                            isButtonDisabled
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : ""
+                          }`}
                           id="send-joke"
+                          disabled={isButtonDisabled}
                         >
                           ComicBot’s Take
                         </button>
