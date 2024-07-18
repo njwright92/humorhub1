@@ -313,6 +313,11 @@ const EventsPage = () => {
         const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
         return selectedDay === 3 && (weekOfMonth === 2 || weekOfMonth === 4);
       }
+      if (event.id === "856") {
+        // 2nd and 4th Friday of the month
+        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
+        return selectedDay === 5 && (weekOfMonth === 2 || weekOfMonth === 4);
+      }
 
       return true;
     },
