@@ -111,6 +111,7 @@ const CityCoordinates = {
   "Valley Stream": { lat: 40.6623762, lng: -73.7018421 },
   WashingtonDC: { lat: 38.9072, lng: -77.0369 },
   Westminster: { lat: 39.8934345, lng: -105.1591677 },
+  Bear: { lat: 39.6295, lng: -75.6581 },
 };
 
 const EventsPage = () => {
