@@ -108,6 +108,9 @@ const CityCoordinates = {
   Vancouver: { lat: 45.6387281, lng: -122.6614861 },
   Salem: { lat: 44.9428975, lng: -123.0350963 },
   Beaverton: { lat: 45.4870617, lng: -122.8037102 },
+  Pottstown: { lat: 40.2451663, lng: -75.6515229 },
+  Hollywood: { lat: 34.1543875, lng: -118.3711861 },
+  "Valley Stream": { lat: 40.6623762, lng: -73.7018421 },
 };
 
 const EventsPage = () => {

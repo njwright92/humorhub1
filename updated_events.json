@@ -6549,5 +6549,95 @@
     "lat": 47.6922971,
     "lng": -122.3576151,
     "details": "Open mic comedy. Signups start at 6:30 PM, show starts at 7 PM."
+  },
+  {
+    "id": "872",
+    "isRecurring": true,
+    "name": "Charlie's Comedy Open Mic Night",
+    "location": "Larry's Pub 156 Rockaway Ave, Valley Stream NY",
+    "date": "Thursday",
+    "lat": 40.6623762,
+    "lng": -73.7018421,
+    "details": "Open mic comedy. Signups start at 7:30 PM, show starts at 8 PM. Free to watch and perform."
+  },
+  {
+    "id": "873",
+    "isRecurring": true,
+    "name": "Rodney's Friday Open Mic",
+    "location": "Rodney's Comedy Club 1118 1st Ave., New York NY",
+    "date": "Friday",
+    "lat": 40.7610068,
+    "lng": -73.9631526,
+    "details": "Open mic comedy. Signups start at 4:30 PM, show starts at 5:00 PM. Five-minute set, $2 and a drink to perform. Cash prize and priority spot awarded every week."
+  },
+  {
+    "id": "874",
+    "isRecurring": true,
+    "name": "The SmokeShow Open Mics",
+    "location": "The Plate Bar and Grill 2396 S Lamb Blvd, Las Vegas NV",
+    "date": "Wednesday",
+    "lat": 36.1452659,
+    "lng": -115.0851529,
+    "details": "Open mic comedy. Every Wednesday from 11 PM to 1 AM."
+  },
+  {
+    "id": "875",
+    "isRecurring": true,
+    "name": "The SmokeShow Open Mics",
+    "location": "Hammered Harry's 450 Fremont St #140, Las Vegas NV",
+    "date": "Thursday",
+    "lat": 36.1698962,
+    "lng": -115.1432544,
+    "details": "Open mic comedy. Every Thursday from 8 PM to 10 PM."
+  },
+  {
+    "id": "876",
+    "isRecurring": true,
+    "name": "The SmokeShow Open Mics",
+    "location": "G.O.A.T. Sports Bar 3805 W Sahara Ave, Las Vegas NV",
+    "date": "Friday",
+    "lat": 36.1439489,
+    "lng": -115.1948518,
+    "details": "Open mic comedy. Every Friday from 9 PM to 11 PM."
+  },
+  {
+    "id": "877",
+    "isRecurring": true,
+    "name": "The SmokeShow Open Mics",
+    "location": "Brew It Coffee House 601 E Bridger Ave, Las Vegas NV",
+    "date": "Saturday",
+    "lat": 36.1661041,
+    "lng": -115.1433828,
+    "details": "Open mic comedy. Every Saturday from 2 PM to 4 PM. Clean mic and family-friendly."
+  },
+  {
+    "id": "878",
+    "isRecurring": true,
+    "name": "Feel the Opwer Open Mic Comedy",
+    "location": "Acoustik Garden Lounge 1515 Atlantic Ave, Brooklyn NY",
+    "date": "Thursday",
+    "lat": 40.678097,
+    "lng": -73.9414106,
+    "details": "Open mic comedy. Hosted by Dave and Budda. Every Thursday at 9 PM."
+  },
+  {
+    "id": "879",
+    "isRecurring": true,
+    "name": "2024 Club Auditions",
+    "location": "4615 Lankershim Blvd, Hollywood CA",
+    "date": "Sunday",
+    "lat": 34.1543875,
+    "lng": -118.3711861,
+    "details": "Auditions for the 2024 Club. Every Sunday at 4 PM. Bring your best 3 minutes."
+  },
+  {
+    "id": "880",
+    "isRecurring": true,
+    "name": "Giddy Gents: Your Weekly Dose of Laughs",
+    "location": "Rivet 238 E High St, Pottstown PA",
+    "date": "Thursday",
+    "lat": 40.2451663,
+    "lng": -75.6515229,
+    "details": "Weekly comedy night at Union Quarters. Signups start at 6:30 PM, show starts at 7 PM."
   }
 ]
