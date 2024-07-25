@@ -6649,5 +6649,15 @@
     "lat": 39.6110547,
     "lng": -75.7100456,
     "details": "Tuesday nights 7:30 PM. Great way to network with other comedians."
+  },
+  {
+    "id": "882",
+    "isRecurring": true,
+    "name": "I NEED COMPANY COMEDY OPEN MIC WITH HILARY SCHWARTZ",
+    "location": "Housewatch 50 Avenue B, New York NY",
+    "date": "Wednesday",
+    "lat": 40.72323,
+    "lng": -73.9854089,
+    "details": "Drink purchase required. Sign up at 6:30 PM. Show from 7 PM to 9 PM."
   }
 ]
