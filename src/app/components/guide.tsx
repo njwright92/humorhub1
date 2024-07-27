@@ -47,7 +47,7 @@ const Guide = () => {
               X
             </button>
             <video
-              className="w-full h-full xs:w-full xs:h-full md:w-82 md:h-138"
+              className="w-full h-full xs:w-full xs:h-full md:w-80 md:h-160 lg:w-80 lg:h-160 xl:w-80 xl:h-160"
               controls
             >
               <source src="path_to_video.mp4" type="video/mp4" />
