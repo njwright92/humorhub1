@@ -48,8 +48,10 @@ type CityCoordinates = {
 const CityCoordinates = {
   Albuquerque: { lat: 35.0844, lng: -106.6504 },
   Allentown: { lat: 40.6077573, lng: -75.4611807 },
+  Akron: { lat: 41.076866, lng: -81.524132 },
   Anchorage: { lat: 61.2181, lng: -149.9003 },
   Austin: { lat: 30.2672, lng: -97.7431 },
+  Bear: { lat: 39.6295, lng: -75.6581 },
   Beaverton: { lat: 45.4870617, lng: -122.8037102 },
   Billings: { lat: 45.7833, lng: -108.5007 },
   Boise: { lat: 43.615, lng: -116.2023 },
@@ -59,6 +61,7 @@ const CityCoordinates = {
   Brooklyn: { lat: 40.6782, lng: -73.9442 },
   Cheney: { lat: 47.4894065, lng: -117.5800534 },
   Chicago: { lat: 41.8781, lng: -87.6298 },
+  Canton: { lat: 40.8503587, lng: -81.4267892 },
   "Coeur D'Alene": { lat: 47.6777, lng: -116.7805 },
   Columbia: { lat: 39.1901561, lng: -76.8175023 },
   Columbus: { lat: 32.4609764, lng: -84.9877094 },
@@ -73,8 +76,10 @@ const CityCoordinates = {
   Hollywood: { lat: 34.1543875, lng: -118.3711861 },
   Honolulu: { lat: 21.3069, lng: -157.8583 },
   Kenmore: { lat: 42.5835732, lng: -87.819903 },
+  Kokomo: { lat: 40.4862354, lng: -86.1331129 },
   "Las Vegas": { lat: 36.1699, lng: -115.1398 },
   "Los Angeles": { lat: 34.0522, lng: -118.2437 },
+  Louisville: { lat: 38.234861, lng: -85.719492 },
   "Medical Lake": { lat: 47.5686687, lng: -117.703776 },
   Miami: { lat: 25.7617, lng: -80.1918 },
   Milwaukee: { lat: 43.0389, lng: -87.9065 },
@@ -101,6 +106,7 @@ const CityCoordinates = {
   "San Francisco": { lat: 37.7749, lng: -122.4194 },
   Sandpoint: { lat: 48.2766, lng: -116.5535 },
   Seattle: { lat: 47.6062, lng: -122.3321 },
+  "Sierra Vista": { lat: 31.553892, lng: -110.3075604 },
   Southfield: { lat: 42.5042688, lng: -83.3189533 },
   Spokane: { lat: 47.6588, lng: -117.426 },
   "Spokane Valley": { lat: 47.6733, lng: -117.2394 },
@@ -111,7 +117,6 @@ const CityCoordinates = {
   "Valley Stream": { lat: 40.6623762, lng: -73.7018421 },
   WashingtonDC: { lat: 38.9072, lng: -77.0369 },
   Westminster: { lat: 39.8934345, lng: -105.1591677 },
-  Bear: { lat: 39.6295, lng: -75.6581 },
 };
 
 const EventsPage = () => {
@@ -304,6 +309,16 @@ const EventsPage = () => {
         // 2nd and 4th Friday of the month
         const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
         return selectedDay === 5 && (weekOfMonth === 2 || weekOfMonth === 4);
+      }
+      if (event.id === "888") {
+        // 1st Monday of the month
+        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
+        return selectedDay === 1 && weekOfMonth === 1;
+      }
+      if (event.id === "886") {
+        // 1st and 3rd Monday of the month
+        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
+        return selectedDay === 1 && (weekOfMonth === 1 || weekOfMonth === 3);
       }
 
       return true;

@@ -6669,5 +6669,65 @@
     "lat": 40.7472343,
     "lng": -73.9944267,
     "details": "Hosted by Natalie G. DM for a spot. Come workout your tight 5 or stretch into your 10 min set! Starts at 1 PM."
+  },
+  {
+    "id": "884",
+    "isRecurring": true,
+    "name": "Comedy Open Mic",
+    "location": "Coopers Pub, 113 E Sycamore St, Kokomo IN",
+    "date": "Thursday",
+    "lat": 40.4862354,
+    "lng": -86.1331129,
+    "details": "Weekly comedy open mic, every Thursday at 8 PM. Free entry. Downstairs in the Comedy Den."
+  },
+  {
+    "id": "885",
+    "isRecurring": true,
+    "name": "Open Mic",
+    "location": "BLVD Bar and Grill, 401 Mola Blvd, Elmwood Park NJ",
+    "date": "Monday",
+    "lat": 40.904385,
+    "lng": -74.1206366,
+    "details": "Open mic every Monday at 9 PM."
+  },
+  {
+    "id": "886",
+    "isRecurring": true,
+    "name": "Open Mic Night at Karma Social",
+    "location": "4623 Whipple Ave NW, Canton OH",
+    "date": "First and Third Monday",
+    "lat": 40.8503587,
+    "lng": -81.4267892,
+    "details": "Open mic every first and third Monday from 8:30 PM to 9:30 PM. Free entry."
+  },
+  {
+    "id": "887",
+    "isRecurring": true,
+    "name": "Open Mic at The Daily Pressed",
+    "location": "323 S Main St, Akron OH",
+    "date": "Tuesday",
+    "lat": 41.076866,
+    "lng": -81.524132,
+    "details": "Open mic every Tuesday from 7:30 PM to 8:30 PM. Free entry."
+  },
+  {
+    "id": "888",
+    "isRecurring": true,
+    "name": "Open Mic Night at The Horned Toad",
+    "location": "526 W Fry Blvd, Sierra Vista AZ",
+    "date": "Monday",
+    "lat": 31.553892,
+    "lng": -110.3075604,
+    "details": "First monday of the month. Industry night specials and open mic hosted by Logan Kendrick."
+  },
+  {
+    "id": "889",
+    "isRecurring": true,
+    "name": "Open Mic Night at The Caravan Comedy Club",
+    "location": "1250 Bardstown Rd, Louisville KY",
+    "date": "Wednesday",
+    "lat": 38.234861,
+    "lng": -85.719492,
+    "details": "Open mic night at The Caravan Comedy Club every Wednesday at 7:30 PM. Free entry."
   }
 ]
