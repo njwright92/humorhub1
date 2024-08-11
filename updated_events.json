@@ -24,7 +24,17 @@
     "isRecurring": true,
     "name": "Williamsburg Open Mic",
     "location": "308 Bedford Ave the Rear, Brooklyn, NY 11249",
-    "date": "Monday, Tuesday",
+    "date": "Monday",
+    "lat": 38.9808749,
+    "lng": -77.9922457,
+    "details": "Time: 6:00pm Frequency: Weekly Cost: $5 (Drink included) URL: N/A Description: Where comedy begins"
+  },
+  {
+    "id": "900",
+    "isRecurring": true,
+    "name": "Williamsburg Open Mic",
+    "location": "308 Bedford Ave the Rear, Brooklyn, NY 11249",
+    "date": "Tuesday",
     "lat": 38.9808749,
     "lng": -77.9922457,
     "details": "Time: 6:00pm Frequency: Weekly Cost: $5 (Drink included) URL: N/A Description: Where comedy begins"
@@ -6729,5 +6739,56 @@
     "lat": 38.234861,
     "lng": -85.719492,
     "details": "Open mic night at The Caravan Comedy Club every Wednesday at 7:30 PM. Free entry."
+  },
+  {
+    "id": "891",
+    "isRecurring": true,
+    "name": "Yes We Are Open - Scruffy Murphys Comedy Open Mic",
+    "location": "2030 Larimer St, Denver CO",
+    "date": "Tuesday",
+    "lat": 39.7532625,
+    "lng": -104.9944534,
+    "details": "Comedy open mic every Tuesday. List goes out at 9:10 PM, show starts at 9:40 PM. Hosted by Rachel Neal."
+  },
+  {
+    "id": "890",
+    "isRecurring": true,
+    "name": "The Smokeshow LAFFuccino Open Mic",
+    "location": "601 E Bridger Ave, Las Vegas NV",
+    "date": "Saturday",
+    "lat": 36.1661451,
+    "lng": -115.1434135,
+    "details": "Open mic hosted by Mistress K and Ray Ray. Saturdays from 2:00 PM to 4:00 PM. All ages welcome, free parking available."
+  },
+
+  {
+    "id": "893",
+    "isRecurring": true,
+    "name": "Open Mic at Almost Famous Night Club",
+    "location": "7419 E Indian Plaza A, Scottsdale AZ",
+    "date": "Monday",
+    "lat": 33.5013064,
+    "lng": -111.9395266,
+    "details": "Open mic every Monday. Signups at 6:00 PM, show starts at 7:00 PM. Hosted by Eric Bernal."
+  },
+  {
+    "id": "894",
+    "isRecurring": true,
+    "name": "Check Mark Comedy Open Mic with Miller Mark",
+    "location": "Williamsburg Comedy Club 308 Bedford Ave, Williamsburg BK",
+    "date": "Sunday",
+    "lat": 40.7138616,
+    "lng": -73.964485,
+    "details": "$1 for a 5-minute set, $2 for a 10-minute set. 1 item minimum for audience and comics. Every Sunday from 4:00 PM to 5:45 PM."
+  },
+  {
+    "id": "892",
+    "isRecurring": true,
+    "name": "Comic Apocalypse Comedy Review",
+    "location": "Cheers Tavern 5915 W Bell Rd, Glendale AZ",
+    "date": "Friday",
+    "lat": 33.6374112,
+    "lng": -112.1904173,
+    "details": "Comedy review every Friday from 7:00 PM to 9:00 PM."
   }
 ]
