@@ -21,6 +21,7 @@ export default function Header() {
   const cityContext = useCity();
   const router = useRouter();
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
+  const [eventCount, setEventCount] = useState<number | null>(null);
 
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -29,6 +30,22 @@ export default function Header() {
     setIsUserSignedIn(!!user);
   }, []);
 
+  useEffect(() => {
+    const fetchEventCount = async () => {
+      try {
+        const response = await fetch("/api/count-events"); // Updated URL
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setEventCount(data.count);
+      } catch (error) {
+        console.error("Error fetching event count:", error);
+      }
+    };
+
+    fetchEventCount();
+  }, []);
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
@@ -80,13 +97,17 @@ export default function Header() {
             <Image
               src={hh}
               alt="Mic"
-              width={70}
-              height={70}
+              width={50}
+              height={50}
               className="rounded-full cursor-pointer"
               loading="eager"
             />
           </Link>
-
+          {eventCount !== null && (
+            <div className="absolute top-0 right-0 mt-2 mr-8 bg-orange-500 text-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-pulse">
+              Events added this week: {eventCount}
+            </div>
+          )}
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>
           <button
             onClick={toggleMenu}

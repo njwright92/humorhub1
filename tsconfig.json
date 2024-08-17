@@ -22,6 +22,16 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../.vscode/route.ts", "src/app/api/route.js", "src/app/utils/geocode.js", "src/app/components/GoogleMap.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../.vscode/route.ts",
+    "src/app/api/route.js",
+    "src/app/utils/geocode.js",
+    "src/app/components/GoogleMap.js",
+    "src/app/api/count-events/route.ts"
+  ],
   "exclude": ["node_modules"]
 }
