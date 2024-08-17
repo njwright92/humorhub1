@@ -8,7 +8,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // Load the updated JSON file
-const updatedEvents = require("./updated_events.json");
+const updatedEvents = require("./formatted_events.json");
 
 // Update or add events in Firestore
 const updateEvents = async () => {
@@ -18,15 +18,24 @@ const updateEvents = async () => {
     const docRef = db.collection("userEvents").doc(updatedEvent.id);
     const doc = await docRef.get();
 
+    // Add a current timestamp to the event if it is being added
+    const currentTimestamp = new Date().toISOString();
+
     if (doc.exists) {
       const existingEvent = doc.data();
       if (!areEventsEqual(existingEvent, updatedEvent)) {
-        batch.update(docRef, updatedEvent);
+        batch.update(docRef, {
+          ...updatedEvent,
+          googleTimestamp: currentTimestamp, // Update timestamp when updating
+        });
         console.log(`Queued update for event with ID ${updatedEvent.id}.`);
       }
     } else {
-      // If the event does not exist, add it
-      batch.set(docRef, updatedEvent);
+      // If the event does not exist, add it with a timestamp
+      batch.set(docRef, {
+        ...updatedEvent,
+        googleTimestamp: currentTimestamp, // Set timestamp when adding
+      });
       console.log(`Queued addition for event with ID ${updatedEvent.id}.`);
     }
   }

@@ -104,7 +104,7 @@ export default function Header() {
             />
           </Link>
           {eventCount !== null && (
-            <div className="absolute top-0 right-0 mt-2 mr-8 bg-orange-500 text-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-pulse">
+            <div className="absolute top-0 right-0 mt-2 mr-8 text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-pulse">
               Events added this week: {eventCount}
             </div>
           )}

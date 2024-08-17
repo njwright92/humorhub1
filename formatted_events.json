@@ -1,0 +1,35 @@
+[
+  {
+    "id": "286",
+    "date": "Thursday",
+    "lng": -74.001912,
+    "name": "The Drew And Peter Mic",
+    "location": "Greenwich Village Comedy Club 99 Macdougal Street, New York NY",
+    "details": "Time: 4:00pm Frequency: Weekly Cost: Paid URL: https://www.yelp.com/biz/greenwich-village-comedy-club-new-york",
+    "isRecurring": true,
+    "lat": 40.728682,
+    "googleTimestamp": "2024-08-17T22:25:23.013Z"
+  },
+  {
+    "id": "222",
+    "date": "Wednesday",
+    "lng": -149.907338,
+    "name": "Open Mic",
+    "location": "Carousel Lounge 3206 Spenard Rd, Anchorage AK",
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2",
+    "isRecurring": true,
+    "lat": 61.190993,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "91",
+    "date": "Tuesday",
+    "lng": -117.163763,
+    "name": "Open Mic",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego",
+    "isRecurring": true,
+    "lat": 32.714129,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  }
+]
