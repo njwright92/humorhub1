@@ -1,34 +1,44 @@
-import admin, { ServiceAccount } from "firebase-admin";
-import { NextResponse } from "next/server";
-import serviceAccount from "../../../../humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json";
+import { NextRequest, NextResponse } from "next/server";
+import * as admin from "firebase-admin";
 
-// Initialize Firebase only once
+// Get the service account key from the Vercel environment variable
+const serviceAccount = JSON.parse(
+  process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string
+);
+
+// Initialize Firebase Admin SDK if it's not already initialized
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as ServiceAccount),
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://your-database-name.firebaseio.com",
   });
 }
 
-const db = admin.firestore();
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const eventsRef = db.collection("userEvents");
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    // Example: Fetch data from Firestore
+    const db = admin.firestore();
+    const snapshot = await db.collection("eventCount").get();
+    const data = snapshot.docs.map((doc) => doc.data());
 
-    const snapshot = await eventsRef
-      .where("googleTimestamp", ">=", oneWeekAgo.toISOString())
-      .get();
-
-    const eventCount = snapshot.size;
-
-    return NextResponse.json({ count: eventCount });
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Error fetching event count:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    console.error("Error fetching data:", error);
+    return NextResponse.error();
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    // Example: Add data to Firestore
+    const db = admin.firestore();
+    await db.collection("your-collection-name").add(body);
+
+    return NextResponse.json({ message: "Data added successfully" });
+  } catch (error) {
+    console.error("Error adding data:", error);
+    return NextResponse.error();
   }
 }
