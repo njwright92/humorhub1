@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 // Get the service account key from the Vercel environment variable
 const serviceAccount = JSON.parse(
-  process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string
+  process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.replace(/\\n/g, "\n") as string
 );
 
 // Initialize Firebase Admin SDK if it's not already initialized
