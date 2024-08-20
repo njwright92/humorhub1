@@ -7731,5 +7731,38 @@
     "isRecurring": true,
     "lat": 36.1698962,
     "googleTimestamp": "2024-08-18T22:25:23.028Z"
+  },
+  {
+    "id": "1015",
+    "date": "Saturday",
+    "lng": -122.3232367,
+    "name": "Saturday Open Mic",
+    "location": "Capitol Hill Comedy Bar, 210 Broadway E, Seattle WA",
+    "details": "Time: 10:00pm\nSignup: 8:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 47.6202913,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z"
+  },
+  {
+    "id": "1016",
+    "date": "Tuesday",
+    "lng": -112.2686207,
+    "name": "Laughing Gas Comedy Show",
+    "location": "Jicky Jacks, 9611 W Camelback Rd, Phoenix AZ",
+    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 33.5076274,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z"
+  },
+  {
+    "id": "1017",
+    "date": "Friday",
+    "lng": -118.3055102,
+    "name": "Crunch Time Mic hosted by A Won",
+    "location": "Third Wheel Comedy, 5176 Santa Monica Blvd Suite 102, Los Angeles CA",
+    "details": "Time: 6:30pm\nSignup: 6:00pm\n3 minutes to start, 10 minutes to crush\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 34.0906889,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z"
   }
 ]
