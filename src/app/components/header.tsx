@@ -26,6 +26,18 @@ export default function Header() {
   const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  const [showBanner, setShowBanner] = useState(true);
+
+  useEffect(() => {
+    // Set a timer to hide the banner after 15 seconds
+    const timer = setTimeout(() => {
+      setShowBanner(false);
+    }, 15000); // 15 seconds
+
+    // Clean up the timer when the component unmounts
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
   }, []);
@@ -103,8 +115,8 @@ export default function Header() {
               loading="eager"
             />
           </Link>
-          {eventCount !== null && (
-            <div className="absolute top-0 transform  right-10 mt-2  text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-bounce">
+          {showBanner && eventCount !== null && (
+            <div className="absolute top-0 transform right-10 mt-2 text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-bounce">
               Events added this week: {eventCount}
             </div>
           )}

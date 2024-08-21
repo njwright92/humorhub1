@@ -3,8 +3,6 @@ import { CityProvider } from "./components/cityContext";
 import { EventProvider } from "./components/eventContext";
 import { HeadlineProvider } from "./components/headlinecontext";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import Head from "next/head";
 
@@ -43,8 +41,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
               <GoogleAnalytics
                 gaId={process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!}
               />
-              <Analytics />
-              <SpeedInsights />
             </HeadlineProvider>
           </EventProvider>
         </CityProvider>
