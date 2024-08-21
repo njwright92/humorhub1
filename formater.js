@@ -64,7 +64,6 @@ const reformatEvents = (data) => {
 const saveFormattedEvents = (events) => {
   try {
     fs.writeFileSync(outputFilePath, JSON.stringify(events, null, 2), "utf8");
-    console.log("Formatted events have been saved to", outputFilePath);
   } catch (error) {
     console.error("Error writing the output file:", error);
     process.exit(1);

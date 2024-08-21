@@ -17,7 +17,6 @@ const addTimestampsToEvents = async () => {
   const snapshot = await eventsRef.get();
 
   if (snapshot.empty) {
-    console.log("No events found.");
     return;
   }
 
@@ -33,7 +32,6 @@ const addTimestampsToEvents = async () => {
       const googleTimestamp = new Date().toISOString(); // Get the current timestamp in ISO format
       event.googleTimestamp = googleTimestamp;
       batch.update(doc.ref, { googleTimestamp });
-      console.log(`Queued timestamp addition for event with ID ${eventId}.`);
     }
 
     // Push the updated event to the array
@@ -42,11 +40,9 @@ const addTimestampsToEvents = async () => {
 
   // Commit the batch
   await batch.commit();
-  console.log("Batch write for timestamps completed.");
 
   // Write the updated events to updated_events.json
   fs.writeFileSync(eventsFilePath, JSON.stringify(updatedEvents, null, 2));
-  console.log("Updated events written to updated_events.json.");
 };
 
 // Run the timestamp addition function

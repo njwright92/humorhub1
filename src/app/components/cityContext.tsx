@@ -82,6 +82,13 @@ const cityCoordinates: CityCoordinates = {
   "Valley Stream": { lat: 40.6623762, lng: -73.7018421 },
   WashingtonDC: { lat: 38.9072, lng: -77.0369 },
   Westminster: { lat: 39.8934345, lng: -105.1591677 },
+  "Fountain Hills": { lat: 33.6060096, lng: -111.7190258 },
+  Livonia: { lat: 42.3683716, lng: -83.3619147 },
+  Largo: { lat: 27.8790713, lng: -82.7902723 },
+  "Pinetop-Lakeside": { lat: 34.1533762, lng: -109.9748472 },
+  Tempe: { lat: 33.3629125, lng: -111.9302 },
+  Mobile: { lat: 30.6920606, lng: -88.0432524 },
+  Tampa: { lat: 27.9443731, lng: -82.3460527 },
 };
 
 const extractCityNames = (coordinates: CityCoordinates) => {

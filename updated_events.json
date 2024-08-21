@@ -22,6 +22,116 @@
     "googleTimestamp": "2024-08-17T22:25:22.999Z"
   },
   {
+    "id": "1000",
+    "date": "Friday",
+    "lng": -88.0432524,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
+    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
+    "details": "Time: 6:00pm - 8:00pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 30.6920606
+  },
+  {
+    "id": "1001",
+    "date": "Monday",
+    "lng": -112.0783952,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Do Better Comedy Open Mic",
+    "location": "The Joy Lush Club, 24 W Camelback Rd Suite D & E, Phoenix AZ",
+    "details": "Sign-up: 7:30pm\nShow: 8:00pm\nFrequency: Weekly\nCost: One drink minimum",
+    "isRecurring": true,
+    "lat": 33.5097773
+  },
+  {
+    "id": "1002",
+    "date": "Wednesday",
+    "lng": -82.3460527,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Open Mic Jam #25",
+    "location": "9847 E Adamo Dr, Tampa FL",
+    "details": "Show starts: 8:00pm\nFrequency: Weekly\nNote: Join for early dinner",
+    "isRecurring": true,
+    "lat": 27.9443731
+  },
+  {
+    "id": "1003",
+    "date": "Saturday",
+    "lng": -88.0432524,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
+    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
+    "details": "Time: 6:00pm - 8:00pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 30.6920606
+  },
+  {
+    "id": "1004",
+    "date": "Sunday",
+    "lng": -88.0432524,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
+    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
+    "details": "Time: 4:00pm - 6:00pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 30.6920606
+  },
+  {
+    "id": "1005",
+    "date": "Wednesday",
+    "lng": -111.9302,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Stand Yo Comedy Open Mic Night",
+    "location": "Bodey's Bar and Grill, 6463 S Rural Rd, Tempe AZ",
+    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free Entry",
+    "isRecurring": true,
+    "lat": 33.3629125
+  },
+  {
+    "id": "1006",
+    "date": "Saturday",
+    "lng": -109.9748472,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Live Stand Up Comedy Open Mic",
+    "location": "1676 W White Mountain Blvd, Pinetop-Lakeside AZ",
+    "details": "Time: 5:00pm\nFrequency: Weekly\nPresented by Magic Mike",
+    "isRecurring": true,
+    "lat": 34.1533762
+  },
+  {
+    "id": "1007",
+    "date": "Tuesday",
+    "lng": -112.156057,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Trivia Night at Charleys Followed by Open Mic",
+    "location": "4324 W Thunderbird Rd, Glendale AZ",
+    "details": "Time: 9:00pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 33.6115595
+  },
+  {
+    "id": "1008",
+    "date": "Wednesday",
+    "lng": -111.9283083,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Open Mic Night hosted by Drake Harris and Nicholas Kirk",
+    "location": "Barstool Scottsdale, 4321 N Scottsdale Rd, Scottsdale AZ",
+    "details": "Time: 9:00pm\nSignup: 8:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 33.499148
+  },
+  {
+    "id": "1009",
+    "date": "Monday",
+    "lng": -81.95982,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "The Jest Joust Comedy Calamity Open Mic Show Podcast hosted by Happy Bones Jones",
+    "location": "410 4th St, Augusta GA",
+    "isRecurring": false,
+    "lat": 33.4690703,
+    "details": "Time: Unknown\nFrequency: weekly"
+  },
+  {
     "id": "101",
     "date": "Monday",
     "name": "Open Mic",
@@ -31,6 +141,94 @@
     "lat": 37.757454,
     "details": "Time: 6:00pm Frequency: Weekly Cost: Paid URL: https://www.yelp.com/biz/mutiny-radio-san-francisco",
     "googleTimestamp": "2024-08-17T22:25:23.000Z"
+  },
+  {
+    "id": "1010",
+    "date": "Wednesday",
+    "lng": -116.7834199,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Wednesday Open Mic Comedy hosted by Laura Brannings",
+    "location": "The Tree House, 314 N 4th Street, Coeur d'Alene ID",
+    "details": "Time: 7:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 47.675661
+  },
+  {
+    "id": "1011",
+    "date": "Tuesday",
+    "lng": -82.7902723,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Open Mic Tuesdays",
+    "location": "The Teaki Hut, 11610 Seminole Blvd, Largo FL",
+    "details": "Time: 8:00pm - 12:00am\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 27.8790713
+  },
+  {
+    "id": "1012",
+    "date": "Unknown",
+    "lng": -83.3619147,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Curlees Comedy Open Mic",
+    "location": "Palsmers Sports Bar, 30375 Plymouth Rd, Livonia MI",
+    "details": "Time: Unknown\nFrequency: Unknown",
+    "isRecurring": false,
+    "lat": 42.3683716
+  },
+  {
+    "id": "1013",
+    "date": "Thursday",
+    "lng": -111.7190258,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Open Mic Thursdays (Music and Comedy)",
+    "location": "Taphouse Bar and Grill, 16828 E Parkview Ave, Fountain Hills AZ",
+    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 33.6060096
+  },
+  {
+    "id": "1014",
+    "date": "Thursday",
+    "lng": -115.1432598,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "The Smokeshow Open Mic hosted by Mistress K and Ray Ray",
+    "location": "Hammered Barrys, 450 Fremont St #140, Las Vegas NV",
+    "details": "Time: 8:00pm - 10:00pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 36.1698962
+  },
+  {
+    "id": "1015",
+    "date": "Saturday",
+    "lng": -122.3232367,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Saturday Open Mic",
+    "location": "Capitol Hill Comedy Bar, 210 Broadway E, Seattle WA",
+    "details": "Time: 10:00pm\nSignup: 8:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 47.6202913
+  },
+  {
+    "id": "1016",
+    "date": "Tuesday",
+    "lng": -112.2686207,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Laughing Gas Comedy Show",
+    "location": "Jicky Jacks, 9611 W Camelback Rd, Phoenix AZ",
+    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 33.5076274
+  },
+  {
+    "id": "1017",
+    "date": "Friday",
+    "lng": -118.3055102,
+    "googleTimestamp": "2024-08-18T22:25:23.028Z",
+    "name": "Crunch Time Mic hosted by A Won",
+    "location": "Third Wheel Comedy, 5176 Santa Monica Blvd Suite 102, Los Angeles CA",
+    "details": "Time: 6:30pm\nSignup: 6:00pm\n3 minutes to start, 10 minutes to crush\nFrequency: Weekly",
+    "isRecurring": true,
+    "lat": 34.0906889
   },
   {
     "id": "102",
@@ -240,6 +438,19 @@
     "lat": 25.801257,
     "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: https://www.yelp.com/biz/speakfridays-miami",
     "googleTimestamp": "2024-08-17T22:25:23.003Z"
+  },
+  {
+    "id": "11Zkgx4qKQbZA1LRYYnr",
+    "date": {
+      "_seconds": 1724299200,
+      "_nanoseconds": 0
+    },
+    "lng": -79.20566099999999,
+    "name": "LuvLees Open Mic",
+    "location": "30375 Plymouth Rd. Livonia, MI",
+    "details": "Open mic sign up it at 7:00 pm and show starts at 7:30 pm every Thursday ",
+    "isRecurring": true,
+    "lat": 43.786694
   },
   {
     "id": "120",
@@ -1492,8 +1703,8 @@
     "location": "Carousel Lounge 3206 Spenard Rd, Anchorage AK",
     "lng": -149.907338,
     "lat": 61.190993,
-    "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2",
-    "googleTimestamp": "2024-08-17T22:25:23.008Z"
+    "googleTimestamp": "2024-08-17T22:25:23.028Z",
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2"
   },
   {
     "id": "223",
@@ -2263,7 +2474,7 @@
     "lng": -74.001912,
     "lat": 40.728682,
     "details": "Time: 4:00pm Frequency: Weekly Cost: Paid URL: https://www.yelp.com/biz/greenwich-village-comedy-club-new-york",
-    "googleTimestamp": "2024-08-17T22:25:23.010Z"
+    "googleTimestamp": "2024-08-17T22:25:23.013Z"
   },
   {
     "id": "287",
@@ -2915,14 +3126,19 @@
     "googleTimestamp": "2024-08-17T22:25:23.013Z"
   },
   {
-    "id": "286",
-    "date": "Thursday",
-    "lng": -74.001912,
-    "name": "The Drew And Peter Mic",
-    "location": "Greenwich Village Comedy Club 99 Macdougal Street, New York NY",
-    "details": "Time: 4:00pm Frequency: Weekly Cost: Paid URL: https://www.yelp.com/biz/greenwich-village-comedy-club-new-york",
-    "isRecurring": true,
-    "lat": 40.728682,
+    "id": "33XNjhrmYPgo6DzqXbC8EvwXDK62",
+    "events": [
+      {
+        "date": "Thursday",
+        "lng": -74.001912,
+        "name": "The Drew And Peter Mic",
+        "location": "Greenwich Village Comedy Club 99 Macdougal Street, New York NY",
+        "isRecurring": true,
+        "details": "Time: 4:00pm Frequency: Weekly Cost: Paid URL: https://www.yelp.com/biz/greenwich-village-comedy-club-new-york",
+        "id": "286",
+        "lat": 40.728682
+      }
+    ],
     "googleTimestamp": "2024-08-17T22:25:23.013Z"
   },
   {
@@ -5874,6 +6090,17 @@
     "googleTimestamp": "2024-08-17T22:25:23.024Z"
   },
   {
+    "id": "581",
+    "date": "Monday",
+    "lng": -117.285654,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z",
+    "name": "Open Mic at Stockwells",
+    "details": "Free open mic on argonne road in millwood, go in the back every monday at 7pm change to wind $15 gift card 21+",
+    "isRecurring": true,
+    "location": "Stockwells grill and chill  3319 N Argonne Rd, Spokane Valley, WA 99212",
+    "lat": 47.6874659
+  },
+  {
     "id": "582",
     "date": "Wednesdays",
     "Details": "an open mic for funny humans --- wednesdays after trivia 9:00pmish",
@@ -7421,8 +7648,8 @@
     "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
     "lng": -117.163763,
     "lat": 32.714129,
-    "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego",
-    "googleTimestamp": "2024-08-17T22:25:23.027Z"
+    "googleTimestamp": "2024-08-17T22:25:23.028Z",
+    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
   },
   {
     "id": "92",
@@ -7513,25 +7740,35 @@
     "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
-    "id": "222",
-    "date": "Wednesday",
-    "lng": -149.907338,
-    "name": "Open Mic",
-    "location": "Carousel Lounge 3206 Spenard Rd, Anchorage AK",
-    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2",
-    "isRecurring": true,
-    "lat": 61.190993,
+    "id": "PDqex7QKQYR4oXNU8waUyUwWHYz2",
+    "events": [
+      {
+        "date": "Wednesday",
+        "lng": -149.907338,
+        "name": "Open Mic",
+        "isRecurring": true,
+        "location": "Carousel Lounge 3206 Spenard Rd, Anchorage AK",
+        "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2",
+        "id": "222",
+        "lat": 61.190993
+      }
+    ],
     "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
-    "id": "91",
-    "date": "Tuesday",
-    "lng": -117.163763,
-    "name": "Open Mic",
-    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
-    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego",
-    "isRecurring": true,
-    "lat": 32.714129,
+    "id": "gddtQjMzrwQMLqzcCCiThST5CMt1",
+    "events": [
+      {
+        "date": "Tuesday",
+        "lng": -117.163763,
+        "name": "Open Mic",
+        "isRecurring": true,
+        "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+        "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego",
+        "id": "91",
+        "lat": 32.714129
+      }
+    ],
     "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
@@ -7547,222 +7784,40 @@
   },
   {
     "id": "hsH0w3pbX0O7LXPekfyLQ67DNYx2",
+    "events": [
+      {
+        "date": "Thursday",
+        "lng": -116.654109,
+        "name": "Open Mic Night at Emerge",
+        "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like!\n\nOpen Mic is sponsored by Emerge CDA and North Idaho Pride Alliance.\n\nFREE. RSVP is recommended, but not required. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+        "location": "Emerge downtown, Coeur D'Alene ID",
+        "isRecurring": true,
+        "id": "14",
+        "lat": 47.691736
+      }
+    ],
+    "googleTimestamp": "2024-08-17T22:25:23.028Z",
     "date": "Thursday",
     "lng": -116.654109,
     "name": "Open Mic Night at Emerge",
     "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like!\n\nOpen Mic is sponsored by Emerge CDA and North Idaho Pride Alliance.\n\nFREE. RSVP is recommended, but not required. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
-    "location": "Emerge downtown, Coeur D'Alene ID",
     "isRecurring": true,
-    "lat": 47.691736,
-    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+    "location": "Emerge downtown, Coeur D'Alene ID",
+    "lat": 47.691736
   },
   {
     "id": "oPRrFB3zsSdPT4gcTWiL",
-    "date:": "Friday",
+    "date": {
+      "_seconds": 1723780800,
+      "_nanoseconds": 0
+    },
     "lng": -73.9318199,
     "name": "Knickerbocker Underground Open Mic",
     "location": "329 Knickerbocker Ave. Brooklyn, NY 11237",
     "details": "Every Friday\nList goes out at 8:30pm\n9pm showtime\n5-6 min",
     "isRecurring": true,
     "lat": 40.70725669999999,
-    "googleTimestamp": "2024-08-17T22:25:23.028Z"
-  },
-  {
-    "id": "1000",
-    "date": "Friday",
-    "lng": -88.0432524,
-    "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
-    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
-    "details": "Time: 6:00pm - 8:00pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 30.6920606,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1001",
-    "date": "Monday",
-    "lng": -112.0783952,
-    "name": "Do Better Comedy Open Mic",
-    "location": "The Joy Lush Club, 24 W Camelback Rd Suite D & E, Phoenix AZ",
-    "details": "Sign-up: 7:30pm\nShow: 8:00pm\nFrequency: Weekly\nCost: One drink minimum",
-    "isRecurring": true,
-    "lat": 33.5097773,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1002",
-    "date": "Wednesday",
-    "lng": -82.3460527,
-    "name": "Open Mic Jam #25",
-    "location": "9847 E Adamo Dr, Tampa FL",
-    "details": "Show starts: 8:00pm\nFrequency: Weekly\nNote: Join for early dinner",
-    "isRecurring": true,
-    "lat": 27.9443731,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1003",
-    "date": "Saturday",
-    "lng": -88.0432524,
-    "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
-    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
-    "details": "Time: 6:00pm - 8:00pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 30.6920606,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1004",
-    "date": "Sunday",
-    "lng": -88.0432524,
-    "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
-    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
-    "details": "Time: 4:00pm - 6:00pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 30.6920606,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1005",
-    "date": "Wednesday",
-    "lng": -111.9302,
-    "name": "Stand Yo Comedy Open Mic Night",
-    "location": "Bodey's Bar and Grill, 6463 S Rural Rd, Tempe AZ",
-    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free Entry",
-    "isRecurring": true,
-    "lat": 33.3629125,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1006",
-    "date": "Saturday",
-    "lng": -109.9748472,
-    "name": "Live Stand Up Comedy Open Mic",
-    "location": "1676 W White Mountain Blvd, Pinetop-Lakeside AZ",
-    "details": "Time: 5:00pm\nFrequency: Weekly\nPresented by Magic Mike",
-    "isRecurring": true,
-    "lat": 34.1533762,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1007",
-    "date": "Tuesday",
-    "lng": -112.156057,
-    "name": "Trivia Night at Charleys Followed by Open Mic",
-    "location": "4324 W Thunderbird Rd, Glendale AZ",
-    "details": "Time: 9:00pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 33.6115595,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1008",
-    "date": "Wednesday",
-    "lng": -111.9283083,
-    "name": "Open Mic Night hosted by Drake Harris and Nicholas Kirk",
-    "location": "Barstool Scottsdale, 4321 N Scottsdale Rd, Scottsdale AZ",
-    "details": "Time: 9:00pm\nSignup: 8:30pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 33.499148,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1009",
-    "date": "Monday",
-    "lng": -81.95982,
-    "name": "The Jest Joust Comedy Calamity Open Mic Show Podcast hosted by Happy Bones Jones",
-    "location": "410 4th St, Augusta GA",
-    "details": "Time: Unknown\nFrequency: weekly",
-    "isRecurring": false,
-    "lat": 33.4690703,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1010",
-    "date": "Wednesday",
-    "lng": -116.7834199,
-    "name": "Wednesday Open Mic Comedy hosted by Laura Brannings",
-    "location": "The Tree House, 314 N 4th Street, Coeur d'Alene ID",
-    "details": "Time: 7:30pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 47.675661,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1011",
-    "date": "Tuesday",
-    "lng": -82.7902723,
-    "name": "Open Mic Tuesdays",
-    "location": "The Teaki Hut, 11610 Seminole Blvd, Largo FL",
-    "details": "Time: 8:00pm - 12:00am\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 27.8790713,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1012",
-    "date": "Unknown",
-    "lng": -83.3619147,
-    "name": "Curlees Comedy Open Mic",
-    "location": "Palsmers Sports Bar, 30375 Plymouth Rd, Livonia MI",
-    "details": "Time: Unknown\nFrequency: Unknown",
-    "isRecurring": false,
-    "lat": 42.3683716,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1013",
-    "date": "Thursday",
-    "lng": -111.7190258,
-    "name": "Open Mic Thursdays (Music and Comedy)",
-    "location": "Taphouse Bar and Grill, 16828 E Parkview Ave, Fountain Hills AZ",
-    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 33.6060096,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1014",
-    "date": "Thursday",
-    "lng": -115.1432598,
-    "name": "The Smokeshow Open Mic hosted by Mistress K and Ray Ray",
-    "location": "Hammered Barrys, 450 Fremont St #140, Las Vegas NV",
-    "details": "Time: 8:00pm - 10:00pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 36.1698962,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1015",
-    "date": "Saturday",
-    "lng": -122.3232367,
-    "name": "Saturday Open Mic",
-    "location": "Capitol Hill Comedy Bar, 210 Broadway E, Seattle WA",
-    "details": "Time: 10:00pm\nSignup: 8:30pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 47.6202913,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1016",
-    "date": "Tuesday",
-    "lng": -112.2686207,
-    "name": "Laughing Gas Comedy Show",
-    "location": "Jicky Jacks, 9611 W Camelback Rd, Phoenix AZ",
-    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 33.5076274,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
-  },
-  {
-    "id": "1017",
-    "date": "Friday",
-    "lng": -118.3055102,
-    "name": "Crunch Time Mic hosted by A Won",
-    "location": "Third Wheel Comedy, 5176 Santa Monica Blvd Suite 102, Los Angeles CA",
-    "details": "Time: 6:30pm\nSignup: 6:00pm\n3 minutes to start, 10 minutes to crush\nFrequency: Weekly",
-    "isRecurring": true,
-    "lat": 34.0906889,
-    "googleTimestamp": "2024-08-18T22:25:23.028Z"
+    "googleTimestamp": "2024-08-17T22:25:23.028Z",
+    "date:": "Friday"
   }
 ]

@@ -23,6 +23,7 @@ export default function Home() {
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false); // State for modal visibility
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
+    
     setIsUserSignedIn(!!user);
   }, []);
   useEffect(() => {

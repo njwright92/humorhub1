@@ -22,12 +22,10 @@ const updateEvents = async () => {
       const existingEvent = doc.data();
       if (!areEventsEqual(existingEvent, updatedEvent)) {
         batch.update(docRef, updatedEvent);
-        console.log(`Queued update for event with ID ${updatedEvent.id}.`);
       }
     } else {
       // If the event does not exist, add it
       batch.set(docRef, updatedEvent);
-      console.log(`Queued addition for event with ID ${updatedEvent.id}.`);
     }
   }
 

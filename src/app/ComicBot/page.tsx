@@ -59,7 +59,6 @@ const ComicBot = () => {
   const handleSend = useCallback(async () => {
     const userInput = input.trim();
 
-    console.log("User input:", userInput);
 
     if (!userInput) {
       console.warn("Your message is empty. Please enter text to send.");
@@ -86,7 +85,6 @@ const ComicBot = () => {
         },
       });
 
-      console.log("Request body:", requestBody);
 
       const response = await fetch(
         "https://bdcd91puxhzzutt3.us-east-1.aws.endpoints.huggingface.cloud",
@@ -101,8 +99,7 @@ const ComicBot = () => {
         }
       );
 
-      console.log("Response status:", response.status);
-      console.log("Response headers:", Object.fromEntries(response.headers));
+     
 
       if (!response.ok) {
         const errorText = await response.text();
