@@ -3,6 +3,8 @@ import { CityProvider } from "./components/cityContext";
 import { EventProvider } from "./components/eventContext";
 import { HeadlineProvider } from "./components/headlinecontext";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 export const metadata = {
@@ -29,6 +31,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         className="rounded-full"
       />
       <html lang="en">
+        <Analytics />
+        <SpeedInsights />
         <CityProvider>
           <EventProvider>
             <HeadlineProvider>
