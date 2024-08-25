@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     // Add data to Firestore
     const db = admin.firestore();
     console.log("Adding data to Firestore...");
-    await db.collection("your-collection-name").add(body);
+    await db.collection("events_test").add(body);
 
     console.log("Data added successfully.");
     return NextResponse.json({ message: "Data added successfully" });
