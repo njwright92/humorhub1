@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import AuthModal from "./authModal";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
@@ -27,6 +27,7 @@ export default function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const [showBanner, setShowBanner] = useState(true);
+  const fetchedOnce = useRef(false);
 
   useEffect(() => {
     // Set a timer to hide the banner after 15 seconds
@@ -43,9 +44,12 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
+    if (fetchedOnce.current) return; // Prevent multiple fetches
+    fetchedOnce.current = true;
+
     const fetchEventCount = async () => {
       try {
-        const response = await fetch("/api/count-events"); // Updated URL
+        const response = await fetch("/api/count-events");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -58,6 +62,7 @@ export default function Header() {
 
     fetchEventCount();
   }, []);
+
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);

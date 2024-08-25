@@ -1,5 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import * as admin from "firebase-admin";
+
+// In-memory cache
+let cache: { count: number; lastUpdated: number } | null = null;
+const CACHE_DURATION = 60 * 10000; // 1 minute cache duration
 
 // Construct the service account object directly using environment variables
 const serviceAccount = {
@@ -23,6 +27,16 @@ if (!admin.apps.length) {
 
 export async function GET() {
   console.log("GET request received.");
+
+  // Check if the cache is valid
+  if (cache && Date.now() - cache.lastUpdated < CACHE_DURATION) {
+    console.log("Returning data from cache.");
+    return NextResponse.json({
+      message: "Events counted and updated.",
+      count: cache.count,
+    });
+  }
+
   try {
     // Fetch data from Firestore
     const db = admin.firestore();
@@ -37,14 +51,9 @@ export async function GET() {
 
     const eventCount = snapshot.size;
     console.log(`Number of events found: ${eventCount}`);
-    const eventsArray: { id: string }[] = [];
 
-    snapshot.forEach((doc) => {
-      const event = doc.data();
-      const eventId = doc.id;
-      console.log(`Event ID: ${eventId}, Event Data:`, event);
-      eventsArray.push({ id: eventId, ...event });
-    });
+    // Cache the result
+    cache = { count: eventCount, lastUpdated: Date.now() };
 
     // Update the event counter in Firestore
     const counterRef = db.collection("counters").doc("eventsCounter");
@@ -57,28 +66,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error in count-events API:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(request: NextRequest) {
-  console.log("POST request received.");
-  try {
-    const body = await request.json();
-    console.log("Request body:", body);
-
-    // Add data to Firestore
-    const db = admin.firestore();
-    console.log("Adding data to Firestore...");
-    await db.collection("events_test").add(body);
-
-    console.log("Data added successfully.");
-    return NextResponse.json({ message: "Data added successfully" });
-  } catch (error) {
-    console.error("Error adding data:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
