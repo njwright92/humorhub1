@@ -118,7 +118,7 @@ export default function Header() {
           {showBanner && eventCount !== null && (
             <div
               className="absolute top-0 transform right-10 mt-2 text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-bounce 
-            md:text-lg md:px-6 md:py-3 sm:text-md sm:px-5 sm:py-2 xs:text-sm xs:px-4 xs:py-2"
+            md:text-lg md:px-4 md:py-2 sm:text-md sm:px-2 sm:py-1 xs:text-sm xs:px-2 xs:py12"
             >
               Events added this week: {eventCount}
             </div>
