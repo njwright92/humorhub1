@@ -23,7 +23,6 @@ export default function Home() {
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false); // State for modal visibility
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
-    
     setIsUserSignedIn(!!user);
   }, []);
   useEffect(() => {
@@ -76,15 +75,15 @@ export default function Home() {
 
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Elevate your comedy with ComicBot, your AI co-writer that&apos;s
-                always ready to brainstorm and enhance your sketches, helping
-                you perfect your punchlines and creative ideas at any moment.
+                ComicBot: Your AI-powered comedy generator, trained on stand-up.
+                Whether you need a quick punchline or a fresh routine, ComicBot
+                delivers sharp, stage-ready material whenever you need it.
               </p>
+              <br />
               <p className="mb-4">
-                From refining jokes to crafting entire routines, ComicBot is
-                your partner in bringing comedy to life, making it indispensable
-                for comedians and writers seeking a unique edge in their
-                creative work.
+                Designed for comedians, ComicBot is your go-to tool for
+                generating new jokes and refining your act. Perfect for
+                on-the-road inspiration or last-minute ideas.
               </p>
               <button
                 onClick={() => {
