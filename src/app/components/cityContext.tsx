@@ -89,6 +89,7 @@ const cityCoordinates: CityCoordinates = {
   Tempe: { lat: 33.3629125, lng: -111.9302 },
   Mobile: { lat: 30.6920606, lng: -88.0432524 },
   Tampa: { lat: 27.9443731, lng: -82.3460527 },
+  Williamsburg: { lat: 40.7081, lng: -73.9571 },
 };
 
 const extractCityNames = (coordinates: CityCoordinates) => {

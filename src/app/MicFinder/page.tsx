@@ -126,6 +126,7 @@ const CityCoordinates = {
   Tempe: { lat: 33.3629125, lng: -111.9302 },
   Mobile: { lat: 30.6920606, lng: -88.0432524 },
   Tampa: { lat: 27.9443731, lng: -82.3460527 },
+  Williamsburg: { lat: 40.7081, lng: -73.9571 },
 };
 
 const EventsPage = () => {
@@ -138,6 +139,11 @@ const EventsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
   const [loadedItems, setLoadedItems] = useState(5);
+  const [isMapVisible, setIsMapVisible] = useState(false);
+
+  const toggleMapVisibility = () => {
+    setIsMapVisible((prev) => !prev);
+  };
 
   const handleOnItemsRendered = ({
     overscanStopIndex,
@@ -564,11 +570,19 @@ const EventsPage = () => {
 
         {/* Map Component */}
         <section className="card-style1">
-          <MemoizedGoogleMap
-            lat={selectedCityCoordinates.lat}
-            lng={selectedCityCoordinates.lng}
-            events={filteredEvents}
-          />
+          <button
+            onClick={toggleMapVisibility}
+            className="mb-4 text-orange-500 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 hover:bg-orange-500 hover:text-zinc-200 active:bg-orange-500 active:text-zinc-200 transition"
+          >
+            {isMapVisible ? "Hide Map" : "Show Map"}
+          </button>
+          {isMapVisible && (
+            <MemoizedGoogleMap
+              lat={selectedCityCoordinates.lat}
+              lng={selectedCityCoordinates.lng}
+              events={filteredEvents}
+            />
+          )}
         </section>
 
         <section className="card-style">

@@ -6,7 +6,7 @@
     "name": "Open Mic",
     "isRecurring": true,
     "location": "The Goody Bar and Grill 8712 E SPRAGUE AVE #1000, Spokane Valley WA",
-    "details": "Every other monday. Hosted by Anthony Singleton, welcoming all talents including musicians, comedians, spoken word, and improv. Contact: 509-557-3999 or visit <a href=\"https://www.lyyv.tv\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">lyyv.tv</a> for more info. <a href=\"https://www.google.com/maps/place/The+Goody+Bar+And+Grill/@47.6567246,-117.2902616,17z/data=!3m1!4b1!4m6!3m5!1s0x549e21c949eed8cb:0xbd4d1292f17e8c43!8m2!3d47.656721!4d-117.2876867!16s%2Fg%2F1trrcxqj?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Every other monday. Hosted by Anthony Singleton, welcoming all talents including musicians, comedians, spoken word, and improv. Contact: 509-557-3999 or visit <a href= https://www.lyyv.tv  target= _blank  style= text-decoration: underline; color: blue; >lyyv.tv</a> for more info. <a href= https://www.google.com/maps/place/The+Goody+Bar+And+Grill/@47.6567246,-117.2902616,17z/data=!3m1!4b1!4m6!3m5!1s0x549e21c949eed8cb:0xbd4d1292f17e8c43!8m2!3d47.656721!4d-117.2876867!16s%2Fg%2F1trrcxqj?entry=ttu  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lat": 47.656721,
     "googleTimestamp": "2024-08-17T22:25:22.996Z"
   },
@@ -27,8 +27,8 @@
     "lng": -88.0432524,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
-    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
-    "details": "Time: 6:00pm - 8:00pm\nFrequency: Weekly",
+    "location": "Serda's Coffee 3 S Royal St, Mobile AL",
+    "details": "Time: 6:00pm - 8:00pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 30.6920606
   },
@@ -38,8 +38,8 @@
     "lng": -112.0783952,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Do Better Comedy Open Mic",
-    "location": "The Joy Lush Club, 24 W Camelback Rd Suite D & E, Phoenix AZ",
-    "details": "Sign-up: 7:30pm\nShow: 8:00pm\nFrequency: Weekly\nCost: One drink minimum",
+    "location": "The Joy Lush Club 24 W Camelback Rd Suite D & E, Phoenix AZ",
+    "details": "Sign-up: 7:30pm Show: 8:00pm Frequency: Weekly Cost: One drink minimum",
     "isRecurring": true,
     "lat": 33.5097773
   },
@@ -50,7 +50,7 @@
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Open Mic Jam #25",
     "location": "9847 E Adamo Dr, Tampa FL",
-    "details": "Show starts: 8:00pm\nFrequency: Weekly\nNote: Join for early dinner",
+    "details": "Show starts: 8:00pm Frequency: Weekly Note: Join for early dinner",
     "isRecurring": true,
     "lat": 27.9443731
   },
@@ -60,8 +60,8 @@
     "lng": -88.0432524,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
-    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
-    "details": "Time: 6:00pm - 8:00pm\nFrequency: Weekly",
+    "location": "Serda's Coffee 3 S Royal St, Mobile AL",
+    "details": "Time: 6:00pm - 8:00pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 30.6920606
   },
@@ -71,8 +71,8 @@
     "lng": -88.0432524,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Serda's Coffee Open Mic (Comedy, Poetry, Music)",
-    "location": "Serda's Coffee, 3 S Royal St, Mobile AL",
-    "details": "Time: 4:00pm - 6:00pm\nFrequency: Weekly",
+    "location": "Serda's Coffee 3 S Royal St, Mobile AL",
+    "details": "Time: 4:00pm - 6:00pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 30.6920606
   },
@@ -82,8 +82,8 @@
     "lng": -111.9302,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Stand Yo Comedy Open Mic Night",
-    "location": "Bodey's Bar and Grill, 6463 S Rural Rd, Tempe AZ",
-    "details": "Time: 6:30pm\nFrequency: Weekly\nCost: Free Entry",
+    "location": "Bodey's Bar and Grill 6463 S Rural Rd, Tempe AZ",
+    "details": "Time: 6:30pm Frequency: Weekly Cost: Free Entry",
     "isRecurring": true,
     "lat": 33.3629125
   },
@@ -94,7 +94,7 @@
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Live Stand Up Comedy Open Mic",
     "location": "1676 W White Mountain Blvd, Pinetop-Lakeside AZ",
-    "details": "Time: 5:00pm\nFrequency: Weekly\nPresented by Magic Mike",
+    "details": "Time: 5:00pm Frequency: Weekly Presented by Magic Mike",
     "isRecurring": true,
     "lat": 34.1533762
   },
@@ -105,7 +105,7 @@
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Trivia Night at Charleys Followed by Open Mic",
     "location": "4324 W Thunderbird Rd, Glendale AZ",
-    "details": "Time: 9:00pm\nFrequency: Weekly",
+    "details": "Time: 9:00pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 33.6115595
   },
@@ -115,8 +115,8 @@
     "lng": -111.9283083,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Open Mic Night hosted by Drake Harris and Nicholas Kirk",
-    "location": "Barstool Scottsdale, 4321 N Scottsdale Rd, Scottsdale AZ",
-    "details": "Time: 9:00pm\nSignup: 8:30pm\nFrequency: Weekly",
+    "location": "Barstool Scottsdale 4321 N Scottsdale Rd, Scottsdale AZ",
+    "details": "Time: 9:00pm Signup: 8:30pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 33.499148
   },
@@ -129,7 +129,7 @@
     "location": "410 4th St, Augusta GA",
     "isRecurring": false,
     "lat": 33.4690703,
-    "details": "Time: Unknown\nFrequency: weekly"
+    "details": "Time: Unknown Frequency: weekly"
   },
   {
     "id": "101",
@@ -148,8 +148,8 @@
     "lng": -116.7834199,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Wednesday Open Mic Comedy hosted by Laura Brannings",
-    "location": "The Tree House, 314 N 4th Street, Coeur d'Alene ID",
-    "details": "Time: 7:30pm\nFrequency: Weekly",
+    "location": "The Tree House 314 N 4th Street, Coeur d'Alene ID",
+    "details": "Time: 7:30pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 47.675661
   },
@@ -159,8 +159,8 @@
     "lng": -82.7902723,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Open Mic Tuesdays",
-    "location": "The Teaki Hut, 11610 Seminole Blvd, Largo FL",
-    "details": "Time: 8:00pm - 12:00am\nFrequency: Weekly",
+    "location": "The Teaki Hut 11610 Seminole Blvd, Largo FL",
+    "details": "Time: 8:00pm - 12:00am Frequency: Weekly",
     "isRecurring": true,
     "lat": 27.8790713
   },
@@ -170,8 +170,8 @@
     "lng": -83.3619147,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Curlees Comedy Open Mic",
-    "location": "Palsmers Sports Bar, 30375 Plymouth Rd, Livonia MI",
-    "details": "Time: Unknown\nFrequency: Unknown",
+    "location": "Palsmers Sports Bar 30375 Plymouth Rd, Livonia MI",
+    "details": "Time: Unknown Frequency: Unknown",
     "isRecurring": false,
     "lat": 42.3683716
   },
@@ -181,8 +181,8 @@
     "lng": -111.7190258,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Open Mic Thursdays (Music and Comedy)",
-    "location": "Taphouse Bar and Grill, 16828 E Parkview Ave, Fountain Hills AZ",
-    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
+    "location": "Taphouse Bar and Grill 16828 E Parkview Ave, Fountain Hills AZ",
+    "details": "Time: 7:00pm - 9:00pm Signup: 6:30pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 33.6060096
   },
@@ -192,8 +192,8 @@
     "lng": -115.1432598,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "The Smokeshow Open Mic hosted by Mistress K and Ray Ray",
-    "location": "Hammered Barrys, 450 Fremont St #140, Las Vegas NV",
-    "details": "Time: 8:00pm - 10:00pm\nFrequency: Weekly",
+    "location": "Hammered Barrys 450 Fremont St #140, Las Vegas NV",
+    "details": "Time: 8:00pm - 10:00pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 36.1698962
   },
@@ -203,8 +203,8 @@
     "lng": -122.3232367,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Saturday Open Mic",
-    "location": "Capitol Hill Comedy Bar, 210 Broadway E, Seattle WA",
-    "details": "Time: 10:00pm\nSignup: 8:30pm\nFrequency: Weekly",
+    "location": "Capitol Hill Comedy Bar 210 Broadway E, Seattle WA",
+    "details": "Time: 10:00pm Signup: 8:30pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 47.6202913
   },
@@ -214,8 +214,8 @@
     "lng": -112.2686207,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Laughing Gas Comedy Show",
-    "location": "Jicky Jacks, 9611 W Camelback Rd, Phoenix AZ",
-    "details": "Time: 7:00pm - 9:00pm\nSignup: 6:30pm\nFrequency: Weekly",
+    "location": "Jicky Jacks 9611 W Camelback Rd, Phoenix AZ",
+    "details": "Time: 7:00pm - 9:00pm Signup: 6:30pm Frequency: Weekly",
     "isRecurring": true,
     "lat": 33.5076274
   },
@@ -225,8 +225,8 @@
     "lng": -118.3055102,
     "googleTimestamp": "2024-08-18T22:25:23.028Z",
     "name": "Crunch Time Mic hosted by A Won",
-    "location": "Third Wheel Comedy, 5176 Santa Monica Blvd Suite 102, Los Angeles CA",
-    "details": "Time: 6:30pm\nSignup: 6:00pm\n3 minutes to start, 10 minutes to crush\nFrequency: Weekly",
+    "location": "Third Wheel Comedy 5176 Santa Monica Blvd Suite 102, Los Angeles CA",
+    "details": "Time: 6:30pm Signup: 6:00pm 3 minutes to start, 10 minutes to crush Frequency: Weekly",
     "isRecurring": true,
     "lat": 34.0906889
   },
@@ -324,7 +324,7 @@
     "name": "Open Mic Night at The Grain Shed",
     "isRecurring": true,
     "location": "The Grain Shed Taproom, Spokane WA",
-    "details": "Hosted by Anthony Singleton. Open Mic Night for music and comedy. Every Friday from 5:30 PM to 8:30ish PM. All ages welcome. Clean mic. Free admission. <a href=\"https://www.google.com/maps/place/The+Grain+Shed+Taproom/@47.6561077,-117.4348802,17z/data=!3m2!4b1!5s0x549e18680a2601e7:0x1a13f3af47308d34!4m6!3m5!1s0x549e194b26b6f1a1:0x6df1cdc8cd28c935!8m2!3d47.6561041!4d-117.4323053!16s%2Fg%2F11thk6c6yx?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Hosted by Anthony Singleton. Open Mic Night for music and comedy. Every Friday from 5:30 PM to 8:30ish PM. All ages welcome. Clean mic. Free admission. <a href= https://www.google.com/maps/place/The+Grain+Shed+Taproom/@47.6561077,-117.4348802,17z/data=!3m2!4b1!5s0x549e18680a2601e7:0x1a13f3af47308d34!4m6!3m5!1s0x549e194b26b6f1a1:0x6df1cdc8cd28c935!8m2!3d47.6561041!4d-117.4323053!16s%2Fg%2F11thk6c6yx?entry=ttu  ttarget= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lng": -117.435997,
     "lat": 47.66264,
     "googleTimestamp": "2024-08-17T22:25:23.001Z"
@@ -568,7 +568,7 @@
     "name": "Stand Up Comedy Open Mic",
     "isRecurring": true,
     "location": "Spikes on 718 E Francis, Spokane WA",
-    "details": "Hosted by Anthony Singleton. Every Saturday at 7:00 PM. For more information follow @AnthonySingleton on social media. <a href=\"https://www.google.com/maps/place/Spike's+Spokane/@47.7147076,-117.4008385,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1eb3e673dd89:0xb506914f6e09b6e2!8m2!3d47.7147076!4d-117.3982638!16s%2Fg%2F11d2j5c86h?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Hosted by Anthony Singleton. Every Saturday at 7:00 PM. For more information follow @AnthonySingleton on social media. <a href= https://www.google.com/maps/place/Spike's+Spokane/@47.7147076,-117.4008385,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1eb3e673dd89:0xb506914f6e09b6e2!8m2!3d47.7147076!4d-117.3982638!16s%2Fg%2F11d2j5c86h?entry=ttu  ttarget= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lng": -117.398302,
     "lat": 47.714804,
     "googleTimestamp": "2024-08-17T22:25:23.004Z"
@@ -691,7 +691,7 @@
     "location": "Emerge downtown, Coeur D'Alene ID",
     "lng": -116.654109,
     "lat": 47.691736,
-    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome. We just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome. We just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. <a href= https://emergecda.com/  target= _blank  style= text-decoration: underline; color: blue; >Visit website</a>. <a href= https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "googleTimestamp": "2024-08-17T22:25:23.004Z"
   },
   {
@@ -1415,7 +1415,7 @@
     "name": "New Talent Tuesday!",
     "isRecurring": true,
     "location": "Spokane Comedy Club, Spokane WA",
-    "details": "Every Tuesday, Featuring: Amateur and Professional comedians trying out new material. Free admission. Shows starting at 9:30pm or later are 21+, earlier shows are 18+ with valid ID. Visit <a href=\"https://www.spokanecomedyclub.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Spokane Comedy Club</a> for more info. <a href=\"https://www.google.com/maps/place/Spokane+Comedy+Club/@47.657017,-117.4193719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1861e8e0198d:0xba09c4ee88e9b25e!8m2!3d47.657017!4d-117.416797!16s%2Fg%2F11cm6j1zpw?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Every Tuesday, Featuring: Amateur and Professional comedians trying out new material. Free admission. Shows starting at 9:30pm or later are 21+, earlier shows are 18+ with valid ID. Visit <a href= https://www.spokanecomedyclub.com/  target= _blank  style= text-decoration: underline; color: blue; >Spokane Comedy Club</a> for more info. <a href= https://www.google.com/maps/place/Spokane+Comedy+Club/@47.657017,-117.4193719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1861e8e0198d:0xba09c4ee88e9b25e!8m2!3d47.657017!4d-117.416797!16s%2Fg%2F11cm6j1zpw?entry=ttu  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lng": -117.569116,
     "lat": 47.492021,
     "googleTimestamp": "2024-08-17T22:25:23.007Z"
@@ -1704,7 +1704,7 @@
     "lng": -149.907338,
     "lat": 61.190993,
     "googleTimestamp": "2024-08-17T22:25:23.028Z",
-    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2"
+    "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2"
   },
   {
     "id": "223",
@@ -2638,7 +2638,7 @@
     "location": "T's Lounge, Spokane WA",
     "lng": -117.435997,
     "lat": 47.66264,
-    "details": "Signup in person at 7:45pm. starts at 8pm usually 9ish on New Talent Nights. What's a comedy scene without a dive bar mic? T's On A Tuesday has been going strong for years and is the perfect place to test out your newest material.  <a href=\"https://tsspokane.com/\">tsspokane.com</a> <a href=\"https://www.google.com/maps/place/T's+Lounge/@47.6636398,-117.4294504,17z/data=!3m1!4b1!4m6!3m5!1s0x549e185ed5817429:0x475d58f4a48ae52b!8m2!3d47.6636398!4d-117.4268755!16s%2Fg%2F11c5ss4c1c?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>",
+    "details": "Signup in person at 7:45pm. starts at 8pm usually 9ish on New Talent Nights. What's a comedy scene without a dive bar mic? T's On A Tuesday has been going strong for years and is the perfect place to test out your newest material.  <a href= https://tsspokane.com/ >tsspokane.com</a> <a href= https://www.google.com/maps/place/T's+Lounge/@47.6636398,-117.4294504,17z/data=!3m1!4b1!4m6!3m5!1s0x549e185ed5817429:0x475d58f4a48ae52b!8m2!3d47.6636398!4d-117.4268755!16s%2Fg%2F11c5ss4c1c?entry=ttu  ttarget= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>",
     "googleTimestamp": "2024-08-17T22:25:23.011Z"
   },
   {
@@ -3875,7 +3875,7 @@
     "isRecurring": true,
     "location": "nYne Bar & Bistro, Spokane WA",
     "lat": 47.6573563,
-    "details": "Signup in person at 7:30pm. starts at 8pm. nYne is one of our local gay bars, so any and all comics who identify as LGBTQIA+ are strongly encouraged to go.  <a href=\"https://www.nynebar.com/\">nynebar.com</a> <a href=\"https://www.google.com/maps/place/nYne+Bar+%26+Bistro/@47.6573563,-119.1693299,8z/data=!4m10!1m2!2m1!1sn9ne+bistro!3m6!1s0x549e188a0e23298d:0xe96a55dc6ee16314!8m2!3d47.6573563!4d-117.4147831!15sCgtuOW5lIGJpc3Ryb1oNIgtuOW5lIGJpc3Ryb5IBDmdheV9uaWdodF9jbHVimgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU56Y1hOdU0zRlJSUkFC4AEA!16s%2Fg%2F1vzv3cvm?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>",
+    "details": "Signup in person at 7:30pm. starts at 8pm. nYne is one of our local gay bars, so any and all comics who identify as LGBTQIA+ are strongly encouraged to go.  <a href= https://www.nynebar.com/ >nynebar.com</a> <a href= https://www.google.com/maps/place/nYne+Bar+%26+Bistro/@47.6573563,-119.1693299,8z/data=!4m10!1m2!2m1!1sn9ne+bistro!3m6!1s0x549e188a0e23298d:0xe96a55dc6ee16314!8m2!3d47.6573563!4d-117.4147831!15sCgtuOW5lIGJpc3Ryb1oNIgtuOW5lIGJpc3Ryb5IBDmdheV9uaWdodF9jbHVimgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVU56Y1hOdU0zRlJSUkFC4AEA!16s%2Fg%2F1vzv3cvm?entry=ttu  ttarget= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>",
     "googleTimestamp": "2024-08-17T22:25:23.016Z"
   },
   {
@@ -5094,7 +5094,7 @@
     "name": "Open Mic Night!",
     "isRecurring": true,
     "location": "Spokane Comedy Club, Spokane WA",
-    "details": "Every Wednesday, A night with professional and first-time comedians. Free admission. Happy hour all night. Sign-up for comedians available at <a href=\"https://www.barkentertainment.com/open-mic\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">openmicer.com</a>. <a href=\"https://www.google.com/maps/place/Spokane+Comedy+Club/@47.657017,-117.4193719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1861e8e0198d:0xba09c4ee88e9b25e!8m2!3d47.657017!4d-117.416797!16s%2Fg%2F11cm6j1zpw?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Every Wednesday, A night with professional and first-time comedians. Free admission. Happy hour all night. Sign-up for comedians available at <a href= https://www.barkentertainment.com/open-mic  target= _blank  style= text-decoration: underline; color: blue; >openmicer.com</a>. <a href= https://www.google.com/maps/place/Spokane+Comedy+Club/@47.657017,-117.4193719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e1861e8e0198d:0xba09c4ee88e9b25e!8m2!3d47.657017!4d-117.416797!16s%2Fg%2F11cm6j1zpw?entry=ttu  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lng": -117.569116,
     "lat": 47.492021,
     "googleTimestamp": "2024-08-17T22:25:23.019Z"
@@ -5182,7 +5182,7 @@
     "name": "Open Mic",
     "isRecurring": true,
     "location": "Spokane Comedy Club 315 W Sprague Ave, Spokane WA",
-    "details": "Time: 8:30pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/spokane-comedy-club-spokane-2",
+    "details": "Time: 8:30pm Frequency: Weekly Cost: Free URL: https://www.yelp.com/biz/spokane-comedy-club-spokane-2",
     "lng": -117.416884,
     "lat": 47.657039,
     "googleTimestamp": "2024-08-17T22:25:23.019Z"
@@ -6130,7 +6130,7 @@
     "location": "Tervan Tavern 411 Cedar St, Sandpoint ID",
     "lng": -116.552568,
     "lat": 48.275897,
-    "details": "Open Mic Night. Bring your talent in front of a live audience with a chill vibe. Be it song, instrument, comedy, improv, or magic, come show it off.  starting at 6:00(ish) p.m. on Wednesdays. Visit <a href=\"https://tervantavern.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Tervan Tavern</a> for more info. <a href=\"https://www.google.com/maps/dir//411+Cedar+St,+Sandpoint,+ID+83864/@48.2759385,-116.6349728,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x5363d6c8c06638a5:0x9a6ea93138ab0076!2m2!1d-116.5525742!2d48.2759868?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Open Mic Night. Bring your talent in front of a live audience with a chill vibe. Be it song, instrument, comedy, improv, or magic, come show it off.  starting at 6:00(ish) p.m. on Wednesdays. Visit <a href= https://tervantavern.com/  target= _blank  style= text-decoration: underline; color: blue; >Tervan Tavern</a> for more info. <a href= https://www.google.com/maps/dir//411+Cedar+St,+Sandpoint,+ID+83864/@48.2759385,-116.6349728,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x5363d6c8c06638a5:0x9a6ea93138ab0076!2m2!1d-116.5525742!2d48.2759868?entry=ttu  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "googleTimestamp": "2024-08-17T22:25:23.024Z"
   },
   {
@@ -6249,7 +6249,7 @@
     "name": "Open Mic Stand Up Comedy!",
     "isRecurring": true,
     "location": "The Draft Zone, Post Falls ID",
-    "details": "Weekly open mic stand-up comedy event. Every Thursday through 1/24. Free admission. Visit <a href=\"https://draftzonepf.com\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Draft Zone </a> for more info. <a href=\"https://www.google.com/maps/place/The+Draft+Zone/@47.7057509,-117.0270137,15z/data=!3m1!4b1!4m6!3m5!1s0x5361ddbc4da8868b:0xc1f752f8c519f0f4!8m2!3d47.7057379!4d-117.0085598!16s%2Fg%2F11gy3bsw8c?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Weekly open mic stand-up comedy event. Every Thursday through 1/24. Free admission. Visit <a href= https://draftzonepf.com  target= _blank  style= text-decoration: underline; color: blue; >Draft Zone </a> for more info. <a href= https://www.google.com/maps/place/The+Draft+Zone/@47.7057509,-117.0270137,15z/data=!3m1!4b1!4m6!3m5!1s0x5361ddbc4da8868b:0xc1f752f8c519f0f4!8m2!3d47.7057379!4d-117.0085598!16s%2Fg%2F11gy3bsw8c?entry=ttu  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lng": -116.96746,
     "lat": 47.719292,
     "googleTimestamp": "2024-08-17T22:25:23.024Z"
@@ -6502,7 +6502,7 @@
     "name": "Quincy Belt Tournament of Champions!",
     "isRecurring": true,
     "location": "The Draft Zone, Post Falls ID",
-    "details": "Post Falls, ID. Entry: Online/In Person. Free entry, no content restrictions. Qualify by winning the \"Quincy Belt\" at the open mic (Thursdays) or via video submission by 12/14. Semifinals: 2/3/24, 3/2/24, 4/6/24, 5/4/24. Finals: 6/1/24. Prizes: 1st - $1000, 2nd - $500, 3rd/4th - $250 each. Email: jaybergcomedy@gmail.com for details and entries. visit <a href=\"https://draftzonepf.com\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Draft Zone </a> for more info. <a href=\"https://www.google.com/maps/place/The+Draft+Zone/@47.7057509,-117.0270137,15z/data=!3m1!4b1!4m6!3m5!1s0x5361ddbc4da8868b:0xc1f752f8c519f0f4!8m2!3d47.7057379!4d-117.0085598!16s%2Fg%2F11gy3bsw8c?entry=ttu\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Post Falls, ID. Entry: Online/In Person. Free entry, no content restrictions. Qualify by winning the  Quincy Belt  at the open mic (Thursdays) or via video submission by 12/14. Semifinals: 2/3/24, 3/2/24, 4/6/24, 5/4/24. Finals: 6/1/24. Prizes: 1st - $1000, 2nd - $500, 3rd/4th - $250 each. Email: jaybergcomedy@gmail.com for details and entries. visit <a href= https://draftzonepf.com  target= _blank  style= text-decoration: underline; color: blue; >Draft Zone </a> for more info. <a href= https://www.google.com/maps/place/The+Draft+Zone/@47.7057509,-117.0270137,15z/data=!3m1!4b1!4m6!3m5!1s0x5361ddbc4da8868b:0xc1f752f8c519f0f4!8m2!3d47.7057379!4d-117.0085598!16s%2Fg%2F11gy3bsw8c?entry=ttu  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "lng": -116.96746,
     "lat": 47.719292,
     "googleTimestamp": "2024-08-17T22:25:23.025Z"
@@ -7481,7 +7481,7 @@
     "lng": -86.1331129,
     "name": "Comedy Open Mic",
     "isRecurring": true,
-    "location": "Coopers Pub, 113 E Sycamore St, Kokomo IN",
+    "location": "Coopers Pub 113 E Sycamore St, Kokomo IN",
     "details": "Weekly comedy open mic, every Thursday at 8 PM. Free entry. Downstairs in the Comedy Den.",
     "lat": 40.4862354,
     "googleTimestamp": "2024-08-17T22:25:23.027Z"
@@ -7492,7 +7492,7 @@
     "lng": -74.1206366,
     "name": "Open Mic",
     "isRecurring": true,
-    "location": "BLVD Bar and Grill, 401 Mola Blvd, Elmwood Park NJ",
+    "location": "BLVD Bar and Grill 401 Mola Blvd, Elmwood Park NJ",
     "details": "Open mic every Monday at 9 PM.",
     "lat": 40.904385,
     "googleTimestamp": "2024-08-17T22:25:23.027Z"
@@ -7615,7 +7615,7 @@
     "location": "Little Nevada Restaurant and Lounge, Spokane WA",
     "lng": -117.190392,
     "lat": 46.644473,
-    "details": "Signup in person at 6:00pm starts 6:30pm-ish. Located in the northern-ish part of Spokane, this spot (and every other one, for that matter) is only as good as you make it, so get to writing! <a href=\"https://www.facebook.com/thelittlenevada/about\"> little nevada Facebook</a> <a href=\"https://www.google.com/maps/place/The+Little+Nevada+Restaurant+%26+Lounge/@47.7015451,-117.3999719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e19133302e643:0x1f7e41b2e502ce4!8m2!3d47.7015452!4d-117.3953585!16s%2Fg%2F11h5rcfc77?entry=ttu\" ttarget=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
+    "details": "Signup in person at 6:00pm starts 6:30pm-ish. Located in the northern-ish part of Spokane, this spot (and every other one, for that matter) is only as good as you make it, so get to writing! <a href= https://www.facebook.com/thelittlenevada/about > little nevada Facebook</a> <a href= https://www.google.com/maps/place/The+Little+Nevada+Restaurant+%26+Lounge/@47.7015451,-117.3999719,17z/data=!3m1!4b1!4m6!3m5!1s0x549e19133302e643:0x1f7e41b2e502ce4!8m2!3d47.7015452!4d-117.3953585!16s%2Fg%2F11h5rcfc77?entry=ttu  ttarget= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "googleTimestamp": "2024-08-17T22:25:23.027Z"
   },
   {
@@ -7649,7 +7649,7 @@
     "lng": -117.163763,
     "lat": 32.714129,
     "googleTimestamp": "2024-08-17T22:25:23.028Z",
-    "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
+    "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego"
   },
   {
     "id": "92",
@@ -7740,81 +7740,44 @@
     "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
-    "id": "PDqex7QKQYR4oXNU8waUyUwWHYz2",
-    "events": [
-      {
-        "date": "Wednesday",
-        "lng": -149.907338,
-        "name": "Open Mic",
-        "isRecurring": true,
-        "location": "Carousel Lounge 3206 Spenard Rd, Anchorage AK",
-        "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2",
-        "id": "222",
-        "lat": 61.190993
-      }
-    ],
+    "date": "Wednesday",
+    "lng": -149.907338,
+    "name": "Open Mic",
+    "isRecurring": true,
+    "location": "Carousel Lounge 3206 Spenard Rd, Anchorage AK",
+    "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: https://www.yelp.com/biz/carousel-cocktail-lounge-anchorage-2",
+    "id": "222",
+    "lat": 61.190993,
     "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
     "id": "gddtQjMzrwQMLqzcCCiThST5CMt1",
-    "events": [
-      {
-        "date": "Tuesday",
-        "lng": -117.163763,
-        "name": "Open Mic",
-        "isRecurring": true,
-        "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
-        "details": "Time: 8:00pm\nFrequency: Weekly\nCost: Free\nURL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego",
-        "id": "91",
-        "lat": 32.714129
-      }
-    ],
-    "googleTimestamp": "2024-08-17T22:25:23.028Z"
-  },
-  {
-    "id": "581",
-    "lng": -117.285654,
-    "name": "Open Mic at Stockwells",
-    "details": "Free open mic on argonne road in millwood, go in the back every monday at 7pm change to wind $15 gift card 21+",
+    "date": "Tuesday",
+    "lng": -117.163763,
+    "name": "Open Mic",
     "isRecurring": true,
-    "lat": 47.6874659,
-    "date": "Monday",
-    "location": "Stockwells grill and chill  3319 N Argonne Rd, Spokane Valley, WA 99212",
+    "location": "The Mad House Comedy Club 502 Horton Plaza, San Diego CA",
+    "details": "Time: 8:00pm Frequency: Weekly Cost: Free URL: http://www.yelp.com/biz/mad-house-comedy-club-san-diego",
+    "lat": 32.714129,
     "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
     "id": "hsH0w3pbX0O7LXPekfyLQ67DNYx2",
-    "events": [
-      {
-        "date": "Thursday",
-        "lng": -116.654109,
-        "name": "Open Mic Night at Emerge",
-        "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like!\n\nOpen Mic is sponsored by Emerge CDA and North Idaho Pride Alliance.\n\nFREE. RSVP is recommended, but not required. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
-        "location": "Emerge downtown, Coeur D'Alene ID",
-        "isRecurring": true,
-        "id": "14",
-        "lat": 47.691736
-      }
-    ],
-    "googleTimestamp": "2024-08-17T22:25:23.028Z",
     "date": "Thursday",
     "lng": -116.654109,
     "name": "Open Mic Night at Emerge",
-    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome.\n\nWe just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like!\n\nOpen Mic is sponsored by Emerge CDA and North Idaho Pride Alliance.\n\nFREE. RSVP is recommended, but not required. <a href=\"https://emergecda.com/\" target=\"_blank\" style=\"text-decoration: underline; color: blue;\">Visit website</a>. <a href=\"https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA\" target=\"_blank\" style=\"text-decoration: underline; color: green;\">View on Google Maps</a>.",
-    "isRecurring": true,
+    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome. We just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like! Open Mic is sponsored by Emerge CDA and North Idaho Pride Alliance. FREE. RSVP is recommended, but not required. <a href= https://emergecda.com/  target= _blank  style= text-decoration: underline; color: blue; >Visit website</a>. <a href= https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "location": "Emerge downtown, Coeur D'Alene ID",
-    "lat": 47.691736
+    "isRecurring": true,
+    "lat": 47.691736,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
   },
   {
     "id": "oPRrFB3zsSdPT4gcTWiL",
-    "date": {
-      "_seconds": 1723780800,
-      "_nanoseconds": 0
-    },
     "lng": -73.9318199,
     "name": "Knickerbocker Underground Open Mic",
-    "location": "329 Knickerbocker Ave. Brooklyn, NY 11237",
-    "details": "Every Friday\nList goes out at 8:30pm\n9pm showtime\n5-6 min",
+    "location": "329 Knickerbocker Ave, Brooklyn NY",
+    "details": "Every Friday List goes out at 8:30pm 9pm showtime 5-6 min",
     "isRecurring": true,
     "lat": 40.70725669999999,
     "googleTimestamp": "2024-08-17T22:25:23.028Z",
