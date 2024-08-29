@@ -168,9 +168,11 @@ export default function Home() {
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div className="flex-1 text-center items-center md:text-right">
               <h2 className="mb-4 text-xl">
-                Discover and share stages for comedy, music, and poetry with Mic
-                Finder, your ultimate platform to connect talent with live
-                performance venues.
+                {" "}
+                Refined your material with ComicBot? Use Mic Finder to discover
+                the perfect spot to test it out. Whether it's comedy, music, or
+                poetry, Mic Finder connects you with live performance venues to
+                bring your new set to life.{" "}
               </h2>
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />
