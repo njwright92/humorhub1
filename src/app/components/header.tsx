@@ -163,11 +163,13 @@ export default function Header() {
             </Link>
             <div className="nav-link">
               <div
-                onClick={() =>
-                  isUserSignedIn
-                    ? (location.href = "/HHapi")
-                    : alert("Please sign in to access this page")
-                }
+                onClick={() => {
+                  if (isUserSignedIn) {
+                    location.href = "/HHapi";
+                  } else {
+                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                  }
+                }}
               >
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   {isUserSignedIn ? "News" : "News"}
@@ -178,7 +180,7 @@ export default function Header() {
                   if (isUserSignedIn) {
                     setIsComicBotModalOpen(true);
                   } else {
-                    alert("Please sign in to access this page");
+                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
                   }
                 }}
               >
@@ -187,11 +189,13 @@ export default function Header() {
                 </span>
               </div>
               <div
-                onClick={() =>
-                  isUserSignedIn
-                    ? (location.href = "/JokePad")
-                    : alert("Please sign in to access this page")
-                }
+                onClick={() => {
+                  if (isUserSignedIn) {
+                    location.href = "/JokePad";
+                  } else {
+                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                  }
+                }}
               >
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   {isUserSignedIn ? "Joke Pad" : "Joke Pad"}

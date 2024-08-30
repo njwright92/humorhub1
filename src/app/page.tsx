@@ -11,20 +11,22 @@ import Footer from "./components/footer";
 import HumorHubAPISection from "./components/humorHubApi";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
-// import Guide from "./components/guide";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import ComicBotModal from "./components/comicBotModal";
+import AuthModal from "./components/authModal";
 import Link from "next/link";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 
 export default function Home() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false); // State for modal visibility
+  const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
   }, []);
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -58,9 +60,7 @@ export default function Home() {
                 if (isUserSignedIn) {
                   setIsComicBotModalOpen(true);
                 } else {
-                  alert(
-                    "You need to be signed in to access this feature. Please sign in or create an account."
-                  );
+                  setIsAuthModalOpen(true); // Open AuthModal if not signed in
                 }
               }}
             >
@@ -90,9 +90,7 @@ export default function Home() {
                   if (isUserSignedIn) {
                     setIsComicBotModalOpen(true);
                   } else {
-                    alert(
-                      "You need to be signed in to access this feature. Please sign in or create an account."
-                    );
+                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
                   }
                 }}
                 className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors"
@@ -116,13 +114,13 @@ export default function Home() {
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div
               className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0"
-              onClick={() =>
-                isUserSignedIn
-                  ? (location.href = "/JokePad")
-                  : alert(
-                      "You need to be signed in to access this page. Please sign in or create an account."
-                    )
-              }
+              onClick={() => {
+                if (isUserSignedIn) {
+                  location.href = "/JokePad";
+                } else {
+                  setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                }
+              }}
             >
               <Image
                 src={jokes}
@@ -134,9 +132,7 @@ export default function Home() {
               <button
                 onClick={() => {
                   if (!isUserSignedIn) {
-                    alert(
-                      "You need to be signed in to access this page. Please sign in or create an account."
-                    );
+                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
                   } else {
                     location.href = "/JokePad";
                   }
@@ -199,6 +195,10 @@ export default function Home() {
         <ComicBotModal
           isOpen={isComicBotModalOpen}
           onClose={() => setIsComicBotModalOpen(false)}
+        />
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
         />
         {/* <Guide /> */}
       </div>
