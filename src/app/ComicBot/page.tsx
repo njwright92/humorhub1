@@ -59,7 +59,6 @@ const ComicBot = () => {
   const handleSend = useCallback(async () => {
     const userInput = input.trim();
 
-
     if (!userInput) {
       console.warn("Your message is empty. Please enter text to send.");
       alert("Please enter a message before sending.");
@@ -85,7 +84,6 @@ const ComicBot = () => {
         },
       });
 
-
       const response = await fetch(
         "https://bdcd91puxhzzutt3.us-east-1.aws.endpoints.huggingface.cloud",
         {
@@ -98,8 +96,6 @@ const ComicBot = () => {
           body: requestBody,
         }
       );
-
-     
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -123,7 +119,7 @@ const ComicBot = () => {
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        console.log("Received chunk:", chunk);
+
         accumulatedText += chunk;
 
         // Update the last message with new content
@@ -139,8 +135,6 @@ const ComicBot = () => {
           )
         );
       }
-
-      console.log("Final accumulated text:", accumulatedText);
     } catch (error) {
       console.error("Error while generating response:", error);
       if (error instanceof Response) {

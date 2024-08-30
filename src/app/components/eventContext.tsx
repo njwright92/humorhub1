@@ -99,7 +99,6 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     }
 
     try {
-      console.log("saveEvent called in EventProvider");
       await saveEventToFirestore(event);
     } catch (error) {
       console.error("Error saving event:", error);
