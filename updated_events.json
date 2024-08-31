@@ -441,10 +441,7 @@
   },
   {
     "id": "11Zkgx4qKQbZA1LRYYnr",
-    "date": {
-      "_seconds": 1724299200,
-      "_nanoseconds": 0
-    },
+    "date": "Thursday",
     "lng": -79.20566099999999,
     "name": "LuvLees Open Mic",
     "location": "30375 Plymouth Rd. Livonia, MI",
@@ -7766,7 +7763,7 @@
     "date": "Thursday",
     "lng": -116.654109,
     "name": "Open Mic Night at Emerge",
-    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome. We just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. You may be introduced to a new form of expression you never even knew you would like! Open Mic is sponsored by Emerge CDA and North Idaho Pride Alliance. FREE. RSVP is recommended, but not required. <a href= https://emergecda.com/  target= _blank  style= text-decoration: underline; color: blue; >Visit website</a>. <a href= https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
+    "details": "Every third Thursday of the month - Singers, Songwriters, Poets, Spoken Word & Monologues welcome. All ages welcome. We just ask that you be respectful of others in the space and are ready to experience a wide variety of performances. <a href= https://emergecda.com/  target= _blank  style= text-decoration: underline; color: blue; >Visit website</a>. <a href= https://www.google.com/maps/place/Emerge/@47.6742323,-116.7842855,15z/data=!4m2!3m1!1s0x0:0xfe97b08bde5da689?sa=X&ved=2ahUKEwjRtISQ86ODAxV0MjQIHcuOBYoQ_BJ6BAgQEAA  target= _blank  style= text-decoration: underline; color: green; >View on Google Maps</a>.",
     "location": "Emerge downtown, Coeur D'Alene ID",
     "isRecurring": true,
     "lat": 47.691736,
@@ -7782,5 +7779,93 @@
     "lat": 40.70725669999999,
     "googleTimestamp": "2024-08-17T22:25:23.028Z",
     "date:": "Friday"
+  },
+  {
+    "id": "2000",
+    "date": "Thursday",
+    "lng": -87.6833978,
+    "name": "Ron Bloom's Open Mic-Nite",
+    "location": "Culture Connects, 707 W Howard St, Evanston IL",
+    "details": "Time: 8:00pm Frequency: Weekly Cost: Free",
+    "isRecurring": true,
+    "lat": 42.0195769,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2002",
+    "date": "Thursday, September 19th",
+    "lng": -112.0018506,
+    "name": "Ahwatukee's Got Talent",
+    "location": "Cactus Jack's, 4747 E Elliot Rd #5, Phoenix AZ",
+    "details": "Time: 6:30pm\nComedy Open Mic\nEvent Date: September 19th",
+    "isRecurring": false,
+    "lat": 33.3484287,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2003",
+    "date": "Wednesday, November 15th, 2024",
+    "lng": -70.28325,
+    "name": "Maine's Wicked Funny Laugh Off 2024",
+    "location": "Lost Valley Brew Pub, 200 Lost Valley Rd, Auburn ME",
+    "details": "Submissions are open at greatfallscomedyclub.com\nEvent Date: November 15th, 2024",
+    "isRecurring": false,
+    "lat": 44.1355896,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2004",
+    "date": "Tuesday",
+    "lng": -112.2686207,
+    "name": "The Laughing Gas Show",
+    "location": "JJ's Bar and Billiard, 9611 W Camelback Rd, Phoenix AZ",
+    "details": "Time: Signup at 6:30pm, show starts at 7:00pm\nFrequency: Weekly\nCost: Free Entry\nFeatures: Cash prize, drink specials\nHosted by: Ruben Bugayong",
+    "isRecurring": true,
+    "lat": 33.5076274,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2005",
+    "date": "Saturday",
+    "lng": -111.8370968,
+    "name": "Jarrod's Open Mic",
+    "location": "109 W University Dr, Mesa AZ",
+    "details": "Time: 3:00pm - 5:00pm, Show up go up, PG-13 Variety Mic (Music, Comedy, Magic, What you got?) Hosted by Durrell Johnson",
+    "isRecurring": true,
+    "lat": 33.4220394,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2006",
+    "date": "Friday",
+    "lng": -117.4268223,
+    "name": "Open Mic at The Garland Drinkery",
+    "location": "828 W Garland Ave, Spokane WA",
+    "details": "Show up go up, starting at 7:30 every Friday",
+    "isRecurring": true,
+    "lat": 47.693665,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2007",
+    "date": "Monday, September 9th",
+    "lng": -117.36715,
+    "name": "Neon Moon Tag Team Open Mic",
+    "location": "5028 N Market St, Spokane WA",
+    "details": "Signup at 8:00pm, Show starts at 8:30pm, hosted by Kole Donovan. Bringing comedians closer together with games and open mic.",
+    "isRecurring": false,
+    "lat": 47.7040897,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
+  },
+  {
+    "id": "2008",
+    "date": "Sunday",
+    "lng": -118.3711915,
+    "name": "2024 Club Auditions",
+    "location": "The Comedy Chateau, 4615 Lankershim Blvd, North Hollywood CA",
+    "details": "Sundays at 4pm, bring your best 3 minutes",
+    "isRecurring": true,
+    "lat": 34.1543875,
+    "googleTimestamp": "2024-08-17T22:25:23.028Z"
   }
 ]
