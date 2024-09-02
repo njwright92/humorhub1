@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useHeadline } from "../components/headlinecontext";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 import Loading from "../components/loading";
+import Head from "next/head";
 
 type Category = "top_stories" | "all_news";
 
@@ -165,6 +166,17 @@ const NewsPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Humor Hub News API - Access the Latest Comedy Content</title>
+        <meta
+          name="description"
+          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news directly to your platform."
+        />
+        <meta
+          name="keywords"
+          content="Humor Hub API, comedy API, jokes API, comedy content, integrate comedy"
+        />
+      </Head>
       <Header />
       <div className="screen-container">
         {error && <p className="error-message text-zinc-200">{error}</p>}

@@ -40,4 +40,14 @@
         <lastmod>2024-09-02</lastmod>
         <priority>0.6</priority>
     </url>
+     <url>
+        <loc>https://www.thehumorhub.com/userAgreement</loc>
+        <lastmod>2024-09-02</lastmod>
+        <priority>0.4</priority>
+    </url>
+     <url>
+        <loc>https://www.thehumorhub.com/privacyPolicy</loc>
+        <lastmod>2024-09-02</lastmod>
+        <priority>0.4</priority>
+    </url>
 </urlset>

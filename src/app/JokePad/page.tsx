@@ -16,6 +16,7 @@ import {
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Head from "next/head";
 
 type Joke = {
   id: string;
@@ -138,6 +139,18 @@ const Jokes = () => {
 
   return (
     <>
+      <Head>
+        <title>Jokepad - Write, Edit, and Perfect Your Jokes</title>
+        <meta
+          name="description"
+          content="Use Jokepad to craft, edit, and refine your jokes. The ultimate tool for comedians to keep their humor sharp."
+        />
+        <meta
+          name="keywords"
+          content="Jokepad, joke writing, comedy tools, edit jokes, humor writing"
+        />
+      </Head>
+
       <Header />
       <main className="flex flex-col">
         <h1 className="title text-2xl font-bold text-center mb-8">

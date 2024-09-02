@@ -15,6 +15,7 @@ import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import ComicBotModal from "./components/comicBotModal";
 import AuthModal from "./components/authModal";
 import Link from "next/link";
+import Head from "next/head";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 
@@ -37,6 +38,18 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Humor Hub - The Go-To Platform for Comedy</title>
+        <meta
+          name="description"
+          content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
+        />
+        <meta
+          name="keywords"
+          content="comedy, humor, funny, jokes, puns, open mic, comedy events"
+        />
+      </Head>
+
       <Header />
       <div className="screen-container">
         <section data-aos="fade-up">

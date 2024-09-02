@@ -1,7 +1,6 @@
-// pages/privacy-policy.tsx
-
 import React from "react";
 import Link from "next/link";
+import Head from "next/head";
 
 const PrivacyPolicy: React.FC = () => {
   return (
@@ -16,6 +15,17 @@ const PrivacyPolicy: React.FC = () => {
       <p>
         <strong>Last updated:</strong> 4/10/24
       </p>
+      <Head>
+        <title>Privacy Policy - Humor Hub</title>
+        <meta
+          name="description"
+          content="Understand how Humor Hub collects, uses, and protects your personal data. Your privacy is important to us."
+        />
+        <meta
+          name="keywords"
+          content="Privacy Policy, data protection, Humor Hub privacy, user data"
+        />
+      </Head>
 
       <p>
         We value your privacy and are committed to protecting your personal
@@ -76,8 +86,9 @@ const PrivacyPolicy: React.FC = () => {
       </p>
 
       <div style={{ marginTop: "4rem" }}>
-      <Link className="btn hover:underline hover:text-blue-500" href="/">
-          Go back to Home</Link>
+        <Link className="btn hover:underline hover:text-blue-500" href="/">
+          Go back to Home
+        </Link>
       </div>
     </div>
   );

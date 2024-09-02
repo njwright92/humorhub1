@@ -20,6 +20,8 @@ import logo from "../../app/comicLogo.webp";
 import comic from "../../app/favicon.ico";
 import { sendGAEvent } from "@next/third-parties/google";
 import Image from "next/image";
+import Head from "next/head";
+
 type ConversationMessage = {
   from: string;
   text: string;
@@ -254,6 +256,17 @@ const ComicBot = () => {
 
   return (
     <>
+      <Head>
+        <title>ComicBot - Your Personal AI Comedy Companion</title>
+        <meta
+          name="description"
+          content="Meet ComicBot, the AI-powered bot that brings you the best jokes and humor tailored just for you. Get ready to laugh!"
+        />
+        <meta
+          name="keywords"
+          content="ComicBot, AI comedy, jokes, humor, funny bot, AI humor"
+        />
+      </Head>
       <Header />
       <main className="screen-container flex flex-col">
         <h1 className="title text-4xl font-bold text-center mb-4">

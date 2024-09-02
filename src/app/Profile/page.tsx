@@ -16,6 +16,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Head from "next/head";
 
 export default function UserProfile() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -88,7 +89,7 @@ export default function UserProfile() {
         fetchUserDataAndEvents(user);
       }
     });
-  
+
     return () => unsubscribe();
   }, [auth, fetchUserDataAndEvents]);
 
@@ -164,6 +165,18 @@ export default function UserProfile() {
 
   return (
     <>
+      <Head>
+        <title>Your Profile - Manage Your Humor Hub Account</title>
+        <meta
+          name="description"
+          content="Access and manage your Humor Hub profile. Update your information, preferences, and view your favorite content."
+        />
+        <meta
+          name="keywords"
+          content="Humor Hub profile, manage account, update profile, comedy account"
+        />
+      </Head>
+
       <Header />
       <main className="screen-container">
         <h1 className="title text-2xl font-bold text-center mb-6">

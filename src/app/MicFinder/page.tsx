@@ -19,6 +19,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
+import Head from "next/head";
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
@@ -476,6 +477,17 @@ const EventsPage = () => {
 
   return (
     <>
+      <Head>
+        <title>MicFinder - Locate Open Mic Events Near You</title>
+        <meta
+          name="description"
+          content="Find the best open mic events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
+        />
+        <meta
+          name="keywords"
+          content="MicFinder, open mic, comedy events, find open mics, comedy shows"
+        />
+      </Head>
       <Header />
       <div className="screen-container">
         <h1 className="title text-4xl font-bold text-center mb-6">

@@ -1,7 +1,6 @@
-// pages/user-agreement.tsx
-
 import React from "react";
 import Link from "next/link";
+import Head from "next/head";
 
 const UserAgreement: React.FC = () => {
   return (
@@ -12,6 +11,18 @@ const UserAgreement: React.FC = () => {
         padding: "3rem",
       }}
     >
+      <Head>
+        <title>User Agreement - Humor Hub</title>
+        <meta
+          name="description"
+          content="Read the terms and conditions of using Humor Hub. Understand your rights and responsibilities as a user of our platform."
+        />
+        <meta
+          name="keywords"
+          content="User Agreement, terms and conditions, Humor Hub policy"
+        />
+      </Head>
+
       <h1 className="title text-center">User Agreement (Terms of Use)</h1>
       <p>
         <strong>Last updated:</strong> 4/10/24
@@ -34,8 +45,8 @@ const UserAgreement: React.FC = () => {
           software with or without modification, free of charge.
         </li>
         <li>
-          The software is provided &#34;as is,&#34; without warranty of any kind. Use at
-          your own risk.
+          The software is provided &#34;as is,&#34; without warranty of any
+          kind. Use at your own risk.
         </li>
       </ol>
 
@@ -58,9 +69,10 @@ const UserAgreement: React.FC = () => {
 
       <h2 className="subtitle-style p-2">UserDisclaimer of Warranties</h2>
       <p>
-        The software is provided &#34;as is,&#34; without warranties or guarantees of
-        any kind. The platform operators disclaim any implied warranties of
-        merchantability, fitness for a particular purpose, or non-infringement.
+        The software is provided &#34;as is,&#34; without warranties or
+        guarantees of any kind. The platform operators disclaim any implied
+        warranties of merchantability, fitness for a particular purpose, or
+        non-infringement.
       </p>
 
       <h2 className="subtitle-style p-2">UserLimitation of Liability</h2>

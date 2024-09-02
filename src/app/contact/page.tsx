@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Head from "next/head";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { db } from "../../../firebase.config";
@@ -52,6 +53,17 @@ const ContactPage: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Contact Us - Humor Hub</title>
+        <meta
+          name="description"
+          content="Get in touch with Humor Hub for any inquiries, feedback, or support. We're here to help you with anything comedy-related."
+        />
+        <meta
+          name="keywords"
+          content="contact, comedy, support, feedback, Humor Hub"
+        />
+      </Head>
       <Header />
       <div className="screen-container mx-auto px-4">
         <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
