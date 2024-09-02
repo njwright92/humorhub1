@@ -538,16 +538,18 @@ const EventsPage = () => {
             className="modern-input max-w-xs mx-auto"
           >
             <option value="">Select a City</option>
-            {Object.keys(CityCoordinates).map((city) => (
-              <option key={city} value={city}>
-                {city
-                  .replace(
-                    /\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/g,
-                    ""
-                  )
-                  .trim()}
-              </option>
-            ))}
+            {Object.keys(CityCoordinates)
+              .sort((a, b) => a.localeCompare(b)) // Sort cities alphabetically
+              .map((city) => (
+                <option key={city} value={city}>
+                  {city
+                    .replace(
+                      /\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/g,
+                      ""
+                    )
+                    .trim()}
+                </option>
+              ))}
           </select>
 
           <div className="relative mt-2">
@@ -621,23 +623,28 @@ const EventsPage = () => {
         <section className="card-style">
           {/* Updated City Filter Section */}
           <div className="city-filter flex flex-wrap">
-            <button
-              onClick={() => handleCityFilterChange("All Cities")}
-              className="city-button m-1 underline hover:no-underline flex-grow text-orange-700 text-lg"
+            <select
+              id="citySelectFilter"
+              name="filterCity"
+              value={filterCity}
+              onChange={(e) => handleCityFilterChange(e.target.value)}
+              className="modern-input max-w-xs mx-auto text-orange-700 text-lg"
             >
-              All Cities
-            </button>
-            {uniqueCities.map((city) => (
-              <button
-                key={city}
-                onClick={() => handleCityFilterChange(city)}
-                className="city-button m-1 underline hover:no-underline text-orange-500 text-md flex-grow"
-              >
-                {city}
-              </button>
-            ))}
+              <option value="All Cities">All Cities</option>
+              {uniqueCities
+                .sort((a, b) => a.localeCompare(b))
+                .map((city) => (
+                  <option
+                    key={city}
+                    value={city}
+                    className="text-orange-500 text-md"
+                  >
+                    {city}
+                  </option>
+                ))}
+            </select>
           </div>
-          <h2 className="title-style text-center">
+          <h2 className="title-style text-center mt-4">
             {filterCity === "All Cities"
               ? "All Events"
               : `Events in ${filterCity}`}
