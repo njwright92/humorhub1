@@ -62,6 +62,48 @@ export default function Home() {
           property="og:image"
           content="https://www.thehumorhub.com/images/og-image-home.jpg"
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@id": "https://www.thehumorhub.com/#website",
+                  "@type": "WebSite",
+                  name: "Humor Hub",
+                  url: "https://www.thehumorhub.com/",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target:
+                      "https://www.thehumorhub.com/search?q={search_term_string}",
+                    "query-input": "required name=search_term_string",
+                  },
+                  publisher: {
+                    "@id": "https://www.thehumorhub.com/#organization",
+                  },
+                },
+                {
+                  "@id": "https://www.thehumorhub.com/#organization",
+                  "@type": "Organization",
+                  name: "Humor Hub",
+                  url: "https://www.thehumorhub.com/",
+                  logo: "https://www.thehumorhub.com/hh.webp",
+                  sameAs: [
+                    "https://www.facebook.com/humorhub",
+                    "https://twitter.com/humorhub",
+                    "https://www.instagram.com/humorhub",
+                  ],
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    email: "njwright92@gmail.com",
+                    contactType: "Customer Support",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </Head>
 
       <Header />
