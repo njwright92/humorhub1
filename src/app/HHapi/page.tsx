@@ -176,6 +176,21 @@ const NewsPage = () => {
           name="keywords"
           content="Humor Hub API, comedy API, jokes API, comedy content, integrate comedy"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/HHapi" />
+        <meta
+          property="og:title"
+          content="Humor Hub API - Access the Latest Comedy Content"
+        />
+        <meta
+          property="og:description"
+          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news directly to your platform."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/HHapi" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-hhapi.jpg"
+        />
       </Head>
       <Header />
       <div className="screen-container">

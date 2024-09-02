@@ -48,6 +48,20 @@ export default function Home() {
           name="keywords"
           content="comedy, humor, funny, jokes, puns, open mic, comedy events"
         />
+        <meta
+          property="og:title"
+          content="Humor Hub - The Go-To Platform for Comedy"
+        />
+        <meta
+          property="og:description"
+          content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-home.jpg"
+        />
       </Head>
 
       <Header />
@@ -171,17 +185,17 @@ export default function Home() {
         </section>
 
         <section className="card-style bg-zinc-900 text-zinc-200 p-4 rounded-xl shadow-md flex flex-col items-center">
-          <h1 className="title-style text-2xl font-bold mb-4 text-center drop-shadow-md">
+          <h2 className="title-style text-2xl font-bold mb-4 text-center drop-shadow-md">
             Mic Finder!
-          </h1>
+          </h2>
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div className="flex-1 text-center items-center md:text-right">
-              <h2 className="mb-4 text-xl">
+              <h3 className="mb-4 text-xl">
                 Refined your material with ComicBot? Use Mic Finder to discover
                 the perfect spot to test it out. Whether it&#39;s comedy, music,
                 or poetry, Mic Finder connects you with live performance venues
                 to bring your new set to life.
-              </h2>
+              </h3>
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />
               </Suspense>

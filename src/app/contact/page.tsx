@@ -63,6 +63,18 @@ const ContactPage: React.FC = () => {
           name="keywords"
           content="contact, comedy, support, feedback, Humor Hub"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/contact" />
+        <meta property="og:title" content="Contact Us - Humor Hub" />
+        <meta
+          property="og:description"
+          content="Get in touch with Humor Hub for any inquiries, feedback, or support. We're here to help you with anything comedy-related."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/contact" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-contact.jpg"
+        />
       </Head>
       <Header />
       <div className="screen-container mx-auto px-4">

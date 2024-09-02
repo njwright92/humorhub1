@@ -266,6 +266,24 @@ const ComicBot = () => {
           name="keywords"
           content="ComicBot, AI comedy, jokes, humor, funny bot, AI humor"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/ComicBot" />
+        <meta
+          property="og:title"
+          content="ComicBot - Your Personal AI Comedy Companion"
+        />
+        <meta
+          property="og:description"
+          content="Meet ComicBot, the AI-powered bot that brings you the best jokes and humor tailored just for you. Get ready to laugh!"
+        />
+        <meta
+          property="og:url"
+          content="https://www.thehumorhub.com/ComicBot"
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-comicbot.jpg"
+        />
       </Head>
       <Header />
       <main className="screen-container flex flex-col">

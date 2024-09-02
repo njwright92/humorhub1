@@ -175,6 +175,21 @@ export default function UserProfile() {
           name="keywords"
           content="Humor Hub profile, manage account, update profile, comedy account"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/Profile" />
+        <meta
+          property="og:title"
+          content="Your Profile - Manage Your Humor Hub Account"
+        />
+        <meta
+          property="og:description"
+          content="Access and manage your Humor Hub profile. Update your information, preferences, and view your favorite content."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/Profile" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-profile.jpg"
+        />
       </Head>
 
       <Header />

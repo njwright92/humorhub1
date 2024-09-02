@@ -21,6 +21,24 @@ const UserAgreement: React.FC = () => {
           name="keywords"
           content="User Agreement, terms and conditions, Humor Hub policy"
         />
+        <link
+          rel="canonical"
+          href="https://www.thehumorhub.com/userAgreement"
+        />
+        <meta property="og:title" content="User Agreement - Humor Hub" />
+        <meta
+          property="og:description"
+          content="Read the terms and conditions of using Humor Hub. Understand your rights and responsibilities as a user of our platform."
+        />
+        <meta
+          property="og:url"
+          content="https://www.thehumorhub.com/userAgreement"
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-useragreement.jpg"
+        />
       </Head>
 
       <h1 className="title text-center">User Agreement (Terms of Use)</h1>

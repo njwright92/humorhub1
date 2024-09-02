@@ -40,6 +40,21 @@ const RootLayout: React.FC<RootLayoutProps> = ({
           sizes="any"
           className="rounded-full"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/" />
+        <meta
+          property="og:title"
+          content="Humor Hub - The Go-To Platform for Comedy"
+        />
+        <meta
+          property="og:description"
+          content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-home.jpg"
+        />
       </Head>
       <body>
         <CityProvider>

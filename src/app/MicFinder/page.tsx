@@ -487,6 +487,24 @@ const EventsPage = () => {
           name="keywords"
           content="MicFinder, open mic, comedy events, find open mics, comedy shows"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
+        <meta
+          property="og:title"
+          content="MicFinder - Locate Open Mic Events Near You"
+        />
+        <meta
+          property="og:description"
+          content="Find the best open mic events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
+        />
+        <meta
+          property="og:url"
+          content="https://www.thehumorhub.com/MicFinder"
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-micfinder.jpg"
+        />
       </Head>
       <Header />
       <div className="screen-container">

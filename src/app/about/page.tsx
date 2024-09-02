@@ -17,6 +17,21 @@ const About: React.FC = () => {
           name="keywords"
           content="about Humor Hub, comedy platform, humor mission, comedy vision"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/about" />
+        <meta
+          property="og:title"
+          content="About Humor Hub - Our Mission and Vision"
+        />
+        <meta
+          property="og:description"
+          content="Learn more about Humor Hub, our mission to bring comedy to everyone, and how we strive to be the ultimate platform for humor."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/about" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-about.jpg"
+        />
       </Head>
 
       <Header />

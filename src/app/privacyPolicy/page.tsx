@@ -25,6 +25,24 @@ const PrivacyPolicy: React.FC = () => {
           name="keywords"
           content="Privacy Policy, data protection, Humor Hub privacy, user data"
         />
+        <link
+          rel="canonical"
+          href="https://www.thehumorhub.com/privacyPolicy"
+        />
+        <meta property="og:title" content="Privacy Policy - Humor Hub" />
+        <meta
+          property="og:description"
+          content="Understand how Humor Hub collects, uses, and protects your personal data. Your privacy is important to us."
+        />
+        <meta
+          property="og:url"
+          content="https://www.thehumorhub.com/privacyPolicy"
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-privacypolicy.jpg"
+        />
       </Head>
 
       <p>

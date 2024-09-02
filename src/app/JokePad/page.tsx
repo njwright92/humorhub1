@@ -149,6 +149,21 @@ const Jokes = () => {
           name="keywords"
           content="Jokepad, joke writing, comedy tools, edit jokes, humor writing"
         />
+        <link rel="canonical" href="https://www.thehumorhub.com/Jokepad" />
+        <meta
+          property="og:title"
+          content="Jokepad - Write, Edit, and Perfect Your Jokes"
+        />
+        <meta
+          property="og:description"
+          content="Use Jokepad to craft, edit, and refine your jokes. The ultimate tool for comedians to keep their humor sharp."
+        />
+        <meta property="og:url" content="https://www.thehumorhub.com/Jokepad" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content="https://www.thehumorhub.com/images/og-image-jokepad.jpg"
+        />
       </Head>
 
       <Header />
