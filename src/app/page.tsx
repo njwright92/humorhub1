@@ -129,7 +129,7 @@ export default function Home() {
                 if (isUserSignedIn) {
                   setIsComicBotModalOpen(true);
                 } else {
-                  setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                  setIsAuthModalOpen(true);
                 }
               }}
             >

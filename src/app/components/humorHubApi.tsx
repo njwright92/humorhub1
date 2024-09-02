@@ -20,10 +20,10 @@ const HumorHubAPISection: React.FC = () => {
       data-aos="fade-up"
     >
       <h1 className="title-style text-3xl font-bold text-center drop-shadow-md">
-        Humor Hub News
+        Hub News!
       </h1>
       <h2 className="text-center text-lg mb-6 p-2">
-        Your Go-To Source for the Latest News
+        Your Go-To Source for the Latest News!
       </h2>
 
       {/* Main Content Section with Image and Text */}
