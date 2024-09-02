@@ -1,4 +1,4 @@
-user-agent:
- *Allow:
- 
-  /Sitemap: https://www.thehumorhub.com/sitemap.xml
+User-agent: *
+Allow: /
+
+Sitemap: https://www.thehumorhub.com/sitemap.xml
