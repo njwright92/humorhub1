@@ -65,6 +65,26 @@ const ContactPage: React.FC = () => {
             We&#39;re here to ensure your experience with Humor Hub is nothing
             short of amazing. Thank you for taking the time to connect with us!
           </p>
+          <p className="text-center mb-6 text-zinc-900">
+            Do you have questions about our ComicBot, or need help finding the
+            perfect open mic event? Maybe you have suggestions on how we can
+            improve our platform or just want to share some love. Whatever it
+            is, we&rsquo;re here to listen and help. Your feedback is crucial in
+            helping us make Humor Hub the best comedy resource on the web.
+          </p>
+          <p className="text-center mb-6 text-zinc-900">
+            Want to know more about how we manage and protect your data? We take
+            privacy seriously and are happy to answer any questions you might
+            have. Feel free to ask us about our data practices or anything else
+            related to your experience on our site.
+          </p>
+          <p className="text-center mb-6 text-zinc-900">
+            If you&rsquo;re a comedian, venue, or event organizer, we&rsquo;re
+            especially interested in hearing from you! We are constantly
+            updating our database of open mic events, and we would love to add
+            your events to our platform. Just send us the details, and
+            we&rsquo;ll take care of the rest.
+          </p>
           {submitStatus === "success" && (
             <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg mb-4">
               Thank you for reaching out! Your message has been sent
