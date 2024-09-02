@@ -10,7 +10,7 @@ import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
 import hh from "../../app/hh.webp";
 import Image from "next/image";
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 import ComicBotModal from "./comicBotModal";
 
