@@ -40,7 +40,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({
           sizes="any"
           className="rounded-full"
         />
-        <li rel="apple-touch-icon" ref="apple-touch-icon.png" />
+        <link rel="apple-touch-icon" ref="apple-touch-icon.png" />
         <link rel="canonical" href="https://www.thehumorhub.com/" />
         <meta
           property="og:title"

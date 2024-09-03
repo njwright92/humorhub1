@@ -32,6 +32,7 @@ const EventForm = dynamic(() => import("../components/EventForm"), {
 });
 
 type Event = {
+  googleTimestamp: any;
   id: string;
   name: string;
   location: string;
@@ -445,6 +446,10 @@ const EventsPage = () => {
   const MemoizedGoogleMap = React.memo(GoogleMap);
   const MemoizedEventForm = React.memo(EventForm);
 
+  const sortedEventsByCity = eventsByCity.sort(
+    (a, b) => b.googleTimestamp - a.googleTimestamp
+  );
+
   const Row = ({
     index,
     style,
@@ -452,7 +457,7 @@ const EventsPage = () => {
     index: number;
     style: React.CSSProperties;
   }) => {
-    const event = eventsByCity[index];
+    const event = sortedEventsByCity[index];
 
     return (
       <div style={style}>
@@ -652,16 +657,9 @@ const EventsPage = () => {
           <List
             height={600}
             itemCount={
-              eventsByCity
-                .filter(
-                  (event) =>
-                    event.location && typeof event.location === "string"
-                )
-                .sort((a, b) => {
-                  const cityA = a.location.split(", ")[1]?.trim();
-                  const cityB = b.location.split(", ")[1]?.trim();
-                  return cityA.localeCompare(cityB);
-                }).length
+              eventsByCity.filter(
+                (event) => event.location && typeof event.location === "string"
+              ).length
             }
             itemSize={385}
             width="100%"
