@@ -21,7 +21,6 @@ import comic from "../../app/favicon.ico";
 import { sendGAEvent } from "@next/third-parties/google";
 import Image from "next/image";
 import Head from "next/head";
-import Script from "next/script";
 
 type ConversationMessage = {
   from: string;
@@ -288,17 +287,8 @@ const ComicBot = () => {
 
         <script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
+          src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
         ></script>
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-WH6KKVYT8F');
-    `}
-        </Script>
       </Head>
       <Header />
       <main className="screen-container flex flex-col">
