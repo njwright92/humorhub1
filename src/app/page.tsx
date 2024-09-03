@@ -40,6 +40,10 @@ export default function Home() {
     <>
       <Head>
         <title>Humor Hub - The Go-To Platform for Comedy</title>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
+        ></script>
         <meta
           name="description"
           content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
