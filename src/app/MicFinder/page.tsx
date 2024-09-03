@@ -447,7 +447,9 @@ const EventsPage = () => {
   const MemoizedEventForm = React.memo(EventForm);
 
   const sortedEventsByCity = eventsByCity.sort(
-    (a, b) => b.googleTimestamp - a.googleTimestamp
+    (a, b) =>
+      new Date(b.googleTimestamp).getTime() -
+      new Date(a.googleTimestamp).getTime()
   );
 
   const Row = ({
@@ -458,7 +460,6 @@ const EventsPage = () => {
     style: React.CSSProperties;
   }) => {
     const event = sortedEventsByCity[index];
-
     return (
       <div style={style}>
         <div key={event.id} className="event-item mt-2">
