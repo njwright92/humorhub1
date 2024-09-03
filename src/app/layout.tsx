@@ -8,30 +8,21 @@ import Head from "next/head";
 
 interface RootLayoutProps {
   children: ReactNode;
-  title?: string;
-  description?: string;
-  keywords?: string;
 }
 
-export const metadata = {
-  title: "Humor Hub",
-  description: "The goto platform for anything comedy.",
-  keywords:
-    "comedy, humor, funny, jokes, jokes, riddles, riddles, puns, puns, jokes, jokes, riddles, riddles, puns, puns, jokes, jokes, riddles, riddles, puns, puns",
-};
-
-const RootLayout: React.FC<RootLayoutProps> = ({
-  children,
-  title = metadata.title,
-  description = metadata.description,
-  keywords = metadata.keywords,
-}) => {
+const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <Head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta name="keywords" content={keywords} />
+        <title>Humor Hub - The Go-To Platform for everything Comedy</title>
+        <meta
+          name="description"
+          content="The goto platform for anything comedy."
+        />
+        <meta
+          name="keywords"
+          content="comedy, humor, funny, jokes, riddles, puns"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link
           rel="icon"
