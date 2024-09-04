@@ -20,6 +20,7 @@ import Footer from "../components/footer";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
+import { getLatLng } from "../utils/geocode";
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
@@ -365,6 +366,65 @@ const EventsPage = () => {
     });
     return Array.from(citySet).sort((a, b) => a.localeCompare(b));
   }, [events, searchTerm, normalizeCityName]);
+  // Function to get the city name from the coordinates and update the dropdown
+  const fetchCityFromCoordinates = async (
+    latitude: number,
+    longitude: number
+  ): Promise<string | null> => {
+    try {
+      console.log("Fetching city name for coordinates:", {
+        latitude,
+        longitude,
+      });
+
+      const response = await getLatLng(undefined, latitude, longitude);
+
+      // Check if the response contains a city (CityName type)
+      if ("city" in response && response.city) {
+        console.log("City found from coordinates:", response.city);
+        return response.city; // Return the city found
+      } else {
+        console.warn("City not found for the given coordinates.");
+        return null; // No city found
+      }
+    } catch (error) {
+      console.error("Error fetching city name from coordinates:", error);
+      return null;
+    }
+  };
+
+  // Geolocation effect to set the default city
+  useEffect(() => {
+    if (navigator.geolocation) {
+      console.log("Geolocation supported by browser.");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log("User's coordinates:", { latitude, longitude });
+
+          // Fetch the city from coordinates and set it as the default selected city
+          fetchCityFromCoordinates(latitude, longitude).then((cityName) => {
+            if (cityName) {
+              console.log("City found from coordinates:", cityName);
+              setSelectedCity(cityName); // Default city is now selected
+              setFilterCity(cityName); // Optional: If you want to filter events by the default city
+            } else {
+              console.warn("No city found for the given coordinates.");
+            }
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+          alert(
+            "Unable to retrieve your location. Please select a city manually."
+          );
+        }
+      );
+    } else {
+      console.warn("Geolocation is not supported by this browser.");
+      alert("Geolocation is not supported. Please select a city manually.");
+    }
+  }, []);
 
   const handleDateChange = useCallback((date: Date | null) => {
     if (date) {
@@ -481,8 +541,8 @@ const EventsPage = () => {
           <select
             id="citySelect"
             name="selectedCity"
-            value={selectedCity}
-            onChange={handleCityChange}
+            value={selectedCity || ""} // Ensure there's a fallback if no city is selected yet
+            onChange={handleCityChange} // Users can still change the city manually
             className="modern-input max-w-xs mx-auto"
           >
             <option value="">Select a City</option>

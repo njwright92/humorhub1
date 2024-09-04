@@ -97,7 +97,7 @@
   },
   {
     "id": 17,
-    "city": "Coeur D'Alene",
+    "city": "Coeur d'Alene",
     "coordinates": { "lat": 47.6777, "lng": -116.7805 },
     "googleTimestamp": 1693765200
   },
