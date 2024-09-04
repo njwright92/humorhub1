@@ -56,9 +56,11 @@ const EventForm: React.FC = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
+
+      // Validate form fields
       if (
         !memoizedEvent.name ||
-        !memoizedEvent.location ||
+        !memoizedEvent.location || // Ensure the location is filled out
         !memoizedEvent.date ||
         !memoizedEvent.details
       ) {
@@ -67,33 +69,45 @@ const EventForm: React.FC = () => {
         );
         return;
       }
+
       setFormErrors("");
+
       try {
-        // Convert the address to lat/lng
-        const { lat, lng } = await getLatLng(memoizedEvent.location);
+        // Convert the address (location) to lat/lng using the geocoding function
+        const response = await getLatLng(memoizedEvent.location);
 
-        // Prepare the event data with lat/lng
-        const eventData: EventData = {
-          ...memoizedEvent,
-          lat,
-          lng,
-        };
+        // Check if the geocoding response contains lat/lng
+        if ("lat" in response && "lng" in response) {
+          const { lat, lng } = response;
 
-        await submitEvent(eventData);
+          // Prepare the event data with lat/lng
+          const eventData: EventData = {
+            ...memoizedEvent,
+            lat,
+            lng, // Add latitude and longitude to event data
+          };
+
+          // Submit the event with lat/lng
+          await submitEvent(eventData);
+        } else {
+          // If geocoding fails, submit the event without lat/lng
+          await submitEvent(memoizedEvent);
+        }
+
         resetForm();
         setShowModal(false);
         alert(
           "Your event has been added successfully! You can view it on the events page. If you encounter any issues, feel free to email us."
         );
       } catch (error) {
-        console.error("Geocoding error: ", error); // Log the original error
+        console.error("Geocoding error: ", error); // Log the original geocoding error
 
-        // Attempt to submit the event without lat/lng to the searchedCities collection
+        // Attempt to submit the event without lat/lng, save it for manual review
         try {
           await addDoc(collection(db, "searchedCities"), memoizedEvent);
           resetForm();
           alert(
-            "We couldn't verify the location. We'll review it manually and it should appear on the events page within 24 hours. If you encounter any issues, feel free to email us."
+            "We couldn't verify the location. We'll review it manually and it should appear on the events page within 24 hours."
           );
           setShowModal(false); // Close the modal after displaying the message
         } catch (dbError) {

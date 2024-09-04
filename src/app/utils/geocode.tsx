@@ -5,12 +5,12 @@ const GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
 let API_KEY: string | undefined = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 // Types for geocoding results
-interface LatLng {
+export interface LatLng {
   lat: number;
   lng: number;
 }
 
-interface CityName {
+export interface CityName {
   city: string | null;
 }
 
