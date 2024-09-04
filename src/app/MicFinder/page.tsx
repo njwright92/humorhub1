@@ -372,16 +372,10 @@ const EventsPage = () => {
     longitude: number
   ): Promise<string | null> => {
     try {
-      console.log("Fetching city name for coordinates:", {
-        latitude,
-        longitude,
-      });
-
       const response = await getLatLng(undefined, latitude, longitude);
 
       // Check if the response contains a city (CityName type)
       if ("city" in response && response.city) {
-        console.log("City found from coordinates:", response.city);
         return response.city; // Return the city found
       } else {
         console.warn("City not found for the given coordinates.");
@@ -396,16 +390,13 @@ const EventsPage = () => {
   // Geolocation effect to set the default city
   useEffect(() => {
     if (navigator.geolocation) {
-      console.log("Geolocation supported by browser.");
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log("User's coordinates:", { latitude, longitude });
 
           // Fetch the city from coordinates and set it as the default selected city
           fetchCityFromCoordinates(latitude, longitude).then((cityName) => {
             if (cityName) {
-              console.log("City found from coordinates:", cityName);
               setSelectedCity(cityName); // Default city is now selected
               setFilterCity(cityName); // Optional: If you want to filter events by the default city
             } else {

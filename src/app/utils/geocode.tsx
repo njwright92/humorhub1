@@ -25,7 +25,6 @@ export const getLatLng = async (
 
     if (address) {
       // Forward geocoding (address to coordinates)
-      console.log(`Fetching coordinates for address: ${address}`);
       response = await axios.get(GEOCODE_API_URL, {
         params: {
           address: encodeURIComponent(String(address)),
@@ -39,9 +38,7 @@ export const getLatLng = async (
       }
     } else if (latitude && longitude) {
       // Reverse geocoding (coordinates to address)
-      console.log(
-        `Fetching city name for coordinates: ${latitude}, ${longitude}`
-      );
+     
       response = await axios.get(GEOCODE_API_URL, {
         params: {
           latlng: `${latitude},${longitude}`,

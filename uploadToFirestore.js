@@ -49,7 +49,7 @@ const syncEvents = async () => {
       batch.set(docRef, updatedEvent);
     }
   }
-
+console.log("Events uploaded successfully!");
   // Commit the batch
   await batch.commit();
 };
