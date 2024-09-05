@@ -16,6 +16,7 @@ import ComicBotModal from "./components/comicBotModal";
 import AuthModal from "./components/authModal";
 import Link from "next/link";
 import Head from "next/head";
+import Script from "next/script";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 
@@ -40,10 +41,7 @@ export default function Home() {
     <>
       <Head>
         <title>Humor Hub - The Go-To Platform for Comedy</title>
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
-        ></script>
+
         <meta
           name="description"
           content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
@@ -109,7 +107,10 @@ export default function Home() {
           }}
         />
       </Head>
-
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
+      ></Script>
       <Header />
       <div className="screen-container">
         <section data-aos="fade-up">
@@ -244,9 +245,9 @@ export default function Home() {
             <div className="flex-1 text-center items-center md:text-right">
               <h3 className="mb-4 text-xl">
                 Refined your material with ComicBot? Use MicFinder to find the
-                best open mic events near you. Whether it's comedy, music, or
-                poetry, MicFinder connects you to live performance venues where
-                you can bring your new set to life.
+                best open mic events near you. Whether it&apos;s comedy, music,
+                or poetry, MicFinder connects you to live performance venues
+                where you can bring your new set to life.
               </h3>
 
               <Suspense fallback={<div>Loading...</div>}>

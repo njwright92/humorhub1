@@ -173,7 +173,7 @@ const Jokes = () => {
         </h1>
         <p className="text-center mb-6">
           Your personal digital notebook for capturing jokes, bits, and comedic
-          ideas. Whether it's a sudden spark of inspiration or refining your
+          ideas. Whether it&apos;s a sudden spark of inspiration or refining your
           work in progress, Jokepad helps you organize and perfect your comedic
           genius.
         </p>

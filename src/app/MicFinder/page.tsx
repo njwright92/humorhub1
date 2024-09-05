@@ -21,6 +21,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
 import { getLatLng } from "../utils/geocode";
+import Script from "next/script";
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
@@ -483,10 +484,7 @@ const EventsPage = () => {
           content="MicFinder, open mic, comedy events, find open mics, comedy shows"
         />
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
-        ></script>
+
         <meta
           property="og:title"
           content="MicFinder - Locate Open Mic Events Near You"
@@ -505,6 +503,10 @@ const EventsPage = () => {
           content="https://www.thehumorhub.com/images/og-image-micfinder.jpg"
         />
       </Head>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
+      ></Script>
       <Header />
       <div className="screen-container">
         <h1 className="title text-4xl font-bold text-center mb-6">
@@ -512,9 +514,9 @@ const EventsPage = () => {
         </h1>
         <p className="text-lg md:text-xl text-center mt-4 mb-6">
           Know or host an amazing open mic event? Share it with the local
-          community through MicFinder to attract a crowd. Whether it’s comedy,
-          music, poetry, or any live performance, let’s spread the word and fill
-          the room!
+          community through MicFinder to attract a crowd. Whether it&apos;s
+          comedy, music, poetry, or any live performance, let&apos;s spread the
+          word and fill the room!
         </p>
 
         <div className="text-center mb-8">

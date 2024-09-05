@@ -21,6 +21,7 @@ import comic from "../../app/favicon.ico";
 import { sendGAEvent } from "@next/third-parties/google";
 import Image from "next/image";
 import Head from "next/head";
+import Script from "next/script";
 
 type ConversationMessage = {
   from: string;
@@ -284,12 +285,11 @@ const ComicBot = () => {
           property="og:image"
           content="https://www.thehumorhub.com/images/og-image-comicbot.jpg"
         />
-
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
-        ></script>
       </Head>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
+      ></Script>
       <Header />
       <main className="screen-container flex flex-col">
         <h1 className="title text-4xl font-bold text-center mb-4">
@@ -297,7 +297,7 @@ const ComicBot = () => {
         </h1>
         <p className="mb-6 text-center">
           Explore the world of humor with ComicBot, your AI-powered comedy
-          assistant. Whether you're crafting jokes, developing sketches, or
+          assistant. Whether you&apos;re crafting jokes, developing sketches, or
           finding funny takes on daily life, ComicBot sparks creativity and
           delivers tailored humor.
         </p>
