@@ -148,16 +148,22 @@ export default function Home() {
 
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                ComicBot: Your AI-powered comedy generator, trained on stand-up.
-                Whether you need a quick punchline or a fresh routine, ComicBot
-                delivers sharp, stage-ready material whenever you need it.
+                Meet ComicBot: your AI-powered comedy companion, trained on
+                stand-up humor and designed to deliver the funniest jokes and
+                humor at the touch of a button. Whether you need a quick
+                punchline, a witty one-liner, or a fresh routine, ComicBot uses
+                AI comedy to bring you sharp, stage-ready material whenever you
+                need it.
               </p>
               <br />
               <p className="mb-4">
-                Designed for comedians, ComicBot is your go-to tool for
-                generating new jokes and refining your act. Perfect for
-                on-the-road inspiration or last-minute ideas.
+                Built for comedians and humor enthusiasts alike, ComicBot is
+                your go-to tool for generating new jokes, refining your comedy
+                act, and bringing AI humor to life. Perfect for on-the-road
+                inspiration, last-minute ideas, or simply for a good laugh with
+                the best AI-powered funny bot available.
               </p>
+
               <button
                 onClick={() => {
                   if (isUserSignedIn) {
@@ -217,14 +223,14 @@ export default function Home() {
             </div>
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Jokepad is your personal comedy archive, transforming
-                spontaneous inspirations into an organized library of laughs,
-                ready whenever inspiration strikes.
+                Jokepad is your personal comedy writing tool, turning
+                spontaneous ideas into a well-organized library of jokes, always
+                ready when inspiration hits.
               </p>
               <p className="mb-4">
-                With cloud-sync technology and a user-friendly interface,
-                Jokepad secures your jokes and one-liners, making every comedic
-                thought count towards your next great performance.
+                With cloud-sync and a user-friendly interface, Jokepad securely
+                stores your jokes and one-liners, helping you refine and perfect
+                your humor for your next performance.
               </p>
             </div>
           </div>
@@ -237,11 +243,12 @@ export default function Home() {
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div className="flex-1 text-center items-center md:text-right">
               <h3 className="mb-4 text-xl">
-                Refined your material with ComicBot? Use Mic Finder to discover
-                the perfect spot to test it out. Whether it&#39;s comedy, music,
-                or poetry, Mic Finder connects you with live performance venues
-                to bring your new set to life.
+                Refined your material with ComicBot? Use MicFinder to find the
+                best open mic events near you. Whether it's comedy, music, or
+                poetry, MicFinder connects you to live performance venues where
+                you can bring your new set to life.
               </h3>
+
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />
               </Suspense>

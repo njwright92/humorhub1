@@ -172,11 +172,12 @@ const Jokes = () => {
           Welcome to JokePad!
         </h1>
         <p className="text-center mb-6">
-          Your personal digital notebook for jotting down jokes, bits, and
-          comedic ideas. Whether a sudden spark of inspiration or refining a
-          work in progress, JokePad is here to capture and organize your comedic
+          Your personal digital notebook for capturing jokes, bits, and comedic
+          ideas. Whether it's a sudden spark of inspiration or refining your
+          work in progress, Jokepad helps you organize and perfect your comedic
           genius.
         </p>
+
         <section className="p-6 rounded-xl shadow-lg">
           <form onSubmit={handleSubmit}>
             <label

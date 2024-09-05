@@ -511,11 +511,12 @@ const EventsPage = () => {
           Discover Open Mic Events!
         </h1>
         <p className="text-lg md:text-xl text-center mt-4 mb-6">
-          Hosting or know about an amazing open mic event? This is the perfect
-          spot to share it with the local community and attract a crowd. Whether
-          it&#39;s comedy, poetry, music, or any form of live performance,
-          let&#39;s get the word out and fill the room!
+          Know or host an amazing open mic event? Share it with the local
+          community through MicFinder to attract a crowd. Whether it’s comedy,
+          music, poetry, or any live performance, let’s spread the word and fill
+          the room!
         </p>
+
         <div className="text-center mb-8">
           <MemoizedEventForm />
         </div>

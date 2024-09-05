@@ -51,10 +51,12 @@ const HumorHubAPISection: React.FC = () => {
 
         <div className="flex-1">
           <p className="mb-4 mt-4 text-md">
-            Dive into the latest trends in humor and entertainment with Humor
-            Hub News, your premier destination for curated, insightful updates
-            across various categories.
+            Stay ahead of the latest trends in humor, entertainment, and comedy
+            events with Humor Hub News. Powered by the Humor Hub API, your
+            source for fresh jokes, curated comedy content, and updates from
+            across the entertainment industry.
           </p>
+
           <button
             onClick={() => {
               if (!isUserSignedIn) {

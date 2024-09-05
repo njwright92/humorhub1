@@ -201,12 +201,17 @@ const NewsPage = () => {
         <div className="min-h-screen bg-zinc-900 flex flex-col items-center p-4">
           <section className="bg-zinc-200 text-zinc-900 p-8 rounded-xl drop-shadow-md max-w-md w-full mx-2 mb-4">
             <h2 className="text-center text-2xl font-bold mb-4">
-              Welcome to Humor Hub News Portal
+              Welcome to the Humor Hub News Portal
             </h2>
             <p className="text-center mb-4 text-lg">
-              Your gateway to the latest in comedy, politics, and beyond.
-              Customize your news experience with targeted categories and
-              dynamic search to keep your insights fresh and focused.
+              Stay updated on comedy, politics, and more. Use the Humor Hub API
+              for real-time updates, or browse curated categories and dynamic
+              search for fresh comedy content.
+            </p>
+            <p className="mb-4 mt-4 text-md">
+              Explore the latest trends in humor and entertainment. Powered by
+              the Humor Hub API, access the newest jokes, events, and comedy
+              content tailored to your interests.
             </p>
             <div className="mb-4 w-full">
               <label className="block mb-2">Choose Category:</label>

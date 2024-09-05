@@ -296,11 +296,12 @@ const ComicBot = () => {
           Welcome to ComicBot!
         </h1>
         <p className="mb-6 text-center">
-          Dive into the world of humor with ComicBot, your AI-powered comedy
-          writing assistant. Whether you&rsquo;re crafting jokes, developing
-          sketches, or exploring funny takes on everyday life, ComicBot is here
-          to spark your creativity.
+          Explore the world of humor with ComicBot, your AI-powered comedy
+          assistant. Whether you're crafting jokes, developing sketches, or
+          finding funny takes on daily life, ComicBot sparks creativity and
+          delivers tailored humor.
         </p>
+
         <div className="flex flex-row justify-center items-center space-x-4 md:space-x-6 mb-6">
           <Image
             src={comic}
