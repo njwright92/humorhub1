@@ -2,8 +2,8 @@
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import AuthModal from "./authModal";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import dynamic from "next/dynamic";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import SearchBar from "./searchBar";
 import { useCity } from "./cityContext";
@@ -13,6 +13,8 @@ import Image from "next/image";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 import ComicBotModal from "./comicBotModal";
+
+const AuthModal = dynamic(() => import("./authModal"));
 
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
