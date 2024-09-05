@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { CityProvider } from "./components/cityContext";
 import { EventProvider } from "./components/eventContext";
 import { HeadlineProvider } from "./components/headlinecontext";

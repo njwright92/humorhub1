@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, ChangeEvent } from "react";
+import { useState, useEffect, useCallback, ChangeEvent } from "react";
 import Header from "../components/header";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../../firebase.config";
