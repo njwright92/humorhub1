@@ -86,20 +86,65 @@ export default function Footer() {
                   <a
                     href="https://github.com/njwright92"
                     className="hover:underline cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Github
                   </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a
                     href="https://twitter.com/naterbug321"
                     className="hover:underline cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    Twitter
+                    X
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://www.linkedin.com/in/nathan-wright-78b237123/"
+                    className="hover:underline cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    LinkedIn
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://www.facebook.com/nate_wrigh"
+                    className="hover:underline cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Facebook
+                  </a>
+                </li>
+                <li className="mb-4">
+                  <a
+                    href="https://www.instagram.com/nate_wright3"
+                    className="hover:underline cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Instagram
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.youtube.com/@justforlaughs"
+                    className="hover:underline cursor-pointer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    YouTube/Stand Up
                   </a>
                 </li>
               </ul>
             </div>
+
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
                 Legal
