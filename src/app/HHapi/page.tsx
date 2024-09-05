@@ -330,7 +330,7 @@ const NewsPage = () => {
                           id="send-joke"
                           disabled={isButtonDisabled}
                         >
-                          ComicBot’s Take
+                          ComicBot&apos;s Take
                         </button>
                       </div>
                     </article>

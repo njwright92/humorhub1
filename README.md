@@ -7,7 +7,7 @@ Humor Hub is an all-in-one comedy platform designed to elevate your comedic crea
 ## Features
 
 - **ComicBot**: Your AI-powered comedy assistant, helping you brainstorm, refine, and enhance your jokes and sketches.
-- **Jokepad**: A cloud-synced comedy workshop for organizing and developing your comedic ideas.
+- **Jokepad**: A cloud-synced comedy workshop for organizing and developing your comedic ideas. new events being added weekly with an autonomous pipeline coming soon!
 - **Mic Finder**: A platform for discovering and sharing live performance stages for comedy, music, and poetry.
 - **HumorHub API**: Access the latest news and trends to fuel your comedic material.
 
@@ -71,7 +71,8 @@ Copy your Firebase config and add it to your environment variables.
 "@googlemaps/js-api-loader": "1.16.2",
 "@googlemaps/markerclusterer": "2.5.3",
 "@heroicons/react": "2.1.1",
-"@next/third-parties": "^14.2.3",
+"@next/third-parties": "14.2.3",
+"@vercel/node": "3.2.10",
 "aos": "2.3.4",
 "axios": "1.6.8",
 "firebase": "10.7.1",
