@@ -40,8 +40,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Humor Hub - The Go-To Platform for Comedy</title>
-
+        <title>Humor Hub the go to platfrorm for everything comedy!</title>
         <meta
           name="description"
           content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
@@ -52,7 +51,7 @@ export default function Home() {
         />
         <meta
           property="og:title"
-          content="Humor Hub - The Go-To Platform for Comedy"
+          content="Humor Hub the go to platfrorm for everything comedy!"
         />
         <meta
           property="og:description"
