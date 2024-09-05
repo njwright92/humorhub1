@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 // In-memory cache
 let cache: { count: number; lastUpdated: number } | null = null;
-const CACHE_DURATION = 60 * 10000; // 1 minute cache duration
+const CACHE_DURATION = 60 * 10000; // 10-minute cache duration
 
 // Construct the service account object directly using environment variables
 const serviceAccount = {
@@ -18,14 +18,13 @@ if (!admin.apps.length) {
     credential: admin.credential.cert(serviceAccount),
     databaseURL: `https://${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseio.com`,
   });
-} else {
 }
 
 export async function GET() {
   // Check if the cache is valid
   if (cache && Date.now() - cache.lastUpdated < CACHE_DURATION) {
     return NextResponse.json({
-      message: "Events counted and updated.",
+      message: "Events counted and updated (from cache).",
       count: cache.count,
     });
   }
@@ -35,10 +34,25 @@ export async function GET() {
     const db = admin.firestore();
     const eventsRef = db.collection("userEvents");
 
-    const snapshot = await eventsRef.get();
+    // Get the timestamp for 1 week ago
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
+    // Query for events added in the last week (using 'googleTimestamp' field)
+    const snapshot = await eventsRef
+      .where(
+        "googleTimestamp",
+        ">=",
+        admin.firestore.Timestamp.fromDate(oneWeekAgo)
+      )
+      .get();
+
+    // Check if no events were found
     if (snapshot.empty) {
-      return NextResponse.json({ message: "No events found." });
+      return NextResponse.json({
+        message: "No events found in the last week.",
+        count: 0, // Set count to 0
+      });
     }
 
     const eventCount = snapshot.size;
