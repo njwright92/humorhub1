@@ -73,9 +73,7 @@ const GoogleMap = ({ lat, lng, events }) => {
           });
         });
       }
-    } catch (error) {
-      console.error("Error loading map:", error);
-    }
+    } catch (error) {}
   }, [lat, lng, events]);
 
   useEffect(() => {

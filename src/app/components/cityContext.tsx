@@ -50,9 +50,7 @@ export const CityProvider: React.FC<{ children: ReactNode }> = ({
         });
 
         setCityCoordinates(citiesData);
-      } catch (error) {
-        console.error("Error fetching cities: ", error);
-      }
+      } catch (error) {}
     };
 
     fetchCities();

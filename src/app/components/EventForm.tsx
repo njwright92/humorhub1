@@ -22,7 +22,6 @@ const submitEvent = async (eventData: EventData) => {
   try {
     await addDoc(collection(db, "userEvents"), eventData);
   } catch (error) {
-    console.error("Error adding event: ", error);
     alert(
       "Oops! Something went wrong while adding your event. Please try again later."
     );
@@ -100,8 +99,6 @@ const EventForm: React.FC = () => {
           "Your event has been added successfully! You can view it on the events page. If you encounter any issues, feel free to email us."
         );
       } catch (error) {
-        console.error("Geocoding error: ", error); // Log the original geocoding error
-
         // Attempt to submit the event without lat/lng, save it for manual review
         try {
           await addDoc(collection(db, "searchedCities"), memoizedEvent);
@@ -111,7 +108,6 @@ const EventForm: React.FC = () => {
           );
           setShowModal(false); // Close the modal after displaying the message
         } catch (dbError) {
-          console.error("Error saving to searchedCities: ", dbError);
           setFormErrors(
             "We couldn't save your event for manual review. Please try again later."
           );

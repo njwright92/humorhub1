@@ -38,7 +38,7 @@ export const getLatLng = async (
       }
     } else if (latitude && longitude) {
       // Reverse geocoding (coordinates to address)
-     
+
       response = await axios.get(GEOCODE_API_URL, {
         params: {
           latlng: `${latitude},${longitude}`,
@@ -66,7 +66,6 @@ export const getLatLng = async (
 
     throw new Error("We couldn't retrieve the location details.");
   } catch (error) {
-    console.error("Error fetching geocode data:", error);
     throw new Error(
       "Oops! Something went wrong while fetching the location data. Please try again later."
     );

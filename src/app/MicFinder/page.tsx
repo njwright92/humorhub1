@@ -148,7 +148,6 @@ const EventsPage = () => {
         });
         setEvents(fetchedEvents);
       } catch (error) {
-        console.error("Error fetching events: ", error);
         alert(
           "Oops! We couldn't load the events at the moment. Please try again later."
         );
@@ -174,9 +173,7 @@ const EventsPage = () => {
         });
 
         setCityCoordinates(citiesData);
-      } catch (error) {
-        console.error("Error fetching cities: ", error);
-      }
+      } catch (error) {}
     };
 
     fetchCities();
@@ -333,7 +330,6 @@ const EventsPage = () => {
         await saveEvent(event);
         alert("Event saved to your profile successfully!");
       } catch (error) {
-        console.error("Error saving event:", error);
         alert(
           "Oops! Something went wrong while saving the event. Please try again."
         );
@@ -379,11 +375,9 @@ const EventsPage = () => {
       if ("city" in response && response.city) {
         return response.city; // Return the city found
       } else {
-        console.warn("City not found for the given coordinates.");
         return null; // No city found
       }
     } catch (error) {
-      console.error("Error fetching city name from coordinates:", error);
       return null;
     }
   };
@@ -401,7 +395,6 @@ const EventsPage = () => {
               setSelectedCity(cityName); // Default city is now selected
               setFilterCity(cityName); // Optional: If you want to filter events by the default city
             } else {
-              console.warn("No city found for the given coordinates.");
             }
           });
         },
@@ -413,7 +406,6 @@ const EventsPage = () => {
         }
       );
     } else {
-      console.warn("Geolocation is not supported by this browser.");
       alert("Geolocation is not supported. Please select a city manually.");
     }
   }, []);

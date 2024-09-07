@@ -67,7 +67,6 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       setSavedEvents(updatedEvents);
       alert("The event has been successfully removed from your saved list.");
     } catch (error) {
-      console.error("Error deleting event:", error);
       alert(
         "Oops! Something went wrong while trying to remove the event. Please try again later."
       );
@@ -101,7 +100,6 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     try {
       await saveEventToFirestore(event);
     } catch (error) {
-      console.error("Error saving event:", error);
       alert(
         "Oops! Something went wrong while saving the event. Please try again."
       );

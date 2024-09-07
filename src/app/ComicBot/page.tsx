@@ -63,7 +63,6 @@ const ComicBot = () => {
     const userInput = input.trim();
 
     if (!userInput) {
-      console.warn("Your message is empty. Please enter text to send.");
       alert("Please enter a message before sending.");
       return;
     }
@@ -102,7 +101,6 @@ const ComicBot = () => {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error response:", errorText);
         throw new Error(
           `Network response was not ok: ${response.status} ${response.statusText}`
         );
@@ -139,10 +137,8 @@ const ComicBot = () => {
         );
       }
     } catch (error) {
-      console.error("Error while generating response:", error);
       if (error instanceof Response) {
         const errorText = await error.text();
-        console.error("Error response body:", errorText);
       }
       alert(
         "Oops! Something went wrong while generating the response. Please try again."
@@ -208,7 +204,6 @@ const ComicBot = () => {
       }
       setConversation([]);
     } catch (error) {
-      console.error("Error saving conversation: ", error);
       alert(
         "Oops! Something went wrong while saving the conversation. Please try again."
       );
@@ -223,7 +218,6 @@ const ComicBot = () => {
         allConversations.filter((convo) => convo.id !== docID)
       );
     } catch (error) {
-      console.error("Error deleting document: ", error);
       alert(
         "Oops! Something went wrong while deleting the conversation. Please try again."
       );
@@ -248,7 +242,6 @@ const ComicBot = () => {
       });
       alert("Joke successfully sent to Jokepad!");
     } catch (error) {
-      console.error("Error sending conversation to Jokepad: ", error);
       alert(
         "Oops! Something went wrong while sending the joke to Jokepad. Please try again."
       );

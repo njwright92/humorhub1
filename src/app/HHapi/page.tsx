@@ -84,7 +84,6 @@ const fetchCategoryNews = async (category: Category, subcategory: string) => {
       (article: Article) => article.title && article.description
     ); // Filter out articles without titles or descriptions
   } catch (error) {
-    console.error("Error fetching news for category:", category, error);
     throw new Error("Failed to fetch news");
   }
 };
@@ -138,7 +137,6 @@ const NewsPage = () => {
       setFetchedArticles({ [category]: fetchedArticles });
       setExpandedArticle(null);
     } catch (error) {
-      console.error("Error while fetching articles:", error);
       setError(
         "Oops! We couldn't fetch the articles at the moment. Please try again later."
       );

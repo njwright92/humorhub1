@@ -57,9 +57,7 @@ export default function Header() {
         }
         const data = await response.json();
         setEventCount(data.count);
-      } catch (error) {
-        console.error("Error fetching event count:", error);
-      }
+      } catch (error) {}
     };
 
     fetchEventCount();
@@ -100,11 +98,7 @@ export default function Header() {
           city: searchTerm,
           timestamp: new Date(),
         });
-      } catch (error) {
-        console.error(
-          "Oops! Something went wrong while logging your search. Please try again later."
-        );
-      }
+      } catch (error) {}
     }
   };
 

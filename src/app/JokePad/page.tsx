@@ -81,7 +81,6 @@ const Jokes = () => {
       setJokes([{ id: newDocId, joke: newJoke }, ...jokes]);
       setNewJoke("");
     } catch (error) {
-      console.error("Error adding joke: ", error);
       alert(
         "Oops! Something went wrong while adding your joke. Please try again."
       );
@@ -117,7 +116,6 @@ const Jokes = () => {
       });
       setEditingJokeId(null); // Reset the editing state
     } catch (error) {
-      console.error("Error updating joke: ", error);
       alert(
         "Oops! Something went wrong while updating your joke. Please try again."
       );
@@ -130,7 +128,6 @@ const Jokes = () => {
       await deleteDoc(jokeDoc);
       setJokes(jokes.filter((joke) => joke.id !== jokeId));
     } catch (error) {
-      console.error("Error deleting joke: ", error);
       alert(
         "Oops! Something went wrong while deleting your joke. Please try again."
       );
@@ -173,9 +170,9 @@ const Jokes = () => {
         </h1>
         <p className="text-center mb-6">
           Your personal digital notebook for capturing jokes, bits, and comedic
-          ideas. Whether it&apos;s a sudden spark of inspiration or refining your
-          work in progress, Jokepad helps you organize and perfect your comedic
-          genius.
+          ideas. Whether it&apos;s a sudden spark of inspiration or refining
+          your work in progress, Jokepad helps you organize and perfect your
+          comedic genius.
         </p>
 
         <section className="p-6 rounded-xl shadow-lg">

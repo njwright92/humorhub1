@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import * as admin from "firebase-admin";
 
 // In-memory cache
-let cache: { count: number; lastUpdated: number } | null = null;
+let cache: { lastUpdated: any; count: any } | null = null;
 const CACHE_DURATION = 60 * 10000; // 10-minute cache duration
 
 // Construct the service account object directly using environment variables
@@ -37,21 +37,23 @@ export async function GET() {
     // Get the timestamp for 1 week ago
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgoTimestamp = admin.firestore.Timestamp.fromDate(oneWeekAgo);
 
-    // Query for events added in the last week (using 'googleTimestamp' field)
+    console.log(
+      "Firestore One Week Ago Timestamp: ",
+      oneWeekAgoTimestamp.toDate().toISOString()
+    );
+
+    // Query for events added in the last week
     const snapshot = await eventsRef
-      .where(
-        "googleTimestamp",
-        ">=",
-        admin.firestore.Timestamp.fromDate(oneWeekAgo)
-      )
+      .where("googleTimestamp", ">=", oneWeekAgo.toISOString()) // Compare string dates
       .get();
 
-    // Check if no events were found
+    // Log if no events were found
     if (snapshot.empty) {
       return NextResponse.json({
         message: "No events found in the last week.",
-        count: 0, // Set count to 0
+        count: 0,
       });
     }
 
@@ -62,7 +64,6 @@ export async function GET() {
 
     // Update the event counter in Firestore
     const counterRef = db.collection("counters").doc("eventsCounter");
-
     await counterRef.set({ count: eventCount }, { merge: true });
 
     return NextResponse.json({
@@ -70,7 +71,6 @@ export async function GET() {
       count: eventCount,
     });
   } catch (error) {
-    console.error("Error in count-events API:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

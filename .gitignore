@@ -44,8 +44,9 @@ humorhub-73ff9-firebase-adminsdk-oyk79-c9b562fce5.json
 
 #json
 uploadToFirestore.js
-updated_events.json
+
 citiesToFirestore.js
 cities.json
 eventsToCities.js
 new_cities.json
+updated_events.json

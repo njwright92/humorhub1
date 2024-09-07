@@ -45,7 +45,6 @@ const ContactPage: React.FC = () => {
         message: "",
       });
     } catch (error) {
-      console.error("Error adding document: ", error);
       setSubmitStatus("error");
     }
     setIsSubmitting(false);
