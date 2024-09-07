@@ -242,12 +242,12 @@ export default function Home() {
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div className="flex-1 text-center items-center md:text-right">
-              <h3 className="mb-4 text-xl">
+              <p className="mb-4 text-xl">
                 Refined your material with ComicBot? Use MicFinder to find the
                 best open mic events near you. Whether it&apos;s comedy, music,
                 or poetry, MicFinder connects you to live performance venues
                 where you can bring your new set to life.
-              </h3>
+              </p>
 
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />

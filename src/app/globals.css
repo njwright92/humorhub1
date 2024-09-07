@@ -3,24 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 245, 245, 255;
-  --background-start-rgb: 31, 31, 31;
-  --background-end-rgb: 31, 31, 31;
-  --accent-color: 255, 107, 107;
   --zinc-900: #1f2022;
   --zinc-200: #d4d4d8;
   --orange-500: #f97316;
 }
 
-@media /* Dark mode preferences */ (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 250, 250, 250;
-    --background-start-rgb: 10, 10, 10; /* zinc-900 equivalent */
-    --background-end-rgb: 25, 25, 25; /* zinc-700 equivalent */
+    --background-start-rgb: 10, 10, 10;
+    --background-end-rgb: 25, 25, 25;
     --accent-color: 22, 101, 52;
-    --zinc-900: #1f2022;
-    --zinc-200: #d4d4d8;
-    --orange-500: #f97316;
   }
 }
 
@@ -31,19 +24,6 @@
 
 .gif-button:hover img {
   transform: scale(1.1); /* Slight zoom on hover */
-}
-
-.video-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 50; /* Ensure it's above other content */
 }
 
 @media (min-width: 768px) {
@@ -93,10 +73,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.video-modal video {
-  object-fit: cover;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
 }
 
 @media (max-width: 768px) {
@@ -126,14 +104,14 @@ body {
   color: var(--zinc-200);
 }
 
-/* Define fonts for h elements (Comic-style font) */
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
-  font-family: "Comic Sans MS", "Comic Sans", cursive;
+h6,
+.font-comic {
+  font-family: "Comic Sans MS", "Comic Sans", sans-serif;
 }
 
 /* Define fonts for p and span elements (Roboto-style font) */
@@ -189,10 +167,7 @@ span {
   @apply flex flex-col min-h-screen p-4 text-zinc-200 text-center;
 }
 
-.card-style {
-  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 rounded-xl drop-shadow-md;
-}
-
+.card-style,
 .card-style1 {
   @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 rounded-xl drop-shadow-md;
 }
@@ -327,10 +302,6 @@ span {
   color: rgb(var(--orange-500));
 }
 
-.font-comic {
-  font-family: "Comic Sans MS", "Comic Sans", sans-serif, Arial;
-}
-
 select {
   color: #d4d4d8;
 }
@@ -452,19 +423,22 @@ option {
   @apply bg-zinc-900 text-zinc-200 rounded-xl drop-shadow-lg px-2 py-1;
   /* Neumorphism effect optimized for dark mode */
 }
+
+.btn:hover,
+.btn:focus,
 .neu-button:hover {
   @apply animate-pulse;
+}
+
+.neu-button:hover {
   text-decoration-line: underline;
   text-decoration-style: dashed;
   text-decoration-color: #f97316;
 }
+
 .glass-effect {
   @apply bg-zinc-900 bg-opacity-40 backdrop-blur-md;
   /* Glassmorphism effect in dark mode */
 }
 
 /* Micro-interaction styles */
-.btn:hover,
-.btn:focus {
-  @apply animate-pulse;
-}
