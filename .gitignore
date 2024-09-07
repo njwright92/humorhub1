@@ -47,3 +47,5 @@ uploadToFirestore.js
 updated_events.json
 citiesToFirestore.js
 cities.json
+eventsToCities.js
+new_cities.json

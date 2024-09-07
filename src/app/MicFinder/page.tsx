@@ -442,6 +442,44 @@ const EventsPage = () => {
       new Date(a.googleTimestamp).getTime()
   );
 
+  const OpenMicBanner = () => {
+    const [visible, setVisible] = useState(true);
+
+    // Auto-hide the banner after 20 seconds
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setVisible(false);
+      }, 20000); // 20 seconds
+
+      return () => clearTimeout(timer); // Cleanup the timer
+    }, []);
+
+    if (!visible) return null;
+
+    return (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4">
+        <strong className="font-bold">Note:</strong>
+        <span className="block sm:inline">
+          I do my best to keep the events current, but with the constant
+          changing landscape of open mics, they&apos;re not always up to date.
+        </span>
+        <span
+          className="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
+          onClick={() => setVisible(false)}
+        >
+          <svg
+            className="fill-current h-6 w-6 text-red-500"
+            role="button"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <title>Close</title>
+            <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
+          </svg>
+        </span>
+      </div>
+    );
+  };
   const Row = ({
     index,
     style,
@@ -509,6 +547,7 @@ const EventsPage = () => {
       ></Script>
       <Header />
       <div className="screen-container">
+        <OpenMicBanner />
         <h1 className="title text-4xl font-bold text-center mb-6">
           Discover Open Mic Events!
         </h1>
@@ -525,23 +564,25 @@ const EventsPage = () => {
         <h2 className="text-lg font-semibold text-center mt-4 mb-4">
           Ready to explore? Select your city and date to find local events!
         </h2>
-
+        <p className="text-sm text-center mb-4 bg-yellow-200 text-yellow-800 p-2 rounded">
+          Don&apos;t see your city automatically? You can save time by searching
+          your city in the navigation bar.
+        </p>
         <p className="text-md text-center mb-4">
-          Scroll to see all upcoming events and discover your next stage or
-          audience.
+          Scroll to see all upcoming events and discover your next stage.
         </p>
 
         <div className="flex flex-col justify-center items-center mt-2">
           <select
             id="citySelect"
             name="selectedCity"
-            value={selectedCity || ""} // Ensure there's a fallback if no city is selected yet
-            onChange={handleCityChange} // Users can still change the city manually
+            value={selectedCity || ""}
+            onChange={handleCityChange}
             className="modern-input max-w-xs mx-auto"
           >
             <option value="">Select a City</option>
             {Object.keys(cityCoordinates)
-              .sort((a, b) => a.localeCompare(b)) // Sort cities alphabetically
+              .sort((a, b) => a.localeCompare(b))
               .map((city) => (
                 <option key={city} value={city}>
                   {city}
