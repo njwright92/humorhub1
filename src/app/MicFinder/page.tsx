@@ -61,6 +61,15 @@ const EventsPage = () => {
   const [loadedItems, setLoadedItems] = useState(5);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleCitySelect = (city: string) => {
+    const normalizedCity = normalizeCityName(city);
+    setSelectedCity(normalizedCity);
+    setFilterCity(normalizedCity);
+    setSearchTerm(normalizedCity);
+    setIsDropdownOpen(false); // Close the dropdown after selection
+  };
 
   const toggleMapVisibility = () => {
     setIsMapVisible((prev) => !prev);
@@ -449,14 +458,14 @@ const EventsPage = () => {
     if (!visible) return null;
 
     return (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center mb-4">
+      <div className=" border border-red-400 text-red-500 px-4 py-3 rounded-xl shadow-xl relative text-center mb-4">
         <strong className="font-bold">Note:</strong>
         <span className="block sm:inline">
           I do my best to keep the events current, but with the constant
           changing landscape of open mics, they&apos;re not always up to date.
         </span>
         <span
-          className="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
+          className="absolute top-[-0.5rem] right-[-0.5rem] px-4 py-3 cursor-pointer"
           onClick={() => setVisible(false)}
         >
           <svg
@@ -556,32 +565,56 @@ const EventsPage = () => {
         <h2 className="text-lg font-semibold text-center mt-4 mb-4">
           Ready to explore? Select your city and date to find local events!
         </h2>
-        <p className="text-sm text-center mb-4 bg-yellow-200 text-yellow-800 p-2 rounded">
-          Don&apos;t see your city automatically? You can save time by searching
-          your city in the navigation bar.
-        </p>
+
         <p className="text-md text-center mb-4">
           Scroll to see all upcoming events and discover your next stage.
         </p>
 
         <div className="flex flex-col justify-center items-center mt-2">
-          <select
-            id="citySelect"
-            name="selectedCity"
-            value={selectedCity || ""}
-            onChange={handleCityChange}
-            className="modern-input max-w-xs mx-auto"
-          >
-            <option value="">Select a City</option>
-            {Object.keys(cityCoordinates)
-              .sort((a, b) => a.localeCompare(b))
-              .map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-          </select>
+          {/* Dropdown with search input */}
+          <div className="relative w-full max-w-xs">
+            {/* Button to open/close dropdown */}
+            <div
+              className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+            >
+              {selectedCity || "Select a City"}
+            </div>
 
+            {/* Dropdown menu */}
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
+                {/* Search input inside the dropdown */}
+                <input
+                  type="text"
+                  placeholder="Search for a city..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
+                />
+
+                {/* Filtered city options */}
+                <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
+                  {Object.keys(cityCoordinates)
+                    .filter((city) =>
+                      city.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .sort((a, b) => a.localeCompare(b))
+                    .map((city) => (
+                      <li
+                        key={city}
+                        className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
+                        onClick={() => handleCitySelect(city)}
+                      >
+                        {city}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Date Picker */}
           <div className="relative mt-2">
             <ReactDatePicker
               ref={datePickerRef}

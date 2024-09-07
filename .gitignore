@@ -36,7 +36,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 package-lock.json
-
+src/app/components/guide.tsx
 # firebase
 humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json
 

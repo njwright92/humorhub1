@@ -124,7 +124,22 @@ body {
   /* Create a gradient background from zinc-900 to zinc-700 */
   background-image: linear-gradient(to bottom, var(--zinc-900), #2d3748);
   color: var(--zinc-200);
-  font-family: comic;
+}
+
+/* Define fonts for h elements (Comic-style font) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+/* Define fonts for p and span elements (Roboto-style font) */
+p,
+span {
+  font-family: "Roboto", "Arial", sans-serif;
 }
 
 .custom-backdrop {
