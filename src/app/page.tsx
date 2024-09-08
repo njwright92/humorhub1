@@ -40,10 +40,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Humor Hub the go to platfrorm for everything comedy!</title>
+        <title>"Humor Hub - The Hub of Humor, Open Mics, and ComicBot</title>
         <meta
           name="description"
-          content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
+          content="Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub."
         />
         <meta
           name="keywords"
@@ -51,11 +51,11 @@ export default function Home() {
         />
         <meta
           property="og:title"
-          content="Humor Hub the go to platfrorm for everything comedy!"
+          content="Humor Hub - The Hub of Humor, Open Mics, and ComicBot"
         />
         <meta
           property="og:description"
-          content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
+          content="Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub."
         />
         <meta property="og:url" content="https://www.thehumorhub.com/" />
         <meta property="og:type" content="website" />
@@ -257,7 +257,7 @@ export default function Home() {
               <Link href="/MicFinder">
                 <Image
                   src={micFinder}
-                  alt="Mic Finder Image"
+                  alt="Mic Finder"
                   width={200}
                   height={200}
                   className="rounded-xl shadow-lg"

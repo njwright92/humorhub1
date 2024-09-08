@@ -6,15 +6,15 @@ import { HeadlineProvider } from "./components/headlinecontext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Humor Hub - The Go-To Platform for Everything Comedy",
+  title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
   description:
-    "Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub.",
+    "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
   keywords:
-    "comedy platform, stand-up comedy, funny jokes, puns, open mic events, humor content, AI comedy, comedy writing tools, best jokes, comedy venues",
+    "comedy platform, stand-up comedy, funny jokes, puns, open mic events, comicbot, humor content, AI comedy, comedy writing tools, best jokes, comedy venues",
   openGraph: {
-    title: "Humor Hub - The Go-To Platform for Everything Comedy",
+    title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
     description:
-      "Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub.",
+      "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
     url: "https://www.thehumorhub.com/",
     type: "website",
     images: [
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     creator: "@natebug321",
-    title: "Humor Hub - The Go-To Platform for Everything Comedy",
+    title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
     description:
-      "Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub.",
+      "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
     images: [
       {
         url: "https://www.thehumorhub.com/images/og-image-home.jpg",
@@ -48,7 +48,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="apple-touch-icon" href="/apple.png" />
 
         {/* Favicon */}
         <link
