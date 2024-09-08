@@ -40,7 +40,9 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>"Humor Hub - The Hub of Humor, Open Mics, and ComicBot</title>
+        <title>
+          &quot;Humor Hub - The Hub of Humor, Open Mics, and ComicBot&quot;
+        </title>
         <meta
           name="description"
           content="Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub."
