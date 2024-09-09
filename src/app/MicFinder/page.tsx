@@ -61,14 +61,15 @@ const EventsPage = () => {
   const [loadedItems, setLoadedItems] = useState(5);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
+  const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
 
   const handleCitySelect = (city: string) => {
     const normalizedCity = normalizeCityName(city);
     setSelectedCity(normalizedCity);
     setFilterCity(normalizedCity);
     setSearchTerm(normalizedCity);
-    setIsDropdownOpen(false); // Close the dropdown after selection
+    setIsFirstDropdownOpen(false); // Close the first dropdown after selection
   };
 
   const toggleMapVisibility = () => {
@@ -92,21 +93,19 @@ const EventsPage = () => {
     return name.trim();
   }, []);
 
-  const handleCityFilterChange = useCallback(
-    (city: string) => {
-      if (city === "All Cities") {
-        setFilterCity(city);
-        setSelectedCity("");
-        setSearchTerm("");
-      } else {
-        const normalizedCity = normalizeCityName(city);
-        setFilterCity(normalizedCity);
-        setSelectedCity(normalizedCity);
-        setSearchTerm(normalizedCity);
-      }
-    },
-    [setFilterCity, setSelectedCity, normalizeCityName, setSearchTerm]
-  );
+  const handleCityFilterChange = (city: string) => {
+    if (city === "All Cities") {
+      setFilterCity(city);
+      setSelectedCity("");
+      setSearchTerm("");
+    } else {
+      const normalizedCity = normalizeCityName(city);
+      setFilterCity(normalizedCity);
+      setSelectedCity(normalizedCity);
+      setSearchTerm(normalizedCity);
+    }
+    setIsSecondDropdownOpen(false); // Close the second dropdown after selection
+  };
 
   // Filter events based on the selected city
   const eventsByCity = useMemo(() => {
@@ -345,16 +344,6 @@ const EventsPage = () => {
     [saveEvent, isUserSignedIn]
   );
 
-  const handleCityChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const normalizedCity = normalizeCityName(event.target.value);
-      setSelectedCity(normalizedCity);
-      setFilterCity(normalizedCity);
-      setSearchTerm(normalizedCity);
-    },
-    [setSelectedCity, setFilterCity, normalizeCityName, setSearchTerm]
-  );
-
   const uniqueCities = useMemo(() => {
     const citySet = new Set<string>();
     events.forEach((event) => {
@@ -376,55 +365,30 @@ const EventsPage = () => {
     longitude: number
   ): Promise<string | null> => {
     try {
-      console.log(
-        "Fetching coordinates for latitude:",
-        latitude,
-        "and longitude:",
-        longitude
-      );
-
       const response = await getLatLng(undefined, latitude, longitude);
-      console.log("Received response from getLatLng:", response);
-
       // Log the entire response to inspect the structure
       if (response) {
-        console.log("Response contains data:", response);
-
         // Check if city exists in the response
         if ("city" in response) {
-          console.log("City found in response:", response.city);
         } else {
-          console.log("City not found in response.");
         }
-
         // Check if state exists in the response
         if ("state" in response) {
-          console.log("State found in response:", response.state);
         } else {
-          console.log("State not found in response.");
         }
-
         // If both city and state exist, return them
         if ("city" in response && "state" in response) {
           const city = response.city;
           const stateAbbreviation = response.state;
-          console.log(
-            "Returning city and state:",
-            `${city} ${stateAbbreviation}`
-          );
-
           // Return city and state abbreviation in the format 'City State'
           return `${city} ${stateAbbreviation}`;
         } else {
-          console.log("City or state is missing in the response.");
           return null;
         }
       } else {
-        console.log("No response received.");
         return null;
       }
     } catch (error) {
-      console.error("Error fetching city and state:", error);
       return null;
     }
   };
@@ -617,13 +581,16 @@ const EventsPage = () => {
             {/* Button to open/close dropdown */}
             <div
               className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
-              onClick={() => setIsDropdownOpen((prev) => !prev)}
+              onClick={() => {
+                setIsFirstDropdownOpen((prev) => !prev); // Toggle first dropdown
+                setIsSecondDropdownOpen(false); // Close second dropdown if open
+              }}
             >
               {selectedCity || "Select a City"}
             </div>
 
             {/* Dropdown menu */}
-            {isDropdownOpen && (
+            {isFirstDropdownOpen && (
               <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
                 {/* Search input inside the dropdown */}
                 <input
@@ -647,7 +614,7 @@ const EventsPage = () => {
                         className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
                         onClick={() => {
                           handleCitySelect(city);
-                          setIsDropdownOpen(false); // Close dropdown after selection
+                          setIsFirstDropdownOpen(false); // Close dropdown after selection
                         }}
                       >
                         {city}
@@ -734,13 +701,16 @@ const EventsPage = () => {
               {/* Button to open/close dropdown */}
               <div
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
-                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                onClick={() => {
+                  setIsSecondDropdownOpen((prev) => !prev); // Toggle second dropdown
+                  setIsFirstDropdownOpen(false); // Close first dropdown if open
+                }}
               >
                 {filterCity || "All Cities"}
               </div>
 
               {/* Dropdown menu */}
-              {isDropdownOpen && (
+              {isSecondDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
                   {/* Search input inside the dropdown */}
                   <input
@@ -758,7 +728,7 @@ const EventsPage = () => {
                       className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
                       onClick={() => {
                         handleCityFilterChange("All Cities");
-                        setIsDropdownOpen(false);
+                        setIsSecondDropdownOpen(false);
                       }}
                     >
                       All Cities
