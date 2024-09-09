@@ -63,18 +63,27 @@ const EventsPage = () => {
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
   const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
+  const [mapLocation, setMapLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   const handleCitySelect = (city: string) => {
     const normalizedCity = normalizeCityName(city);
     setSelectedCity(normalizedCity);
     setFilterCity(normalizedCity);
     setSearchTerm(normalizedCity);
-    setIsFirstDropdownOpen(false); // Close the first dropdown after selection
   };
 
   const toggleMapVisibility = () => {
     setIsMapVisible((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (selectedCity && cityCoordinates[selectedCity]) {
+      setMapLocation(cityCoordinates[selectedCity]);
+    }
+  }, [selectedCity, cityCoordinates]);
 
   const handleOnItemsRendered = ({
     overscanStopIndex,
@@ -436,11 +445,23 @@ const EventsPage = () => {
     }
   };
 
-  // Coordinates for the selected city or default to Spokane, WA if not available
-  const selectedCityCoordinates =
-    cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
+  const selectedCityCoordinates = useMemo(() => {
+    return cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
+  }, [selectedCity, cityCoordinates]);
 
-  const MemoizedGoogleMap = React.memo(GoogleMap);
+  // Update map location only when the selected city coordinates change
+  useEffect(() => {
+    if (selectedCityCoordinates) {
+      setMapLocation(selectedCityCoordinates);
+    }
+  }, [selectedCityCoordinates]);
+
+  const MemoizedGoogleMap = useMemo(() => {
+    return mapLocation && isMapVisible ? (
+      <GoogleMap lat={mapLocation.lat} lng={mapLocation.lng} events={events} />
+    ) : null;
+  }, [mapLocation, isMapVisible, events]);
+
   const MemoizedEventForm = React.memo(EventForm);
 
   const sortedEventsByCity = eventsByCity.sort(
@@ -681,17 +702,11 @@ const EventsPage = () => {
         <section className="card-style1">
           <button
             onClick={toggleMapVisibility}
-            className="mb-4 text-orange-500 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 hover:bg-orange-500 hover:text-zinc-200 active:bg-orange-500 active:text-zinc-200 transition"
+            className="mb-4 text-orange-500 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 hover:bg-orange-500 hover:text-zinc-200 transition"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
-          {isMapVisible && (
-            <MemoizedGoogleMap
-              lat={selectedCityCoordinates.lat}
-              lng={selectedCityCoordinates.lng}
-              events={filteredEvents}
-            />
-          )}
+          {isMapVisible && MemoizedGoogleMap}
         </section>
 
         <section className="card-style">
