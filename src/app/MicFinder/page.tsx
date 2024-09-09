@@ -89,12 +89,7 @@ const EventsPage = () => {
   };
 
   const normalizeCityName = useCallback((name: string) => {
-    return name
-      .replace(
-        /\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b/g,
-        ""
-      )
-      .trim();
+    return name.trim();
   }, []);
 
   const handleCityFilterChange = useCallback(
@@ -175,14 +170,17 @@ const EventsPage = () => {
 
         citiesSnapshot.forEach((doc) => {
           const cityData = doc.data();
-          citiesData[cityData.city] = {
+          const city = cityData.city; // "City State" format, no need to manipulate
+          citiesData[city] = {
             lat: cityData.coordinates.lat,
             lng: cityData.coordinates.lng,
           };
         });
 
-        setCityCoordinates(citiesData);
-      } catch (error) {}
+        setCityCoordinates(citiesData); // Store city data with "City State"
+      } catch (error) {
+        console.error("Error fetching city data:", error);
+      }
     };
 
     fetchCities();
@@ -378,15 +376,55 @@ const EventsPage = () => {
     longitude: number
   ): Promise<string | null> => {
     try {
-      const response = await getLatLng(undefined, latitude, longitude);
+      console.log(
+        "Fetching coordinates for latitude:",
+        latitude,
+        "and longitude:",
+        longitude
+      );
 
-      // Check if the response contains a city (CityName type)
-      if ("city" in response && response.city) {
-        return response.city; // Return the city found
+      const response = await getLatLng(undefined, latitude, longitude);
+      console.log("Received response from getLatLng:", response);
+
+      // Log the entire response to inspect the structure
+      if (response) {
+        console.log("Response contains data:", response);
+
+        // Check if city exists in the response
+        if ("city" in response) {
+          console.log("City found in response:", response.city);
+        } else {
+          console.log("City not found in response.");
+        }
+
+        // Check if state exists in the response
+        if ("state" in response) {
+          console.log("State found in response:", response.state);
+        } else {
+          console.log("State not found in response.");
+        }
+
+        // If both city and state exist, return them
+        if ("city" in response && "state" in response) {
+          const city = response.city;
+          const stateAbbreviation = response.state;
+          console.log(
+            "Returning city and state:",
+            `${city} ${stateAbbreviation}`
+          );
+
+          // Return city and state abbreviation in the format 'City State'
+          return `${city} ${stateAbbreviation}`;
+        } else {
+          console.log("City or state is missing in the response.");
+          return null;
+        }
       } else {
-        return null; // No city found
+        console.log("No response received.");
+        return null;
       }
     } catch (error) {
+      console.error("Error fetching city and state:", error);
       return null;
     }
   };
@@ -398,14 +436,17 @@ const EventsPage = () => {
         (position) => {
           const { latitude, longitude } = position.coords;
 
-          // Fetch the city from coordinates and set it as the default selected city
-          fetchCityFromCoordinates(latitude, longitude).then((cityName) => {
-            if (cityName) {
-              setSelectedCity(cityName); // Default city is now selected
-              setFilterCity(cityName); // Optional: If you want to filter events by the default city
-            } else {
+          // Fetch the city and state from coordinates and set it as the default selected city
+          fetchCityFromCoordinates(latitude, longitude).then(
+            (cityWithState) => {
+              if (cityWithState) {
+                setSelectedCity(cityWithState); // Set full "City State"
+                setFilterCity(cityWithState); // Optional: filter events by the default city
+              } else {
+                console.error("City and state could not be determined.");
+              }
             }
-          });
+          );
         },
         (error) => {
           console.error("Error getting user location:", error);
@@ -426,7 +467,7 @@ const EventsPage = () => {
   }, []);
 
   const selectedCityCoordinates =
-    cityCoordinates[selectedCity] || cityCoordinates["Spokane"];
+    cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
 
   const openDatePicker = () => {
     if (datePickerRef && datePickerRef.current) {
@@ -604,7 +645,10 @@ const EventsPage = () => {
                       <li
                         key={city}
                         className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
-                        onClick={() => handleCitySelect(city)}
+                        onClick={() => {
+                          handleCitySelect(city);
+                          setIsDropdownOpen(false); // Close dropdown after selection
+                        }}
                       >
                         {city}
                       </li>
@@ -684,29 +728,64 @@ const EventsPage = () => {
         </section>
 
         <section className="card-style">
-          {/* Updated City Filter Section */}
-          <div className="city-filter flex flex-wrap">
-            <select
-              id="citySelectFilter"
-              name="filterCity"
-              value={filterCity}
-              onChange={(e) => handleCityFilterChange(e.target.value)}
-              className="modern-input max-w-xs mx-auto text-orange-700 text-lg"
-            >
-              <option value="All Cities">All Cities</option>
-              {uniqueCities
-                .sort((a, b) => a.localeCompare(b))
-                .map((city) => (
-                  <option
-                    key={city}
-                    value={city}
-                    className="text-orange-500 text-md"
-                  >
-                    {city}
-                  </option>
-                ))}
-            </select>
+          <div className="flex flex-col justify-center items-center mt-2">
+            {/* Dropdown with search input */}
+            <div className="relative w-full max-w-xs">
+              {/* Button to open/close dropdown */}
+              <div
+                className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+              >
+                {filterCity || "All Cities"}
+              </div>
+
+              {/* Dropdown menu */}
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
+                  {/* Search input inside the dropdown */}
+                  <input
+                    type="text"
+                    placeholder="Search for a city..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
+                  />
+
+                  {/* Filtered city options */}
+                  <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
+                    <li
+                      key="All Cities"
+                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
+                      onClick={() => {
+                        handleCityFilterChange("All Cities");
+                        setIsDropdownOpen(false);
+                      }}
+                    >
+                      All Cities
+                    </li>
+                    {uniqueCities
+                      .filter((city) =>
+                        city.toLowerCase().includes(searchTerm.toLowerCase())
+                      )
+                      .sort((a, b) => a.localeCompare(b))
+                      .map((city) => (
+                        <li
+                          key={city}
+                          className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
+                          onClick={() => {
+                            handleCityFilterChange(city);
+                            setIsDropdownOpen(false);
+                          }}
+                        >
+                          {city}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
+
           <h2 className="title-style text-center mt-4">
             {filterCity === "All Cities"
               ? "All Events"

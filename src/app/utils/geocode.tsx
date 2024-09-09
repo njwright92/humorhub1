@@ -10,8 +10,9 @@ export interface LatLng {
   lng: number;
 }
 
-export interface CityName {
+export interface CityAndState {
   city: string | null;
+  state: string | null;
 }
 
 // Geocode function to handle both forward and reverse geocoding
@@ -19,7 +20,7 @@ export const getLatLng = async (
   address?: string | number | boolean,
   latitude?: number,
   longitude?: number
-): Promise<LatLng | CityName> => {
+): Promise<LatLng | CityAndState> => {
   try {
     let response;
 
@@ -49,14 +50,21 @@ export const getLatLng = async (
       if (response.data.status === "OK") {
         const addressComponents = response.data.results[0].address_components;
         let city: string | null = null;
+        let state: string | null = null;
 
         for (const component of addressComponents) {
           if (component.types.includes("locality")) {
             city = component.long_name; // Get the city name
-            break; // Exit loop once city is found
           }
+          if (component.types.includes("administrative_area_level_1")) {
+            state = component.short_name; // Get the state abbreviation
+          }
+
+          // Break early if both city and state are found
+          if (city && state) break;
         }
-        return { city }; // Return city for reverse geocoding
+
+        return { city, state }; // Return both city and state for reverse geocoding
       }
     } else {
       throw new Error(
