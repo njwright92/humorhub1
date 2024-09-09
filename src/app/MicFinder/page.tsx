@@ -359,58 +359,52 @@ const EventsPage = () => {
     });
     return Array.from(citySet).sort((a, b) => a.localeCompare(b));
   }, [events, searchTerm, normalizeCityName]);
-  // Function to get the city name from the coordinates and update the dropdown
-  const fetchCityFromCoordinates = async (
-    latitude: number,
-    longitude: number
-  ): Promise<string | null> => {
-    try {
-      const response = await getLatLng(undefined, latitude, longitude);
-      // Log the entire response to inspect the structure
-      if (response) {
-        // Check if city exists in the response
-        if ("city" in response) {
-        } else {
-        }
-        // Check if state exists in the response
-        if ("state" in response) {
-        } else {
-        }
-        // If both city and state exist, return them
-        if ("city" in response && "state" in response) {
-          const city = response.city;
-          const stateAbbreviation = response.state;
-          // Return city and state abbreviation in the format 'City State'
-          return `${city} ${stateAbbreviation}`;
-        } else {
-          return null;
-        }
-      } else {
-        return null;
-      }
-    } catch (error) {
-      return null;
-    }
+
+  type LocationResponse = {
+    city?: string;
+    state?: string;
   };
 
-  // Geolocation effect to set the default city
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
+  const fetchCityFromCoordinates = useCallback(
+    async (latitude: number, longitude: number): Promise<string | null> => {
+      try {
+        const response = (await getLatLng(
+          undefined,
+          latitude,
+          longitude
+        )) as LocationResponse;
 
-          // Fetch the city and state from coordinates and set it as the default selected city
-          fetchCityFromCoordinates(latitude, longitude).then(
-            (cityWithState) => {
-              if (cityWithState) {
-                setSelectedCity(cityWithState); // Set full "City State"
-                setFilterCity(cityWithState); // Optional: filter events by the default city
-              } else {
-                console.error("City and state could not be determined.");
-              }
-            }
+        // Return formatted city and state if both are present
+        return response.city && response.state
+          ? `${response.city} ${response.state}`
+          : null;
+      } catch (error) {
+        console.error("Error fetching city and state:", error);
+        return null;
+      }
+    },
+    []
+  ); // Dependency array is empty because this function doesn’t depend on any external state
+
+  useEffect(() => {
+    const fetchUserLocation = async () => {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported. Please select a city manually.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords: { latitude, longitude } }) => {
+          const cityWithState = await fetchCityFromCoordinates(
+            latitude,
+            longitude
           );
+          if (cityWithState) {
+            setSelectedCity(cityWithState);
+            setFilterCity(cityWithState);
+          } else {
+            console.error("City and state could not be determined.");
+          }
         },
         (error) => {
           console.error("Error getting user location:", error);
@@ -419,10 +413,10 @@ const EventsPage = () => {
           );
         }
       );
-    } else {
-      alert("Geolocation is not supported. Please select a city manually.");
-    }
-  }, []);
+    };
+
+    fetchUserLocation();
+  }, [fetchCityFromCoordinates]); // The hook now depends on the memoized function
 
   const handleDateChange = useCallback((date: Date | null) => {
     if (date) {
@@ -451,13 +445,12 @@ const EventsPage = () => {
   const OpenMicBanner = () => {
     const [visible, setVisible] = useState(true);
 
-    // Auto-hide the banner after 20 seconds
     useEffect(() => {
       const timer = setTimeout(() => {
         setVisible(false);
-      }, 20000); // 20 seconds
+      }, 10000);
 
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer);
     }, []);
 
     if (!visible) return null;
@@ -582,8 +575,8 @@ const EventsPage = () => {
             <div
               className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
               onClick={() => {
-                setIsFirstDropdownOpen((prev) => !prev); // Toggle first dropdown
-                setIsSecondDropdownOpen(false); // Close second dropdown if open
+                setIsFirstDropdownOpen((prev) => !prev);
+                setIsSecondDropdownOpen(false);
               }}
             >
               {selectedCity || "Select a City"}
@@ -614,7 +607,7 @@ const EventsPage = () => {
                         className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
                         onClick={() => {
                           handleCitySelect(city);
-                          setIsFirstDropdownOpen(false); // Close dropdown after selection
+                          setIsFirstDropdownOpen(false);
                         }}
                       >
                         {city}
@@ -702,8 +695,8 @@ const EventsPage = () => {
               <div
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
                 onClick={() => {
-                  setIsSecondDropdownOpen((prev) => !prev); // Toggle second dropdown
-                  setIsFirstDropdownOpen(false); // Close first dropdown if open
+                  setIsSecondDropdownOpen((prev) => !prev);
+                  setIsFirstDropdownOpen(false);
                 }}
               >
                 {filterCity || "All Cities"}
@@ -744,7 +737,7 @@ const EventsPage = () => {
                           className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
                           onClick={() => {
                             handleCityFilterChange(city);
-                            setIsDropdownOpen(false);
+                            setIsSecondDropdownOpen(false);
                           }}
                         >
                           {city}
