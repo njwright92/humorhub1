@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 
 export interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
@@ -9,16 +10,43 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const router = useRouter();
+
+  const normalizeTerm = (term: string) =>
+    term.replace(/\s+/g, "").toLowerCase();
 
   const handleSearch = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (searchTerm.trim()) {
-        onSearch(searchTerm);
+        // Normalize the search term (remove spaces and convert to lowercase)
+        const normalizedSearchTerm = normalizeTerm(searchTerm);
+
+        // Define routing paths for normalized terms
+        const pageRoutes: { [key: string]: string } = {
+          home: "/",
+          news: "/HHapi",
+          comicbot: "/ComicBot",
+          jokepad: "/JokePad",
+          micfinder: "/MicFinder",
+          profile: "/Profile",
+          contact: "/contact",
+          about: "/about",
+        };
+
+        // Check if the normalized search term matches a predefined page route
+        if (pageRoutes[normalizedSearchTerm]) {
+          router.push(pageRoutes[normalizedSearchTerm]);
+        } else {
+          // Handle the city search routing
+          onSearch(searchTerm);
+        }
+
+        // Clear search input after submission
         setSearchTerm("");
       }
     },
-    [onSearch, searchTerm]
+    [onSearch, router, searchTerm]
   );
 
   const handleInputChange = useCallback(
@@ -64,7 +92,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           <input
             id="search-input"
             type="text"
-            placeholder="Search city to view events..."
+            placeholder="Search city or page..."
             value={searchTerm}
             onChange={handleInputChange}
             className="p-2 text-black rounded-lg shadow-lg w-3/4"

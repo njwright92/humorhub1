@@ -141,7 +141,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    YouTube/Stand Up
+                    YouTube
                   </a>
                 </li>
               </ul>
