@@ -1,10 +1,8 @@
-"use client";
-
 import React, { useState, useCallback, useEffect } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
-const ClientSignOutButton: React.FC = () => {
+const ClientSignOutButton: React.FC = React.memo(() => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -15,12 +13,9 @@ const ClientSignOutButton: React.FC = () => {
       await signOut(auth);
       alert("Signed out successfully");
       router.push("/");
-    } catch (e) {
-      if (e instanceof Error) {
-        alert(`Error signing out`);
-      } else {
-        alert("Unknown error occurred");
-      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+      alert("Error signing out, please try again.");
     } finally {
       setLoading(false);
     }
@@ -41,11 +36,14 @@ const ClientSignOutButton: React.FC = () => {
     <button
       onClick={handleSignOut}
       disabled={loading}
-      className="btn hover:bg-red-600 transition-colors text:no-wrap"
+      className="btn hover:bg-red-600 transition-colors text-no-wrap"
     >
       {loading ? "Signing Out..." : "Sign Out"}
     </button>
   );
-};
+});
+
+// Set the display name for the memoized component
+ClientSignOutButton.displayName = "ClientSignOutButton";
 
 export default ClientSignOutButton;

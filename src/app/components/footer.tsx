@@ -17,16 +17,18 @@ export default function Footer() {
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+    const unsubscribe = onAuthStateChanged(auth, (user) =>
+      handleAuthStateChanged(user)
+    );
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-  };
+  }, []);
 
   return (
     <footer

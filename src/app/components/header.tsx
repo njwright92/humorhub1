@@ -24,29 +24,28 @@ export default function Header() {
   const router = useRouter();
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   const [eventCount, setEventCount] = useState<number | null>(null);
-
-  const toggleAuthModal = () => setIsAuthModalOpen(!isAuthModalOpen);
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
   const [showBanner, setShowBanner] = useState(true);
+
   const fetchedOnce = useRef(false);
 
-  useEffect(() => {
-    // Set a timer to hide the banner after 15 seconds
-    const timer = setTimeout(() => {
-      setShowBanner(false);
-    }, 15000); // 15 seconds
-
-    // Clean up the timer when the component unmounts
-    return () => clearTimeout(timer);
+  // Toggle auth modal
+  const toggleAuthModal = useCallback(() => {
+    setIsAuthModalOpen((prev) => !prev);
   }, []);
 
+  // Toggle mobile menu
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen((prev) => !prev);
+  }, []);
+
+  // Handle user authentication state change
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
   }, []);
 
+  // Fetch the event count from the API
   useEffect(() => {
-    if (fetchedOnce.current) return; // Prevent multiple fetches
+    if (fetchedOnce.current) return;
     fetchedOnce.current = true;
 
     const fetchEventCount = async () => {
@@ -57,50 +56,69 @@ export default function Header() {
         }
         const data = await response.json();
         setEventCount(data.count);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching event count:", error);
+      }
     };
 
     fetchEventCount();
   }, []);
 
+  // Set up Firebase auth listener and clean up on component unmount
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
-  const handleSearch = async (searchTerm: string) => {
-    const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+  // Set a timer to hide the banner after 15 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowBanner(false);
+    }, 15000); // 15 seconds
 
-    // First, check for an exact match
-    let matchingCity = Object.keys(cityContext).find(
-      (city) => city.toLowerCase() === normalizedSearchTerm
-    );
+    return () => clearTimeout(timer);
+  }, []);
 
-    // If no exact match is found, check for partial matches
-    if (!matchingCity) {
-      matchingCity = Object.keys(cityContext).find(
-        (city) =>
-          city.toLowerCase().startsWith(normalizedSearchTerm) ||
-          city.toLowerCase().includes(normalizedSearchTerm)
-      );
-    }
+  // Handle the search functionality
+  const handleSearch = useCallback(
+    async (searchTerm: string) => {
+      const normalizedSearchTerm = searchTerm.toLowerCase().trim();
 
-    if (matchingCity) {
-      router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
-    } else {
-      alert(
-        "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!"
+      // First, check for an exact match
+      let matchingCity = Object.keys(cityContext).find(
+        (city) => city.toLowerCase() === normalizedSearchTerm
       );
 
-      try {
-        await addDoc(collection(db, "searchedCities"), {
-          city: searchTerm,
-          timestamp: new Date(),
-        });
-      } catch (error) {}
-    }
-  };
+      // If no exact match is found, check for partial matches
+      if (!matchingCity) {
+        matchingCity = Object.keys(cityContext).find(
+          (city) =>
+            city.toLowerCase().startsWith(normalizedSearchTerm) ||
+            city.toLowerCase().includes(normalizedSearchTerm)
+        );
+      }
+
+      // Navigate to the matching city's events page or show an alert if no match
+      if (matchingCity) {
+        router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
+      } else {
+        alert(
+          "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!"
+        );
+
+        try {
+          await addDoc(collection(db, "searchedCities"), {
+            city: searchTerm,
+            timestamp: new Date(),
+          });
+        } catch (error) {
+          console.error("Error logging searched city:", error);
+        }
+      }
+    },
+    [cityContext, router]
+  );
 
   return (
     <>

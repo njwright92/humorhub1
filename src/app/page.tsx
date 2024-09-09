@@ -12,19 +12,21 @@ import HumorHubAPISection from "./components/humorHubApi";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import ComicBotModal from "./components/comicBotModal";
-import AuthModal from "./components/authModal";
 import Link from "next/link";
 import Head from "next/head";
 import Script from "next/script";
 
+// Dynamic imports
 const EventForm = dynamic(() => import("./components/EventForm"));
+const ComicBotModal = dynamic(() => import("./components/comicBotModal"));
+const AuthModal = dynamic(() => import("./components/authModal"));
 
 export default function Home() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  // Handle user authentication state changes
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
   }, []);
@@ -33,8 +35,11 @@ export default function Home() {
     AOS.init({
       duration: 1000,
     });
+
+    // Initialize Firebase auth state listener
     const auth = getAuth();
-    return onAuthStateChanged(auth, handleAuthStateChanged);
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+    return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
   return (

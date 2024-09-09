@@ -6,18 +6,20 @@ import React, {
   ReactNode,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import PropTypes from "prop-types";
 import { app } from "../../../firebase.config";
 
-const CityContext = createContext<any>(null);
-
+// Define the type for City Coordinates
 type CityCoordinates = {
   [key: string]: { lat: number; lng: number };
 };
 
-// Create a custom hook to simplify using the CityContext
+// Create the CityContext with an initial value of null
+const CityContext = createContext<CityCoordinates | null>(null);
+
+// Custom hook to access city data from the CityContext
 export const useCity = () => {
   const context = useContext(CityContext);
   if (!context) {
@@ -28,41 +30,45 @@ export const useCity = () => {
   return context;
 };
 
-// Create the CityProvider component
+// CityProvider component
 export const CityProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const db = getFirestore(app);
-        const citiesSnapshot = await getDocs(collection(db, "cities"));
-        const citiesData: CityCoordinates = {};
+  // Fetch cities from Firestore and update the state
+  const fetchCities = useCallback(async () => {
+    try {
+      const db = getFirestore(app);
+      const citiesSnapshot = await getDocs(collection(db, "cities"));
+      const citiesData: CityCoordinates = {};
 
-        citiesSnapshot.forEach((doc) => {
-          const cityData = doc.data();
+      citiesSnapshot.forEach((doc) => {
+        const cityData = doc.data();
+        if (cityData.city && cityData.coordinates) {
           citiesData[cityData.city] = {
             lat: cityData.coordinates.lat,
             lng: cityData.coordinates.lng,
           };
-        });
+        }
+      });
 
-        setCityCoordinates(citiesData);
-      } catch (error) {}
-    };
-
-    fetchCities();
+      setCityCoordinates(citiesData);
+    } catch (error) {
+      console.error("Error fetching city data:", error);
+    }
   }, []);
+
+  // Fetch cities only once on mount
+  useEffect(() => {
+    if (Object.keys(cityCoordinates).length === 0) {
+      fetchCities();
+    }
+  }, [cityCoordinates, fetchCities]);
 
   return (
     <CityContext.Provider value={cityCoordinates}>
       {children}
     </CityContext.Provider>
   );
-};
-
-CityProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

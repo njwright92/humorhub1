@@ -8,15 +8,20 @@ import {
 } from "firebase/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import { XMarkIcon } from "@heroicons/react/16/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
+// Type for the modal props
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-const passwordRegex = /^.{6,}$/;
+// Updated email regex to follow modern RFC 5322 standards
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Updated password regex to be at least 8 characters, including letters, numbers, and special characters
+const passwordRegex =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [ui, setUi] = useState<firebaseui.auth.AuthUI | null>(null);
   const [email, setEmail] = useState<string>("");
@@ -30,52 +35,43 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       const auth = getAuth();
 
       if (!emailRegex.test(email)) {
-        alert(
-          "Oops! That doesn't look like a valid email address. Please try again."
-        );
+        alert("Please enter a valid email address.");
         return;
       }
 
       if (!passwordRegex.test(password)) {
         alert(
-          "Your password needs to be at least 6 characters long. Please try again."
+          "Your password must be at least 8 characters long, contain a letter, a number, and a special character."
         );
         return;
       }
 
       if (isSignUp && password !== confirmPassword) {
-        alert(
-          "The passwords you entered don't match. Please check and try again."
-        );
+        alert("Passwords do not match.");
         return;
       }
 
       try {
         if (isSignUp) {
           await createUserWithEmailAndPassword(auth, email, password);
-          alert(
-            "Welcome aboard! You've successfully signed up. Please update your profile."
-          );
+          alert("Sign-up successful! Please update your profile.");
         } else {
           await signInWithEmailAndPassword(auth, email, password);
-          alert("Welcome back! You've successfully signed in.");
+          alert("Sign-in successful! Welcome back.");
         }
         onClose();
       } catch (error) {
         if (error instanceof Error) {
-          switch ((error as AuthError).code) {
+          const authError = error as AuthError;
+          switch (authError.code) {
             case "auth/email-already-in-use":
-              alert(
-                "This email is already in use. Try signing in or use a different email."
-              );
+              alert("This email is already in use. Try signing in.");
               break;
             case "auth/wrong-password":
-              alert("The password you entered is incorrect. Please try again.");
+              alert("Incorrect password. Please try again.");
               break;
             default:
-              alert(
-                `Something went wrong: ${error.message}. Please try again later.`
-              );
+              alert(`Error: ${authError.message}. Please try again.`);
           }
         }
       }
@@ -157,7 +153,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="input-field "
+            className="input-field"
             autoComplete={isSignUp ? "new-password" : "current-password"}
           />
           {isSignUp && (

@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 const HumorHubAPISection: React.FC = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
+  // Handle authentication state
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {

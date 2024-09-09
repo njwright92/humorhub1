@@ -65,12 +65,32 @@ const Jokes = () => {
   }, [userUID]);
 
   useEffect(() => {
-    fetchJokes();
-  }, [fetchJokes]);
+    if (!userUID) return;
+
+    const debounceFetchJokes = setTimeout(() => {
+      const jokeQuery = query(
+        collection(db, "jokes"),
+        where("uid", "==", userUID)
+      );
+
+      const unsubscribe = onSnapshot(jokeQuery, (querySnapshot) => {
+        const fetchedJokes = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          joke: doc.data().joke,
+        }));
+        setJokes(fetchedJokes);
+      });
+
+      return () => unsubscribe();
+    }, 300); // Debounced to 300ms
+
+    return () => clearTimeout(debounceFetchJokes);
+  }, [userUID]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!userUID) return;
+    if (!userUID || !newJoke) return; // Ensure the joke isn't empty
+
     try {
       const jokeCollection = collection(db, "jokes");
       const docRef = await addDoc(jokeCollection, {
@@ -78,7 +98,8 @@ const Jokes = () => {
         uid: userUID,
       });
       const newDocId = docRef.id;
-      setJokes([{ id: newDocId, joke: newJoke }, ...jokes]);
+      // Only update the state once the Firestore operation succeeds
+      setJokes((prevJokes) => [{ id: newDocId, joke: newJoke }, ...prevJokes]);
       setNewJoke("");
     } catch (error) {
       alert(
@@ -94,45 +115,49 @@ const Jokes = () => {
   const handleEditChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>, jokeId: string) => {
       setJokes((currentJokes) => {
-        const updatedJokes = currentJokes.map((joke) =>
-          joke.id === jokeId ? { ...joke, joke: e.target.value } : joke
-        );
-        return updatedJokes;
+        return currentJokes.map((joke) => {
+          if (joke.id === jokeId && joke.joke !== e.target.value) {
+            return { ...joke, joke: e.target.value };
+          }
+          return joke;
+        });
       });
     },
     []
   );
 
-  const handleEditSubmit = async (jokeId: string) => {
-    const editedJoke = jokes.find((j) => j.id === jokeId);
-    if (!editedJoke) return; // Check if the joke is found
+  const handleEditSubmit = useCallback(
+    async (jokeId: string) => {
+      const editedJoke = jokes.find((j) => j.id === jokeId);
+      if (!editedJoke) return;
 
-    try {
-      // Update the joke using Firestore operations
-      const jokeDoc = doc(db, "jokes", jokeId); // Use jokeId which is a string
-      await updateDoc(jokeDoc, {
-        joke: editedJoke.joke,
-        uid: userUID,
-      });
-      setEditingJokeId(null); // Reset the editing state
-    } catch (error) {
-      alert(
-        "Oops! Something went wrong while updating your joke. Please try again."
-      );
-    }
-  };
+      try {
+        const jokeDoc = doc(db, "jokes", jokeId);
+        await updateDoc(jokeDoc, {
+          joke: editedJoke.joke,
+          uid: userUID,
+        });
+        setEditingJokeId(null);
+      } catch (error) {
+        alert(
+          "Oops! Something went wrong while updating your joke. Please try again."
+        );
+      }
+    },
+    [jokes, userUID]
+  );
 
-  const handleDelete = async (jokeId: string) => {
+  const handleDelete = useCallback(async (jokeId: string) => {
     try {
       const jokeDoc = doc(db, "jokes", jokeId);
       await deleteDoc(jokeDoc);
-      setJokes(jokes.filter((joke) => joke.id !== jokeId));
+      setJokes((prevJokes) => prevJokes.filter((joke) => joke.id !== jokeId));
     } catch (error) {
       alert(
         "Oops! Something went wrong while deleting your joke. Please try again."
       );
     }
-  };
+  }, []);
 
   return (
     <>

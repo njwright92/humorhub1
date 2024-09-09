@@ -30,6 +30,7 @@ export default function UserProfile() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const uidRef = useRef<string | null>(null);
 
+  // Memoize profile image object URL creation
   const profileImageObjectURL = useMemo(() => {
     return profileImage ? URL.createObjectURL(profileImage) : null;
   }, [profileImage]);
@@ -37,13 +38,8 @@ export default function UserProfile() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
-      if (user) {
-        uidRef.current = user.uid;
-      } else {
-        uidRef.current = null;
-      }
+      uidRef.current = user ? user.uid : null;
     });
-
     return () => unsubscribe();
   }, [auth]);
 
@@ -60,23 +56,21 @@ export default function UserProfile() {
 
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
-          setName(userData.name);
-          setBio(userData.bio);
-          setProfileImageUrl(userData.profileImageUrl);
+          setName(userData.name || "");
+          setBio(userData.bio || "");
+          setProfileImageUrl(userData.profileImageUrl || "");
         }
 
         if (userEventsDocSnap.exists() && userEventsDocSnap.data().events) {
           const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
           eventsFromFirestore.forEach((event) => {
             if (!savedEvents.some((e) => e.id === event.id)) {
-              saveEvent(event); // Make sure saveEvent here doesn't trigger an alert
+              saveEvent(event); // Ensure no alert on saveEvent
             }
           });
         }
       } catch (error) {
-        alert(
-          "Oops! We couldn't load your profile data and events. Please try again later."
-        );
+        alert("Oops! We couldn't load your profile data and events.");
       }
     },
     [saveEvent, savedEvents]
@@ -98,10 +92,14 @@ export default function UserProfile() {
         const file = event.target.files[0];
         setProfileImage(file);
 
-        const storageRef = ref(storage, `profileImages/${uidRef.current}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        setProfileImageUrl(url);
+        try {
+          const storageRef = ref(storage, `profileImages/${uidRef.current}`);
+          await uploadBytes(storageRef, file);
+          const url = await getDownloadURL(storageRef);
+          setProfileImageUrl(url);
+        } catch (error) {
+          alert("Oops! Something went wrong while uploading the image.");
+        }
       }
     },
     [storage]
@@ -109,24 +107,22 @@ export default function UserProfile() {
 
   const handleSubmit = useCallback(async () => {
     const user = auth.currentUser;
-    if (user) {
-      try {
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(
-          userRef,
-          {
-            name,
-            bio,
-            profileImageUrl,
-          },
-          { merge: true }
-        );
-        setIsEditing(false);
-      } catch (error) {
-        alert(
-          "Oops! Something went wrong while saving your profile. Please try again."
-        );
-      }
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(
+        userRef,
+        {
+          name,
+          bio,
+          profileImageUrl,
+        },
+        { merge: true }
+      );
+      setIsEditing(false);
+    } catch (error) {
+      alert("Oops! Something went wrong while saving your profile.");
     }
   }, [auth, name, bio, profileImageUrl]);
 
@@ -134,11 +130,9 @@ export default function UserProfile() {
     async (eventId: string) => {
       try {
         await deleteEvent(eventId);
-        alert("Event deleted successfully");
+        alert("Event deleted successfully.");
       } catch (error) {
-        alert(
-          "Oops! Something went wrong while deleting the event. Please try again."
-        );
+        alert("Oops! Something went wrong while deleting the event.");
       }
     },
     [deleteEvent]
@@ -156,7 +150,6 @@ export default function UserProfile() {
     setName(name);
     setBio(bio);
     setProfileImageUrl(profileImageUrl);
-
     setIsEditing(false);
   }, [name, bio, profileImageUrl]);
 

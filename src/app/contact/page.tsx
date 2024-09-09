@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Head from "next/head";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -26,28 +26,30 @@ const ContactPage: React.FC = () => {
     null
   );
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormState({ ...formState, [name]: value });
-  };
+  // Memoize handleInputChange to avoid re-creating the function on every render
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormState((prevState) => ({ ...prevState, [name]: value }));
+    },
+    []
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return; // Prevent multiple submissions
     setIsSubmitting(true);
+    setSubmitStatus(null); // Reset status before submitting
+
     try {
       await addDoc(collectionRef, formState);
       setSubmitStatus("success");
-      setFormState({
-        name: "",
-        email: "",
-        message: "",
-      });
+      setFormState({ name: "", email: "", message: "" }); // Reset form
     } catch (error) {
       setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false); // Always stop submitting
     }
-    setIsSubmitting(false);
   };
 
   return (

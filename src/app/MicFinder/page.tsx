@@ -125,23 +125,6 @@ const EventsPage = () => {
   }, [filterCity, events, normalizeCityName]);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryTerm = urlParams.get("searchTerm");
-    const city = urlParams.get("city");
-
-    if (city) {
-      setSelectedCity(city);
-      setFilterCity(city);
-    }
-
-    if (queryTerm) {
-      setSearchTerm(queryTerm);
-    } else {
-      setSearchTerm("");
-    }
-  }, []);
-
-  useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
@@ -385,53 +368,77 @@ const EventsPage = () => {
     },
     []
   ); // Dependency array is empty because this function doesn’t depend on any external state
+  // Define fetchUserLocation using useCallback to memoize it
+  const fetchUserLocation = useCallback(async () => {
+    // Ensure navigator.geolocation is supported before proceeding
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported. Please select a city manually.");
+      return;
+    }
 
-  useEffect(() => {
-    const fetchUserLocation = async () => {
-      if (!navigator.geolocation) {
-        alert("Geolocation is not supported. Please select a city manually.");
-        return;
-      }
+    // Get the current position using geolocation
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords: { latitude, longitude } }) => {
+        const cityWithState = await fetchCityFromCoordinates(
+          latitude,
+          longitude
+        );
 
-      navigator.geolocation.getCurrentPosition(
-        async ({ coords: { latitude, longitude } }) => {
-          const cityWithState = await fetchCityFromCoordinates(
-            latitude,
-            longitude
-          );
-          if (cityWithState) {
-            setSelectedCity(cityWithState);
-            setFilterCity(cityWithState);
-          } else {
-            console.error("City and state could not be determined.");
-          }
-        },
-        (error) => {
-          console.error("Error getting user location:", error);
-          alert(
-            "Unable to retrieve your location. Please select a city manually."
-          );
+        if (cityWithState) {
+          setSelectedCity(cityWithState);
+          setFilterCity(cityWithState);
+        } else {
+          console.error("City and state could not be determined.");
         }
-      );
-    };
+      },
+      (error) => {
+        console.error("Error getting user location:", error);
+        alert(
+          "Unable to retrieve your location. Please select a city manually."
+        );
+      }
+    );
+  }, [fetchCityFromCoordinates]);
 
-    fetchUserLocation();
-  }, [fetchCityFromCoordinates]); // The hook now depends on the memoized function
+  // useEffect that handles URL query parameters and fetches geolocation if necessary
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryTerm = urlParams.get("searchTerm");
+    const city = urlParams.get("city");
 
+    // Check if there's a city provided in the URL, otherwise fetch the user's geolocation
+    if (city) {
+      setSelectedCity(city);
+      setFilterCity(city);
+    } else {
+      fetchUserLocation(); // Fetch geolocation only if no city is provided in the URL
+    }
+
+    // Handle the search term if present in the URL
+    if (queryTerm) {
+      setSearchTerm(queryTerm);
+    } else {
+      setSearchTerm("");
+    }
+  }, [fetchUserLocation]);
+
+  // Handler to change the date
   const handleDateChange = useCallback((date: Date | null) => {
     if (date) {
       setSelectedDate(date);
     }
   }, []);
 
-  const selectedCityCoordinates =
-    cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
-
+  // Open the date picker programmatically
   const openDatePicker = () => {
     if (datePickerRef && datePickerRef.current) {
       datePickerRef.current.setOpen(true);
     }
   };
+
+  // Coordinates for the selected city or default to Spokane, WA if not available
+  const selectedCityCoordinates =
+    cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
 
   const MemoizedGoogleMap = React.memo(GoogleMap);
   const MemoizedEventForm = React.memo(EventForm);
