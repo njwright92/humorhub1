@@ -111,13 +111,14 @@ h4,
 h5,
 h6,
 .font-comic {
-  font-family: "Comic Sans MS", "Comic Sans", sans-serif;
+  font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "Chalkboard SE",
+    "Roboto", sans-serif;
 }
 
 /* Define fonts for p and span elements (Roboto-style font) */
 p,
 span {
-  font-family: "Roboto", "Arial", sans-serif;
+  font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;
 }
 
 .custom-backdrop {
@@ -440,5 +441,3 @@ option {
   @apply bg-zinc-900 bg-opacity-40 backdrop-blur-md;
   /* Glassmorphism effect in dark mode */
 }
-
-/* Micro-interaction styles */
