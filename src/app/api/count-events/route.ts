@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 
 // In-memory cache
 let cache: { lastUpdated: number; count: number } | null = null;
-const CACHE_DURATION = 10 * 60 * 1000; // 10-minute cache duration
+const CACHE_DURATION = 30 * 1000; // 10-minute cache duration
 
 // Parse the private key for Firebase admin initialization
 const serviceAccount = {
@@ -23,9 +23,12 @@ if (!admin.apps.length) {
   });
 }
 
-export async function GET() {
-  // Check if the cache is still valid
-  if (cache && Date.now() - cache.lastUpdated < CACHE_DURATION) {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const refresh = searchParams.get("refresh");
+
+  // Check if cache is bypassed or cache is invalid
+  if (!refresh && cache && Date.now() - cache.lastUpdated < CACHE_DURATION) {
     return NextResponse.json({
       message: "Events counted and updated (from cache).",
       count: cache.count,
@@ -42,14 +45,11 @@ export async function GET() {
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const oneWeekAgoISO = oneWeekAgo.toISOString();
 
-    console.log("Firestore One Week Ago Timestamp: ", oneWeekAgoISO);
-
-    // Query for events added in the last week using string date comparison
+    // Query for events added in the last week
     const snapshot = await eventsRef
-      .where("googleTimestamp", ">=", oneWeekAgoISO) // Use ISO string comparison
+      .where("googleTimestamp", ">=", oneWeekAgoISO)
       .get();
 
-    // If no events are found, return a response
     if (snapshot.empty) {
       return NextResponse.json({
         message: "No events found in the last week.",
@@ -60,10 +60,10 @@ export async function GET() {
     // Count the number of events
     const eventCount = snapshot.size;
 
-    // Cache the result for future requests
+    // Cache the result
     cache = { count: eventCount, lastUpdated: Date.now() };
 
-    // Update the event counter in Firestore (optional but useful)
+    // Update the event counter in Firestore
     const counterRef = db.collection("counters").doc("eventsCounter");
     await counterRef.set({ count: eventCount }, { merge: true });
 

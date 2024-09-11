@@ -75,7 +75,7 @@ export default function Header() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowBanner(false);
-    }, 15000); // 15 seconds
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);
