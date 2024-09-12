@@ -155,20 +155,22 @@ export default function Home() {
 
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Meet ComicBot: your AI-powered comedy companion, trained on
-                stand-up humor and designed to deliver the funniest jokes and
-                humor at the touch of a button. Whether you need a quick
-                punchline, a witty one-liner, or a fresh routine, ComicBot uses
-                AI comedy to bring you sharp, stage-ready material whenever you
-                need it.
+                Meet ComicBot: your AI-powered comedy companion, designed to
+                deliver the funniest jokes, puns, and humor at the touch of a
+                button. Trained on stand-up comedy and optimized for both new
+                and experienced comedians, ComicBot uses advanced AI comedy
+                technology to bring you sharp, stage-ready material, whether you
+                need a quick punchline, a witty one-liner, or a fresh routine.
               </p>
               <br />
               <p className="mb-4">
-                Built for comedians and humor enthusiasts alike, ComicBot is
-                your go-to tool for generating new jokes, refining your comedy
-                act, and bringing AI humor to life. Perfect for on-the-road
-                inspiration, last-minute ideas, or simply for a good laugh with
-                the best AI-powered funny bot available.
+                Built for stand-up comedians and humor enthusiasts alike,
+                ComicBot is your go-to tool for generating new jokes, refining
+                your comedy act, and bringing AI humor to life. Whether you're
+                on the road, looking for last-minute ideas, or simply in need of
+                a laugh, ComicBot offers the best AI-powered funny bot
+                experience, perfect for creating and organizing your comedy
+                material.
               </p>
 
               <button
@@ -231,14 +233,17 @@ export default function Home() {
             </div>
             <div className="flex-1 text-center md:text-left">
               <p className="mb-4">
-                Jokepad is your personal comedy writing tool, turning
-                spontaneous ideas into a well-organized library of jokes, always
-                ready when inspiration hits.
+                Jokepad is your ultimate comedy writing tool, transforming
+                spontaneous ideas into a well-organized, cloud-synced library of
+                jokes. Whether you're refining punchlines or brainstorming fresh
+                humor, Jokepad keeps your comedy content ready when inspiration
+                strikes.
               </p>
               <p className="mb-4">
-                With cloud-sync and a user-friendly interface, Jokepad securely
-                stores your jokes and one-liners, helping you refine and perfect
-                your humor for your next performance.
+                With a user-friendly interface and secure cloud-sync technology,
+                Jokepad allows comedians to store, edit, and perfect jokes and
+                one-liners. It's designed to help you sharpen your humor writing
+                and prepare your material for your next performance.
               </p>
             </div>
           </div>
@@ -252,9 +257,11 @@ export default function Home() {
             <div className="flex-1 text-center items-center md:text-right">
               <p className="mb-4">
                 Refined your material with ComicBot? Use MicFinder to find the
-                best open mic events near you. Whether it&apos;s comedy, music,
-                or poetry, MicFinder connects you to live performance venues
-                where you can bring your new set to life.
+                best open mic events near you. Whether it's comedy, music, or
+                poetry, MicFinder helps comedians and performers locate live
+                open mic venues across the US, giving you the perfect stage to
+                bring your new set to life. Discover top-rated open mics and
+                local comedy shows near you, and start performing today.
               </p>
 
               <Suspense fallback={<div>Loading...</div>}>
