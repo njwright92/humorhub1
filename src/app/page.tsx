@@ -179,7 +179,7 @@ export default function Home() {
                     setIsAuthModalOpen(true); // Open AuthModal if not signed in
                   }
                 }}
-                className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors"
+                className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Unlock Your Creative Side with ComicBot
               </button>
@@ -213,17 +213,18 @@ export default function Home() {
                 alt="Jokepad - Your Ultimate Comedy Workshop"
                 width={250}
                 height={250}
-                className="rounded-xl shadow-lg"
+                className="rounded-xl shadow-lg cursor-pointer"
               />
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent the div's click event from firing
                   if (!isUserSignedIn) {
                     setIsAuthModalOpen(true); // Open AuthModal if not signed in
                   } else {
                     location.href = "/JokePad";
                   }
                 }}
-                className="btn inline-block text-lg py-2 px-4 hover:bg-green-700 transition-colors mt-4"
+                className="btn inline-block text-lg py-2 px-4 hover:bg-green-700 transition-colors mt-4 cursor-pointer"
               >
                 Explore Jokepad Now
               </button>
@@ -267,11 +268,11 @@ export default function Home() {
                   alt="Mic Finder"
                   width={200}
                   height={200}
-                  className="rounded-xl shadow-lg"
+                  className="rounded-xl shadow-lg cursor-pointer"
                 />
               </Link>
               <Link href="/MicFinder">
-                <span className="btn inline-block text-lg items-center py-2 px-4 mt-6 hover:bg-blue-700 transition-colors">
+                <span className="btn inline-block text-lg items-center py-2 px-4 mt-6 hover:bg-blue-700 transition-colors cursor-pointer">
                   Find My Mic
                 </span>
               </Link>

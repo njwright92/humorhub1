@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import news from "../../app/news.webp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import AuthModal from "./authModal";
 
 const HumorHubAPISection: React.FC = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Handle authentication state
   useEffect(() => {
@@ -20,21 +22,19 @@ const HumorHubAPISection: React.FC = () => {
       className="card-style rounded-lg shadow-lg p-4 bg-zinc-900 text-zinc-200"
       data-aos="fade-up"
     >
-      <h1 className="title-style text-3xl font-bold text-center drop-shadow-md">
+      <h2 className="title-style text-3xl font-bold text-center drop-shadow-md">
         Hub News!
-      </h1>
-      <h2 className="text-center text-lg mb-6 p-2">
-        Your Go-To Source for the Latest News!
       </h2>
+      <h3 className="text-center text-lg mb-6 p-2">
+        Your Go-To Source for the Latest News!
+      </h3>
 
       {/* Main Content Section with Image and Text */}
       <div className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col md:flex-row-reverse items-center justify-center p-4">
         <div
           onClick={() => {
             if (!isUserSignedIn) {
-              alert(
-                "Oops! You need to be signed in to access this page. Please sign in or create an account to continue."
-              );
+              setIsAuthModalOpen(true); // Open AuthModal if not signed in
             } else {
               location.href = "/HHapi";
             }
@@ -61,19 +61,25 @@ const HumorHubAPISection: React.FC = () => {
           <button
             onClick={() => {
               if (!isUserSignedIn) {
-                alert(
-                  "Oops! You need to be signed in to access this page. Please sign in or create an account to continue."
-                );
+                setIsAuthModalOpen(true); // Open AuthModal if not signed in
               } else {
                 location.href = "/HHapi";
               }
             }}
-            className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors"
+            className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors cursor-pointer"
           >
             Discover More Here
           </button>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      {isAuthModalOpen && (
+        <AuthModal
+          onClose={() => setIsAuthModalOpen(false)}
+          isOpen={isAuthModalOpen}
+        />
+      )}
     </div>
   );
 };
