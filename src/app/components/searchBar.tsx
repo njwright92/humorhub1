@@ -13,14 +13,15 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   const router = useRouter();
 
   const normalizeTerm = (term: string) =>
-    term.replace(/\s+/g, "").toLowerCase();
+    term.trim().replace(/\s+/g, "").toLowerCase();
 
   const handleSearch = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      if (searchTerm.trim()) {
-        // Normalize the search term (remove spaces and convert to lowercase)
-        const normalizedSearchTerm = normalizeTerm(searchTerm);
+      const trimmedSearchTerm = searchTerm.trim();
+      if (trimmedSearchTerm) {
+        // Normalize the search term (trim, remove spaces, and convert to lowercase)
+        const normalizedSearchTerm = normalizeTerm(trimmedSearchTerm);
 
         // Define routing paths for normalized terms
         const pageRoutes: { [key: string]: string } = {
@@ -38,8 +39,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         if (pageRoutes[normalizedSearchTerm]) {
           router.push(pageRoutes[normalizedSearchTerm]);
         } else {
-          // Handle the city search routing
-          onSearch(searchTerm);
+          // Handle the city search routing with normalized term
+          onSearch(normalizedSearchTerm);
         }
 
         // Clear search input after submission

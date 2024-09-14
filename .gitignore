@@ -6,6 +6,13 @@
 .pnp.js
 .yarn/install-state.gz
 
+/backend/__pycache__
+/backend/venv
+/backend/=0.2.90
+/backend/=0.30.6
+/backend/=0.114.2
+/backend/models/
+/backend/models/comic-mistral-v4.2.gguf
 # testing
 .vscode/
 /coverage
