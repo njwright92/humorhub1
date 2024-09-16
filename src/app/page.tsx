@@ -174,11 +174,12 @@ export default function Home() {
               </p>
 
               <button
-                onClick={() => {
-                  if (isUserSignedIn) {
-                    setIsComicBotModalOpen(true);
-                  } else {
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent the div&#39;s click event from firing
+                  if (!isUserSignedIn) {
                     setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                  } else {
+                    location.href = "/ComicBot";
                   }
                 }}
                 className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors cursor-pointer"
