@@ -178,7 +178,7 @@ const EventsPage = () => {
   }, []);
 
   const isRecurringEvent = useCallback(
-    (eventDate: string, selectedDate: Date, event: Event): boolean => {
+    (eventDate: string, selectedDate: Date): boolean => {
       const dayOfWeekMap: { [key: string]: number } = {
         Sunday: 0,
         Monday: 1,
@@ -192,89 +192,12 @@ const EventsPage = () => {
       const eventDay = dayOfWeekMap[eventDate];
       const selectedDay = selectedDate.getDay();
 
+      // Check if the event occurs on the same day of the week
       if (eventDay !== selectedDay) {
         return false;
       }
 
-      if (event.id === "814") {
-        // Every third Wednesday of the month
-        const firstDayOfMonth = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          1
-        );
-        let thirdWednesday =
-          firstDayOfMonth.getDay() === 3
-            ? 1 + 14
-            : 15 - ((firstDayOfMonth.getDay() + 2) % 7);
-        while (thirdWednesday <= 0) {
-          thirdWednesday += 7;
-        }
-        return selectedDate.getDate() === thirdWednesday;
-      }
-
-      if (event.id === "815") {
-        // 1st and 3rd Sunday of the month
-        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
-        return (
-          selectedDate.getDay() === 0 &&
-          (weekOfMonth === 1 || weekOfMonth === 3)
-        );
-      }
-
-      if (event.id === "816") {
-        // Every last Tuesday of the month
-        const lastDayOfMonth = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth() + 1,
-          0
-        );
-        const lastTuesday =
-          lastDayOfMonth.getDate() - ((lastDayOfMonth.getDay() + 6) % 7);
-        return selectedDate.getDate() === lastTuesday;
-      }
-
-      if (event.id === "12") {
-        const firstFriday = new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          1
-        );
-        while (firstFriday.getDay() !== 5) {
-          firstFriday.setDate(firstFriday.getDate() + 1);
-        }
-        const diffInDays = Math.ceil(
-          (selectedDate.getTime() - firstFriday.getTime()) /
-            (1000 * 60 * 60 * 24)
-        );
-        return diffInDays % 14 < 7;
-      }
-
-      if (event.id === "1") {
-        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
-        return weekOfMonth === 2 || weekOfMonth === 4;
-      }
-
-      if (event.id === "819") {
-        // 2nd and 4th Wednesday of the month
-        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
-        return selectedDay === 3 && (weekOfMonth === 2 || weekOfMonth === 4);
-      }
-      if (event.id === "856") {
-        // 2nd and 4th Friday of the month
-        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
-        return selectedDay === 5 && (weekOfMonth === 2 || weekOfMonth === 4);
-      }
-      if (event.id === "888") {
-        // 1st Monday of the month
-        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
-        return selectedDay === 1 && weekOfMonth === 1;
-      }
-      if (event.id === "886") {
-        // 1st and 3rd Monday of the month
-        const weekOfMonth = Math.floor((selectedDate.getDate() - 1) / 7) + 1;
-        return selectedDay === 1 && (weekOfMonth === 1 || weekOfMonth === 3);
-      }
+      // Add any additional general recurring logic here if needed
 
       return true;
     },
@@ -294,7 +217,7 @@ const EventsPage = () => {
       const normalizedSelectedDate = new Date(selectedDate);
       normalizedSelectedDate.setHours(0, 0, 0, 0);
       const isOnSelectedDate = event.isRecurring
-        ? isRecurringEvent(event.date, selectedDate, event)
+        ? isRecurringEvent(event.date, selectedDate)
         : eventDate.toDateString() === normalizedSelectedDate.toDateString();
 
       // Check if the event matches the search term

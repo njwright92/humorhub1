@@ -18,7 +18,6 @@ import Loading from "../components/loading";
 import { useHeadline } from "../components/headlinecontext";
 import logo from "../../app/comicLogo.webp";
 import comic from "../../app/favicon.ico";
-import { sendGAEvent } from "@next/third-parties/google";
 import Image from "next/image";
 import Head from "next/head";
 import Script from "next/script";
@@ -67,6 +66,8 @@ const ComicBot = () => {
       return;
     }
 
+    console.log("User input:", userInput);
+
     setConversation((prev) => [
       ...prev,
       { from: "You", content: userInput, role: "user", text: userInput },
@@ -76,78 +77,51 @@ const ComicBot = () => {
 
     try {
       const requestBody = JSON.stringify({
-        inputs: `an absurd funny take on: ${userInput}`,
-        parameters: {
-          max_new_tokens: 256,
-          temperature: 0.8,
-          repetition_penalty: 1.1,
-          do_sample: true,
-          stream: true,
-        },
+        prompt: userInput, // Fix: Send userInput as a string, not an object
       });
 
-      const response = await fetch(
-        "https://bdcd91puxhzzutt3.us-east-1.aws.endpoints.huggingface.cloud",
-        {
-          headers: {
-            Accept: "text/event-stream",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_API}`,
-          },
-          method: "POST",
-          body: requestBody,
-        }
-      );
+      console.log("Sending request with body:", requestBody);
+
+      // Use environment variable for the backend URL
+      const BACKEND_URL =
+        process.env.NEXT_PUBLIC_REACT_APP_BACKEND_URL ||
+        "http://143.244.186.144:8000";
+
+      const response = await fetch(`${BACKEND_URL}/generate`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: requestBody,
+      });
+
+      console.log("Received response:", response);
 
       if (!response.ok) {
-        const errorText = await response.text();
         throw new Error(
           `Network response was not ok: ${response.status} ${response.statusText}`
         );
       }
 
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
+      const data = await response.json();
+      console.log("Response data:", data);
 
-      if (!reader) {
-        throw new Error("Unable to read response");
-      }
-
-      let accumulatedText = "";
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-
-        accumulatedText += chunk;
-
-        // Update the last message with new content
-        setConversation((prev) =>
-          prev.map((message, index) =>
-            index === prev.length - 1
-              ? {
-                  ...message,
-                  content: accumulatedText,
-                  text: accumulatedText,
-                }
-              : message
-          )
-        );
-      }
+      setConversation((prev) => [
+        ...prev,
+        {
+          from: "ComicBot",
+          content: data.response,
+          role: "bot",
+          text: data.response,
+        },
+      ]);
     } catch (error) {
-      if (error instanceof Response) {
-        const errorText = await error.text();
-      }
-      alert(
-        "Oops! Something went wrong while generating the response. Please try again."
-      );
+      console.error("Error during fetch:", error);
+      alert("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
       setInput("");
     }
-    sendGAEvent({ event: "buttonClicked", value: "sendButton" });
   }, [input]);
 
   useEffect(() => {
@@ -328,16 +302,17 @@ const ComicBot = () => {
                 }
               }}
               className="input-field w-full h-40 p-4 text-black rounded-xl shadow-inner"
-              placeholder="What funny idea are you exploring today? Type here and press Send to see what ComicBot can add to your comedy..."
+              placeholder="What funny idea are you exploring today?"
               id="enterPrompt"
             />
           </div>
           <button
-            onClick={handleSend}
+            onClick={() => alert("ComicBot coming soon!")}
             className="send-button bg-orange-500 hover:bg-orange-700 text-zinc-900 hover:text-zinc-200 text-lg px-12 py-2 rounded-xl shadow-lg transition-all duration-150 ease-in-out hover:animate-pulse mb-2"
           >
             Send
           </button>
+
           <section className="section-style">
             {/* Loading indicator at the end of the conversation list */}
             {isLoading && (
