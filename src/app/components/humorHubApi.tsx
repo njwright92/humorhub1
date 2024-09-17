@@ -56,9 +56,7 @@ const HumorHubAPISection: React.FC = () => {
         <div className="flex-1">
           <p className="mb-4 mt-4 text-md">
             Stay ahead of the latest trends in humor, entertainment, and comedy
-            events with Humor Hub News. Powered by the Humor Hub API, your
-            source for fresh jokes, curated comedy content, and updates from
-            across the entertainment industry.
+            events with Humor Hub News. Your source for fresh content to write jokes.
           </p>
 
           <button
