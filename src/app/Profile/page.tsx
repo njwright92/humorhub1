@@ -32,15 +32,19 @@ export default function UserProfile() {
 
   // Memoize profile image object URL creation
   const profileImageObjectURL = useMemo(() => {
-    return profileImage ? URL.createObjectURL(profileImage) : null;
+    if (!profileImage) return null;
+
+    const objectURL = URL.createObjectURL(profileImage);
+    return objectURL;
   }, [profileImage]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
-      uidRef.current = user ? user.uid : null;
+      uidRef.current = user?.uid || null; // Simplified ternary operator
     });
-    return () => unsubscribe();
+
+    return unsubscribe; // Cleanup the subscription on unmount
   }, [auth]);
 
   const fetchUserDataAndEvents = useCallback(
@@ -56,20 +60,21 @@ export default function UserProfile() {
 
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
-          setName(userData.name || "");
-          setBio(userData.bio || "");
-          setProfileImageUrl(userData.profileImageUrl || "");
+          setName(userData?.name || "");
+          setBio(userData?.bio || "");
+          setProfileImageUrl(userData?.profileImageUrl || "");
         }
 
         if (userEventsDocSnap.exists() && userEventsDocSnap.data().events) {
           const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
-          eventsFromFirestore.forEach((event) => {
-            if (!savedEvents.some((e) => e.id === event.id)) {
-              saveEvent(event); // Ensure no alert on saveEvent
-            }
-          });
+          const newEvents = eventsFromFirestore.filter(
+            (event) => !savedEvents.some((e) => e.id === event.id)
+          );
+
+          newEvents.forEach((event) => saveEvent(event)); // Save only new events
         }
       } catch (error) {
+        console.error("Error fetching profile data and events:", error); // Log the error for debugging
         alert("Oops! We couldn't load your profile data and events.");
       }
     },
@@ -83,23 +88,24 @@ export default function UserProfile() {
       }
     });
 
-    return () => unsubscribe();
+    return unsubscribe; // Cleanup the subscription on unmount
   }, [auth, fetchUserDataAndEvents]);
 
   const handleImageChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files[0]) {
-        const file = event.target.files[0];
-        setProfileImage(file);
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-        try {
-          const storageRef = ref(storage, `profileImages/${uidRef.current}`);
-          await uploadBytes(storageRef, file);
-          const url = await getDownloadURL(storageRef);
-          setProfileImageUrl(url);
-        } catch (error) {
-          alert("Oops! Something went wrong while uploading the image.");
-        }
+      setProfileImage(file); // Set image state early
+
+      try {
+        const storageRef = ref(storage, `profileImages/${uidRef.current}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        setProfileImageUrl(url); // Set profile image URL after upload
+      } catch (error) {
+        console.error("Error uploading image:", error); // Better error logging
+        alert("Oops! Something went wrong while uploading the image.");
       }
     },
     [storage]
@@ -107,21 +113,14 @@ export default function UserProfile() {
 
   const handleSubmit = useCallback(async () => {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) return; // Return early if the user is not authenticated
 
     try {
       const userRef = doc(db, "users", user.uid);
-      await setDoc(
-        userRef,
-        {
-          name,
-          bio,
-          profileImageUrl,
-        },
-        { merge: true }
-      );
-      setIsEditing(false);
+      await setDoc(userRef, { name, bio, profileImageUrl }, { merge: true });
+      setIsEditing(false); // Disable editing mode after successful save
     } catch (error) {
+      console.error("Error saving profile:", error); // Log the error
       alert("Oops! Something went wrong while saving your profile.");
     }
   }, [auth, name, bio, profileImageUrl]);
@@ -132,6 +131,7 @@ export default function UserProfile() {
         await deleteEvent(eventId);
         alert("Event deleted successfully.");
       } catch (error) {
+        console.error("Error deleting event:", error); // Log the error
         alert("Oops! Something went wrong while deleting the event.");
       }
     },
@@ -143,14 +143,14 @@ export default function UserProfile() {
       alert("You must be signed in to edit your profile.");
       return;
     }
-    setIsEditing(true);
+    setIsEditing(true); // Enable editing mode
   }, [isUserSignedIn]);
 
   const handleCancel = useCallback(() => {
-    setName(name);
-    setBio(bio);
-    setProfileImageUrl(profileImageUrl);
-    setIsEditing(false);
+    setName(name); // Reset name
+    setBio(bio); // Reset bio
+    setProfileImageUrl(profileImageUrl); // Reset profile image URL
+    setIsEditing(false); // Exit editing mode
   }, [name, bio, profileImageUrl]);
 
   return (
