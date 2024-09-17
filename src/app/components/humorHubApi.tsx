@@ -8,13 +8,13 @@ const HumorHubAPISection: React.FC = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Handle authentication state
+  // Monitor authentication state
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
     });
-    return () => unsubscribe(); // Cleanup subscription
+    return () => unsubscribe(); // Clean up subscription on unmount
   }, []);
 
   return (

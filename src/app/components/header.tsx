@@ -20,30 +20,27 @@ export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  const cityContext = useCity();
-  const router = useRouter();
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   const [eventCount, setEventCount] = useState<number | null>(null);
   const [showBanner, setShowBanner] = useState(true);
 
   const fetchedOnce = useRef(false);
+  const cityContext = useCity();
+  const router = useRouter();
 
-  // Toggle auth modal
-  const toggleAuthModal = useCallback(() => {
-    setIsAuthModalOpen((prev) => !prev);
-  }, []);
+  // Toggle modal and menu
+  const toggleAuthModal = useCallback(
+    () => setIsAuthModalOpen((prev) => !prev),
+    []
+  );
+  const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
-  // Toggle mobile menu
-  const toggleMenu = useCallback(() => {
-    setIsMenuOpen((prev) => !prev);
-  }, []);
-
-  // Handle user authentication state change
+  // Handle Firebase auth state change
   const handleAuthStateChanged = useCallback((user: User | null) => {
     setIsUserSignedIn(!!user);
   }, []);
 
-  // Fetch the event count from the API
+  // Fetch event count only once
   useEffect(() => {
     if (fetchedOnce.current) return;
     fetchedOnce.current = true;
@@ -51,9 +48,9 @@ export default function Header() {
     const fetchEventCount = async () => {
       try {
         const response = await fetch("/api/count-events");
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
-        }
+
         const data = await response.json();
         setEventCount(data.count);
       } catch (error) {
@@ -64,42 +61,27 @@ export default function Header() {
     fetchEventCount();
   }, []);
 
-  // Set up Firebase auth listener and clean up on component unmount
+  // Firebase auth listener, clean up on unmount
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
-  // Set a timer to hide the banner after 15 seconds
+  // Auto-hide banner after 10 seconds
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowBanner(false);
-    }, 10000);
-
+    const timer = setTimeout(() => setShowBanner(false), 10000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle the search functionality
+  // Handle search functionality
   const handleSearch = useCallback(
     async (searchTerm: string) => {
       const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-
-      // First, check for an exact match
-      let matchingCity = Object.keys(cityContext).find(
-        (city) => city.toLowerCase() === normalizedSearchTerm
+      const matchingCity = Object.keys(cityContext).find((city) =>
+        city.toLowerCase().includes(normalizedSearchTerm)
       );
 
-      // If no exact match is found, check for partial matches
-      if (!matchingCity) {
-        matchingCity = Object.keys(cityContext).find(
-          (city) =>
-            city.toLowerCase().startsWith(normalizedSearchTerm) ||
-            city.toLowerCase().includes(normalizedSearchTerm)
-        );
-      }
-
-      // Navigate to the matching city's events page or show an alert if no match
       if (matchingCity) {
         router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
       } else {
