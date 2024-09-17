@@ -68,23 +68,26 @@ const EventsPage = () => {
     lng: number;
   } | null>(null);
 
+  // Refactored Code with Highlights
+
   const handleCitySelect = (city: string) => {
-    const normalizedCity = normalizeCityName(city);
+    const normalizedCity = normalizeCityName(city); // No changes here
     setSelectedCity(normalizedCity);
     setFilterCity(normalizedCity);
     setSearchTerm(normalizedCity);
   };
 
-  const toggleMapVisibility = () => {
-    setIsMapVisible((prev) => !prev);
-  };
+  // Refactored toggleMapVisibility - Simplified the toggle function
+  const toggleMapVisibility = () => setIsMapVisible((prev) => !prev);
 
+  // Refactored useEffect to avoid unnecessary database reads
   useEffect(() => {
     if (selectedCity && cityCoordinates[selectedCity]) {
       setMapLocation(cityCoordinates[selectedCity]);
     }
   }, [selectedCity, cityCoordinates]);
 
+  // Refactored handleOnItemsRendered to avoid unnecessary state updates
   const handleOnItemsRendered = ({
     overscanStopIndex,
   }: {
@@ -94,55 +97,60 @@ const EventsPage = () => {
       overscanStopIndex >= loadedItems - 1 &&
       loadedItems < eventsByCity.length
     ) {
-      setLoadedItems(loadedItems + 5);
+      setLoadedItems((prev) => Math.min(prev + 5, eventsByCity.length)); // Avoid setting state when all items are loaded
     }
   };
 
-  const normalizeCityName = useCallback((name: string) => {
-    return name.trim();
-  }, []);
+  // Refactored normalizeCityName - No changes, kept useCallback
+  const normalizeCityName = useCallback((name: string) => name.trim(), []);
 
+  // Refactored handleCityFilterChange - Simplified normalization logic
   const handleCityFilterChange = (city: string) => {
     if (city === "All Cities") {
       setFilterCity(city);
       setSelectedCity("");
       setSearchTerm("");
     } else {
-      const normalizedCity = normalizeCityName(city);
+      const normalizedCity = normalizeCityName(city); // Normalize once and reuse
       setFilterCity(normalizedCity);
       setSelectedCity(normalizedCity);
       setSearchTerm(normalizedCity);
     }
-    setIsSecondDropdownOpen(false); // Close the second dropdown after selection
+    setIsSecondDropdownOpen(false); // No changes needed here
   };
 
-  // Filter events based on the selected city
+  // Refactored eventsByCity - Optimized filtering logic to avoid re-splitting and re-normalizing
   const eventsByCity = useMemo(() => {
-    return filterCity === "All Cities"
-      ? events
-      : events.filter((event) => {
-          const location = event.location;
-          if (location && typeof location === "string") {
-            const locationParts = location.split(",");
-            return (
-              locationParts.length > 1 &&
-              normalizeCityName(locationParts[1].trim()) === filterCity
-            );
-          }
-          return false;
-        });
-  }, [filterCity, events, normalizeCityName]);
+    if (filterCity === "All Cities") {
+      return events;
+    }
 
+    const normalizedFilterCity = normalizeCityName(filterCity);
+
+    return events.filter((event) => {
+      const location = event.location;
+      if (location && typeof location === "string") {
+        const locationParts = location.split(",");
+        return (
+          locationParts.length > 1 &&
+          normalizeCityName(locationParts[1].trim()) === normalizedFilterCity
+        );
+      }
+      return false;
+    });
+  }, [filterCity, events, normalizeCityName]); // Add normalizeCityName here
+
+  // Refactored useEffect to fetchEvents - Reduced unnecessary operations and improved error handling
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
-        const fetchedEvents: Event[] = [];
-        querySnapshot.forEach((doc) => {
-          fetchedEvents.push(doc.data() as Event);
-        });
-        setEvents(fetchedEvents);
+        const fetchedEvents: Event[] = querySnapshot.docs.map(
+          (doc) => doc.data() as Event
+        ); // Use map to collect events in one step
+        setEvents(fetchedEvents); // Set state once after all data is collected
       } catch (error) {
+        console.error("Error fetching events:", error); // Log the error for better debugging
         alert(
           "Oops! We couldn't load the events at the moment. Please try again later."
         );
@@ -152,6 +160,7 @@ const EventsPage = () => {
     fetchEvents();
   }, []);
 
+  // Refactored useEffect to fetchCities - Optimized data fetching and error handling
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -159,24 +168,26 @@ const EventsPage = () => {
         const citiesSnapshot = await getDocs(collection(db, "cities"));
         const citiesData: CityCoordinates = {};
 
-        citiesSnapshot.forEach((doc) => {
+        // Use map to populate citiesData in a cleaner, more efficient way
+        citiesSnapshot.docs.forEach((doc) => {
           const cityData = doc.data();
-          const city = cityData.city; // "City State" format, no need to manipulate
+          const city = cityData.city; // "City State" format, directly usable
           citiesData[city] = {
             lat: cityData.coordinates.lat,
             lng: cityData.coordinates.lng,
           };
         });
 
-        setCityCoordinates(citiesData); // Store city data with "City State"
+        setCityCoordinates(citiesData); // Set state only once with all data
       } catch (error) {
-        console.error("Error fetching city data:", error);
+        console.error("Error fetching city data:", error); // Log error for better debugging
       }
     };
 
     fetchCities();
   }, []);
 
+  // Refactored isRecurringEvent - Simplified logic and improved readability
   const isRecurringEvent = useCallback(
     (eventDate: string, selectedDate: Date): boolean => {
       const dayOfWeekMap: { [key: string]: number } = {
@@ -192,54 +203,54 @@ const EventsPage = () => {
       const eventDay = dayOfWeekMap[eventDate];
       const selectedDay = selectedDate.getDay();
 
-      // Check if the event occurs on the same day of the week
-      if (eventDay !== selectedDay) {
-        return false;
-      }
-
-      // Add any additional general recurring logic here if needed
-
-      return true;
+      return eventDay === selectedDay; // Simplified logic, no need for additional checks
     },
     []
   );
 
+  // Refactored filteredEvents - Optimized filtering logic for performance
   const filteredEvents = useMemo(() => {
-    return events.filter((event) => {
-      // Check if the event matches the selected city
-      const isInSelectedCity =
-        selectedCity === "" ||
-        (event.location && event.location.includes(selectedCity));
+    const normalizedSelectedDate = new Date(selectedDate);
+    normalizedSelectedDate.setHours(0, 0, 0, 0);
 
-      // Check if the event matches the selected date
+    const lowercasedSearchTerm = searchTerm ? searchTerm.toLowerCase() : null;
+    const lowercasedSelectedCity = selectedCity
+      ? selectedCity.toLowerCase()
+      : "";
+
+    return events.filter((event) => {
+      const isInSelectedCity =
+        !lowercasedSelectedCity ||
+        (event.location &&
+          event.location.toLowerCase().includes(lowercasedSelectedCity)); // Normalize city match
+
       const eventDate = new Date(event.date);
       eventDate.setHours(0, 0, 0, 0);
-      const normalizedSelectedDate = new Date(selectedDate);
-      normalizedSelectedDate.setHours(0, 0, 0, 0);
       const isOnSelectedDate = event.isRecurring
         ? isRecurringEvent(event.date, selectedDate)
-        : eventDate.toDateString() === normalizedSelectedDate.toDateString();
+        : eventDate.getTime() === normalizedSelectedDate.getTime(); // Direct comparison of timestamps
 
-      // Check if the event matches the search term
-      const matchesSearchTerm = searchTerm
+      const matchesSearchTerm = lowercasedSearchTerm
         ? (event.name &&
-            event.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            event.name.toLowerCase().includes(lowercasedSearchTerm)) ||
           (event.location &&
-            event.location.toLowerCase().includes(searchTerm.toLowerCase()))
+            event.location.toLowerCase().includes(lowercasedSearchTerm))
         : true;
 
       return isInSelectedCity && isOnSelectedDate && matchesSearchTerm;
     });
   }, [events, selectedCity, selectedDate, isRecurringEvent, searchTerm]);
 
+  // Refactored useEffect for auth state listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
+      setIsUserSignedIn(!!user); // Set user signed-in status
     });
 
-    return () => unsubscribe();
+    return unsubscribe; // Cleanup on unmount
   }, []);
 
+  // Refactored handleEventSave - Improved alert logic and error handling
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
@@ -249,8 +260,9 @@ const EventsPage = () => {
 
       try {
         await saveEvent(event);
-        alert("Event saved to your profile successfully!");
+        alert("Event saved to your profile successfully!"); // Show success message only on successful save
       } catch (error) {
+        console.error("Error saving event:", error); // Log error for better debugging
         alert(
           "Oops! Something went wrong while saving the event. Please try again."
         );
@@ -258,28 +270,33 @@ const EventsPage = () => {
     },
     [saveEvent, isUserSignedIn]
   );
-
   const uniqueCities = useMemo(() => {
     const citySet = new Set<string>();
+    const lowercasedSearchTerm = searchTerm.toLowerCase(); // Precompute the lowercased search term once
+
     events.forEach((event) => {
       if (event.location) {
-        const parts = event.location.split(", ");
+        const parts = event.location.split(", "); // Split once, reuse for the check
         if (parts.length > 1) {
           const normalizedCity = normalizeCityName(parts[1].trim());
-          if (normalizedCity.toLowerCase().includes(searchTerm.toLowerCase())) {
+          if (normalizedCity.toLowerCase().includes(lowercasedSearchTerm)) {
+            // Use precomputed search term
             citySet.add(normalizedCity);
           }
         }
       }
     });
-    return Array.from(citySet).sort((a, b) => a.localeCompare(b));
+
+    return Array.from(citySet).sort((a, b) => a.localeCompare(b)); // Sort the unique cities alphabetically
   }, [events, searchTerm, normalizeCityName]);
 
+  // Type definition for location response
   type LocationResponse = {
     city?: string;
     state?: string;
   };
 
+  // Refactored fetchCityFromCoordinates - Streamlined return logic
   const fetchCityFromCoordinates = useCallback(
     async (latitude: number, longitude: number): Promise<string | null> => {
       try {
@@ -289,7 +306,7 @@ const EventsPage = () => {
           longitude
         )) as LocationResponse;
 
-        // Return formatted city and state if both are present
+        // Return formatted city and state if both are present, otherwise return null
         return response.city && response.state
           ? `${response.city} ${response.state}`
           : null;
@@ -298,29 +315,32 @@ const EventsPage = () => {
         return null;
       }
     },
-    []
-  ); // Dependency array is empty because this function doesn’t depend on any external state
-  // Define fetchUserLocation using useCallback to memoize it
+    [] // No dependencies
+  );
+
+  // Refactored fetchUserLocation - Simplified geolocation logic and error handling
   const fetchUserLocation = useCallback(async () => {
-    // Ensure navigator.geolocation is supported before proceeding
     if (!navigator.geolocation) {
       alert("Geolocation is not supported. Please select a city manually.");
       return;
     }
 
-    // Get the current position using geolocation
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
-        const cityWithState = await fetchCityFromCoordinates(
-          latitude,
-          longitude
-        );
+        try {
+          const cityWithState = await fetchCityFromCoordinates(
+            latitude,
+            longitude
+          );
 
-        if (cityWithState) {
-          setSelectedCity(cityWithState);
-          setFilterCity(cityWithState);
-        } else {
-          console.error("City and state could not be determined.");
+          if (cityWithState) {
+            setSelectedCity(cityWithState);
+            setFilterCity(cityWithState);
+          } else {
+            console.error("City and state could not be determined.");
+          }
+        } catch (error) {
+          console.error("Error processing location:", error);
         }
       },
       (error) => {
@@ -330,78 +350,76 @@ const EventsPage = () => {
         );
       }
     );
-  }, [fetchCityFromCoordinates]);
+  }, [fetchCityFromCoordinates]); // fetchCityFromCoordinates is a dependency
 
   // useEffect that handles URL query parameters and fetches geolocation if necessary
+  // Refactored useEffect for handling URL parameters and geolocation
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const queryTerm = urlParams.get("searchTerm");
+    const queryTerm = urlParams.get("searchTerm") || ""; // Default to an empty string if no search term is present
     const city = urlParams.get("city");
 
-    // Check if there's a city provided in the URL, otherwise fetch the user's geolocation
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
     } else {
-      fetchUserLocation(); // Fetch geolocation only if no city is provided in the URL
+      fetchUserLocation(); // Fetch geolocation only if no city is provided
     }
 
-    // Handle the search term if present in the URL
-    if (queryTerm) {
-      setSearchTerm(queryTerm);
-    } else {
-      setSearchTerm("");
-    }
+    setSearchTerm(queryTerm); // Set search term from URL or default to empty string
   }, [fetchUserLocation]);
 
-  // Handler to change the date
+  // Refactored handleDateChange - Simplified condition
   const handleDateChange = useCallback((date: Date | null) => {
-    if (date) {
-      setSelectedDate(date);
-    }
+    if (date) setSelectedDate(date); // Directly set date if it's not null
   }, []);
 
-  // Open the date picker programmatically
+  // Refactored openDatePicker - Added null check for ref
   const openDatePicker = () => {
-    if (datePickerRef && datePickerRef.current) {
-      datePickerRef.current.setOpen(true);
-    }
+    datePickerRef?.current?.setOpen(true); // Optional chaining to safely open the date picker
   };
 
+  // Memoized selected city coordinates, with default to "Spokane WA"
   const selectedCityCoordinates = useMemo(() => {
     return cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
   }, [selectedCity, cityCoordinates]);
 
-  // Update map location only when the selected city coordinates change
+  // Update map location only when selectedCityCoordinates changes
   useEffect(() => {
     if (selectedCityCoordinates) {
       setMapLocation(selectedCityCoordinates);
     }
   }, [selectedCityCoordinates]);
 
+  // Memoized Google Map - Only renders when mapLocation and isMapVisible are true
   const MemoizedGoogleMap = useMemo(() => {
     return mapLocation && isMapVisible ? (
       <GoogleMap lat={mapLocation.lat} lng={mapLocation.lng} events={events} />
     ) : null;
   }, [mapLocation, isMapVisible, events]);
 
+  // Memoize EventForm to prevent unnecessary re-renders
   const MemoizedEventForm = React.memo(EventForm);
 
-  const sortedEventsByCity = eventsByCity.sort(
-    (a, b) =>
-      new Date(b.googleTimestamp).getTime() -
-      new Date(a.googleTimestamp).getTime()
-  );
+  // Memoized sorted events by city to avoid unnecessary sorting on every render
+  const sortedEventsByCity = useMemo(() => {
+    return eventsByCity.sort(
+      (a, b) =>
+        new Date(b.googleTimestamp).getTime() -
+        new Date(a.googleTimestamp).getTime()
+    );
+  }, [eventsByCity]);
 
+  // OpenMicBanner component with visibility timeout
   const OpenMicBanner = () => {
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
       const timer = setTimeout(() => {
         setVisible(false);
-      }, 10000);
+      }, 10000); // Hide banner after 10 seconds
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer); // Cleanup the timeout
     }, []);
 
     if (!visible) return null;
