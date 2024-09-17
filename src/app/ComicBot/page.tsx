@@ -47,14 +47,14 @@ const ComicBot = () => {
 
   useEffect(() => {
     if (selectedHeadline && selectedDescription) {
-      setInput(
-        `Write an absurd take on the following news: ${selectedHeadline}\n\n ${selectedDescription}`
-      );
+      const newInput = `Write an absurd take on the following news: ${selectedHeadline}\n\n${selectedDescription}`;
+      setInput((prevInput) => (prevInput !== newInput ? newInput : prevInput));
     }
   }, [selectedHeadline, selectedDescription]);
 
-  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
-    const { value } = event.target;
+  const handleInputChange = ({
+    target: { value },
+  }: ChangeEvent<HTMLTextAreaElement>): void => {
     setInput(value);
   };
 
@@ -66,8 +66,6 @@ const ComicBot = () => {
       return;
     }
 
-    console.log("User input:", userInput);
-
     setConversation((prev) => [
       ...prev,
       { from: "You", content: userInput, role: "user", text: userInput },
@@ -76,36 +74,25 @@ const ComicBot = () => {
     setIsLoading(true);
 
     try {
-      const requestBody = JSON.stringify({
-        prompt: userInput, // Fix: Send userInput as a string, not an object
-      });
-
-      console.log("Sending request with body:", requestBody);
-
-      // Use environment variable for the backend URL
       const BACKEND_URL =
         process.env.NEXT_PUBLIC_REACT_APP_BACKEND_URL ||
         "http://143.244.186.144:8000";
 
       const response = await fetch(`${BACKEND_URL}/generate`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: requestBody,
+        body: JSON.stringify({ prompt: userInput }), // Stringify input properly
       });
-
-      console.log("Received response:", response);
 
       if (!response.ok) {
         throw new Error(
-          `Network response was not ok: ${response.status} ${response.statusText}`
+          `Fetch failed: ${response.status} ${response.statusText}`
         );
       }
 
       const data = await response.json();
-      console.log("Response data:", data);
-
       setConversation((prev) => [
         ...prev,
         {
@@ -117,41 +104,40 @@ const ComicBot = () => {
       ]);
     } catch (error) {
       console.error("Error during fetch:", error);
-      alert("Something went wrong. Please try again later.");
+      alert("Error: Could not process the request. Please try again later.");
     } finally {
       setIsLoading(false);
-      setInput("");
+      setInput(""); // Reset input after sending
     }
   }, [input]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserUID(user.uid);
-      } else {
-        setUserUID(null);
-      }
+      setUserUID(user ? user.uid : null); // Simplified ternary check
     });
-    return () => {
-      unsubscribe();
-    };
+
+    return unsubscribe; // Directly return the cleanup function
   }, []);
 
   const fetchConvos = useCallback(async () => {
     if (!userUID) return;
 
-    const convoQuery = query(
-      collection(db, "conversations"),
-      where("uid", "==", userUID)
-    );
-    const querySnapshot = await getDocs(convoQuery);
+    try {
+      const convoQuery = query(
+        collection(db, "conversations"),
+        where("uid", "==", userUID)
+      );
+      const querySnapshot = await getDocs(convoQuery);
 
-    const fetchedConvos = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      messages: doc.data().messages,
-    }));
+      const fetchedConvos = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        messages: doc.data().messages,
+      }));
 
-    setAllConversations(fetchedConvos);
+      setAllConversations(fetchedConvos);
+    } catch (error) {
+      console.error("Error fetching conversations:", error); // Improved error handling
+    }
   }, [userUID]);
 
   useEffect(() => {
@@ -159,6 +145,8 @@ const ComicBot = () => {
   }, [fetchConvos]);
 
   const saveConversation = useCallback(async () => {
+    if (!conversation.length) return; // Prevent saving if there's no conversation
+
     try {
       const userUID = auth.currentUser?.uid;
       if (userUID) {
@@ -170,14 +158,17 @@ const ComicBot = () => {
             role: msg.role,
           })),
         });
+
         setAllConversations((prevConvos) => [
           ...prevConvos,
           { id: docRef.id, messages: conversation },
         ]);
         setIsSaved(true);
       }
-      setConversation([]);
+
+      setConversation([]); // Clear conversation after saving
     } catch (error) {
+      console.error("Error saving conversation:", error); // Log error for debugging
       alert(
         "Oops! Something went wrong while saving the conversation. Please try again."
       );
@@ -188,10 +179,11 @@ const ComicBot = () => {
     try {
       await deleteDoc(doc(db, "conversations", docID));
 
-      setAllConversations(
-        allConversations.filter((convo) => convo.id !== docID)
+      setAllConversations((prevConvos) =>
+        prevConvos.filter((convo) => convo.id !== docID)
       );
     } catch (error) {
+      console.error("Error deleting conversation:", error); // Improved error handling
       alert(
         "Oops! Something went wrong while deleting the conversation. Please try again."
       );
@@ -205,17 +197,26 @@ const ComicBot = () => {
       alert("User is not signed in.");
       return;
     }
+
+    if (!conversation.length) {
+      alert("Conversation is empty. Cannot send to Jokepad.");
+      return;
+    }
+
     try {
       const jokeCollection = collection(db, "jokes");
       const conversationText = conversation
         .map((message) => `${message.from}: ${message.content}`)
         .join("\n");
+
       await addDoc(jokeCollection, {
         joke: conversationText,
         uid: userUID,
       });
+
       alert("Joke successfully sent to Jokepad!");
     } catch (error) {
+      console.error("Error sending conversation to Jokepad:", error); // Better error logging
       alert(
         "Oops! Something went wrong while sending the joke to Jokepad. Please try again."
       );
