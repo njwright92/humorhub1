@@ -165,7 +165,9 @@ const NewsPage = () => {
   return (
     <>
       <Head>
-        <title>Humor Hub News API - Access the Latest Comedy Content</title>
+        <title>
+          Hub News - Access the Latest top stories in all news categories
+        </title>
         <meta
           name="description"
           content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news directly to your platform."
@@ -194,23 +196,21 @@ const NewsPage = () => {
       <div className="screen-container">
         {error && <p className="error-message text-zinc-200">{error}</p>}
         <h1 className="title text-3xl font-bold text-center text-zinc-200 mb-6">
-          Humor Hub News
+          Hub News
         </h1>
         <div className="min-h-screen bg-zinc-900 flex flex-col items-center p-4">
           <section className="bg-zinc-200 text-zinc-900 p-8 rounded-xl drop-shadow-md max-w-md w-full mx-2 mb-4">
             <h2 className="text-center text-2xl font-bold mb-4">
-              Welcome to the Humor Hub News Portal
+              Welcome to the News Hub!
             </h2>
             <p className="text-center mb-4 text-lg">
-              Stay updated on comedy, politics, and more. Use the Humor Hub API
-              for real-time updates, or browse curated categories and dynamic
-              search for fresh comedy content.
+              Get real-time comedy, politics, and more with the news hub. Browse
+              top categories and search for the freshest content.
             </p>
             <p className="mb-4 mt-4 text-md">
-              Explore the latest trends in humor and entertainment. Powered by
-              the Humor Hub API, access the newest jokes, events, and comedy
-              content tailored to your interests.
+              Discover the latest news on all the top news categories.
             </p>
+
             <div className="mb-4 w-full">
               <label className="block mb-2">Choose Category:</label>
               <select
