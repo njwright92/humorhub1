@@ -52,6 +52,9 @@ export default function Footer() {
                 width={70}
                 height={70}
                 className="rounded-full mr-2 cursor-pointer"
+                loading="lazy"
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, 250px"
               />
             </Link>
           </div>

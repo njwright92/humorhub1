@@ -150,6 +150,9 @@ export default function Home() {
                 width={250}
                 height={250}
                 className="rounded-xl shadow-lg cursor-pointer"
+                loading="lazy"
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, 250px"
               />
             </div>
 
@@ -217,6 +220,9 @@ export default function Home() {
                 width={250}
                 height={250}
                 className="rounded-xl shadow-lg cursor-pointer"
+                loading="lazy"
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, 250px"
               />
               <button
                 onClick={(e) => {
@@ -277,6 +283,9 @@ export default function Home() {
                   width={200}
                   height={200}
                   className="rounded-xl shadow-lg cursor-pointer"
+                  loading="lazy"
+                  style={{ objectFit: "contain" }}
+                  sizes="(max-width: 768px) 100vw, 250px"
                 />
               </Link>
               <Link href="/MicFinder">

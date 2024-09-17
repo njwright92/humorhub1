@@ -114,6 +114,8 @@ export default function Header() {
               height={50}
               className="rounded-full cursor-pointer"
               loading="eager"
+              style={{ objectFit: "contain" }}
+              sizes="(max-width: 768px) 100vw, 250px"
             />
           </Link>
           {showBanner && eventCount !== null && (
