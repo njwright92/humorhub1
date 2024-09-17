@@ -16,6 +16,9 @@ import ComicBotModal from "./comicBotModal";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
+const CACHE_KEY = "eventCountCache";
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
+
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,21 +46,40 @@ export default function Header() {
   // Fetch event count only once
   useEffect(() => {
     if (fetchedOnce.current) return;
-    fetchedOnce.current = true;
 
     const fetchEventCount = async () => {
       try {
+        // Check if data is already cached in localStorage
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+          const { count, lastUpdated } = JSON.parse(cachedData);
+
+          // If the cached data is still valid (within 24 hours), use it
+          if (Date.now() - lastUpdated < CACHE_DURATION) {
+            setEventCount(count);
+            return;
+          }
+        }
+
+        // If no valid cache, fetch from the API
         const response = await fetch("/api/count-events");
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
         setEventCount(data.count);
+
+        // Store the event count and timestamp in localStorage
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({ count: data.count, lastUpdated: Date.now() })
+        );
       } catch (error) {
         console.error("Error fetching event count:", error);
       }
     };
 
+    fetchedOnce.current = true;
     fetchEventCount();
   }, []);
 
