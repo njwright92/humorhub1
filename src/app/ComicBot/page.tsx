@@ -277,6 +277,9 @@ const ComicBot = () => {
             className="rounded-2xl shadow-lg"
             width={150}
             height={150}
+            loading="lazy"
+            style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
+            sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
           />
           <Image
             src={logo}
@@ -284,6 +287,9 @@ const ComicBot = () => {
             className="rounded-full shadow-lg"
             width={150}
             height={150}
+            loading="lazy"
+            style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
+            sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
           />
         </div>
         <p className="mb-2 text-center italic text-sm text-red-500">

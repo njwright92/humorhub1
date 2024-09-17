@@ -119,10 +119,7 @@ export default function Home() {
       ></Script>
       <Header />
       <div className="screen-container">
-        <section data-aos="fade-up">
-          <HumorHubAPISection />
-        </section>
-
+        <HumorHubAPISection />
         <section
           data-aos="fade-up"
           className="card-style flex flex-col items-center w-full p-4"
@@ -151,8 +148,8 @@ export default function Home() {
                 height={250}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain" }}
-                sizes="(max-width: 768px) 100vw, 250px"
+                style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
+                sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
               />
             </div>
 
@@ -221,8 +218,8 @@ export default function Home() {
                 height={250}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain" }}
-                sizes="(max-width: 768px) 100vw, 250px"
+                style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
+                sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
               />
               <button
                 onClick={(e) => {
@@ -284,8 +281,8 @@ export default function Home() {
                   height={200}
                   className="rounded-xl shadow-lg cursor-pointer"
                   loading="lazy"
-                  style={{ objectFit: "contain" }}
-                  sizes="(max-width: 768px) 100vw, 250px"
+                  style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
+                  sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
                 />
               </Link>
               <Link href="/MicFinder">
