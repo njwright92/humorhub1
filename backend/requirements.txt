@@ -21,4 +21,11 @@ uvicorn
 uvloop
 watchfiles
 websockets
+firebase-admin
+python-dotenv
+google-cloud-vision
+requests
+opencv-python
+Pillow
+pytesseract
 
