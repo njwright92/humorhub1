@@ -95,47 +95,108 @@ def parse_event_details(text):
     print("Parsing event details from extracted text...")
     event_details = {}
 
-    # Clean up the text
-    text = text.replace('\n', ' ').strip()
-    print(f"Cleaned Text: {text}")
+    # Split the text into lines
+    lines = text.strip().split('\n')
+    print(f"Lines: {lines}")
 
-    # List of weekdays
-    weekdays = ['Monday', 'Tuesday', 'Wednesday',
-                'Thursday', 'Friday', 'Saturday', 'Sunday']
+    # Initialize variables
+    event_name = None
+    location = None
+    details = []
+    date = 'Unknown'
+    time_str = 'Unknown Time'
 
-    # Extract date
-    date = None
-    for day in weekdays:
-        if re.search(r'\b' + day + r'\b', text, re.IGNORECASE):
-            date = day
+    # Patterns to identify event name
+    event_name_patterns = [
+        r'^(Open Mic at .+)$',
+        r'^(.*Open Mic.*)$',
+        r'^(.*Comedy Show.*)$',
+        r'^(.*Stand[-\s]?Up.*)$',
+        r'^(.*Comedy Night.*)$',
+        r'^(.*Laughs.*)$',
+        r'^(.*Giggles.*)$',
+        r'^(.*Comedy Competition.*)$',
+    ]
+
+    # Search for event name
+    for line in lines:
+        for pattern in event_name_patterns:
+            match = re.match(pattern, line.strip(), re.IGNORECASE)
+            if match:
+                event_name = match.group(1).strip()
+                break
+        if event_name:
             break
 
-    if not date:
-        date = 'Wednesday'  # Default value
+    # Fallback if event name not found
+    if not event_name:
+        event_name = 'Unknown Event Name'
 
+    # Extract date (day of the week)
+    weekdays_patterns = {
+        'Monday': r'\bMon(?:day)?\b',
+        'Tuesday': r'\bTue(?:sday)?\b',
+        'Wednesday': r'\bWed(?:nesday)?\b',
+        'Thursday': r'\bThu(?:rsday)?\b',
+        'Friday': r'\bFri(?:day)?\b',
+        'Saturday': r'\bSat(?:urday)?\b',
+        'Sunday': r'\bSun(?:day)?\b',
+    }
+    for day, pattern in weekdays_patterns.items():
+        for line in lines:
+            if re.search(pattern, line, re.IGNORECASE):
+                date = day
+                break
+
+    # Extract time
+    time_pattern = r"\b(\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm))\b"
+    for line in lines:
+        time_match = re.search(time_pattern, line, re.IGNORECASE)
+        if time_match:
+            time_str = time_match.group(1)
+            break
+
+    # Extract location
+    location_patterns = [
+        r"^(?:Location|Venue|At|Where)[:\-]?\s*(.+)$",
+        r"^.*\d{1,5}\s+\w+\s+\w+.*$",  # Addresses like '2075 Mission St'
+        r".*(Pub|Bar|Club|Cafe|Restaurant|Theatre|Hall|Lounge|Center|Centre).*",
+    ]
+    for line in lines:
+        for pattern in location_patterns:
+            match = re.match(pattern, line.strip(), re.IGNORECASE)
+            if match:
+                if match.lastindex:
+                    location = match.group(1).strip()
+                else:
+                    location = line.strip()
+                break
+        if location:
+            break
+
+    # Fallback location
+    if not location:
+        location = 'Unknown Location'
+
+    # Extract additional details
+    for line in lines:
+        line_clean = line.strip()
+        if line_clean and line_clean not in [event_name, location]:
+            details.append(line_clean)
+
+    details_text = ' '.join(details)
+
+    # Generate unique ID and timestamp
+    event_details['id'] = generate_event_id()
+    event_details['name'] = event_name
     event_details['date'] = date
-
-    # Regular expressions for parsing time and location
-    time_pattern = r"\b(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm))\b"
-    location_pattern = r"Rotten Ralph's Pub (2nd & Chestnut, Philadelphia PA)"
-    name_pattern = r"A Totally Normal Wednesday Comedy Open-Mic"
-
-    # Extract data
-    time_match = re.search(time_pattern, text, re.IGNORECASE)
-    location_match = re.search(location_pattern, text)
-
-    # Populate other event details
-    event_details['id'] = generate_event_id()  # Generate a unique ID
-    event_details['name'] = name_pattern if name_pattern else 'A Totally Normal Wednesday Comedy Open-Mic'
-    event_details['isRecurring'] = True  # Assuming events are recurring
-    event_details['location'] = location_match.group(
-        1) if location_match else "Rotten Ralph's Pub 2nd & Chestnut, Philadelphia PA"
-    event_details['details'] = f"Time: {time_match.group(1) if time_match else '9:00pm'} Frequency: Weekly Cost: Free"
+    event_details['isRecurring'] = True  # Or determine based on text
+    event_details['location'] = location
+    event_details['details'] = f"{details_text} Time: {time_str}."
     event_details['googleTimestamp'] = datetime.utcnow().isoformat() + 'Z'
 
     print(f"Parsed event details: {event_details}")
     return event_details
-
 
 def get_coordinates(address):
     """Geocode the event location using Geocod.io API or use default coordinates."""
