@@ -8,6 +8,7 @@ import { useHeadline } from "../components/headlinecontext";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 import Loading from "../components/loading";
 import Head from "next/head";
+import Script from "next/script";
 
 type Category = "top_stories" | "all_news";
 
@@ -192,6 +193,10 @@ const NewsPage = () => {
           content="https://www.thehumorhub.com/images/og-image-hhapi.jpg"
         />
       </Head>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
+      ></Script>
       <Header />
       <div className="screen-container">
         {error && <p className="error-message text-zinc-200">{error}</p>}

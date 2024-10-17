@@ -511,7 +511,7 @@ const EventsPage = () => {
       </Head>
       <Script
         async
-        src="https://www.googletagmanager.com/gtag/js?id=G-L4N0VS2TW8"
+        src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       ></Script>
       <Header />
       <div className="screen-container">

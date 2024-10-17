@@ -1,9 +1,12 @@
+// app/layout.tsx
+
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { CityProvider } from "./components/cityContext";
 import { EventProvider } from "./components/eventContext";
 import { HeadlineProvider } from "./components/headlinecontext";
 import "./globals.css";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
@@ -43,10 +46,27 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
+const GTM_ID = "GTM-KVJSFKV8"; // Your GTM Container ID
+
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <head>
+        {/* Google Tag Manager Script */}
+        <Script
+          id="gtm-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `,
+          }}
+        />
+        {/* End Google Tag Manager Script */}
         <meta charSet="UTF-8" />
         <link rel="apple-touch-icon" href="/apple.png" />
 
@@ -77,15 +97,18 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         />
       </head>
       <body>
+        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-KVJSFKV8"
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
             height="0"
             width="0"
-            style={{ display: "none", visibility: "hidden" }} // Corrected style prop
+            style={{ display: "none", visibility: "hidden" }}
             title="Google Tag Manager"
           ></iframe>
         </noscript>
+        {/* End Google Tag Manager (noscript) */}
+
         <CityProvider>
           <EventProvider>
             <HeadlineProvider>
