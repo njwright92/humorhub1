@@ -162,8 +162,8 @@ export default function Home() {
               <br />
               <p className="mb-4">
                 Designed for comedians and humor lovers, ComicBot helps you
-                generate, refine, and organize your comedy. Whether you're on
-                the go or need fresh ideas, ComicBot delivers.
+                generate, refine, and organize your comedy. Whether you&lsquo;re
+                on the go or need fresh ideas, ComicBot delivers.
               </p>
 
               <button
