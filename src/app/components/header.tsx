@@ -16,9 +16,6 @@ import ComicBotModal from "./comicBotModal";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
-const CACHE_KEY = "eventCountCache";
-const CACHE_DURATION = 24 * 60 * 60 * 1000;
-
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,37 +40,18 @@ export default function Header() {
     setIsUserSignedIn(!!user);
   }, []);
 
-  // Fetch event count only once
+  // Fetch event count once
   useEffect(() => {
     if (fetchedOnce.current) return;
 
     const fetchEventCount = async () => {
       try {
-        // Check if data is already cached in localStorage
-        const cachedData = localStorage.getItem(CACHE_KEY);
-        if (cachedData) {
-          const { count, lastUpdated } = JSON.parse(cachedData);
-
-          // If the cached data is still valid (within 24 hours), use it
-          if (Date.now() - lastUpdated < CACHE_DURATION) {
-            setEventCount(count);
-            return;
-          }
-        }
-
-        // If no valid cache, fetch from the API
         const response = await fetch("/api/count-events");
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
         setEventCount(data.count);
-
-        // Store the event count and timestamp in localStorage
-        localStorage.setItem(
-          CACHE_KEY,
-          JSON.stringify({ count: data.count, lastUpdated: Date.now() })
-        );
       } catch (error) {
         console.error("Error fetching event count:", error);
       }
@@ -221,11 +199,6 @@ export default function Header() {
                   {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
                 </span>
               </div>
-              {/* <Link href="/comedians">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  Comedians
-                </span>
-              </Link> */}
               <Link href="/MicFinder">
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                   Mic Finder

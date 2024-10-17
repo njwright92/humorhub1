@@ -135,9 +135,9 @@ export default function Home() {
               className="md:w-1/2 flex justify-center mb-4 md:mb-0"
               onClick={() => {
                 if (isUserSignedIn) {
-                  setIsComicBotModalOpen(true);
+                  setIsComicBotModalOpen(true); // Open ComicBotModal if signed in
                 } else {
-                  setIsAuthModalOpen(true);
+                  setIsAuthModalOpen(true); // Open AuthModal if not signed in
                 }
               }}
             >
@@ -148,8 +148,8 @@ export default function Home() {
                 height={250}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
-                sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
+                style={{ objectFit: "contain", maxWidth: "100%" }}
+                sizes="(max-width: 768px) 90vw, 250px"
               />
             </div>
 
@@ -162,17 +162,17 @@ export default function Home() {
               <br />
               <p className="mb-4">
                 Designed for comedians and humor lovers, ComicBot helps you
-                generate, refine, and organize your comedy. Whether you&#39;re
-                on the go or need fresh ideas, ComicBot delivers.
+                generate, refine, and organize your comedy. Whether you're on
+                the go or need fresh ideas, ComicBot delivers.
               </p>
 
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent the div&#39;s click event from firing
+                  e.stopPropagation(); // Prevent the div's click event from firing
                   if (!isUserSignedIn) {
                     setIsAuthModalOpen(true); // Open AuthModal if not signed in
                   } else {
-                    location.href = "/ComicBot";
+                    setIsComicBotModalOpen(true); // Open ComicBotModal if signed in
                   }
                 }}
                 className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors cursor-pointer"
