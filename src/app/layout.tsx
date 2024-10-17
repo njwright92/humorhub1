@@ -77,6 +77,15 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-KVJSFKV8"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }} // Corrected style prop
+            title="Google Tag Manager"
+          ></iframe>
+        </noscript>
         <CityProvider>
           <EventProvider>
             <HeadlineProvider>
