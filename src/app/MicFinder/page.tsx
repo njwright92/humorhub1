@@ -33,6 +33,11 @@ const EventForm = dynamic(() => import("../components/EventForm"), {
   ssr: false,
 });
 
+type DataLayerEventParams = {
+  event_category: string;
+  event_label: string;
+  [key: string]: any;
+};
 type Event = {
   googleTimestamp: any;
   id: string;
@@ -69,16 +74,65 @@ const EventsPage = () => {
   } | null>(null);
 
   // Refactored Code with Highlights
+  const searchTimeoutRef = useRef<number | null>(null);
 
+  const sendDataLayerEvent = (
+    eventName: string,
+    eventParams: DataLayerEventParams
+  ) => {
+    if (typeof window !== "undefined" && window.dataLayer) {
+      const { event, ...restParams } = eventParams; // Exclude 'event' property
+      window.dataLayer.push({
+        event: eventName,
+        ...restParams,
+      });
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    // Debounce the search event
+    if (searchTimeoutRef.current !== null) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = window.setTimeout(() => {
+      sendDataLayerEvent("search_city", {
+        event_category: "City Search",
+        event_label: term,
+      });
+    }, 500); // Delay of 500ms
+  };
+
+  // Handle city selection
   const handleCitySelect = (city: string) => {
-    const normalizedCity = normalizeCityName(city); // No changes here
+    const normalizedCity = normalizeCityName(city);
     setSelectedCity(normalizedCity);
     setFilterCity(normalizedCity);
     setSearchTerm(normalizedCity);
-  };
 
+    // Send event to dataLayer
+    sendDataLayerEvent("select_city", {
+      event_category: "City Selection",
+      event_label: normalizedCity,
+    });
+  };
   // Refactored toggleMapVisibility - Simplified the toggle function
-  const toggleMapVisibility = () => setIsMapVisible((prev) => !prev);
+  // Toggle map visibility with tracking
+  const toggleMapVisibility = () => {
+    setIsMapVisible((prev) => {
+      const newValue = !prev;
+
+      // Send event to dataLayer
+      sendDataLayerEvent("toggle_map", {
+        event_category: "Map Interaction",
+        event_label: newValue ? "Show Map" : "Hide Map",
+      });
+
+      return newValue;
+    });
+  };
 
   // Refactored useEffect to avoid unnecessary database reads
   useEffect(() => {
@@ -111,12 +165,18 @@ const EventsPage = () => {
       setSelectedCity("");
       setSearchTerm("");
     } else {
-      const normalizedCity = normalizeCityName(city); // Normalize once and reuse
+      const normalizedCity = normalizeCityName(city);
       setFilterCity(normalizedCity);
       setSelectedCity(normalizedCity);
       setSearchTerm(normalizedCity);
     }
-    setIsSecondDropdownOpen(false); // No changes needed here
+    setIsSecondDropdownOpen(false);
+
+    // Send event to dataLayer
+    sendDataLayerEvent("filter_city", {
+      event_category: "City Filter",
+      event_label: city,
+    });
   };
 
   // Refactored eventsByCity - Optimized filtering logic to avoid re-splitting and re-normalizing
@@ -267,9 +327,14 @@ const EventsPage = () => {
           "Oops! Something went wrong while saving the event. Please try again."
         );
       }
+      sendDataLayerEvent("save_event", {
+        event_category: "Event Interaction",
+        event_label: event.name,
+      });
     },
     [saveEvent, isUserSignedIn]
   );
+
   const uniqueCities = useMemo(() => {
     const citySet = new Set<string>();
     const lowercasedSearchTerm = searchTerm.toLowerCase(); // Precompute the lowercased search term once
@@ -544,7 +609,19 @@ const EventsPage = () => {
             <div
               className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
               onClick={() => {
-                setIsFirstDropdownOpen((prev) => !prev);
+                setIsFirstDropdownOpen((prev) => {
+                  const newValue = !prev;
+
+                  // Send event when dropdown is opened
+                  if (newValue) {
+                    sendDataLayerEvent("open_dropdown", {
+                      event_category: "Dropdown",
+                      event_label: "City Selection Dropdown",
+                    });
+                  }
+
+                  return newValue;
+                });
                 setIsSecondDropdownOpen(false);
               }}
             >
@@ -559,7 +636,7 @@ const EventsPage = () => {
                   type="text"
                   placeholder="Search for a city..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchInputChange}
                   className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
                 />
 
@@ -577,6 +654,12 @@ const EventsPage = () => {
                         onClick={() => {
                           handleCitySelect(city);
                           setIsFirstDropdownOpen(false);
+
+                          // Send event to dataLayer
+                          sendDataLayerEvent("click_city_option", {
+                            event_category: "City Selection",
+                            event_label: city,
+                          });
                         }}
                       >
                         {city}
@@ -658,7 +741,19 @@ const EventsPage = () => {
               <div
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
                 onClick={() => {
-                  setIsSecondDropdownOpen((prev) => !prev);
+                  setIsSecondDropdownOpen((prev) => {
+                    const newValue = !prev;
+
+                    // Send event when dropdown is opened
+                    if (newValue) {
+                      sendDataLayerEvent("open_dropdown", {
+                        event_category: "Dropdown",
+                        event_label: "City Filter Dropdown",
+                      });
+                    }
+
+                    return newValue;
+                  });
                   setIsFirstDropdownOpen(false);
                 }}
               >
@@ -685,10 +780,17 @@ const EventsPage = () => {
                       onClick={() => {
                         handleCityFilterChange("All Cities");
                         setIsSecondDropdownOpen(false);
+
+                        // Send event to dataLayer
+                        sendDataLayerEvent("click_city_filter_option", {
+                          event_category: "City Filter",
+                          event_label: "All Cities",
+                        });
                       }}
                     >
                       All Cities
                     </li>
+
                     {uniqueCities
                       .filter((city) =>
                         city.toLowerCase().includes(searchTerm.toLowerCase())
@@ -701,6 +803,12 @@ const EventsPage = () => {
                           onClick={() => {
                             handleCityFilterChange(city);
                             setIsSecondDropdownOpen(false);
+
+                            // Send event to dataLayer
+                            sendDataLayerEvent("click_city_filter_option", {
+                              event_category: "City Filter",
+                              event_label: city,
+                            });
                           }}
                         >
                           {city}
