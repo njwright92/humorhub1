@@ -412,26 +412,26 @@ const EventsPage = () => {
   };
 
   // Refactored fetchCityFromCoordinates - Streamlined return logic
-  const fetchCityFromCoordinates = useCallback(
-    async (latitude: number, longitude: number): Promise<string | null> => {
-      try {
-        const response = (await getLatLng(
-          undefined,
-          latitude,
-          longitude
-        )) as LocationResponse;
+  // const fetchCityFromCoordinates = useCallback(
+  //   async (latitude: number, longitude: number): Promise<string | null> => {
+  //     try {
+  //       const response = (await getLatLng(
+  //         undefined,
+  //         latitude,
+  //         longitude
+  //       )) as LocationResponse;
 
-        // Return formatted city and state if both are present, otherwise return null
-        return response.city && response.state
-          ? `${response.city} ${response.state}`
-          : null;
-      } catch (error) {
-        console.error("Error fetching city and state:", error);
-        return null;
-      }
-    },
-    [] // No dependencies
-  );
+  //       // Return formatted city and state if both are present, otherwise return null
+  //       return response.city && response.state
+  //         ? `${response.city} ${response.state}`
+  //         : null;
+  //     } catch (error) {
+  //       console.error("Error fetching city and state:", error);
+  //       return null;
+  //     }
+  //   },
+  //   [] // No dependencies
+  // );
 
   // Refactored fetchUserLocation - Now uses findClosestCity
   const fetchUserLocation = useCallback(() => {
