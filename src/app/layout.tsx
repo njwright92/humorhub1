@@ -20,12 +20,6 @@ export const metadata: Metadata = {
       "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
     url: "https://www.thehumorhub.com/",
     type: "website",
-    images: [
-      {
-        url: "https://www.thehumorhub.com/images/og-image-home.jpg",
-        alt: "Humor Hub Open Graph Image",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -33,12 +27,6 @@ export const metadata: Metadata = {
     title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
     description:
       "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
-    images: [
-      {
-        url: "https://www.thehumorhub.com/images/og-image-home.jpg",
-        alt: "Humor Hub Twitter Image",
-      },
-    ],
   },
 };
 
@@ -73,8 +61,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         {/* Favicon */}
         <link
           rel="icon"
-          href="/icon.png"
-          type="image/png"
+          href="/favicon.ico"
+          type="image/x-icon"
           sizes="any"
           className="rounded-full"
         />
@@ -91,10 +79,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           content="Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub."
         />
         <meta property="og:url" content="https://www.thehumorhub.com/" />
-        <meta
-          property="og:image"
-          content="https://www.thehumorhub.com/images/og-image-home.jpg"
-        />
       </head>
       <body>
         {/* Google Tag Manager (noscript) */}

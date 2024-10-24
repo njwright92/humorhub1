@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import * as admin from "firebase-admin";
 
-// In-memory cache to store event count and last updated timestamp
-let cache: { lastUpdated: number; count: number } | null = null;
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24-hour cache duration
+// In-memory cache to store event count and last updated date
+let cache: { lastUpdatedDate: string; count: number } | null = null;
 
 // Parse the private key for Firebase admin initialization
 const serviceAccount = {
@@ -27,8 +26,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const refresh = searchParams.get("refresh");
 
-  // Check if cache exists and is still valid (24 hours)
-  if (!refresh && cache && Date.now() - cache.lastUpdated < CACHE_DURATION) {
+  const today = new Date().toISOString().slice(0, 10); // 'yyyy-mm-dd'
+
+  // Check if cache exists and is still valid (today's date)
+  if (!refresh && cache && cache.lastUpdatedDate === today) {
     return NextResponse.json({
       message: "Events counted and updated (from cache).",
       count: cache.count,
@@ -40,20 +41,15 @@ export async function GET(request: Request) {
     const db = admin.firestore();
     const counterRef = db.collection("counters").doc("eventsCounter");
 
-    // Fetch the current count and last updated timestamp from Firestore
+    // Fetch the current count and last updated date from Firestore
     const counterDoc = await counterRef.get();
     const counterData = counterDoc.exists ? counterDoc.data() : null;
 
-    // If the data exists and was updated within the last 24 hours, return it
-    if (
-      counterData &&
-      counterData.lastUpdated &&
-      Date.now() - counterData.lastUpdated.toMillis() < CACHE_DURATION &&
-      !refresh
-    ) {
+    // If the data exists and was updated today, return it
+    if (counterData && counterData.lastUpdatedDate === today && !refresh) {
       cache = {
         count: counterData.count,
-        lastUpdated: counterData.lastUpdated.toMillis(),
+        lastUpdatedDate: counterData.lastUpdatedDate,
       };
       return NextResponse.json({
         message: "Events counted and updated (from Firestore).",
@@ -76,13 +72,13 @@ export async function GET(request: Request) {
     const eventCount = snapshot.size;
 
     // Cache the result in memory
-    cache = { count: eventCount, lastUpdated: Date.now() };
+    cache = { count: eventCount, lastUpdatedDate: today };
 
-    // Update the Firestore counter document with the new count and lastUpdated timestamp
+    // Update the Firestore counter document with the new count and lastUpdatedDate
     await counterRef.set(
       {
         count: eventCount,
-        lastUpdated: admin.firestore.Timestamp.now(),
+        lastUpdatedDate: today,
       },
       { merge: true }
     );
