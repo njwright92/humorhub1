@@ -23,6 +23,27 @@ import Head from "next/head";
 import { getLatLng } from "../utils/geocode";
 import Script from "next/script";
 
+// Helper function to calculate distance between two coordinates
+function getDistanceFromLatLonInKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371; // Radius of the earth in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180; // Convert degrees to radians
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; // Distance in km
+  return d;
+}
+
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
@@ -72,6 +93,35 @@ const EventsPage = () => {
     lat: number;
     lng: number;
   } | null>(null);
+
+  // Function to find the closest city in the database
+  const findClosestCity = useCallback(
+    (latitude: number, longitude: number): string | null => {
+      if (Object.keys(cityCoordinates).length === 0) {
+        console.error("City coordinates not loaded yet.");
+        return null;
+      }
+
+      let closestCity: string | null = null;
+      let minDistance = Infinity;
+
+      for (const [city, coords] of Object.entries(cityCoordinates)) {
+        const distance = getDistanceFromLatLonInKm(
+          latitude,
+          longitude,
+          coords.lat,
+          coords.lng
+        );
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCity = city;
+        }
+      }
+
+      return closestCity;
+    },
+    [cityCoordinates] // Dependency array includes cityCoordinates
+  );
 
   // Refactored Code with Highlights
   const searchTimeoutRef = useRef<number | null>(null);
@@ -383,8 +433,8 @@ const EventsPage = () => {
     [] // No dependencies
   );
 
-  // Refactored fetchUserLocation - Simplified geolocation logic and error handling
-  const fetchUserLocation = useCallback(async () => {
+  // Refactored fetchUserLocation - Now uses findClosestCity
+  const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported. Please select a city manually.");
       return;
@@ -393,16 +443,14 @@ const EventsPage = () => {
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
         try {
-          const cityWithState = await fetchCityFromCoordinates(
-            latitude,
-            longitude
-          );
+          const closestCity = findClosestCity(latitude, longitude);
 
-          if (cityWithState) {
-            setSelectedCity(cityWithState);
-            setFilterCity(cityWithState);
+          if (closestCity) {
+            setSelectedCity(closestCity);
+            setFilterCity(closestCity);
           } else {
-            console.error("City and state could not be determined.");
+            console.error("Closest city could not be determined.");
+            alert("No nearby cities found. Please select a city manually.");
           }
         } catch (error) {
           console.error("Error processing location:", error);
@@ -415,24 +463,24 @@ const EventsPage = () => {
         );
       }
     );
-  }, [fetchCityFromCoordinates]); // fetchCityFromCoordinates is a dependency
+  }, [findClosestCity]); // Dependency array includes findClosestCity
 
-  // useEffect that handles URL query parameters and fetches geolocation if necessary
   // Refactored useEffect for handling URL parameters and geolocation
+  // useEffect that handles URL query parameters and fetches geolocation if necessary
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const queryTerm = urlParams.get("searchTerm") || ""; // Default to an empty string if no search term is present
+    const queryTerm = urlParams.get("searchTerm") || "";
     const city = urlParams.get("city");
 
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
-    } else {
-      fetchUserLocation(); // Fetch geolocation only if no city is provided
+    } else if (Object.keys(cityCoordinates).length > 0) {
+      fetchUserLocation(); // Fetch geolocation only if no city is provided and cityCoordinates are loaded
     }
 
-    setSearchTerm(queryTerm); // Set search term from URL or default to empty string
-  }, [fetchUserLocation]);
+    setSearchTerm(queryTerm);
+  }, [fetchUserLocation, cityCoordinates]); // Added cityCoordinates to dependency array
 
   // Refactored handleDateChange - Simplified condition
   const handleDateChange = useCallback((date: Date | null) => {
