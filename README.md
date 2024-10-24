@@ -1,31 +1,47 @@
-[![Website Status](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://thehumorhub.com/)
+[![Website Status](https://img.shields.io/website-up-down-green-red/http/thehumorhub.com.svg)](https://thehumorhub.com/)
+[![GitHub stars](https://img.shields.io/github/stars/njwright92/humor-hub.svg)](https://github.com/njwright92/humor-hub/stargazers)
+[![GitHub license](https://img.shields.io/github/license/njwright92/humor-hub.svg)](https://github.com/njwright92/humor-hub/blob/main/LICENSE)
 
 # Humor Hub
 
-Humor Hub is an all-in-one comedy platform designed to elevate your comedic creativity and streamline the process of finding performance opportunities. This platform combines various tools and features to assist comedians, writers, and performers in crafting and refining their material, discovering open mic events, and staying updated with the latest comedy news.
+_Elevate your comedy with Humor Hub, the ultimate platform for comedians, writers, and performers._
 
-## Features
+Humor Hub is an all-in-one comedy platform designed to boost your comedic creativity and streamline the process of finding performance opportunities. With over **1,300 open mic events** across **250+ US cities**, it has become a premier resource for comics nationwide. This platform combines various tools and features to assist comedians, writers, and performers in crafting and refining their material, discovering open mic events, and staying updated with the latest comedy news.
 
-- **ComicBot**: Your AI-powered comedy assistant, helping you brainstorm, refine, and enhance your jokes and sketches.
-- **Jokepad**: A cloud-synced comedy workshop for organizing and developing your comedic ideas. new events being added weekly with an autonomous pipeline coming soon!
-- **Mic Finder**: A platform for discovering and sharing live performance stages for comedy, music, and poetry.
-- **HumorHub API**: Access the latest news and trends to fuel your comedic material.
+## 🚀 Features
 
-## Technologies Used
+- ### 🎤 **Mic Finder**
+
+  Discover and share live performance stages for comedy, music, and poetry. With a vast and continuously growing database of events, finding your next stage has never been easier.
+
+- ### 📝 **Jokepad**
+
+  A cloud-synced comedy workshop for organizing and developing your comedic ideas. Keep your material organized, accessible, and ready to refine anytime, anywhere.
+
+- ### 🤖 **ComicBot** _(Coming Soon)_
+
+  Your AI-powered comedy assistant, helping you brainstorm, refine, and enhance your jokes and sketches. Get personalized feedback and take your comedy writing to the next level.
+
+- ### 📰 **HumorHub API**
+  Access the latest news and trends to fuel your comedic material. Stay informed and inspired with up-to-date content tailored for comedians.
+
+## 🛠️ Technologies Used
 
 - **Frontend**: React, Next.js, Tailwind CSS
 - **Backend**: Node.js, Express.js
+- **Database**: Firebase Firestore
 - **Authentication**: Firebase Auth
+- **Maps and Location**: Google Maps API
 - **Animations**: AOS (Animate on Scroll)
 - **Deployment**: Vercel
 
-## Getting Started
+## 🎯 Getting Started
 
-#### Prerequisites
+### Prerequisites
 
-- Node.js (v14 or later)
-- npm or yarn
-- Firebase project setup
+- **Node.js** (v14 or later)
+- **npm** or **yarn**
+- **Firebase** project setup
 
 ### Installation
 
@@ -48,12 +64,15 @@ Copy your Firebase config and add it to your environment variables.
 
 - \*\* npm run dev
 
-## Usage
+## 📖 Usage
 
-- \*\* ComicBot: Access the AI assistant to help with your comedy writing.
-- \*\* Jokepad: Use the workshop to organize and develop your jokes.
-- \*\* Mic Finder: Discover open mic events and share your own.
-- \*\* HumorHub News: Fetch the latest comedy news for fresh material.
+- \*\* Mic Finder: Discover open mic events and share your own. With over 1,300 events across 250+ cities, find the perfect spot to perform.
+
+- \*\* Jokepad: Use the workshop to organize and develop your jokes. Keep your material organized and accessible from anywhere.
+
+- \*\* ComicBot (Coming Soon): Access the AI assistant to help with your comedy writing. Enhance your creativity with intelligent suggestions.
+
+- \*\* HumorHub News: Fetch the latest comedy news for fresh material. Stay ahead with trending topics and stories.
 
 ## Dependencies
 
@@ -68,27 +87,22 @@ Copy your Firebase config and add it to your environment variables.
 "lint": "next lint"
 },
 "dependencies": {
-"@googlemaps/js-api-loader": "1.16.2",
-"@googlemaps/markerclusterer": "2.5.3",
-"@heroicons/react": "2.1.1",
-"@next/third-parties": "14.2.3",
-"@vercel/node": "3.2.10",
-"aos": "2.3.4",
-"axios": "1.6.8",
-"firebase": "10.7.1",
-"firebase-admin": "12.1.0",
-"firebaseui": "6.1.0",
-"next": "14.2.0",
-"react": "18.2.0",
-"react-datepicker": "4.25.0",
-"react-dom": "18.2.0",
-"react-window": "1.8.10",
-"sharp": "0.33.2"
+"@googlemaps/js-api-loader": "^1.16.2",
+"@heroicons/react": "^2.1.1",
+"aos": "^2.3.4",
+"axios": "^1.6.8",
+"firebase": "^10.7.1",
+"firebase-admin": "^12.1.0",
+"firebaseui": "^6.1.0",
+"next": "^14.2.11",
+"react": "^18.3.1",
+"react-datepicker": "^4.25.0",
+"react-dom": "^18.3.1",
+"react-window": "^1.8.10",
+"sharp": "^0.33.2"
 },
 "devDependencies": {
 "@types/aos": "3.0.7",
-"@types/google.maps": "3.54.10",
-"@types/node": "20",
 "@types/react": "18",
 "@types/react-datepicker": "4.19.4",
 "@types/react-dom": "18",
@@ -98,7 +112,7 @@ Copy your Firebase config and add it to your environment variables.
 "eslint-config-next": "14.0.4",
 "postcss": "8",
 "tailwindcss": "3.3.0",
-"typescript": "5"
+"typescript": "^5.6.2"
 }
 }
 
@@ -117,8 +131,12 @@ Open a pull request.
 Author: Nate
 Email: thehumorhub777@gmail.com
 GitHub: njwright92
-Elevate your comedy with Humor Hub, the ultimate platform for comedians, writers, and performers.
+Feel free to reach out with questions, suggestions, or just to connect!
 
 #### License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+Elevate your comedy with Humor Hub, the ultimate platform for comedians, writers, and performers. Join our community and take your craft to new heights!
+
+\*\* Made with ❤️ and a dash of humor by Nate.
