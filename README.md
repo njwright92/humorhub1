@@ -1,6 +1,5 @@
 [![Website Status](https://img.shields.io/website-up-down-green-red/http/thehumorhub.com.svg)](https://thehumorhub.com/)
-[![GitHub stars](https://img.shields.io/github/stars/njwright92/humor-hub.svg)](https://github.com/njwright92/humor-hub/stargazers)
-[![GitHub license](https://img.shields.io/github/license/njwright92/humor-hub.svg)](https://github.com/njwright92/humor-hub/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/njwright92/humor-hub.svg)](https://github.com/njwright92/humorhub1/stargazers)
 
 # Humor Hub
 
