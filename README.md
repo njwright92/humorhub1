@@ -74,7 +74,7 @@ Copy your Firebase config and add it to your environment variables.
 
 - \*\* HumorHub News: Fetch the latest comedy news for fresh material. Stay ahead with trending topics and stories.
 
-## Dependencies
+## 📦 Dependencies
 
 {
 "name": "humorhub",
@@ -116,7 +116,7 @@ Copy your Firebase config and add it to your environment variables.
 }
 }
 
-### Contributing
+### 🤝 Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request with your changes.
 
@@ -126,14 +126,14 @@ Commit your changes (git commit -m 'Add your feature').
 Push to the branch (git push origin feature/your-feature).
 Open a pull request.
 
-### Contact
+### 📫 Contact
 
-Author: Nate
+Author: Nate W.
 Email: thehumorhub777@gmail.com
 GitHub: njwright92
 Feel free to reach out with questions, suggestions, or just to connect!
 
-#### License
+#### 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
