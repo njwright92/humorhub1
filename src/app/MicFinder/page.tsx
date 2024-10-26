@@ -20,8 +20,9 @@ import Footer from "../components/footer";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
-import { getLatLng } from "../utils/geocode";
+// import { getLatLng } from "../utils/geocode";
 import Script from "next/script";
+import router from "next/navigation";
 
 // Helper function to calculate distance between two coordinates
 function getDistanceFromLatLonInKm(
@@ -406,10 +407,10 @@ const EventsPage = () => {
   }, [events, searchTerm, normalizeCityName]);
 
   // Type definition for location response
-  type LocationResponse = {
-    city?: string;
-    state?: string;
-  };
+  // type LocationResponse = {
+  //   city?: string;
+  //   state?: string;
+  // };
 
   // Refactored fetchCityFromCoordinates - Streamlined return logic
   // const fetchCityFromCoordinates = useCallback(
