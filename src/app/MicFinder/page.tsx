@@ -126,18 +126,16 @@ const EventsPage = () => {
   // Refactored Code with Highlights
   const searchTimeoutRef = useRef<number | null>(null);
 
-  const sendDataLayerEvent = (
-    eventName: string,
-    eventParams: DataLayerEventParams
-  ) => {
-    if (typeof window !== "undefined" && window.dataLayer) {
-      const { event, ...restParams } = eventParams; // Exclude 'event' property
-      window.dataLayer.push({
-        event: eventName,
-        ...restParams,
-      });
-    }
-  };
+  function sendDataLayerEvent(
+    event_name: string,
+    params: { event_category: string; event_label: string }
+  ) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: event_name,
+      ...params,
+    });
+  }
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
@@ -619,7 +617,7 @@ const EventsPage = () => {
         <meta property="og:type" content="website" />
         <meta
           property="og:image"
-          content="https://www.thehumorhub.com/images/og-image-micfinder.jpg"
+          content="https://www.thehumorhub.com/micfinder.webp"
         />
       </Head>
       <Script

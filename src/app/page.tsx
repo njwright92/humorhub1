@@ -42,6 +42,17 @@ export default function Home() {
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
+  function sendDataLayerEvent(
+    event_name: string,
+    params: { event_category: string; event_label: string }
+  ) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: event_name,
+      ...params,
+    });
+  }
+
   return (
     <>
       <Head>
@@ -134,10 +145,14 @@ export default function Home() {
             <div
               className="md:w-1/2 flex justify-center mb-4 md:mb-0"
               onClick={() => {
+                sendDataLayerEvent("click_comicbot_image", {
+                  event_category: "Engagement",
+                  event_label: "ComicBot Image",
+                });
                 if (isUserSignedIn) {
-                  setIsComicBotModalOpen(true); // Open ComicBotModal if signed in
+                  setIsComicBotModalOpen(true);
                 } else {
-                  setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                  setIsAuthModalOpen(true);
                 }
               }}
             >
@@ -168,11 +183,15 @@ export default function Home() {
 
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent the div's click event from firing
+                  e.stopPropagation();
+                  sendDataLayerEvent("click_comicbot_button", {
+                    event_category: "Engagement",
+                    event_label: "ComicBot Button",
+                  });
                   if (!isUserSignedIn) {
-                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    setIsAuthModalOpen(true);
                   } else {
-                    setIsComicBotModalOpen(true); // Open ComicBotModal if signed in
+                    setIsComicBotModalOpen(true);
                   }
                 }}
                 className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors cursor-pointer"
@@ -197,10 +216,14 @@ export default function Home() {
             <div
               className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0"
               onClick={() => {
+                sendDataLayerEvent("click_jokepad_image", {
+                  event_category: "Engagement",
+                  event_label: "Jokepad Image",
+                });
                 if (isUserSignedIn) {
                   location.href = "/JokePad";
                 } else {
-                  setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                  setIsAuthModalOpen(true);
                 }
               }}
             >
@@ -216,9 +239,13 @@ export default function Home() {
               />
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent the div&#39;s click event from firing
+                  e.stopPropagation();
+                  sendDataLayerEvent("click_jokepad_button", {
+                    event_category: "Engagement",
+                    event_label: "Jokepad Button",
+                  });
                   if (!isUserSignedIn) {
-                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    setIsAuthModalOpen(true);
                   } else {
                     location.href = "/JokePad";
                   }
@@ -269,12 +296,26 @@ export default function Home() {
                   height={200}
                   className="rounded-xl shadow-lg cursor-pointer"
                   loading="lazy"
-                  style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
-                  sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
+                  style={{ objectFit: "contain", maxWidth: "100%" }}
+                  sizes="(max-width: 768px) 90vw, 250px"
+                  onClick={() => {
+                    sendDataLayerEvent("click_micfinder_image", {
+                      event_category: "Navigation",
+                      event_label: "MicFinder Image",
+                    });
+                  }}
                 />
               </Link>
               <Link href="/MicFinder">
-                <span className="btn inline-block text-lg items-center py-2 px-4 mt-6 hover:bg-blue-700 transition-colors cursor-pointer">
+                <span
+                  className="btn inline-block text-lg items-center py-2 px-4 mt-6 hover:bg-blue-700 transition-colors cursor-pointer"
+                  onClick={() => {
+                    sendDataLayerEvent("click_micfinder_button", {
+                      event_category: "Navigation",
+                      event_label: "MicFinder Button",
+                    });
+                  }}
+                >
                   Find My Mic
                 </span>
               </Link>

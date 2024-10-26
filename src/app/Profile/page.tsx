@@ -154,6 +154,17 @@ export default function UserProfile() {
     setIsEditing(false); // Exit editing mode
   }, [name, bio, profileImageUrl]);
 
+  function sendDataLayerEvent(
+    event_name: string,
+    params: { event_category: string; event_label: string }
+  ) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: event_name,
+      ...params,
+    });
+  }
+
   return (
     <>
       <Head>
@@ -209,7 +220,14 @@ export default function UserProfile() {
                   type="file"
                   onChange={handleImageChange}
                   className="standard-input mb-4"
+                  onClick={() => {
+                    sendDataLayerEvent("click_upload_profile_image", {
+                      event_category: "Profile_Interaction",
+                      event_label: "Profile_Image_Upload",
+                    });
+                  }}
                 />
+
                 {profileImageObjectURL && (
                   <Image
                     src={profileImageObjectURL}
@@ -296,7 +314,28 @@ export default function UserProfile() {
 
           <div className="flex justify-center space-x-4">
             <button
-              onClick={isEditing ? handleSubmit : handleEdit}
+              onClick={() => {
+                if (!isUserSignedIn) {
+                  alert("You must be signed in to edit your profile.");
+                  return;
+                }
+
+                if (isEditing) {
+                  // If in editing mode, this button acts as "Save Changes"
+                  sendDataLayerEvent("click_save_changes", {
+                    event_category: "Profile_Interaction",
+                    event_label: "Save_Changes_Click",
+                  });
+                  handleSubmit(); // Call handleSubmit to save the profile
+                } else {
+                  // Otherwise, it acts as "Edit Profile"
+                  sendDataLayerEvent("click_edit_profile", {
+                    event_category: "Profile_Interaction",
+                    event_label: "Edit_Profile_Click",
+                  });
+                  handleEdit(); // Enable editing mode
+                }
+              }}
               className="btn bg-orange-500 hover:bg-orange-700 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-150 ease-in-out hover:animate-pulse"
             >
               {isEditing ? "Save Changes" : "Edit Profile"}
@@ -304,7 +343,13 @@ export default function UserProfile() {
 
             {isEditing && (
               <button
-                onClick={handleCancel}
+                onClick={() => {
+                  sendDataLayerEvent("click_cancel_edit", {
+                    event_category: "Profile_Interaction",
+                    event_label: "Cancel_Edit_Click",
+                  });
+                  handleCancel(); // Discard changes
+                }}
                 className="btn bg-zinc-500 hover:bg-zinc-700 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-150 ease-in-out hover:animate-pulse"
               >
                 Cancel
@@ -340,7 +385,13 @@ export default function UserProfile() {
                 </div>
                 <button
                   className="btn bg-red-500 hover:bg-red-700 text-zinc-200 font-bold py-1 px-3 rounded hover:animate-pulse transition-colors duration-150 ease-in-out"
-                  onClick={() => handleDeleteEvent(event.id)}
+                  onClick={() => {
+                    handleDeleteEvent(event.id);
+                    sendDataLayerEvent("click_delete_saved_event", {
+                      event_category: "Event_Management",
+                      event_label: "Delete_Saved_Event_Click",
+                    });
+                  }}
                   style={{ color: "#d4d4d8" }}
                 >
                   Delete
