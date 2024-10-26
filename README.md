@@ -5,7 +5,7 @@
 
 _Elevate your comedy with Humor Hub, the ultimate platform for comedians, writers, and performers._
 
-Humor Hub is an all-in-one comedy platform designed to boost your comedic creativity and streamline the process of finding performance opportunities. With over **1,300 open mic events** across **250+ US cities**, it has become a premier resource for comics nationwide. This platform combines various tools and features to assist comedians, writers, and performers in crafting and refining their material, discovering open mic events, and staying updated with the latest comedy news.
+Humor Hub is an all-in-one comedy platform designed to boost your comedic creativity and streamline the process of finding performance opportunities. With over **1,300 open mic events** across **290+ US cities**, it has become a premier resource for comics nationwide. This platform combines various tools and features to assist comedians, writers, and performers in crafting and refining their material, discovering open mic events, and staying updated with the latest comedy news.
 
 ## 🚀 Features
 
@@ -76,15 +76,6 @@ Copy your Firebase config and add it to your environment variables.
 ## 📦 Dependencies
 
 {
-"name": "humorhub",
-"version": "0.1.0",
-"private": true,
-"scripts": {
-"dev": "next dev",
-"build": "next build",
-"start": "next start",
-"lint": "next lint"
-},
 "dependencies": {
 "@googlemaps/js-api-loader": "^1.16.2",
 "@heroicons/react": "^2.1.1",
@@ -100,19 +91,6 @@ Copy your Firebase config and add it to your environment variables.
 "react-window": "^1.8.10",
 "sharp": "^0.33.2"
 },
-"devDependencies": {
-"@types/aos": "3.0.7",
-"@types/react": "18",
-"@types/react-datepicker": "4.19.4",
-"@types/react-dom": "18",
-"@types/react-window": "1.8.8",
-"autoprefixer": "10.0.1",
-"eslint": "8",
-"eslint-config-next": "14.0.4",
-"postcss": "8",
-"tailwindcss": "3.3.0",
-"typescript": "^5.6.2"
-}
 }
 
 ### 🤝 Contributing
