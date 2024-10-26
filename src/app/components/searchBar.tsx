@@ -1,64 +1,96 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
+import { collection, getDocs, DocumentData } from "firebase/firestore";
+
+import { db } from "../../../firebase.config"; // Adjust path to your config
 
 export interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
 }
 
+interface City {
+  id: string;
+  city: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+}
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [suggestedCities, setSuggestedCities] = useState<City[]>([]);
   const router = useRouter();
 
-  const normalizeTerm = (term: string) =>
-    term.trim().replace(/\s+/g, "").toLowerCase();
+  const normalizeTerm = (term: string) => term.trim().toLowerCase();
 
-  const handleSearch = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const trimmedSearchTerm = searchTerm.trim();
-      if (trimmedSearchTerm) {
-        // Normalize the search term (trim, remove spaces, and convert to lowercase)
-        const normalizedSearchTerm = normalizeTerm(trimmedSearchTerm);
+  const fetchCities = async (queryTerm: string) => {
+    try {
+      const citiesRef = collection(db, "cities");
+      const normalizedQueryTerm = queryTerm.toLowerCase();
 
-        // Define routing paths for normalized terms
-        const pageRoutes: { [key: string]: string } = {
-          home: "/",
-          news: "/HHapi",
-          comicbot: "/ComicBot",
-          jokepad: "/JokePad",
-          micfinder: "/MicFinder",
-          profile: "/Profile",
-          contact: "/contact",
-          about: "/about",
-        };
+      const querySnapshot = await getDocs(citiesRef);
 
-        // Check if the normalized search term matches a predefined page route
-        if (pageRoutes[normalizedSearchTerm]) {
-          router.push(pageRoutes[normalizedSearchTerm]);
-        } else {
-          // Handle the city search routing with normalized term
-          onSearch(normalizedSearchTerm);
-        }
+      // Filter the snapshot data based on the normalized query term
+      const cities: City[] = querySnapshot.docs
+        .map((doc) => {
+          const data = doc.data() as DocumentData;
+          return {
+            id: doc.id,
+            city: data.city || "Unknown City",
+            coordinates: {
+              lat: data.coordinates?.lat || 0,
+              lng: data.coordinates?.lng || 0,
+            },
+          };
+        })
+        .filter((city) =>
+          city.city.toLowerCase().includes(normalizedQueryTerm)
+        );
 
-        // Clear search input after submission
-        setSearchTerm("");
-      }
-    },
-    [onSearch, router, searchTerm]
-  );
+      setSuggestedCities(cities);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value);
+      const term = e.target.value;
+      setSearchTerm(term);
+      if (term.trim()) {
+        fetchCities(normalizeTerm(term));
+      } else {
+        setSuggestedCities([]);
+      }
     },
     []
   );
 
+  const handleCitySelect = (city: City) => {
+    onSearch(city.city); // Call onSearch with the selected city
+    setSearchTerm("");
+    setSuggestedCities([]);
+    router.push(`/MicFinder?city=${encodeURIComponent(city.city)}`);
+  };
+
+  const handleSearch = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const normalizedSearchTerm = normalizeTerm(searchTerm);
+      if (normalizedSearchTerm) {
+        onSearch(normalizedSearchTerm);
+      }
+      setSearchTerm("");
+    },
+    [onSearch, searchTerm]
+  );
+
   const handleClearInput = useCallback(() => {
     setSearchTerm("");
+    setSuggestedCities([]);
     setIsFocused(true);
   }, []);
 
@@ -88,7 +120,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       {isInputVisible && (
         <form
           onSubmit={handleSearch}
-          className="flex items-center rounded-lg bg-white shadow-lg z-10 animate-slide-in"
+          className="flex flex-col items-center rounded-lg bg-white shadow-lg z-10 animate-slide-in"
         >
           <input
             id="search-input"
@@ -96,7 +128,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             placeholder="Search city or page..."
             value={searchTerm}
             onChange={handleInputChange}
-            className="p-2 text-black rounded-lg shadow-lg w-3/4"
+            className="p-2 text-black rounded-lg shadow-lg w-full"
             autoFocus
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -104,7 +136,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           {searchTerm && (
             <button
               type="button"
-              className="px-2 py-2 text-black rounded-lg shadow-lg ml-2 bg-gray-300"
+              className="px-2 py-2 text-black rounded-xl shadow-lg bg-zinc-300 mt-2"
               onClick={handleClearInput}
             >
               Clear
@@ -112,10 +144,24 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           )}
           <button
             type="submit"
-            className="px-4 py-2 text-black rounded-lg shadow-lg ml-2 bg-gray-300"
+            className="px-3 py-3 text-black rounded-xl shadow-lg bg-zinc-300 mt-2"
           >
             Search
           </button>
+
+          {suggestedCities.length > 0 && (
+            <ul className="bg-white w-full shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto">
+              {suggestedCities.map((city) => (
+                <li
+                  key={city.id}
+                  className="p-2 cursor-pointer hover:bg-zinc-200 text-zinc-950"
+                  onClick={() => handleCitySelect(city)}
+                >
+                  {city.city}
+                </li>
+              ))}
+            </ul>
+          )}
         </form>
       )}
     </div>

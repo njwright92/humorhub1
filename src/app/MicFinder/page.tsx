@@ -22,7 +22,6 @@ import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
 // import { getLatLng } from "../utils/geocode";
 import Script from "next/script";
-import router from "next/navigation";
 
 // Helper function to calculate distance between two coordinates
 function getDistanceFromLatLonInKm(
