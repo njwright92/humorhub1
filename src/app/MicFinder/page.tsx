@@ -623,11 +623,11 @@ const EventsPage = () => {
       <Header />
       <div className="screen-container">
         <OpenMicBanner />
-        <h1 className="title text-4xl sm:text-xl xs:text-lg font-bold text-center mb-6">
+        <h1 className="title font-bold text-center mb-6">
           Discover Open Mic Events!
         </h1>
 
-        <p className="text-lg md:text-lg sm:text-md xs:text-sm text-center mt-4 mb-6">
+        <p className="text-sm xs:text-sm text-center mt-4 mb-6">
           Know or host an amazing open mic event? Share it with the local
           community through MicFinder. Whether it&apos;s comedy, music, poetry,
           or any live performance, let&apos;s spread the word and fill the room!

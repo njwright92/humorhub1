@@ -173,22 +173,26 @@ span {
   @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 rounded-xl drop-shadow-md;
 }
 
+/* Shared styles for all title classes */
 .title,
 .title-style,
 .subtitle-style {
   @apply text-orange-500 font-bold;
 }
 
+/* Responsive styles for .title */
 .title {
-  @apply text-4xl mt-10 mb-2 rounded-xl drop-shadow-md;
+  @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-10 mb-2 rounded-xl drop-shadow-md;
 }
 
+/* Responsive styles for .title-style */
 .title-style {
-  @apply text-2xl mb-2 rounded-xl drop-shadow-md;
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 rounded-xl drop-shadow-md;
 }
 
+/* Responsive styles for .subtitle-style (example if needed) */
 .subtitle-style {
-  @apply text-xl mb-2 rounded-xl drop-shadow-md;
+  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2;
 }
 
 .flex-row-wrap {
