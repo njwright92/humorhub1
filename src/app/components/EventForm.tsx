@@ -23,7 +23,7 @@ const submitEvent = async (eventData: EventData) => {
     await addDoc(collection(db, "userEvents"), eventData);
   } catch (error) {
     alert(
-      "Oops! Something went wrong while adding your event. Please try again later."
+      "Oops! Something went wrong while adding your event. Please try again later.",
     );
   }
 };
@@ -64,7 +64,7 @@ const EventForm: React.FC = () => {
         !memoizedEvent.details
       ) {
         setFormErrors(
-          "Please fill in all the required fields to submit your event."
+          "Please fill in all the required fields to submit your event.",
         );
         return;
       }
@@ -96,7 +96,7 @@ const EventForm: React.FC = () => {
         resetForm();
         setShowModal(false);
         alert(
-          "Your event has been added successfully! You can view it on the events page. If you encounter any issues, feel free to email us."
+          "Your event has been added successfully! You can view it on the events page. If you encounter any issues, feel free to email us.",
         );
       } catch (error) {
         // Attempt to submit the event without lat/lng, save it for manual review
@@ -104,18 +104,18 @@ const EventForm: React.FC = () => {
           await addDoc(collection(db, "searchedCities"), memoizedEvent);
           resetForm();
           alert(
-            "We couldn't verify the location. We'll review it manually and it should appear on the events page within 24 hours."
+            "We couldn't verify the location. We'll review it manually and it should appear on the events page within 24 hours.",
           );
           setShowModal(false); // Close the modal after displaying the message
         } catch (dbError) {
           setFormErrors(
-            "We couldn't save your event for manual review. Please try again later."
+            "We couldn't save your event for manual review. Please try again later.",
           );
           setShowModal(false); // Close the modal even if there's an error
         }
       }
     },
-    [memoizedEvent]
+    [memoizedEvent],
   );
 
   const handleChange = useCallback(
@@ -123,7 +123,7 @@ const EventForm: React.FC = () => {
       const { name, value } = e.target;
       setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
     },
-    []
+    [],
   );
 
   return (

@@ -19,7 +19,7 @@ export interface CityAndState {
 export const getLatLng = async (
   address?: string | number | boolean,
   latitude?: number,
-  longitude?: number
+  longitude?: number,
 ): Promise<LatLng | CityAndState> => {
   try {
     let response;
@@ -68,14 +68,14 @@ export const getLatLng = async (
       }
     } else {
       throw new Error(
-        "Either an address or latitude/longitude must be provided."
+        "Either an address or latitude/longitude must be provided.",
       );
     }
 
     throw new Error("We couldn't retrieve the location details.");
   } catch (error) {
     throw new Error(
-      "Oops! Something went wrong while fetching the location data. Please try again later."
+      "Oops! Something went wrong while fetching the location data. Please try again later.",
     );
   }
 };

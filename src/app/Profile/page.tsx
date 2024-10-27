@@ -69,7 +69,7 @@ export default function UserProfile() {
         if (userEventsDocSnap.exists() && userEventsDocSnap.data().events) {
           const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
           const newEvents = eventsFromFirestore.filter(
-            (event) => !savedEvents.some((e) => e.id === event.id)
+            (event) => !savedEvents.some((e) => e.id === event.id),
           );
 
           newEvents.forEach((event) => saveEvent(event)); // Save only new events
@@ -79,7 +79,7 @@ export default function UserProfile() {
         alert("Oops! We couldn't load your profile data and events.");
       }
     },
-    [saveEvent, savedEvents]
+    [saveEvent, savedEvents],
   );
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function UserProfile() {
         alert("Oops! Something went wrong while uploading the image.");
       }
     },
-    [storage]
+    [storage],
   );
 
   const handleSubmit = useCallback(async () => {
@@ -136,7 +136,7 @@ export default function UserProfile() {
         alert("Oops! Something went wrong while deleting the event.");
       }
     },
-    [deleteEvent]
+    [deleteEvent],
   );
 
   const handleEdit = useCallback(() => {
@@ -156,7 +156,7 @@ export default function UserProfile() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({

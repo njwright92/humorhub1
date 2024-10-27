@@ -47,7 +47,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           };
         })
         .filter((city) =>
-          city.city.toLowerCase().includes(normalizedQueryTerm)
+          city.city.toLowerCase().includes(normalizedQueryTerm),
         );
 
       setSuggestedCities(cities);
@@ -66,7 +66,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         setSuggestedCities([]);
       }
     },
-    []
+    [],
   );
 
   const handleCitySelect = (city: City) => {
@@ -85,7 +85,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       }
       setSearchTerm("");
     },
-    [onSearch, searchTerm]
+    [onSearch, searchTerm],
   );
 
   const handleClearInput = useCallback(() => {

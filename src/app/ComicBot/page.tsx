@@ -39,7 +39,7 @@ const ComicBot = () => {
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [userUID, setUserUID] = useState<string | null>(
-    auth.currentUser ? auth.currentUser.uid : null
+    auth.currentUser ? auth.currentUser.uid : null,
   );
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +88,7 @@ const ComicBot = () => {
 
       if (!response.ok) {
         throw new Error(
-          `Fetch failed: ${response.status} ${response.statusText}`
+          `Fetch failed: ${response.status} ${response.statusText}`,
         );
       }
 
@@ -125,7 +125,7 @@ const ComicBot = () => {
     try {
       const convoQuery = query(
         collection(db, "conversations"),
-        where("uid", "==", userUID)
+        where("uid", "==", userUID),
       );
       const querySnapshot = await getDocs(convoQuery);
 
@@ -170,7 +170,7 @@ const ComicBot = () => {
     } catch (error) {
       console.error("Error saving conversation:", error); // Log error for debugging
       alert(
-        "Oops! Something went wrong while saving the conversation. Please try again."
+        "Oops! Something went wrong while saving the conversation. Please try again.",
       );
     }
   }, [conversation]);
@@ -180,18 +180,18 @@ const ComicBot = () => {
       await deleteDoc(doc(db, "conversations", docID));
 
       setAllConversations((prevConvos) =>
-        prevConvos.filter((convo) => convo.id !== docID)
+        prevConvos.filter((convo) => convo.id !== docID),
       );
     } catch (error) {
       console.error("Error deleting conversation:", error); // Improved error handling
       alert(
-        "Oops! Something went wrong while deleting the conversation. Please try again."
+        "Oops! Something went wrong while deleting the conversation. Please try again.",
       );
     }
   };
 
   const sendConversationToJokepad = async (
-    conversation: ConversationMessage[]
+    conversation: ConversationMessage[],
   ) => {
     if (!userUID) {
       alert("User is not signed in.");
@@ -218,7 +218,7 @@ const ComicBot = () => {
     } catch (error) {
       console.error("Error sending conversation to Jokepad:", error); // Better error logging
       alert(
-        "Oops! Something went wrong while sending the joke to Jokepad. Please try again."
+        "Oops! Something went wrong while sending the joke to Jokepad. Please try again.",
       );
     }
   };

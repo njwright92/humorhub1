@@ -28,7 +28,7 @@ const Jokes = () => {
   const [newJoke, setNewJoke] = useState<string>("");
   const [editingJokeId, setEditingJokeId] = useState<string | null>(null);
   const [userUID, setUserUID] = useState<string | null>(
-    auth.currentUser ? auth.currentUser.uid : null
+    auth.currentUser ? auth.currentUser.uid : null,
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -52,7 +52,7 @@ const Jokes = () => {
 
     const jokeQuery = query(
       collection(db, "jokes"),
-      where("uid", "==", userUID)
+      where("uid", "==", userUID),
     );
     const unsubscribe = onSnapshot(jokeQuery, (querySnapshot) => {
       const fetchedJokes = querySnapshot.docs.map((doc) => ({
@@ -70,7 +70,7 @@ const Jokes = () => {
     const debounceFetchJokes = setTimeout(() => {
       const jokeQuery = query(
         collection(db, "jokes"),
-        where("uid", "==", userUID)
+        where("uid", "==", userUID),
       );
 
       const unsubscribe = onSnapshot(jokeQuery, (querySnapshot) => {
@@ -103,7 +103,7 @@ const Jokes = () => {
       setNewJoke("");
     } catch (error) {
       alert(
-        "Oops! Something went wrong while adding your joke. Please try again."
+        "Oops! Something went wrong while adding your joke. Please try again.",
       );
     }
   };
@@ -123,7 +123,7 @@ const Jokes = () => {
         });
       });
     },
-    []
+    [],
   );
 
   const handleEditSubmit = useCallback(
@@ -140,11 +140,11 @@ const Jokes = () => {
         setEditingJokeId(null);
       } catch (error) {
         alert(
-          "Oops! Something went wrong while updating your joke. Please try again."
+          "Oops! Something went wrong while updating your joke. Please try again.",
         );
       }
     },
-    [jokes, userUID]
+    [jokes, userUID],
   );
 
   const handleDelete = useCallback(async (jokeId: string) => {
@@ -154,7 +154,7 @@ const Jokes = () => {
       setJokes((prevJokes) => prevJokes.filter((joke) => joke.id !== jokeId));
     } catch (error) {
       alert(
-        "Oops! Something went wrong while deleting your joke. Please try again."
+        "Oops! Something went wrong while deleting your joke. Please try again.",
       );
     }
   }, []);

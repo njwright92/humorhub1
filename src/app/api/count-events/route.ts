@@ -9,7 +9,7 @@ const serviceAccount = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   privateKey: process.env.NEXT_PUBLIC_FIREBASE_PRIVATE_KEY?.replace(
     /\\n/g,
-    "\n"
+    "\n",
   ),
   clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
 };
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
         count: eventCount,
         lastUpdatedDate: today,
       },
-      { merge: true }
+      { merge: true },
     );
 
     return NextResponse.json({
@@ -91,7 +91,7 @@ export async function GET(request: Request) {
     console.error("Error counting events:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

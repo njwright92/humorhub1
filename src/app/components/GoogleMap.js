@@ -19,9 +19,8 @@ const GoogleMap = ({ lat, lng, events }) => {
       await loader.load();
 
       const { google } = window;
-      const { AdvancedMarkerElement } = await google.maps.importLibrary(
-        "marker"
-      );
+      const { AdvancedMarkerElement } =
+        await google.maps.importLibrary("marker");
 
       if (mapContainerRef.current) {
         const map = new google.maps.Map(mapContainerRef.current, {

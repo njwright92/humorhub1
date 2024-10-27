@@ -68,7 +68,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       alert("The event has been successfully removed from your saved list.");
     } catch (error) {
       alert(
-        "Oops! Something went wrong while trying to remove the event. Please try again later."
+        "Oops! Something went wrong while trying to remove the event. Please try again later.",
       );
     }
   };
@@ -101,7 +101,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       await saveEventToFirestore(event);
     } catch (error) {
       alert(
-        "Oops! Something went wrong while saving the event. Please try again."
+        "Oops! Something went wrong while saving the event. Please try again.",
       );
     }
   };
@@ -125,7 +125,7 @@ export const useEvents = () => {
   const context = useContext(EventContext);
   if (!context) {
     throw new Error(
-      "Oops! It looks like you are trying to access events outside of their provider. Please make sure your component is wrapped in an EventProvider."
+      "Oops! It looks like you are trying to access events outside of their provider. Please make sure your component is wrapped in an EventProvider.",
     );
   }
   return context;

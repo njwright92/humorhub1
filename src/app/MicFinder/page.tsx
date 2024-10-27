@@ -27,7 +27,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 6371; // Radius of the earth in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180; // Convert degrees to radians
@@ -105,7 +105,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -115,7 +115,7 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates] // Dependency array includes cityCoordinates
+    [cityCoordinates], // Dependency array includes cityCoordinates
   );
 
   // Refactored Code with Highlights
@@ -123,7 +123,7 @@ const EventsPage = () => {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -249,13 +249,13 @@ const EventsPage = () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map(
-          (doc) => doc.data() as Event
+          (doc) => doc.data() as Event,
         ); // Use map to collect events in one step
         setEvents(fetchedEvents); // Set state once after all data is collected
       } catch (error) {
         console.error("Error fetching events:", error); // Log the error for better debugging
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later."
+          "Oops! We couldn't load the events at the moment. Please try again later.",
         );
       }
     };
@@ -307,7 +307,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay; // Simplified logic, no need for additional checks
     },
-    []
+    [],
   );
 
   // Refactored filteredEvents - Optimized filtering logic for performance
@@ -366,7 +366,7 @@ const EventsPage = () => {
       } catch (error) {
         console.error("Error saving event:", error); // Log error for better debugging
         alert(
-          "Oops! Something went wrong while saving the event. Please try again."
+          "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
       sendDataLayerEvent("save_event", {
@@ -374,7 +374,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn]
+    [saveEvent, isUserSignedIn],
   );
 
   const uniqueCities = useMemo(() => {
@@ -451,9 +451,9 @@ const EventsPage = () => {
       (error) => {
         console.error("Error getting user location:", error);
         alert(
-          "Unable to retrieve your location. Please select a city manually."
+          "Unable to retrieve your location. Please select a city manually.",
         );
-      }
+      },
     );
   }, [findClosestCity]); // Dependency array includes findClosestCity
 
@@ -513,7 +513,7 @@ const EventsPage = () => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime()
+        new Date(a.googleTimestamp).getTime(),
     );
   }, [eventsByCity]);
 
@@ -617,9 +617,9 @@ const EventsPage = () => {
         />
       </Head>
       <Script
-        async
+        strategy="lazyOnload"
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
-      ></Script>
+      />
       <Header />
       <div className="screen-container">
         <OpenMicBanner />
@@ -686,7 +686,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase())
+                      city.toLowerCase().includes(searchTerm.toLowerCase()),
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -837,7 +837,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase())
+                        city.toLowerCase().includes(searchTerm.toLowerCase()),
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
@@ -873,7 +873,7 @@ const EventsPage = () => {
             height={600}
             itemCount={
               eventsByCity.filter(
-                (event) => event.location && typeof event.location === "string"
+                (event) => event.location && typeof event.location === "string",
               ).length
             }
             itemSize={385}

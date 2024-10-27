@@ -24,7 +24,7 @@ export const useCity = () => {
   const context = useContext(CityContext);
   if (!context) {
     throw new Error(
-      "Oops! It looks like you are trying to use city data outside of its provider. Please make sure your component is wrapped in a CityProvider."
+      "Oops! It looks like you are trying to use city data outside of its provider. Please make sure your component is wrapped in a CityProvider.",
     );
   }
   return context;

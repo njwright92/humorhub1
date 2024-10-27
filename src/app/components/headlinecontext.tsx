@@ -20,7 +20,7 @@ export const useHeadline = () => {
   const context = useContext(HeadlineContext);
   if (!context) {
     throw new Error(
-      "Oops! It looks like you're trying to use the headline context outside of its provider. Please make sure your component is wrapped in a HeadlineProvider."
+      "Oops! It looks like you're trying to use the headline context outside of its provider. Please make sure your component is wrapped in a HeadlineProvider.",
     );
   }
   return context;

@@ -41,7 +41,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
       if (!passwordRegex.test(password)) {
         alert(
-          "Your password must be at least 8 characters long, contain a letter, a number, and a special character."
+          "Your password must be at least 8 characters long, contain a letter, a number, and a special character.",
         );
         return;
       }
@@ -76,7 +76,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
       }
     },
-    [email, password, confirmPassword, isSignUp, onClose]
+    [email, password, confirmPassword, isSignUp, onClose],
   );
 
   useEffect(() => {

@@ -56,8 +56,8 @@ const fetchCategoryNews = async (category: Category, subcategory: string) => {
       .map(
         (k) =>
           `${encodeURIComponent(k)}=${encodeURIComponent(
-            params[k as keyof typeof params] as string
-          )}`
+            params[k as keyof typeof params] as string,
+          )}`,
       )
       .join("&");
 
@@ -82,7 +82,7 @@ const fetchCategoryNews = async (category: Category, subcategory: string) => {
     const data = await response.json();
 
     return data.data.filter(
-      (article: Article) => article.title && article.description
+      (article: Article) => article.title && article.description,
     ); // Filter out articles without titles or descriptions
   } catch (error) {
     throw new Error("Failed to fetch news");
@@ -95,7 +95,7 @@ const NewsPage = () => {
   const [selectedSubcategory, setSelectedSubcategory] =
     useState<string>("general");
   const [fetchedArticles, setFetchedArticles] = useState<ArticlesByCategory>(
-    {}
+    {},
   );
   const [error, setError] = useState("");
   const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
@@ -116,7 +116,7 @@ const NewsPage = () => {
   };
 
   const handleCategoryChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const category = event.target.value as Category;
     setSelectedCategory(category);
@@ -124,7 +124,7 @@ const NewsPage = () => {
   };
 
   const handleSubcategoryChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const subcategory = event.target.value;
     setSelectedSubcategory(subcategory);
@@ -139,7 +139,7 @@ const NewsPage = () => {
       setExpandedArticle(null);
     } catch (error) {
       setError(
-        "Oops! We couldn't fetch the articles at the moment. Please try again later."
+        "Oops! We couldn't fetch the articles at the moment. Please try again later.",
       );
     } finally {
       setIsLoading(false);
@@ -337,7 +337,7 @@ const NewsPage = () => {
                         </button>
                       </div>
                     </article>
-                  )
+                  ),
                 )}
               </section>
             ))
