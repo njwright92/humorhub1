@@ -133,15 +133,15 @@ export default function Home() {
         <HumorHubAPISection />
         <section
           data-aos="fade-up"
-          className="card-style flex flex-col items-center w-full p-4"
+          className="card-style flex flex-col items-center w-full p-4 xs:p-2 sm:p-4"
         >
-          <h2 className="title-style text-3xl font-bold mb-4 text-center">
+          <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center">
             Meet ComicBot
           </h2>
-          <h3 className="text-xl font-semibold mb-6">
+          <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">
             Your Comedy Genius Assistant!
           </h3>
-          <div className="md:flex-row flex flex-col md:items-center md:justify-center w-full">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-center w-full">
             <div
               className="md:w-1/2 flex justify-center mb-4 md:mb-0"
               onClick={() => {
@@ -159,26 +159,24 @@ export default function Home() {
               <Image
                 src={ComicBot}
                 alt="ComicBot - Your Comedy Genius Assistant"
-                width={250}
-                height={250}
+                width={200}
+                height={200}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain", maxWidth: "100%" }}
-                sizes="(max-width: 768px) 90vw, 250px"
+                style={{ objectFit: "contain", maxWidth: "90%" }}
+                sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
               />
             </div>
 
             <div className="flex-1 text-center md:text-left">
-              <p className="mb-4">
+              <p className="text-sm sm:text-md mb-4">
                 Meet ComicBot: your AI comedy companion. Get instant jokes,
                 puns, and stage-ready material. Perfect for both new and
                 seasoned comedians.
               </p>
-              <br />
-              <p className="mb-4">
+              <p className="text-sm sm:text-md mb-4">
                 Designed for comedians and humor lovers, ComicBot helps you
-                generate, refine, and organize your comedy. Whether you&lsquo;re
-                on the go or need fresh ideas, ComicBot delivers.
+                generate, refine, and organize your comedy.
               </p>
 
               <button
@@ -194,7 +192,7 @@ export default function Home() {
                     setIsComicBotModalOpen(true);
                   }
                 }}
-                className="btn inline-block text-lg py-2 px-4 hover:bg-blue-700 transition-colors cursor-pointer"
+                className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Unlock Your Creative Side with ComicBot
               </button>
@@ -204,17 +202,17 @@ export default function Home() {
 
         <section
           data-aos="fade-up"
-          className="card-style bg-zinc-900 text-zinc-200 p-4 rounded-xl shadow-md flex flex-col items-center"
+          className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center"
         >
-          <h2 className="title-style text-3xl font-bold mb-6 text-center">
+          <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">
             Jokepad
           </h2>
-          <h3 className="text-xl font-bold mb-6 text-center">
+          <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-center">
             Your Ultimate Comedy Workshop
           </h3>
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div
-              className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0"
+              className="md:w-1/2 flex items-center justify-center mb-4 md:mb-0"
               onClick={() => {
                 sendDataLayerEvent("click_jokepad_image", {
                   event_category: "Engagement",
@@ -230,12 +228,12 @@ export default function Home() {
               <Image
                 src={jokes}
                 alt="Jokepad - Your Ultimate Comedy Workshop"
-                width={250}
-                height={250}
+                width={200}
+                height={200}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain", maxWidth: "100%" }} // Ensure image doesn't exceed screen width
-                sizes="(max-width: 768px) 90vw, 250px" // Make the image 90% width on mobile
+                style={{ objectFit: "contain", maxWidth: "90%" }}
+                sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
               />
               <button
                 onClick={(e) => {
@@ -250,44 +248,39 @@ export default function Home() {
                     location.href = "/JokePad";
                   }
                 }}
-                className="btn inline-block text-lg py-2 px-4 hover:bg-green-700 transition-colors mt-4 cursor-pointer"
+                className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-green-700 transition-colors mt-4 cursor-pointer"
               >
                 Explore Jokepad Now
               </button>
             </div>
             <div className="flex-1 text-center md:text-left">
-              <p className="mb-4">
+              <p className="text-sm sm:text-md mb-4">
                 Jokepad turns your ideas into a cloud-synced joke library.
-                Refine punchlines or brainstorm new humor, ready whenever
-                inspiration hits.
+                Refine punchlines or brainstorm new humor.
               </p>
-              <p className="mb-4">
+              <p className="text-sm sm:text-md mb-4">
                 With an easy interface and secure cloud-sync, Jokepad lets you
-                store, edit, and perfect jokes. Sharpen your material for your
-                next performance.
+                store, edit, and perfect jokes.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="card-style bg-zinc-900 text-zinc-200 p-4 rounded-xl shadow-md flex flex-col items-center">
-          <h2 className="title-style text-2xl font-bold mb-4 text-center drop-shadow-md">
+        <section className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center">
+          <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
             Mic Finder!
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div className="flex-1 text-center items-center md:text-right">
-              <p className="mb-4">
+              <p className="text-sm sm:text-md mb-4">
                 Ready to perform? Use MicFinder to discover over 1000 open mic
-                events in 200+ cities, updated weekly. Whether it&#39;s comedy,
-                music, or poetry, MicFinder helps you find the perfect stage.
-                Start performing today.
+                events in 200+ cities, updated weekly.
               </p>
-
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />
               </Suspense>
             </div>
-            <div className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0">
+            <div className="md:w-1/2 flex items-center justify-center mb-4 md:mb-0">
               <Link href="/MicFinder">
                 <Image
                   src={micFinder}
@@ -296,8 +289,8 @@ export default function Home() {
                   height={200}
                   className="rounded-xl shadow-lg cursor-pointer"
                   loading="lazy"
-                  style={{ objectFit: "contain", maxWidth: "100%" }}
-                  sizes="(max-width: 768px) 90vw, 250px"
+                  style={{ objectFit: "contain", maxWidth: "90%" }}
+                  sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
                   onClick={() => {
                     sendDataLayerEvent("click_micfinder_image", {
                       event_category: "Navigation",
@@ -308,7 +301,7 @@ export default function Home() {
               </Link>
               <Link href="/MicFinder">
                 <span
-                  className="btn inline-block text-lg items-center py-2 px-4 mt-6 hover:bg-blue-700 transition-colors cursor-pointer"
+                  className="btn text-md sm:text-lg items-center py-2 px-4 w-full sm:w-auto mt-6 hover:bg-blue-700 transition-colors cursor-pointer"
                   onClick={() => {
                     sendDataLayerEvent("click_micfinder_button", {
                       event_category: "Navigation",
@@ -322,6 +315,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         <ComicBotModal
           isOpen={isComicBotModalOpen}
           onClose={() => setIsComicBotModalOpen(false)}
