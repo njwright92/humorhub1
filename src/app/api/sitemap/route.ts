@@ -13,7 +13,7 @@ export const GET = async () => {
     const city = doc.data().city;
     return {
       loc: `https://www.thehumorhub.com/MicFinder?city=${encodeURIComponent(
-        city,
+        city
       )}`,
       lastmod: "2024-09-02", // Last modified date; update as needed
       priority: "0.9",
@@ -26,6 +26,11 @@ export const GET = async () => {
       loc: "https://www.thehumorhub.com/",
       lastmod: "2024-09-02",
       priority: "1.0",
+    },
+    {
+      loc: "https://www.thehumorhub.com/MicFinder",
+      lastmod: "2024-09-02",
+      priority: "0.9",
     },
     {
       loc: "https://www.thehumorhub.com/ComicBot",
@@ -83,7 +88,7 @@ export const GET = async () => {
             <lastmod>${lastmod}</lastmod>
             <priority>${priority}</priority>
           </url>
-        `,
+        `
         )
         .join("")}
     </urlset>`;
