@@ -25,7 +25,7 @@ Humor Hub is an all-in-one comedy platform designed to boost your comedic creati
   Access the latest news and trends to fuel your comedic material. Stay informed and inspired with up-to-date content tailored for comedians.
 
 ## 🛠️ Technologies Used
-
+- **Formated with prettier for consitancy
 - **Frontend**: React, Next.js, Tailwind CSS
 - **Backend**: Node.js, Express.js
 - **Database**: Firebase Firestore
