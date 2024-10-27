@@ -623,12 +623,13 @@ const EventsPage = () => {
       <Header />
       <div className="screen-container">
         <OpenMicBanner />
-        <h1 className="title text-4xl font-bold text-center mb-6">
+        <h1 className="title text-4xl sm:text-2xl xs:text-xl font-bold text-center mb-6">
           Discover Open Mic Events!
         </h1>
-        <p className="text-lg md:text-xl text-center mt-4 mb-6">
+
+        <p className="text-lg md:text-xl sm:text-base xs:text-sm text-center mt-4 mb-6">
           Know or host an amazing open mic event? Share it with the local
-          community through MicFinder to attract a crowd. Whether it&apos;s
+          community through MicFinder. Whether it&apos;s
           comedy, music, poetry, or any live performance, let&apos;s spread the
           word and fill the room!
         </p>
@@ -636,11 +637,12 @@ const EventsPage = () => {
         <div className="text-center mb-8">
           <MemoizedEventForm />
         </div>
-        <h2 className="text-lg font-semibold text-center mt-4 mb-4">
+
+        <h2 className="text-lg font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
           Ready to explore? Select your city and date to find local events!
         </h2>
 
-        <p className="text-md text-center mb-4">
+        <p className="text-md text-center mb-4 sm:mb-2 xs:mb-1">
           Scroll to see all upcoming events and discover your next stage.
         </p>
 
@@ -715,6 +717,7 @@ const EventsPage = () => {
           {/* Date Picker */}
           <div className="relative mt-2">
             <ReactDatePicker
+              placeholderText="Select Date"
               ref={datePickerRef}
               selected={selectedDate}
               onChange={handleDateChange}
@@ -770,7 +773,7 @@ const EventsPage = () => {
         <section className="card-style1">
           <button
             onClick={toggleMapVisibility}
-            className="mb-4 text-orange-500 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 hover:bg-orange-500 hover:text-zinc-200 transition"
+            className="mb-4 text-orange-600 rounded-lg shadow-lg px-4 py-2 bg-zinc-100 hover:bg-orange-500 hover:text-zinc-200 transition"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>

@@ -20,7 +20,7 @@ const nextConfig = {
           ],
         },
         {
-          source: "/(.*).(js|css|png|jpg|svg|webp|woff2)$",
+          source: "/(.*).(js|css|png|jpg|svg|webp|woff2|html|iframe)$",
           headers: [
             {
               key: "Cache-Control",
