@@ -27,7 +27,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number,
+  lon2: number
 ): number {
   const R = 6371; // Radius of the earth in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180; // Convert degrees to radians
@@ -105,7 +105,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng,
+          coords.lng
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -115,7 +115,7 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates], // Dependency array includes cityCoordinates
+    [cityCoordinates] // Dependency array includes cityCoordinates
   );
 
   // Refactored Code with Highlights
@@ -123,7 +123,7 @@ const EventsPage = () => {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -249,13 +249,13 @@ const EventsPage = () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map(
-          (doc) => doc.data() as Event,
+          (doc) => doc.data() as Event
         ); // Use map to collect events in one step
         setEvents(fetchedEvents); // Set state once after all data is collected
       } catch (error) {
         console.error("Error fetching events:", error); // Log the error for better debugging
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later.",
+          "Oops! We couldn't load the events at the moment. Please try again later."
         );
       }
     };
@@ -307,7 +307,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay; // Simplified logic, no need for additional checks
     },
-    [],
+    []
   );
 
   // Refactored filteredEvents - Optimized filtering logic for performance
@@ -366,7 +366,7 @@ const EventsPage = () => {
       } catch (error) {
         console.error("Error saving event:", error); // Log error for better debugging
         alert(
-          "Oops! Something went wrong while saving the event. Please try again.",
+          "Oops! Something went wrong while saving the event. Please try again."
         );
       }
       sendDataLayerEvent("save_event", {
@@ -374,7 +374,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn],
+    [saveEvent, isUserSignedIn]
   );
 
   const uniqueCities = useMemo(() => {
@@ -451,9 +451,9 @@ const EventsPage = () => {
       (error) => {
         console.error("Error getting user location:", error);
         alert(
-          "Unable to retrieve your location. Please select a city manually.",
+          "Unable to retrieve your location. Please select a city manually."
         );
-      },
+      }
     );
   }, [findClosestCity]); // Dependency array includes findClosestCity
 
@@ -481,9 +481,8 @@ const EventsPage = () => {
       setIsDatePickerOpen(false); // Close date picker after selecting a date
     }
   };
-  // Refactored openDatePicker - Added null check for ref
   const openDatePicker = () => {
-    setIsDatePickerOpen(true); // Set state to true to open the date picker
+    setIsDatePickerOpen((prev) => !prev); // Toggle state to open/close the calendar
   };
 
   // Memoized selected city coordinates, with default to "Spokane WA"
@@ -513,7 +512,7 @@ const EventsPage = () => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime(),
+        new Date(a.googleTimestamp).getTime()
     );
   }, [eventsByCity]);
 
@@ -646,7 +645,7 @@ const EventsPage = () => {
         </p>
 
         <div className="flex flex-col justify-center items-center mt-2">
-          <div className="relative w-full max-w-xs">
+          <div className="relative w-full max-w-xs min-h-[60px]">
             <div
               className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
               onClick={() => {
@@ -671,7 +670,7 @@ const EventsPage = () => {
 
             {/* Dropdown menu */}
             {isFirstDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
+              <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 max-h-[192px] overflow-y-auto">
                 {/* Search input inside the dropdown */}
                 <input
                   type="text"
@@ -685,7 +684,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase()),
+                      city.toLowerCase().includes(searchTerm.toLowerCase())
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -712,21 +711,24 @@ const EventsPage = () => {
           </div>
 
           {/* Date Picker */}
-          <div className="relative mt-2">
-            <ReactDatePicker
-              placeholderText="Select Date"
-              ref={datePickerRef}
-              selected={selectedDate}
-              onChange={handleDateChange}
-              open={isDatePickerOpen} // Use open prop to control visibility
-              onClickOutside={() => setIsDatePickerOpen(false)} // Close on outside click
-              onSelect={() => setIsDatePickerOpen(false)} // Close on selection
-              className="modern-input"
-            />
-            <CalendarIcon
-              className="h-5 w-5 text-black absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
-              onClick={openDatePicker} // Open date picker when calendar icon is clicked
-            />
+          <div className="flex flex-col justify-center items-center mt-2">
+            <div className="relative w-full max-w-xs min-h-[60px]">
+              <ReactDatePicker
+                ref={datePickerRef}
+                selected={selectedDate}
+                onChange={handleDateChange}
+                onFocus={openDatePicker} // Opens date picker on focus
+                open={isDatePickerOpen} // Controls visibility of the date picker
+                onClickOutside={() => setIsDatePickerOpen(false)} // Closes on outside click
+                onSelect={() => setIsDatePickerOpen(false)} // Closes upon selection
+                className="modern-input w-full cursor-pointer" // Adds padding for icon space
+                aria-label="Select date" // Accessible label for screen readers
+              />
+              <CalendarIcon
+                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-3/4 cursor-pointer"
+                aria-hidden="true"
+              />
+            </div>
           </div>
         </div>
 
@@ -770,7 +772,7 @@ const EventsPage = () => {
         <section className="card-style1">
           <button
             onClick={toggleMapVisibility}
-            className="mb-4 text-orange-600 rounded-lg shadow-lg px-4 py-2 bg-zinc-100 hover:bg-orange-500 hover:text-zinc-200 transition"
+            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 transition"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
@@ -837,7 +839,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase()),
+                        city.toLowerCase().includes(searchTerm.toLowerCase())
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
@@ -873,7 +875,7 @@ const EventsPage = () => {
             height={600}
             itemCount={
               eventsByCity.filter(
-                (event) => event.location && typeof event.location === "string",
+                (event) => event.location && typeof event.location === "string"
               ).length
             }
             itemSize={385}
