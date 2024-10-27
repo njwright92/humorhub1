@@ -8,7 +8,6 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 import { EventContext } from "../components/eventContext";
@@ -22,7 +21,7 @@ import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
 // import { getLatLng } from "../utils/geocode";
 import Script from "next/script";
-
+import ReactDatePicker from "react-datepicker";
 // Helper function to calculate distance between two coordinates
 function getDistanceFromLatLonInKm(
   lat1: number,
@@ -54,11 +53,6 @@ const EventForm = dynamic(() => import("../components/EventForm"), {
   ssr: false,
 });
 
-type DataLayerEventParams = {
-  event_category: string;
-  event_label: string;
-  [key: string]: any;
-};
 type Event = {
   googleTimestamp: any;
   id: string;
@@ -78,7 +72,8 @@ type CityCoordinates = {
 const EventsPage = () => {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const datePickerRef = useRef<ReactDatePicker>(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef<ReactDatePicker | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const { saveEvent } = useContext(EventContext);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
@@ -295,7 +290,6 @@ const EventsPage = () => {
     fetchCities();
   }, []);
 
-  // Refactored isRecurringEvent - Simplified logic and improved readability
   const isRecurringEvent = useCallback(
     (eventDate: string, selectedDate: Date): boolean => {
       const dayOfWeekMap: { [key: string]: number } = {
@@ -481,13 +475,15 @@ const EventsPage = () => {
   }, [fetchUserLocation, cityCoordinates]); // Added cityCoordinates to dependency array
 
   // Refactored handleDateChange - Simplified condition
-  const handleDateChange = useCallback((date: Date | null) => {
-    if (date) setSelectedDate(date); // Directly set date if it's not null
-  }, []);
-
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      setSelectedDate(date); // Update selected date
+      setIsDatePickerOpen(false); // Close date picker after selecting a date
+    }
+  };
   // Refactored openDatePicker - Added null check for ref
   const openDatePicker = () => {
-    datePickerRef?.current?.setOpen(true); // Optional chaining to safely open the date picker
+    setIsDatePickerOpen(true); // Set state to true to open the date picker
   };
 
   // Memoized selected city coordinates, with default to "Spokane WA"
@@ -720,14 +716,16 @@ const EventsPage = () => {
           <div className="relative mt-2">
             <ReactDatePicker
               ref={datePickerRef}
-              id="datePicker"
               selected={selectedDate}
               onChange={handleDateChange}
+              open={isDatePickerOpen} // Use open prop to control visibility
+              onClickOutside={() => setIsDatePickerOpen(false)} // Close on outside click
+              onSelect={() => setIsDatePickerOpen(false)} // Close on selection
               className="modern-input"
             />
             <CalendarIcon
               className="h-5 w-5 text-black absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer"
-              onClick={openDatePicker}
+              onClick={openDatePicker} // Open date picker when calendar icon is clicked
             />
           </div>
         </div>
