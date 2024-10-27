@@ -2,7 +2,10 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  swcMinify: true, // Enables faster builds with SWC-based minification
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
 
   async headers() {
     try {
