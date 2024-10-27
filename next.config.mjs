@@ -5,7 +5,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Matching all routes to allow CORS headers
         source: "/(.*)",
         headers: [
           {
@@ -21,6 +20,14 @@ const nextConfig = {
             value: "X-Requested-With, Content-Type, Authorization",
           },
         ],
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap.xml",
+        destination: "/api/sitemap", // Point to your API route for the sitemap
       },
     ];
   },
