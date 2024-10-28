@@ -195,6 +195,37 @@ span {
   @apply text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2;
 }
 
+.tab-button {
+  padding: 0.625rem 1.25rem;
+  margin: 0 0.325rem;
+  cursor: pointer;
+  border-radius: 0.325rem;
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+  border: none;
+}
+
+/* Active Button Styles */
+.tab-button-active {
+  background-color: #f97316; /* orange-500 */
+  color: #f4f4f5; /* zinc-100 */
+}
+
+.tab-button-active:hover {
+  background-color: #dd6b20; /* Slightly darker orange-500 */
+}
+
+/* Inactive Button Styles */
+.tab-button-inactive {
+  background-color: #f4f4f5; /* zinc-100 */
+  color: #f97316; /* orange-500 */
+}
+
+.tab-button-inactive:hover {
+  background-color: #e4e4e7; /* Slightly darker zinc-100 */
+}
+
 .flex-row-wrap {
   @apply flex flex-row flex-wrap sm:flex-nowrap;
 }

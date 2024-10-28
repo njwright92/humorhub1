@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  Suspense,
 } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "@heroicons/react/24/solid";
@@ -19,15 +20,15 @@ import Footer from "../components/footer";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
-// import { getLatLng } from "../utils/geocode";
 import Script from "next/script";
 import ReactDatePicker from "react-datepicker";
+
 // Helper function to calculate distance between two coordinates
 function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 6371; // Radius of the earth in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180; // Convert degrees to radians
@@ -43,6 +44,7 @@ function getDistanceFromLatLonInKm(
   return d;
 }
 
+// Dynamic imports with Suspense for better performance
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
@@ -63,6 +65,7 @@ type Event = {
   lng: number;
   details: string;
   isRecurring: boolean;
+  festival?: boolean; // New field to distinguish festivals
 };
 
 type CityCoordinates = {
@@ -88,6 +91,9 @@ const EventsPage = () => {
     lat: number;
     lng: number;
   } | null>(null);
+  const [selectedTab, setSelectedTab] = useState<"openMics" | "festivals">(
+    "openMics",
+  ); // State to track selected tab
 
   // Function to find the closest city in the database
   const findClosestCity = useCallback(
@@ -105,7 +111,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -115,15 +121,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates] // Dependency array includes cityCoordinates
+    [cityCoordinates],
   );
 
-  // Refactored Code with Highlights
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -161,8 +166,7 @@ const EventsPage = () => {
       event_label: normalizedCity,
     });
   };
-  // Refactored toggleMapVisibility - Simplified the toggle function
-  // Toggle map visibility with tracking
+
   const toggleMapVisibility = () => {
     setIsMapVisible((prev) => {
       const newValue = !prev;
@@ -177,14 +181,12 @@ const EventsPage = () => {
     });
   };
 
-  // Refactored useEffect to avoid unnecessary database reads
   useEffect(() => {
     if (selectedCity && cityCoordinates[selectedCity]) {
       setMapLocation(cityCoordinates[selectedCity]);
     }
   }, [selectedCity, cityCoordinates]);
 
-  // Refactored handleOnItemsRendered to avoid unnecessary state updates
   const handleOnItemsRendered = ({
     overscanStopIndex,
   }: {
@@ -194,14 +196,12 @@ const EventsPage = () => {
       overscanStopIndex >= loadedItems - 1 &&
       loadedItems < eventsByCity.length
     ) {
-      setLoadedItems((prev) => Math.min(prev + 5, eventsByCity.length)); // Avoid setting state when all items are loaded
+      setLoadedItems((prev) => Math.min(prev + 5, eventsByCity.length));
     }
   };
 
-  // Refactored normalizeCityName - No changes, kept useCallback
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
 
-  // Refactored handleCityFilterChange - Simplified normalization logic
   const handleCityFilterChange = (city: string) => {
     if (city === "All Cities") {
       setFilterCity(city);
@@ -222,7 +222,6 @@ const EventsPage = () => {
     });
   };
 
-  // Refactored eventsByCity - Optimized filtering logic to avoid re-splitting and re-normalizing
   const eventsByCity = useMemo(() => {
     if (filterCity === "All Cities") {
       return events;
@@ -241,21 +240,24 @@ const EventsPage = () => {
       }
       return false;
     });
-  }, [filterCity, events, normalizeCityName]); // Add normalizeCityName here
+  }, [filterCity, events, normalizeCityName]);
 
-  // Refactored useEffect to fetchEvents - Reduced unnecessary operations and improved error handling
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
-        const fetchedEvents: Event[] = querySnapshot.docs.map(
-          (doc) => doc.data() as Event
-        ); // Use map to collect events in one step
-        setEvents(fetchedEvents); // Set state once after all data is collected
+        const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
+          const data = doc.data() as Event;
+          return {
+            ...data,
+            festival: data.festival || false, // Ensure festival field exists
+          };
+        });
+        setEvents(fetchedEvents);
       } catch (error) {
-        console.error("Error fetching events:", error); // Log the error for better debugging
+        console.error("Error fetching events:", error);
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later."
+          "Oops! We couldn't load the events at the moment. Please try again later.",
         );
       }
     };
@@ -263,7 +265,6 @@ const EventsPage = () => {
     fetchEvents();
   }, []);
 
-  // Refactored useEffect to fetchCities - Optimized data fetching and error handling
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -271,19 +272,18 @@ const EventsPage = () => {
         const citiesSnapshot = await getDocs(collection(db, "cities"));
         const citiesData: CityCoordinates = {};
 
-        // Use map to populate citiesData in a cleaner, more efficient way
         citiesSnapshot.docs.forEach((doc) => {
           const cityData = doc.data();
-          const city = cityData.city; // "City State" format, directly usable
+          const city = cityData.city; // "City State" format
           citiesData[city] = {
             lat: cityData.coordinates.lat,
             lng: cityData.coordinates.lng,
           };
         });
 
-        setCityCoordinates(citiesData); // Set state only once with all data
+        setCityCoordinates(citiesData);
       } catch (error) {
-        console.error("Error fetching city data:", error); // Log error for better debugging
+        console.error("Error fetching city data:", error);
       }
     };
 
@@ -305,12 +305,11 @@ const EventsPage = () => {
       const eventDay = dayOfWeekMap[eventDate];
       const selectedDay = selectedDate.getDay();
 
-      return eventDay === selectedDay; // Simplified logic, no need for additional checks
+      return eventDay === selectedDay;
     },
-    []
+    [],
   );
 
-  // Refactored filteredEvents - Optimized filtering logic for performance
   const filteredEvents = useMemo(() => {
     const normalizedSelectedDate = new Date(selectedDate);
     normalizedSelectedDate.setHours(0, 0, 0, 0);
@@ -324,13 +323,13 @@ const EventsPage = () => {
       const isInSelectedCity =
         !lowercasedSelectedCity ||
         (event.location &&
-          event.location.toLowerCase().includes(lowercasedSelectedCity)); // Normalize city match
+          event.location.toLowerCase().includes(lowercasedSelectedCity));
 
       const eventDate = new Date(event.date);
       eventDate.setHours(0, 0, 0, 0);
       const isOnSelectedDate = event.isRecurring
         ? isRecurringEvent(event.date, selectedDate)
-        : eventDate.getTime() === normalizedSelectedDate.getTime(); // Direct comparison of timestamps
+        : eventDate.getTime() === normalizedSelectedDate.getTime();
 
       const matchesSearchTerm = lowercasedSearchTerm
         ? (event.name &&
@@ -339,20 +338,35 @@ const EventsPage = () => {
             event.location.toLowerCase().includes(lowercasedSearchTerm))
         : true;
 
-      return isInSelectedCity && isOnSelectedDate && matchesSearchTerm;
-    });
-  }, [events, selectedCity, selectedDate, isRecurringEvent, searchTerm]);
+      const isFestivalMatch =
+        selectedTab === "festivals"
+          ? event.festival === true
+          : event.festival !== true;
 
-  // Refactored useEffect for auth state listener
+      return (
+        isInSelectedCity &&
+        isOnSelectedDate &&
+        matchesSearchTerm &&
+        isFestivalMatch
+      );
+    });
+  }, [
+    events,
+    selectedCity,
+    selectedDate,
+    isRecurringEvent,
+    searchTerm,
+    selectedTab,
+  ]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user); // Set user signed-in status
+      setIsUserSignedIn(!!user);
     });
 
-    return unsubscribe; // Cleanup on unmount
+    return unsubscribe;
   }, []);
 
-  // Refactored handleEventSave - Improved alert logic and error handling
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
@@ -362,11 +376,11 @@ const EventsPage = () => {
 
       try {
         await saveEvent(event);
-        alert("Event saved to your profile successfully!"); // Show success message only on successful save
+        alert("Event saved to your profile successfully!");
       } catch (error) {
-        console.error("Error saving event:", error); // Log error for better debugging
+        console.error("Error saving event:", error);
         alert(
-          "Oops! Something went wrong while saving the event. Please try again."
+          "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
       sendDataLayerEvent("save_event", {
@@ -374,58 +388,28 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn]
+    [saveEvent, isUserSignedIn],
   );
 
   const uniqueCities = useMemo(() => {
     const citySet = new Set<string>();
-    const lowercasedSearchTerm = searchTerm.toLowerCase(); // Precompute the lowercased search term once
+    const lowercasedSearchTerm = searchTerm.toLowerCase();
 
     events.forEach((event) => {
       if (event.location) {
-        const parts = event.location.split(", "); // Split once, reuse for the check
+        const parts = event.location.split(", ");
         if (parts.length > 1) {
           const normalizedCity = normalizeCityName(parts[1].trim());
           if (normalizedCity.toLowerCase().includes(lowercasedSearchTerm)) {
-            // Use precomputed search term
             citySet.add(normalizedCity);
           }
         }
       }
     });
 
-    return Array.from(citySet).sort((a, b) => a.localeCompare(b)); // Sort the unique cities alphabetically
+    return Array.from(citySet).sort((a, b) => a.localeCompare(b));
   }, [events, searchTerm, normalizeCityName]);
 
-  // Type definition for location response
-  // type LocationResponse = {
-  //   city?: string;
-  //   state?: string;
-  // };
-
-  // Refactored fetchCityFromCoordinates - Streamlined return logic
-  // const fetchCityFromCoordinates = useCallback(
-  //   async (latitude: number, longitude: number): Promise<string | null> => {
-  //     try {
-  //       const response = (await getLatLng(
-  //         undefined,
-  //         latitude,
-  //         longitude
-  //       )) as LocationResponse;
-
-  //       // Return formatted city and state if both are present, otherwise return null
-  //       return response.city && response.state
-  //         ? `${response.city} ${response.state}`
-  //         : null;
-  //     } catch (error) {
-  //       console.error("Error fetching city and state:", error);
-  //       return null;
-  //     }
-  //   },
-  //   [] // No dependencies
-  // );
-
-  // Refactored fetchUserLocation - Now uses findClosestCity
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported. Please select a city manually.");
@@ -451,14 +435,12 @@ const EventsPage = () => {
       (error) => {
         console.error("Error getting user location:", error);
         alert(
-          "Unable to retrieve your location. Please select a city manually."
+          "Unable to retrieve your location. Please select a city manually.",
         );
-      }
+      },
     );
-  }, [findClosestCity]); // Dependency array includes findClosestCity
+  }, [findClosestCity]);
 
-  // Refactored useEffect for handling URL parameters and geolocation
-  // useEffect that handles URL query parameters and fetches geolocation if necessary
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const queryTerm = urlParams.get("searchTerm") || "";
@@ -468,51 +450,52 @@ const EventsPage = () => {
       setSelectedCity(city);
       setFilterCity(city);
     } else if (Object.keys(cityCoordinates).length > 0) {
-      fetchUserLocation(); // Fetch geolocation only if no city is provided and cityCoordinates are loaded
+      fetchUserLocation();
     }
 
     setSearchTerm(queryTerm);
-  }, [fetchUserLocation, cityCoordinates]); // Added cityCoordinates to dependency array
+  }, [fetchUserLocation, cityCoordinates]);
 
-  // Refactored handleDateChange - Simplified condition
   const handleDateChange = (date: Date | null) => {
     if (date) {
-      setSelectedDate(date); // Update selected date
-      setIsDatePickerOpen(false); // Close date picker after selecting a date
+      setSelectedDate(date);
+      setIsDatePickerOpen(false);
     }
   };
+
   const openDatePicker = () => {
-    setIsDatePickerOpen((prev) => !prev); // Toggle state to open/close the calendar
+    setIsDatePickerOpen((prev) => !prev);
   };
 
-  // Memoized selected city coordinates, with default to "Spokane WA"
   const selectedCityCoordinates = useMemo(() => {
     return cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
   }, [selectedCity, cityCoordinates]);
 
-  // Update map location only when selectedCityCoordinates changes
   useEffect(() => {
     if (selectedCityCoordinates) {
       setMapLocation(selectedCityCoordinates);
     }
   }, [selectedCityCoordinates]);
 
-  // Memoized Google Map - Only renders when mapLocation and isMapVisible are true
   const MemoizedGoogleMap = useMemo(() => {
     return mapLocation && isMapVisible ? (
-      <GoogleMap lat={mapLocation.lat} lng={mapLocation.lng} events={events} />
+      <Suspense fallback={<p>Loading map...</p>}>
+        <GoogleMap
+          lat={mapLocation.lat}
+          lng={mapLocation.lng}
+          events={filteredEvents} // Use filteredEvents to match selectedTab
+        />
+      </Suspense>
     ) : null;
-  }, [mapLocation, isMapVisible, events]);
+  }, [mapLocation, isMapVisible, filteredEvents]);
 
-  // Memoize EventForm to prevent unnecessary re-renders
   const MemoizedEventForm = React.memo(EventForm);
 
-  // Memoized sorted events by city to avoid unnecessary sorting on every render
   const sortedEventsByCity = useMemo(() => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime()
+        new Date(a.googleTimestamp).getTime(),
     );
   }, [eventsByCity]);
 
@@ -531,7 +514,7 @@ const EventsPage = () => {
     if (!visible) return null;
 
     return (
-      <div className=" border border-red-400 text-red-500 px-4 py-3 rounded-xl shadow-xl relative text-center mb-4">
+      <div className="border border-red-400 text-red-500 px-4 py-3 rounded-xl shadow-xl relative text-center mb-4">
         <strong className="font-bold">Note:</strong>
         <span className="block sm:inline">
           I do my best to keep the events current, but with the constant
@@ -554,6 +537,7 @@ const EventsPage = () => {
       </div>
     );
   };
+
   const Row = ({
     index,
     style,
@@ -568,6 +552,9 @@ const EventsPage = () => {
           <h3 className="text-lg font-semibold">{event.name}</h3>
           <p className="details-label">📅 Date: {event.date}</p>
           <p className="details-label">📍 Location: {event.location}</p>
+          {event.festival && (
+            <p className="details-label">🏆 This is a festival event!</p>
+          )}
           <div className="details-label">
             <span className="details-label">ℹ️ Details:</span>
             <div dangerouslySetInnerHTML={{ __html: event.details }} />
@@ -586,24 +573,24 @@ const EventsPage = () => {
   return (
     <>
       <Head>
-        <title>MicFinder - Locate Open Mic Events Near You</title>
+        <title>MicFinder - Locate Open Mic and Festival Events Near You</title>
         <meta
           name="description"
-          content="Find the best open mic events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
+          content="Find the best open mic and festival events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
         />
         <meta
           name="keywords"
-          content="MicFinder, open mic, comedy events, find open mics, comedy shows"
+          content="MicFinder, open mic, comedy events, comedy festivals, find open mics, comedy shows"
         />
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
 
         <meta
           property="og:title"
-          content="MicFinder - Locate Open Mic Events Near You"
+          content="MicFinder - Locate Open Mic and Festival Events Near You"
         />
         <meta
           property="og:description"
-          content="Find the best open mic events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
+          content="Find the best open mic and festival events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
         />
         <meta
           property="og:url"
@@ -623,13 +610,13 @@ const EventsPage = () => {
       <div className="screen-container">
         <OpenMicBanner />
         <h1 className="title font-bold text-center mb-6">
-          Discover Open Mic Events!
+          Discover Mics and Festivals!
         </h1>
 
         <p className="text-sm xs:text-sm text-center mt-4 mb-6">
-          Know or host an amazing open mic event? Share it with the local
-          community through MicFinder. Whether it&apos;s comedy, music, poetry,
-          or any live performance, let&apos;s spread the word and fill the room!
+          Know or host an amazing event? Share it with the local community
+          through MicFinder. Comedy, music, poetry, or any live performance,
+          let&apos;s spread the word and fill the room!
         </p>
 
         <div className="text-center mb-8">
@@ -684,7 +671,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase())
+                      city.toLowerCase().includes(searchTerm.toLowerCase()),
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -717,12 +704,12 @@ const EventsPage = () => {
                 ref={datePickerRef}
                 selected={selectedDate}
                 onChange={handleDateChange}
-                onFocus={openDatePicker} // Opens date picker on focus
-                open={isDatePickerOpen} // Controls visibility of the date picker
-                onClickOutside={() => setIsDatePickerOpen(false)} // Closes on outside click
-                onSelect={() => setIsDatePickerOpen(false)} // Closes upon selection
-                className="modern-input w-full cursor-pointer" // Adds padding for icon space
-                aria-label="Select date" // Accessible label for screen readers
+                onFocus={openDatePicker}
+                open={isDatePickerOpen}
+                onClickOutside={() => setIsDatePickerOpen(false)}
+                onSelect={() => setIsDatePickerOpen(false)}
+                className="modern-input w-full cursor-pointer"
+                aria-label="Select date"
               />
               <CalendarIcon
                 className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-3/4 cursor-pointer"
@@ -732,22 +719,62 @@ const EventsPage = () => {
           </div>
         </div>
 
+        {/* Map Component */}
+        <section className="card-style1">
+          <button
+            onClick={toggleMapVisibility}
+            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 transition"
+          >
+            {isMapVisible ? "Hide Map" : "Show Map"}
+          </button>
+          {MemoizedGoogleMap}
+        </section>
+
+        {/* Tab Buttons */}
+        <div className="tab-container flex justify-center mt-4">
+          <button
+            className={`tab-button ${
+              selectedTab === "openMics"
+                ? "tab-button-active"
+                : "tab-button-inactive"
+            }`}
+            onClick={() => setSelectedTab("Mics")}
+            aria-label="Show Open Mic Events"
+          >
+            Mics
+          </button>
+          <button
+            className={`tab-button ${
+              selectedTab === "openMics"
+                ? "tab-button-inactive"
+                : "tab-button-active"
+            }`}
+            onClick={() => setSelectedTab("Festivals")}
+            aria-label="Show Festival Events"
+          >
+            Festivals
+          </button>
+        </div>
+
         {/* Event List */}
         <section className="card-style">
           <h2
             className="title-style text-center"
             style={{ borderBottom: "0.15rem solid #f97316" }}
           >
-            Events List:
+            {selectedTab === "openMics" ? "Open Mic Events" : "Festival Events"}
           </h2>
           {selectedCity === "" ? (
-            <p>Please select a city to see today&#39;s events.</p>
+            <p>Please select a city to see events.</p>
           ) : filteredEvents.length > 0 ? (
             filteredEvents.map((event) => (
               <div key={event.id} className="event-item mt-2">
                 <h3 className="text-lg font-semibold">{event.name}</h3>
                 <p className="details-label">📅 Date: {event.date}</p>
                 <p className="details-label">📍 Location: {event.location}</p>
+                {event.festival && (
+                  <p className="details-label">🏆 This is a festival event!</p>
+                )}
                 <div className="details-label">
                   <span className="details-label">ℹ️ Details:</span>
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
@@ -768,17 +795,7 @@ const EventsPage = () => {
           )}
         </section>
 
-        {/* Map Component */}
-        <section className="card-style1">
-          <button
-            onClick={toggleMapVisibility}
-            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 transition"
-          >
-            {isMapVisible ? "Hide Map" : "Show Map"}
-          </button>
-          {isMapVisible && MemoizedGoogleMap}
-        </section>
-
+        {/* All Events List */}
         <section className="card-style">
           <div className="flex flex-col justify-center items-center mt-2">
             {/* Dropdown with search input */}
@@ -839,7 +856,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase())
+                        city.toLowerCase().includes(searchTerm.toLowerCase()),
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
@@ -873,11 +890,7 @@ const EventsPage = () => {
           </h2>
           <List
             height={600}
-            itemCount={
-              eventsByCity.filter(
-                (event) => event.location && typeof event.location === "string"
-              ).length
-            }
+            itemCount={sortedEventsByCity.length}
             itemSize={385}
             width="100%"
             onItemsRendered={handleOnItemsRendered}

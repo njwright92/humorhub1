@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -136,11 +136,12 @@ export default function Home() {
           className="card-style flex flex-col items-center w-full p-4 xs:p-2 sm:p-4"
         >
           <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center">
-            Meet ComicBot
+            ComicBot
           </h2>
           <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">
-            Your Comedy Genius Assistant!
+            Your AI Comedy Wingman!
           </h3>
+
           <div className="flex flex-col md:flex-row md:items-center md:justify-center w-full">
             <div
               className="md:w-1/2 flex justify-center mb-4 md:mb-0"
@@ -170,13 +171,12 @@ export default function Home() {
 
             <div className="flex-1 text-center md:text-left">
               <p className="text-sm sm:text-md mb-4">
-                Meet ComicBot: your AI comedy companion. Get instant jokes,
-                puns, and stage-ready material. Perfect for both new and
-                seasoned comedians.
+                Meet ComicBot: your instant go-to for jokes, punchlines, and
+                comedy gold. Perfect for comedians and humor lovers alike.
               </p>
               <p className="text-sm sm:text-md mb-4">
-                Designed for comedians and humor lovers, ComicBot helps you
-                generate, refine, and organize your comedy.
+                Generate, refine, and organize material effortlessly with
+                ComicBot—your personal comedy genius in a bot.
               </p>
 
               <button
@@ -250,18 +250,19 @@ export default function Home() {
                 }}
                 className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-green-700 transition-colors mt-4 cursor-pointer"
               >
-                Explore Jokepad Now
+                Dive into Jokepad
               </button>
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <p className="text-sm sm:text-md mb-4">
-                Jokepad turns your ideas into a cloud-synced joke library.
-                Refine punchlines or brainstorm new humor.
-              </p>
-              <p className="text-sm sm:text-md mb-4">
-                With an easy interface and secure cloud-sync, Jokepad lets you
-                store, edit, and perfect jokes.
-              </p>
+
+              <div className="flex-1 text-center md:text-left">
+                <p className="text-sm sm:text-md mb-4">
+                  Jokepad turns your ideas into a cloud-synced joke library.
+                  Brainstorm and polish punchlines with ease.
+                </p>
+                <p className="text-sm sm:text-md mb-4">
+                  Store, edit, and refine your best jokes, all in one
+                  streamlined space.
+                </p>
+              </div>
             </div>
           </div>
         </section>
