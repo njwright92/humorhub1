@@ -28,7 +28,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number,
+  lon2: number
 ): number {
   const R = 6371; // Radius of the earth in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180; // Convert degrees to radians
@@ -65,7 +65,7 @@ type Event = {
   lng: number;
   details: string;
   isRecurring: boolean;
-  festival?: boolean; // New field to distinguish festivals
+  festival: boolean;
 };
 
 type CityCoordinates = {
@@ -91,9 +91,7 @@ const EventsPage = () => {
     lat: number;
     lng: number;
   } | null>(null);
-  const [selectedTab, setSelectedTab] = useState<"openMics" | "festivals">(
-    "openMics",
-  ); // State to track selected tab
+  const [selectedTab, setSelectedTab] = useState<"Mics" | "Festivals">("Mics"); // State to track selected tab
 
   // Function to find the closest city in the database
   const findClosestCity = useCallback(
@@ -111,7 +109,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng,
+          coords.lng
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -121,14 +119,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates],
+    [cityCoordinates]
   );
 
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -223,41 +221,55 @@ const EventsPage = () => {
   };
 
   const eventsByCity = useMemo(() => {
-    if (filterCity === "All Cities") {
-      return events;
+    let filteredEvents = events;
+
+    if (filterCity !== "All Cities") {
+      const normalizedFilterCity = normalizeCityName(filterCity);
+      filteredEvents = filteredEvents.filter((event) => {
+        const location = event.location;
+        if (location && typeof location === "string") {
+          const locationParts = location.split(",");
+          return (
+            locationParts.length > 1 &&
+            normalizeCityName(locationParts[1].trim()) === normalizedFilterCity
+          );
+        }
+        return false;
+      });
     }
 
-    const normalizedFilterCity = normalizeCityName(filterCity);
+    // Festival filtering based on selectedTab
+    const isFestivalMatch = (event: Event) =>
+      selectedTab === "Festivals"
+        ? event.festival === true
+        : event.festival !== true;
 
-    return events.filter((event) => {
-      const location = event.location;
-      if (location && typeof location === "string") {
-        const locationParts = location.split(",");
-        return (
-          locationParts.length > 1 &&
-          normalizeCityName(locationParts[1].trim()) === normalizedFilterCity
-        );
-      }
-      return false;
-    });
-  }, [filterCity, events, normalizeCityName]);
+    filteredEvents = filteredEvents.filter(isFestivalMatch);
+
+    return filteredEvents;
+  }, [filterCity, events, normalizeCityName, selectedTab]);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
-          const data = doc.data() as Event;
+          const data = doc.data();
+
+          // Ensure festival is a boolean and defaults to false if undefined
+          const festival =
+            typeof data.festival === "boolean" ? data.festival : false;
+
           return {
             ...data,
-            festival: data.festival || false, // Ensure festival field exists
-          };
+            festival,
+          } as Event;
         });
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later.",
+          "Oops! We couldn't load the events at the moment. Please try again later."
         );
       }
     };
@@ -307,7 +319,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay;
     },
-    [],
+    []
   );
 
   const filteredEvents = useMemo(() => {
@@ -338,8 +350,8 @@ const EventsPage = () => {
             event.location.toLowerCase().includes(lowercasedSearchTerm))
         : true;
 
-      const isFestivalMatch =
-        selectedTab === "festivals"
+      const isFestivalMatch = (event: Event) =>
+        selectedTab === "Festivals"
           ? event.festival === true
           : event.festival !== true;
 
@@ -380,7 +392,7 @@ const EventsPage = () => {
       } catch (error) {
         console.error("Error saving event:", error);
         alert(
-          "Oops! Something went wrong while saving the event. Please try again.",
+          "Oops! Something went wrong while saving the event. Please try again."
         );
       }
       sendDataLayerEvent("save_event", {
@@ -388,7 +400,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn],
+    [saveEvent, isUserSignedIn]
   );
 
   const uniqueCities = useMemo(() => {
@@ -435,9 +447,9 @@ const EventsPage = () => {
       (error) => {
         console.error("Error getting user location:", error);
         alert(
-          "Unable to retrieve your location. Please select a city manually.",
+          "Unable to retrieve your location. Please select a city manually."
         );
-      },
+      }
     );
   }, [findClosestCity]);
 
@@ -495,7 +507,7 @@ const EventsPage = () => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime(),
+        new Date(a.googleTimestamp).getTime()
     );
   }, [eventsByCity]);
 
@@ -514,11 +526,13 @@ const EventsPage = () => {
     if (!visible) return null;
 
     return (
-      <div className="border border-red-400 text-red-500 px-4 py-3 rounded-xl shadow-xl relative text-center mb-4">
-        <strong className="font-bold">Note:</strong>
+      <div className="border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-4">
+        <strong className="font-bold">Note: </strong>
         <span className="block sm:inline">
-          I do my best to keep the events current, but with the constant
-          changing landscape of open mics, they&apos;re not always up to date.
+          Events may not always be up-to-date due to frequent changes in the
+          open mic scene.
+          <br />
+          Starting to add festivals. Contact me to get yours added.
         </span>
         <span
           className="absolute top-[-0.5rem] right-[-0.5rem] px-4 py-3 cursor-pointer"
@@ -553,7 +567,7 @@ const EventsPage = () => {
           <p className="details-label">📅 Date: {event.date}</p>
           <p className="details-label">📍 Location: {event.location}</p>
           {event.festival && (
-            <p className="details-label">🏆 This is a festival event!</p>
+            <p className="details-label">🏆 This is a festival!</p>
           )}
           <div className="details-label">
             <span className="details-label">ℹ️ Details:</span>
@@ -573,7 +587,9 @@ const EventsPage = () => {
   return (
     <>
       <Head>
-        <title>MicFinder - Locate Open Mic and Festival Events Near You</title>
+        <title>
+          MicFinder - Locate Open Mics and Festivals events Near You
+        </title>
         <meta
           name="description"
           content="Find the best open mic and festival events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
@@ -671,7 +687,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase()),
+                      city.toLowerCase().includes(searchTerm.toLowerCase())
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -730,39 +746,13 @@ const EventsPage = () => {
           {MemoizedGoogleMap}
         </section>
 
-        {/* Tab Buttons */}
-        <div className="tab-container flex justify-center mt-4">
-          <button
-            className={`tab-button ${
-              selectedTab === "openMics"
-                ? "tab-button-active"
-                : "tab-button-inactive"
-            }`}
-            onClick={() => setSelectedTab("Mics")}
-            aria-label="Show Open Mic Events"
-          >
-            Mics
-          </button>
-          <button
-            className={`tab-button ${
-              selectedTab === "openMics"
-                ? "tab-button-inactive"
-                : "tab-button-active"
-            }`}
-            onClick={() => setSelectedTab("Festivals")}
-            aria-label="Show Festival Events"
-          >
-            Festivals
-          </button>
-        </div>
-
         {/* Event List */}
         <section className="card-style">
           <h2
             className="title-style text-center"
             style={{ borderBottom: "0.15rem solid #f97316" }}
           >
-            {selectedTab === "openMics" ? "Open Mic Events" : "Festival Events"}
+            {selectedTab === "Mics" ? "Open Mics" : "Festivals"}
           </h2>
           {selectedCity === "" ? (
             <p>Please select a city to see events.</p>
@@ -773,7 +763,7 @@ const EventsPage = () => {
                 <p className="details-label">📅 Date: {event.date}</p>
                 <p className="details-label">📍 Location: {event.location}</p>
                 {event.festival && (
-                  <p className="details-label">🏆 This is a festival event!</p>
+                  <p className="details-label">🏆 This is a festival!</p>
                 )}
                 <div className="details-label">
                   <span className="details-label">ℹ️ Details:</span>
@@ -789,11 +779,36 @@ const EventsPage = () => {
             ))
           ) : (
             <p>
-              No events found for {selectedCity || "the selected city"} on{" "}
+              No daily events found for {selectedCity || "the selected city"} on{" "}
               {selectedDate.toLocaleDateString()}.
             </p>
           )}
         </section>
+        {/* Tab Buttons */}
+        <div className="tab-container flex justify-center mt-4">
+          <button
+            className={`tab-button ${
+              selectedTab === "Mics"
+                ? "tab-button-active"
+                : "tab-button-inactive"
+            }`}
+            onClick={() => setSelectedTab("Mics")}
+            aria-label="Show Open Mic Events"
+          >
+            Mics
+          </button>
+          <button
+            className={`tab-button ${
+              selectedTab === "Mics"
+                ? "tab-button-inactive"
+                : "tab-button-active"
+            }`}
+            onClick={() => setSelectedTab("Festivals")}
+            aria-label="Show Festival Events"
+          >
+            Festivals
+          </button>
+        </div>
 
         {/* All Events List */}
         <section className="card-style">
@@ -856,7 +871,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase()),
+                        city.toLowerCase().includes(searchTerm.toLowerCase())
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
@@ -885,9 +900,14 @@ const EventsPage = () => {
 
           <h2 className="title-style text-center mt-4">
             {filterCity === "All Cities"
-              ? "All Events"
-              : `Events in ${filterCity}`}
+              ? selectedTab === "Mics"
+                ? "All Mics"
+                : "All Festivals"
+              : selectedTab === "Mics"
+                ? `Mics in ${filterCity}`
+                : `Festivals in ${filterCity}`}
           </h2>
+
           <List
             height={600}
             itemCount={sortedEventsByCity.length}
