@@ -535,8 +535,8 @@ video {
 .right-2 {
   right: 0.5rem;
 }
-.right-4 {
-  right: 1rem;
+.right-3 {
+  right: 0.75rem;
 }
 .right-\[-0\.5rem\] {
   right: -0.5rem;
@@ -676,8 +676,14 @@ video {
 .max-h-60 {
   max-height: 15rem;
 }
+.max-h-\[192px\] {
+  max-height: 192px;
+}
 .max-h-screen {
   max-height: 100vh;
+}
+.min-h-\[60px\] {
+  min-height: 60px;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -724,8 +730,8 @@ video {
     rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.-translate-y-1\/2 {
-  --tw-translate-y: -50%;
+.-translate-y-3\/4 {
+  --tw-translate-y: -75%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y))
     rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1491,6 +1497,37 @@ span {
   }
 }
 
+.tab-button {
+  padding: 0.625rem 1.25rem;
+  margin: 0 0.325rem;
+  cursor: pointer;
+  border-radius: 0.325rem;
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+  border: none;
+}
+
+/* Active Button Styles */
+.tab-button-active {
+  background-color: #f97316; /* orange-500 */
+  color: #f4f4f5; /* zinc-100 */
+}
+
+.tab-button-active:hover {
+  background-color: #dd6b20; /* Slightly darker orange-500 */
+}
+
+/* Inactive Button Styles */
+.tab-button-inactive {
+  background-color: #f4f4f5; /* zinc-100 */
+  color: #f97316; /* orange-500 */
+}
+
+.tab-button-inactive:hover {
+  background-color: #e4e4e7; /* Slightly darker zinc-100 */
+}
+
 .flex-row-wrap {
   display: flex;
   flex-direction: row;
@@ -1938,11 +1975,6 @@ option {
 .hover\:bg-green-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(21 128 61 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-orange-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 107 107 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-orange-600:hover {

@@ -22,26 +22,26 @@ import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
 import Script from "next/script";
 import ReactDatePicker from "react-datepicker";
+import { parse, isValid } from "date-fns";
 
-// Helper function to calculate distance between two coordinates
 function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
-  const R = 6371; // Radius of the earth in km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180; // Convert degrees to radians
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const R = 6371; // Earth's radius in kilometers
+  const toRad = (value: number) => (value * Math.PI) / 180; // Degrees to radians
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
   const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distance in km
-  return d;
+  return R * c;
 }
 
 // Dynamic imports with Suspense for better performance
@@ -109,7 +109,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -119,14 +119,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates]
+    [cityCoordinates],
   );
 
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -164,6 +164,18 @@ const EventsPage = () => {
       event_label: normalizedCity,
     });
   };
+
+  const eventsForMap = useMemo(() => {
+    let filteredEvents = events;
+
+    // Simplified festival filtering based on selectedTab
+    const isFestivalMatch = (event: Event) =>
+      selectedTab === "Festivals" ? event.festival : !event.festival;
+
+    filteredEvents = filteredEvents.filter(isFestivalMatch);
+
+    return filteredEvents;
+  }, [events, selectedTab]);
 
   const toggleMapVisibility = () => {
     setIsMapVisible((prev) => {
@@ -238,11 +250,9 @@ const EventsPage = () => {
       });
     }
 
-    // Festival filtering based on selectedTab
+    // Simplified festival filtering based on selectedTab
     const isFestivalMatch = (event: Event) =>
-      selectedTab === "Festivals"
-        ? event.festival === true
-        : event.festival !== true;
+      selectedTab === "Festivals" ? event.festival : !event.festival;
 
     filteredEvents = filteredEvents.filter(isFestivalMatch);
 
@@ -256,9 +266,7 @@ const EventsPage = () => {
         const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
 
-          // Ensure festival is a boolean and defaults to false if undefined
-          const festival =
-            typeof data.festival === "boolean" ? data.festival : false;
+          const festival = data.festival === true;
 
           return {
             ...data,
@@ -269,7 +277,7 @@ const EventsPage = () => {
       } catch (error) {
         console.error("Error fetching events:", error);
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later."
+          "Oops! We couldn't load the events at the moment. Please try again later.",
         );
       }
     };
@@ -319,7 +327,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay;
     },
-    []
+    [],
   );
 
   const filteredEvents = useMemo(() => {
@@ -337,11 +345,39 @@ const EventsPage = () => {
         (event.location &&
           event.location.toLowerCase().includes(lowercasedSelectedCity));
 
-      const eventDate = new Date(event.date);
-      eventDate.setHours(0, 0, 0, 0);
-      const isOnSelectedDate = event.isRecurring
-        ? isRecurringEvent(event.date, selectedDate)
-        : eventDate.getTime() === normalizedSelectedDate.getTime();
+      let isOnSelectedDate = true;
+      if (event.isRecurring) {
+        isOnSelectedDate = isRecurringEvent(event.date, selectedDate);
+      } else {
+        if (event.date && typeof event.date === "string") {
+          let eventDate: Date | undefined = undefined;
+          const dateFormats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
+
+          for (let format of dateFormats) {
+            const parsedDate = parse(event.date, format, new Date());
+            if (isValid(parsedDate)) {
+              eventDate = parsedDate;
+              break;
+            }
+          }
+
+          if (!eventDate) {
+            console.warn(
+              `Invalid date format for event: ${event.name} with date: "${event.date}"`,
+            );
+            isOnSelectedDate = false;
+          } else {
+            eventDate.setHours(0, 0, 0, 0);
+            isOnSelectedDate =
+              eventDate.getTime() === normalizedSelectedDate.getTime();
+          }
+        } else {
+          console.warn(
+            `Event date is missing or invalid for event: ${event.name}`,
+          );
+          isOnSelectedDate = false;
+        }
+      }
 
       const matchesSearchTerm = lowercasedSearchTerm
         ? (event.name &&
@@ -350,10 +386,8 @@ const EventsPage = () => {
             event.location.toLowerCase().includes(lowercasedSearchTerm))
         : true;
 
-      const isFestivalMatch = (event: Event) =>
-        selectedTab === "Festivals"
-          ? event.festival === true
-          : event.festival !== true;
+      const isFestivalMatch =
+        selectedTab === "Festivals" ? event.festival : !event.festival;
 
       return (
         isInSelectedCity &&
@@ -392,7 +426,7 @@ const EventsPage = () => {
       } catch (error) {
         console.error("Error saving event:", error);
         alert(
-          "Oops! Something went wrong while saving the event. Please try again."
+          "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
       sendDataLayerEvent("save_event", {
@@ -400,7 +434,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn]
+    [saveEvent, isUserSignedIn],
   );
 
   const uniqueCities = useMemo(() => {
@@ -447,9 +481,9 @@ const EventsPage = () => {
       (error) => {
         console.error("Error getting user location:", error);
         alert(
-          "Unable to retrieve your location. Please select a city manually."
+          "Unable to retrieve your location. Please select a city manually.",
         );
-      }
+      },
     );
   }, [findClosestCity]);
 
@@ -495,11 +529,11 @@ const EventsPage = () => {
         <GoogleMap
           lat={mapLocation.lat}
           lng={mapLocation.lng}
-          events={filteredEvents} // Use filteredEvents to match selectedTab
+          events={eventsForMap} // Use eventsForMap here
         />
       </Suspense>
     ) : null;
-  }, [mapLocation, isMapVisible, filteredEvents]);
+  }, [mapLocation, isMapVisible, eventsForMap]); // Add eventsForMap to dependencies
 
   const MemoizedEventForm = React.memo(EventForm);
 
@@ -507,7 +541,7 @@ const EventsPage = () => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime()
+        new Date(a.googleTimestamp).getTime(),
     );
   }, [eventsByCity]);
 
@@ -687,7 +721,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase())
+                      city.toLowerCase().includes(searchTerm.toLowerCase()),
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -871,7 +905,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase())
+                        city.toLowerCase().includes(searchTerm.toLowerCase()),
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
@@ -907,6 +941,9 @@ const EventsPage = () => {
                 ? `Mics in ${filterCity}`
                 : `Festivals in ${filterCity}`}
           </h2>
+          {selectedTab === "Festivals" && sortedEventsByCity.length === 0 && (
+            <p>No festivals found for {filterCity}.</p>
+          )}
 
           <List
             height={600}
