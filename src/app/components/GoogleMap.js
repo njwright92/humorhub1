@@ -240,7 +240,7 @@ const GoogleMap = ({ lat, lng, events }) => {
             });
 
             // Attach event listener to marker.element
-            marker.element.addEventListener("click", () => {
+            marker.element.addEventListener("gmp-click", () => {
               infoWindow.close();
               infoWindow.setContent(`
                 <div style="padding: .75rem; text-align: center; background-color: #f5f5f5;">

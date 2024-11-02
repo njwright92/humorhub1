@@ -28,7 +28,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number,
+  lon2: number
 ): number {
   const R = 6371; // Earth's radius in kilometers
   const toRad = (value: number) => (value * Math.PI) / 180; // Degrees to radians
@@ -97,7 +97,6 @@ const EventsPage = () => {
   const findClosestCity = useCallback(
     (latitude: number, longitude: number): string | null => {
       if (Object.keys(cityCoordinates).length === 0) {
-        console.error("City coordinates not loaded yet.");
         return null;
       }
 
@@ -109,7 +108,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng,
+          coords.lng
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -119,14 +118,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates],
+    [cityCoordinates]
   );
 
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -275,9 +274,8 @@ const EventsPage = () => {
         });
         setEvents(fetchedEvents);
       } catch (error) {
-        console.error("Error fetching events:", error);
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later.",
+          "Oops! We couldn't load the events at the moment. Please try again later."
         );
       }
     };
@@ -303,7 +301,7 @@ const EventsPage = () => {
 
         setCityCoordinates(citiesData);
       } catch (error) {
-        console.error("Error fetching city data:", error);
+        // Handle error if necessary
       }
     };
 
@@ -327,7 +325,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay;
     },
-    [],
+    []
   );
 
   const filteredEvents = useMemo(() => {
@@ -362,9 +360,6 @@ const EventsPage = () => {
           }
 
           if (!eventDate) {
-            console.warn(
-              `Invalid date format for event: ${event.name} with date: "${event.date}"`,
-            );
             isOnSelectedDate = false;
           } else {
             eventDate.setHours(0, 0, 0, 0);
@@ -372,9 +367,6 @@ const EventsPage = () => {
               eventDate.getTime() === normalizedSelectedDate.getTime();
           }
         } else {
-          console.warn(
-            `Event date is missing or invalid for event: ${event.name}`,
-          );
           isOnSelectedDate = false;
         }
       }
@@ -424,9 +416,8 @@ const EventsPage = () => {
         await saveEvent(event);
         alert("Event saved to your profile successfully!");
       } catch (error) {
-        console.error("Error saving event:", error);
         alert(
-          "Oops! Something went wrong while saving the event. Please try again.",
+          "Oops! Something went wrong while saving the event. Please try again."
         );
       }
       sendDataLayerEvent("save_event", {
@@ -434,7 +425,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn],
+    [saveEvent, isUserSignedIn]
   );
 
   const uniqueCities = useMemo(() => {
@@ -471,19 +462,17 @@ const EventsPage = () => {
             setSelectedCity(closestCity);
             setFilterCity(closestCity);
           } else {
-            console.error("Closest city could not be determined.");
             alert("No nearby cities found. Please select a city manually.");
           }
         } catch (error) {
-          console.error("Error processing location:", error);
+          // Handle error if necessary
         }
       },
       (error) => {
-        console.error("Error getting user location:", error);
         alert(
-          "Unable to retrieve your location. Please select a city manually.",
+          "Unable to retrieve your location. Please select a city manually."
         );
-      },
+      }
     );
   }, [findClosestCity]);
 
@@ -541,7 +530,7 @@ const EventsPage = () => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime(),
+        new Date(a.googleTimestamp).getTime()
     );
   }, [eventsByCity]);
 
@@ -721,7 +710,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase()),
+                      city.toLowerCase().includes(searchTerm.toLowerCase())
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -905,7 +894,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase()),
+                        city.toLowerCase().includes(searchTerm.toLowerCase())
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
