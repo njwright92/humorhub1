@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -210,9 +210,10 @@ export default function Home() {
           <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-center">
             Your Ultimate Comedy Workshop
           </h3>
-          <div className="flex flex-col md:flex-row-reverse items-center w-full">
+          <div className="flex flex-col md:flex-row items-center w-full">
+            {/* Image and Button */}
             <div
-              className="md:w-1/2 flex items-center justify-center mb-4 md:mb-0"
+              className="md:w-1/2 flex flex-col items-center justify-center mb-4 md:mb-0"
               onClick={() => {
                 sendDataLayerEvent("click_jokepad_image", {
                   event_category: "Engagement",
@@ -252,17 +253,18 @@ export default function Home() {
               >
                 Dive into Jokepad
               </button>
+            </div>
 
-              <div className="flex-1 text-center md:text-left">
-                <p className="text-sm sm:text-md mb-4">
-                  Jokepad turns your ideas into a cloud-synced joke library.
-                  Brainstorm and polish punchlines with ease.
-                </p>
-                <p className="text-sm sm:text-md mb-4">
-                  Store, edit, and refine your best jokes, all in one
-                  streamlined space.
-                </p>
-              </div>
+            {/* Text Content */}
+            <div className="md:w-1/2 flex-1 text-center md:text-left">
+              <p className="text-sm sm:text-md mb-4">
+                Jokepad turns your ideas into a cloud-synced joke library.
+                Brainstorm and polish punchlines with ease.
+              </p>
+              <p className="text-sm sm:text-md mb-4">
+                Store, edit, and refine your best jokes, all in one streamlined
+                space.
+              </p>
             </div>
           </div>
         </section>
