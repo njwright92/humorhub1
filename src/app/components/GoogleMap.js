@@ -5,10 +5,11 @@ import { Loader } from "@googlemaps/js-api-loader";
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
+// Include the 'marker' library in the Loader
 const loader = new Loader({
   apiKey: API_KEY,
-  version: "weekly",
-  libraries: ["places"],
+  version: "beta",
+  libraries: ["places", "marker"],
 });
 
 const mapStyles = [
@@ -187,6 +188,16 @@ const mapStyles = [
     elementType: "labels.icon",
     stylers: [{ visibility: "off" }],
   },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels",
+    stylers: [{ visibility: "on" }],
+  },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#ffffff" }],
+  },
 ];
 
 const GoogleMap = ({ lat, lng, events }) => {
@@ -198,18 +209,17 @@ const GoogleMap = ({ lat, lng, events }) => {
 
       const { google } = window;
 
+      // Access AdvancedMarkerElement directly
+      const { AdvancedMarkerElement } = google.maps.marker;
+
       if (mapContainerRef.current) {
-        // Initialize the map centered on the city coordinates with zoom level 10
+        // Initialize the map with a mapId
         const map = new google.maps.Map(mapContainerRef.current, {
           center: { lat, lng },
           zoom: 10,
           styles: mapStyles,
+          mapId: "ac1223", // Replace with your actual Map ID
         });
-
-        console.log("Events passed to GoogleMap:", events);
-
-        // Optional: If you want to adjust the bounds slightly to include markers
-        // const bounds = new google.maps.LatLngBounds();
 
         events.forEach((event) => {
           const eventLat = parseFloat(event.lat);
@@ -217,11 +227,11 @@ const GoogleMap = ({ lat, lng, events }) => {
 
           if (!isNaN(eventLat) && !isNaN(eventLng)) {
             const position = { lat: eventLat, lng: eventLng };
-            // bounds.extend(position); // We can remove this line
 
-            const marker = new google.maps.Marker({
-              position,
+            // Create the advanced marker
+            const marker = new AdvancedMarkerElement({
               map,
+              position,
               title: event.name,
             });
 
@@ -229,33 +239,30 @@ const GoogleMap = ({ lat, lng, events }) => {
               maxWidth: 250,
             });
 
-            marker.addListener("click", () => {
+            // Attach event listener to marker.element
+            marker.element.addEventListener("click", () => {
               infoWindow.close();
               infoWindow.setContent(`
-                <div style="padding: .75rem; text-align: center; background-color: zinc-200;">
-                  <h2 style="font-weight: bold; color: black">${event.name}</h2>
-                  <p style="color: black">${event.location}</p>
-                  <p style="color: black">${event.date}</p>
+                <div style="padding: .75rem; text-align: center; background-color: #f5f5f5;">
+                  <h2 style="font-weight: bold; color: black;">${event.name}</h2>
+                  <p style="color: black;">${event.location}</p>
+                  <p style="color: black;">${event.date}</p>
                   ${
                     event.details
-                      ? `<p style="color: black">${event.details}</p>`
+                      ? `<p style="color: black;">${event.details}</p>`
                       : ""
                   }
                 </div>
               `);
-              infoWindow.open(map, marker);
+              infoWindow.open({
+                map,
+                anchor: marker,
+              });
             });
-          } else {
-            console.warn(`Invalid coordinates for event: ${event.name}`);
           }
         });
-
-        // Remove the map.fitBounds(bounds) call
-        // map.fitBounds(bounds);
       }
-    } catch (error) {
-      console.error("Error loading map or markers:", error);
-    }
+    } catch (error) {}
   }, [lat, lng, events]);
 
   useEffect(() => {
