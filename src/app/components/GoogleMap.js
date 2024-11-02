@@ -199,13 +199,17 @@ const GoogleMap = ({ lat, lng, events }) => {
       const { google } = window;
 
       if (mapContainerRef.current) {
+        // Initialize the map centered on the city coordinates with zoom level 10
         const map = new google.maps.Map(mapContainerRef.current, {
           center: { lat, lng },
           zoom: 10,
-          styles: mapStyles, // Apply the styles here
+          styles: mapStyles,
         });
-        // Adjust map bounds to fit all markers
-        const bounds = new google.maps.LatLngBounds();
+
+        console.log("Events passed to GoogleMap:", events);
+
+        // Optional: If you want to adjust the bounds slightly to include markers
+        // const bounds = new google.maps.LatLngBounds();
 
         events.forEach((event) => {
           const eventLat = parseFloat(event.lat);
@@ -213,11 +217,11 @@ const GoogleMap = ({ lat, lng, events }) => {
 
           if (!isNaN(eventLat) && !isNaN(eventLng)) {
             const position = { lat: eventLat, lng: eventLng };
-            bounds.extend(position); // Extend bounds to include marker
+            // bounds.extend(position); // We can remove this line
 
             const marker = new google.maps.Marker({
               position,
-              map, // Add marker to the map directly
+              map,
               title: event.name,
             });
 
@@ -232,7 +236,11 @@ const GoogleMap = ({ lat, lng, events }) => {
                   <h2 style="font-weight: bold; color: black">${event.name}</h2>
                   <p style="color: black">${event.location}</p>
                   <p style="color: black">${event.date}</p>
-                  ${event.details ? `<p style="color: black">${event.details}</p>` : ""}
+                  ${
+                    event.details
+                      ? `<p style="color: black">${event.details}</p>`
+                      : ""
+                  }
                 </div>
               `);
               infoWindow.open(map, marker);
@@ -242,8 +250,8 @@ const GoogleMap = ({ lat, lng, events }) => {
           }
         });
 
-        // Adjust the map to fit all markers
-        map.fitBounds(bounds);
+        // Remove the map.fitBounds(bounds) call
+        // map.fitBounds(bounds);
       }
     } catch (error) {
       console.error("Error loading map or markers:", error);
