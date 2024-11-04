@@ -26,15 +26,14 @@ const HumorHubAPISection: React.FC = () => {
         Hub News!
       </h2>
       <h3 className="text-center text-md sm:text-lg mb-4 p-2">
-        Your Go-To Source for the Latest News!
+        Your Source for Fresh Headlines!
       </h3>
 
-      {/* Main Content Section with Image and Text */}
-      <div className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4 xs:p-2 ">
+      <div className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4 xs:p-2">
         <div
           onClick={() => {
             if (!isUserSignedIn) {
-              setIsAuthModalOpen(true); // Open AuthModal if not signed in
+              setIsAuthModalOpen(true);
             } else {
               location.href = "/HHapi";
             }
@@ -42,40 +41,38 @@ const HumorHubAPISection: React.FC = () => {
         >
           <Image
             src={news}
-            alt="Visual Representation of Humor Hub News"
-            width={200} // Reduce size for mobile
+            alt="Comedy News Update"
+            width={200}
             height={200}
             className="rounded-xl shadow-lg -mt-6 sm:mt-0 sm:ml-4 mb-4 cursor-pointer"
             loading="eager"
             priority
-            style={{ objectFit: "contain", maxWidth: "80%" }} // Reduce width for smaller screens
-            sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px" // Adjust sizes for small screens
+            style={{ objectFit: "contain", maxWidth: "80%" }}
+            sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
           />
         </div>
 
         <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0">
           <p className="mb-4 mt-2 sm:mb-2 text-sm xs:text-xs sm:text-sm">
-            Stay ahead of the latest trends in humor, entertainment, and comedy
-            events with Humor Hub News. Your source for fresh content to write
-            jokes.
+            Stay in the loop with the freshest comedy news, tips, and events.
+            Get your creative gears turning with Humor Hub News.
           </p>
 
           <button
             onClick={() => {
               if (!isUserSignedIn) {
-                setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                setIsAuthModalOpen(true);
               } else {
                 location.href = "/HHapi";
               }
             }}
             className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 xs:px-1 sm:px-2 rounded hover:bg-green-600 transition-colors cursor-pointer w-full sm:w-auto"
           >
-            Discover More Here
+            Check It Out
           </button>
         </div>
       </div>
 
-      {/* Auth Modal */}
       {isAuthModalOpen && (
         <AuthModal
           onClose={() => setIsAuthModalOpen(false)}

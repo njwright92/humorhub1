@@ -28,7 +28,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 6371; // Earth's radius in kilometers
   const toRad = (value: number) => (value * Math.PI) / 180; // Degrees to radians
@@ -108,7 +108,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -118,14 +118,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates]
+    [cityCoordinates],
   );
 
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -275,7 +275,7 @@ const EventsPage = () => {
         setEvents(fetchedEvents);
       } catch (error) {
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later."
+          "Oops! We couldn't load the events at the moment. Please try again later.",
         );
       }
     };
@@ -325,7 +325,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay;
     },
-    []
+    [],
   );
 
   const filteredEvents = useMemo(() => {
@@ -417,7 +417,7 @@ const EventsPage = () => {
         alert("Event saved to your profile successfully!");
       } catch (error) {
         alert(
-          "Oops! Something went wrong while saving the event. Please try again."
+          "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
       sendDataLayerEvent("save_event", {
@@ -425,7 +425,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn]
+    [saveEvent, isUserSignedIn],
   );
 
   const uniqueCities = useMemo(() => {
@@ -470,9 +470,9 @@ const EventsPage = () => {
       },
       (error) => {
         alert(
-          "Unable to retrieve your location. Please select a city manually."
+          "Unable to retrieve your location. Please select a city manually.",
         );
-      }
+      },
     );
   }, [findClosestCity]);
 
@@ -530,7 +530,7 @@ const EventsPage = () => {
     return eventsByCity.sort(
       (a, b) =>
         new Date(b.googleTimestamp).getTime() -
-        new Date(a.googleTimestamp).getTime()
+        new Date(a.googleTimestamp).getTime(),
     );
   }, [eventsByCity]);
 
@@ -555,7 +555,7 @@ const EventsPage = () => {
           Events may not always be up-to-date due to frequent changes in the
           open mic scene.
           <br />
-          Starting to add festivals. Contact me to get yours added.
+          Starting to add festivals. Contact us to get yours added.
         </span>
         <span
           className="absolute top-[-0.5rem] right-[-0.5rem] px-4 py-3 cursor-pointer"
@@ -611,25 +611,27 @@ const EventsPage = () => {
     <>
       <Head>
         <title>
-          MicFinder - Locate Open Mics and Festivals events Near You
+          MicFinder - Your Comedy HQ: Open Mics, Shows & Festivals Near You
         </title>
         <meta
           name="description"
-          content="Find the best open mic and festival events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
+          content="Jump into the local comedy scene with MicFinder! Whether you're cracking jokes or just soaking them up, find the best open mics, shows, and festivals in your area."
         />
+
         <meta
           name="keywords"
-          content="MicFinder, open mic, comedy events, comedy festivals, find open mics, comedy shows"
+          content="MicFinder, comedy events, stand-up comedy, open mic near me, local mics, comedy festivals, comedy nights, live comedy shows, comedy, jokes, mics"
         />
+
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
 
         <meta
           property="og:title"
-          content="MicFinder - Locate Open Mic and Festival Events Near You"
+          content="MicFinder - Your Go-To Tool for Finding Open Mics and Comedy Festivals"
         />
         <meta
           property="og:description"
-          content="Find the best open mic and festival events in your area with MicFinder. Whether you're a comedian or an audience member, we've got you covered."
+          content="Locate the top open mic nights, stand-up comedy shows, and festivals in your region with MicFinder. Perfect for comedians and fans seeking local events."
         />
         <meta
           property="og:url"
@@ -649,13 +651,13 @@ const EventsPage = () => {
       <div className="screen-container">
         <OpenMicBanner />
         <h1 className="title font-bold text-center mb-6">
-          Discover Mics and Festivals!
+          Discover Mics and Festivals Near You!
         </h1>
 
-        <p className="text-sm xs:text-sm text-center mt-4 mb-6">
-          Know or host an amazing event? Share it with the local community
-          through MicFinder. Comedy, music, poetry, or any live performance,
-          let&apos;s spread the word and fill the room!
+        <p className="text-center mt-4 mb-6">
+          Got a mic to share or ready to find your next mic? MicFinder is your
+          go-to for discovering and adding comedy events—connect with your
+          community and keep the laughs going!
         </p>
 
         <div className="text-center mb-8">
@@ -663,11 +665,12 @@ const EventsPage = () => {
         </div>
 
         <h2 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
-          Ready to explore? Select your city and date to find local events!
+          Find your next show or next night out—pick a city and date!
         </h2>
 
         <p className="text-sm text-center mb-4 sm:mb-2 xs:mb-1">
-          Scroll to see all upcoming events and discover your next stage.
+          Dive in and scroll through upcoming events to find your next big gig
+          or a night of laughter.
         </p>
 
         <div className="flex flex-col justify-center items-center mt-2">
@@ -710,7 +713,7 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {Object.keys(cityCoordinates)
                     .filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase())
+                      city.toLowerCase().includes(searchTerm.toLowerCase()),
                     )
                     .sort((a, b) => a.localeCompare(b))
                     .map((city) => (
@@ -894,7 +897,7 @@ const EventsPage = () => {
 
                     {uniqueCities
                       .filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase())
+                        city.toLowerCase().includes(searchTerm.toLowerCase()),
                       )
                       .sort((a, b) => a.localeCompare(b))
                       .map((city) => (
