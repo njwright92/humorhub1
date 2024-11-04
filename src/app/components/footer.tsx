@@ -37,10 +37,10 @@ export default function Footer() {
       <hr className="my-6 border-zinc-200 sm:mx-auto dark:border-zinc-700 lg:my-8" />
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <h1 className="text-2xl font-semibold text-zinc-200 mb-2 text-center">
-          Humor Hub
+          Humor Hub - The Hub of Humor!
         </h1>
         <p className="text-md mb-4 text-center">
-          Humor Hub unites the comedic community through technology.
+          Connecting comics and fans with events, tools, and more. Join the fun!
         </p>
 
         <div className="md:flex md:justify-between">
@@ -61,7 +61,7 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 mr-2">
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
-                Resources
+                Get to Know Us
               </h2>
               <ul className="text-zinc-200">
                 <li className="mb-4">
@@ -69,7 +69,7 @@ export default function Footer() {
                     href="/about"
                     className="hover:underline cursor-pointer"
                   >
-                    About
+                    About Humor Hub
                   </Link>
                 </li>
                 <li>
@@ -77,42 +77,42 @@ export default function Footer() {
                     href="/contact"
                     className="hover:underline cursor-pointer"
                   >
-                    Contact us
+                    Contact Our Team
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
-                Follow us
+                Stay Connected
               </h2>
               <ul className="text-zinc-200">
                 <li className="mb-4">
                   <a
                     href="https://github.com/njwright92"
-                    className="hover:underline cursor-pointer"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="hover:underline cursor-pointer"
                   >
-                    Github
+                    GitHub
                   </a>
                 </li>
                 <li className="mb-4">
                   <a
                     href="https://twitter.com/naterbug321"
-                    className="hover:underline cursor-pointer"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="hover:underline cursor-pointer"
                   >
-                    X
+                    X (Twitter)
                   </a>
                 </li>
                 <li className="mb-4">
                   <a
                     href="https://www.linkedin.com/in/nathan-wright-78b237123/"
-                    className="hover:underline cursor-pointer"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="hover:underline cursor-pointer"
                   >
                     LinkedIn
                   </a>
@@ -120,9 +120,9 @@ export default function Footer() {
                 <li className="mb-4">
                   <a
                     href="https://www.facebook.com/nate_wrigh"
-                    className="hover:underline cursor-pointer"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="hover:underline cursor-pointer"
                   >
                     Facebook
                   </a>
@@ -130,9 +130,9 @@ export default function Footer() {
                 <li className="mb-4">
                   <a
                     href="https://www.instagram.com/nate_wright3"
-                    className="hover:underline cursor-pointer"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="hover:underline cursor-pointer"
                   >
                     Instagram
                   </a>
@@ -140,9 +140,9 @@ export default function Footer() {
                 <li>
                   <a
                     href="https://www.youtube.com/@justforlaughs"
-                    className="hover:underline cursor-pointer"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="hover:underline cursor-pointer"
                   >
                     YouTube
                   </a>
@@ -152,13 +152,19 @@ export default function Footer() {
 
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
-                Legal
+                Legal Info
               </h2>
               <div className="text-zinc-200 flex flex-col">
-                <Link className="cursor-pointer mb-1" href="/userAgreement">
+                <Link
+                  href="/userAgreement"
+                  className="cursor-pointer mb-1 hover:underline"
+                >
                   User Agreement
                 </Link>
-                <Link className="cursor-pointer mt-1" href="/privacyPolicy">
+                <Link
+                  href="/privacyPolicy"
+                  className="cursor-pointer mt-1 hover:underline"
+                >
                   Privacy Policy
                 </Link>
               </div>
@@ -181,16 +187,17 @@ export default function Footer() {
             </button>
             <div className="text-center sm:text-left">
               <span className="text-sm sm:text-center block sm:inline">
-                © {new Date().getFullYear()} Humor Hub™. All Rights Reserved.
+                © {new Date().getFullYear()} Humor Hub™. All rights reserved.
               </span>
               <p className="italic block sm:inline mt-2 sm:mt-0 sm:ml-4">
-                Crafted with laughter by Nathan Wright.
+                Crafted with passion by Vanilla Nate!
                 <a
                   href="https://njwright92.github.io/paper-kit-portfolio/"
                   className="underline text-blue-500 transition-colors hover:text-zinc-200"
                 >
-                  Portfolio.
+                  Portfolio
                 </a>
+                .
               </p>
             </div>
           </div>

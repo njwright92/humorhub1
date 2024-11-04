@@ -121,9 +121,9 @@ export default function Header() {
           {showBanner && eventCount !== null && (
             <div
               className="absolute top-0 transform right-10 mt-2 text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-bounce 
-            md:text-lg md:px-4 md:py-2 sm:text-md sm:px-2 sm:py-1 xs:text-sm xs:px-2 xs:py12"
+          md:text-lg md:px-4 md:py-2 sm:text-md sm:px-2 sm:py-1 xs:text-sm xs:px-2 xs:py12"
             >
-              Events added this week: {eventCount}
+              {`Weekly Highlights: ${eventCount} New Mics!`}
             </div>
           )}
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>
@@ -215,7 +215,7 @@ export default function Header() {
 
               <Link href="/contact">
                 <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  Contact
+                  Contact Us
                 </span>
               </Link>
               <Link href="/about">
