@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -163,7 +163,7 @@ export default function Home() {
               <p className="text-sm sm:text-md mb-4">
                 Stuck on a joke? ComicBot is your unfiltered, comedy-trained
                 chatbot ready to punch through writers block and spark new
-                material... &#39;Coming soon!&#39;
+                material... &#42;&#42;Coming soon!&#42;&#42;
               </p>
               <button
                 onClick={(e) => {
