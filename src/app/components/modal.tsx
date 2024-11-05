@@ -15,7 +15,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children }) => {
         {children}
         <button
           onClick={onClose}
-          className="close-modal-button absolute top-0 right-0 text-black text-lg p-2 mt-10 mr-2"
+          className="close-modal-button absolute top-0 right-0 text-black text-2xl p-2 mt-4 mr-2"
           style={{ cursor: "pointer" }}
           aria-label="Close"
         >

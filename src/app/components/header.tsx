@@ -123,7 +123,8 @@ export default function Header() {
               className="absolute top-0 transform right-10 mt-2 text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-bounce 
           md:text-lg md:px-4 md:py-2 sm:text-md sm:px-2 sm:py-1 xs:text-sm xs:px-2 xs:py12"
             >
-              {`Weekly Highlights: ${eventCount} New Mics!`}
+              {`Weekly Highlights: ${eventCount} New Mics!`} <br />{" "}
+              {`Now adding Comedy Festivals!`}
             </div>
           )}
           <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>

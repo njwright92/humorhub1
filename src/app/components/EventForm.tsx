@@ -14,6 +14,7 @@ interface EventData {
   date: Date | null;
   details: string;
   isRecurring: boolean;
+  isFestival?: boolean;
   lat?: number;
   lng?: number;
 }
@@ -36,6 +37,7 @@ const EventForm: React.FC = () => {
     date: null,
     details: "",
     isRecurring: false,
+    isFestival: undefined,
   });
 
   const [formErrors, setFormErrors] = useState<string>("");
@@ -49,6 +51,7 @@ const EventForm: React.FC = () => {
       date: null,
       details: "",
       isRecurring: false,
+      isFestival: undefined,
     });
   };
 
@@ -134,7 +137,7 @@ const EventForm: React.FC = () => {
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <form
           onSubmit={handleSubmit}
-          className="form-container mx-auto overflow-auto max-h-screen z-50"
+          className="form-container mx-auto justify-center items-center overflow-auto max-h-screen z-50"
         >
           {formErrors && <p className="text-red-500">{formErrors}</p>}
           <h1 className="text-2xl font-bold text-center text-black mt-4 ">
@@ -184,12 +187,13 @@ const EventForm: React.FC = () => {
             autoComplete="off"
           />
 
-          <h6 className="text-zinc-900">Is it a recurring event?:</h6>
-          <p className="text-red-500">
+          <h6 className="text-zinc-900 mt-2">Is it a recurring event?:</h6>
+          <p className="text-red-500 text-sm">
             If yes specify day of the week in details.
           </p>
-          <div className="flex flex-row">
-            <div className="flex flex-col items-center mr-4">
+
+          <div className="flex flex-row justify-center space-x-8">
+            <div className="flex flex-col items-center text-center">
               <label htmlFor="isRecurringYes" className="text-zinc-900">
                 Yes
               </label>
@@ -197,13 +201,12 @@ const EventForm: React.FC = () => {
                 type="checkbox"
                 id="isRecurringYes"
                 name="isRecurring"
-                checked={event.isRecurring === true}
+                aria-checked={event.isRecurring === true}
                 onChange={() => setEvent({ ...event, isRecurring: true })}
-                className="text-zinc-900 shadow-xl rounded-lg p-2"
+                className="shadow-xl rounded-lg p-2"
               />
             </div>
-
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center text-center">
               <label htmlFor="isRecurringNo" className="text-zinc-900">
                 No
               </label>
@@ -211,9 +214,44 @@ const EventForm: React.FC = () => {
                 type="checkbox"
                 id="isRecurringNo"
                 name="isRecurring"
-                checked={event.isRecurring === false}
+                aria-checked={event.isRecurring === false}
                 onChange={() => setEvent({ ...event, isRecurring: false })}
-                className="text-zinc-900 shadow-xl rounded-lg p-2"
+                className="shadow-xl rounded-lg p-2"
+              />
+            </div>
+          </div>
+
+          <h6 className="text-zinc-900 mt-6">
+            Is it a festival or competition?
+          </h6>
+          <p className="text-red-500 text-sm">
+            Check if this event is a festival or competition.
+          </p>
+          <div className="flex flex-row justify-center space-x-8">
+            <div className="flex flex-col items-center text-center">
+              <label htmlFor="isFestivalYes" className="text-zinc-900">
+                Yes
+              </label>
+              <input
+                type="checkbox"
+                id="isFestivalYes"
+                name="isFestival"
+                aria-checked={event.isFestival === true}
+                onChange={() => setEvent({ ...event, isFestival: true })}
+                className="shadow-xl rounded-lg p-2"
+              />
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <label htmlFor="isFestivalNo" className="text-zinc-900">
+                No
+              </label>
+              <input
+                type="checkbox"
+                id="isFestivalNo"
+                name="isFestival"
+                aria-checked={event.isFestival === false}
+                onChange={() => setEvent({ ...event, isFestival: false })}
+                className="shadow-xl rounded-lg p-2"
               />
             </div>
           </div>
