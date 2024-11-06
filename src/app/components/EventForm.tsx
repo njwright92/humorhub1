@@ -7,8 +7,10 @@ import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import Modal from "./modal";
 import { getLatLng } from "../utils/geocode";
+import { v4 as uuidv4 } from "uuid";
 
 interface EventData {
+  id?: string;
   name: string;
   location: string;
   date: Date | null;
@@ -17,14 +19,15 @@ interface EventData {
   isFestival?: boolean;
   lat?: number;
   lng?: number;
+  timestamp?: string;
 }
 
 const submitEvent = async (eventData: EventData) => {
   try {
-    await addDoc(collection(db, "userEvents"), eventData);
+    await addDoc(collection(db, "events"), eventData);
   } catch (error) {
     alert(
-      "Oops! Something went wrong while adding your event. Please try again later.",
+      "Oops! Something went wrong while adding your event. Please try again later."
     );
   }
 };
@@ -55,19 +58,28 @@ const EventForm: React.FC = () => {
     });
   };
 
+  const prepareEventData = (event: EventData): EventData => {
+    const id = uuidv4();
+    const timestamp = event.date ? event.date.toISOString() : "";
+    return {
+      ...event,
+      id,
+      timestamp,
+    };
+  };
+
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
 
-      // Validate form fields
       if (
         !memoizedEvent.name ||
-        !memoizedEvent.location || // Ensure the location is filled out
+        !memoizedEvent.location ||
         !memoizedEvent.date ||
         !memoizedEvent.details
       ) {
         setFormErrors(
-          "Please fill in all the required fields to submit your event.",
+          "Please fill in all the required fields to submit your event."
         );
         return;
       }
@@ -75,50 +87,43 @@ const EventForm: React.FC = () => {
       setFormErrors("");
 
       try {
-        // Convert the address (location) to lat/lng using the geocoding function
         const response = await getLatLng(memoizedEvent.location);
 
-        // Check if the geocoding response contains lat/lng
+        let lat, lng;
         if ("lat" in response && "lng" in response) {
-          const { lat, lng } = response;
-
-          // Prepare the event data with lat/lng
-          const eventData: EventData = {
-            ...memoizedEvent,
-            lat,
-            lng, // Add latitude and longitude to event data
-          };
-
-          // Submit the event with lat/lng
-          await submitEvent(eventData);
-        } else {
-          // If geocoding fails, submit the event without lat/lng
-          await submitEvent(memoizedEvent);
+          lat = response.lat;
+          lng = response.lng;
         }
 
+        const eventData = prepareEventData({
+          ...memoizedEvent,
+          lat,
+          lng,
+        });
+
+        await submitEvent(eventData);
         resetForm();
         setShowModal(false);
         alert(
-          "Your event has been added successfully! You can view it on the events page. If you encounter any issues, feel free to email us.",
+          "Your event has been added successfully! Give it a few hours to appear."
         );
       } catch (error) {
-        // Attempt to submit the event without lat/lng, save it for manual review
         try {
-          await addDoc(collection(db, "searchedCities"), memoizedEvent);
+          await addDoc(collection(db, "events"), memoizedEvent);
           resetForm();
           alert(
-            "We couldn't verify the location. We'll review it manually and it should appear on the events page within 24 hours.",
+            "We couldn't verify the location. We'll review it manually, and it should appear on the events page within 24 hours."
           );
-          setShowModal(false); // Close the modal after displaying the message
+          setShowModal(false);
         } catch (dbError) {
           setFormErrors(
-            "We couldn't save your event for manual review. Please try again later.",
+            "We couldn't save your event for manual review. Please try again later."
           );
-          setShowModal(false); // Close the modal even if there's an error
+          setShowModal(false);
         }
       }
     },
-    [memoizedEvent],
+    [memoizedEvent]
   );
 
   const handleChange = useCallback(
@@ -126,7 +131,7 @@ const EventForm: React.FC = () => {
       const { name, value } = e.target;
       setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
     },
-    [],
+    []
   );
 
   return (
@@ -144,8 +149,7 @@ const EventForm: React.FC = () => {
             Add Event Form
           </h1>
           <p className="text-red-500 text-center mb-1">
-            Please fill in all fields correctly. Then submit, and your event
-            will be added!
+            Please fill in all fields correctly.
           </p>
           <label htmlFor="eventName" className="text-zinc-900">
             Event Name:
@@ -191,7 +195,6 @@ const EventForm: React.FC = () => {
           <p className="text-red-500 text-sm">
             If yes specify day of the week in details.
           </p>
-
           <div className="flex flex-row justify-center space-x-8">
             <div className="flex flex-col items-center text-center">
               <label htmlFor="isRecurringYes" className="text-zinc-900">
@@ -220,7 +223,6 @@ const EventForm: React.FC = () => {
               />
             </div>
           </div>
-
           <h6 className="text-zinc-900 mt-6">
             Is it a festival or competition?
           </h6>
