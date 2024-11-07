@@ -947,8 +947,8 @@ const EventsPage = () => {
                 ? "All Mics"
                 : "All Festivals"
               : selectedTab === "Mics"
-                ? `Mics in ${filterCity}`
-                : `Festivals in ${filterCity}`}
+                ? `All Mics in ${filterCity}`
+                : `All Festivals in ${filterCity}`}
           </h2>
           {selectedTab === "Festivals" && sortedEventsByCity.length === 0 && (
             <p>No festivals found for {filterCity}.</p>

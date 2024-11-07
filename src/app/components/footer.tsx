@@ -18,7 +18,7 @@ export default function Footer() {
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) =>
-      handleAuthStateChanged(user)
+      handleAuthStateChanged(user),
     );
     return () => unsubscribe();
   }, [handleAuthStateChanged]);

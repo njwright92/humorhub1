@@ -27,7 +27,7 @@ const submitEvent = async (eventData: EventData) => {
     await addDoc(collection(db, "events"), eventData);
   } catch (error) {
     alert(
-      "Oops! Something went wrong while adding your event. Please try again later."
+      "Oops! Something went wrong while adding your event. Please try again later.",
     );
   }
 };
@@ -79,7 +79,7 @@ const EventForm: React.FC = () => {
         !memoizedEvent.details
       ) {
         setFormErrors(
-          "Please fill in all the required fields to submit your event."
+          "Please fill in all the required fields to submit your event.",
         );
         return;
       }
@@ -105,25 +105,25 @@ const EventForm: React.FC = () => {
         resetForm();
         setShowModal(false);
         alert(
-          "Your event has been added successfully! Give it a few hours to appear."
+          "Your event has been added successfully! Give it a few hours to appear.",
         );
       } catch (error) {
         try {
           await addDoc(collection(db, "events"), memoizedEvent);
           resetForm();
           alert(
-            "We couldn't verify the location. We'll review it manually, and it should appear on the events page within 24 hours."
+            "We couldn't verify the location. We'll review it manually, and it should appear on the events page within 24 hours.",
           );
           setShowModal(false);
         } catch (dbError) {
           setFormErrors(
-            "We couldn't save your event for manual review. Please try again later."
+            "We couldn't save your event for manual review. Please try again later.",
           );
           setShowModal(false);
         }
       }
     },
-    [memoizedEvent]
+    [memoizedEvent],
   );
 
   const handleChange = useCallback(
@@ -131,7 +131,7 @@ const EventForm: React.FC = () => {
       const { name, value } = e.target;
       setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
     },
-    []
+    [],
   );
 
   return (

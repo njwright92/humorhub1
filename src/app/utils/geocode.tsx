@@ -18,7 +18,7 @@ export const getLatLng = async (
   latitude?: number,
   longitude?: number,
   city?: string,
-  state?: string
+  state?: string,
 ): Promise<LatLng | CityAndState> => {
   try {
     let response;
