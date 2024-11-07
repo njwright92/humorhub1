@@ -19,7 +19,7 @@ const HumorHubAPISection: React.FC = () => {
 
   return (
     <div
-      className="card-style rounded-lg shadow-lg p-4 bg-zinc-900 text-zinc-200 xs:p-2 sm:p-4"
+      className="card-style rounded-lg shadow-lg p-4 xs:p-2 sm:p-4"
       data-aos="fade-up"
     >
       <h2 className="title-style text-2xl xs:text-xl sm:text-2xl font-bold text-center drop-shadow-md">

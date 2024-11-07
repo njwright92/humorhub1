@@ -18,7 +18,7 @@ export default function Footer() {
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) =>
-      handleAuthStateChanged(user),
+      handleAuthStateChanged(user)
     );
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
@@ -190,7 +190,7 @@ export default function Footer() {
                 © {new Date().getFullYear()} Humor Hub™. All rights reserved.
               </span>
               <p className="italic block sm:inline mt-2 sm:mt-0 sm:ml-4">
-                Crafted with passion by Vanilla Nate!
+                Crafted with passion by Vanilla Nate!{" "}
                 <a
                   href="https://njwright92.github.io/paper-kit-portfolio/"
                   className="underline text-blue-500 transition-colors hover:text-zinc-200"

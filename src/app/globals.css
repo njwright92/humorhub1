@@ -170,7 +170,7 @@ span {
 
 .card-style,
 .card-style1 {
-  @apply flex-grow bg-zinc-900 text-zinc-200 p-4 mt-10 mb-10 rounded-xl drop-shadow-md;
+  @apply flex-grow bg-transparent  text-zinc-200 p-4 mt-10 mb-10 shadow-2xl;
 }
 
 /* Shared styles for all title classes */
