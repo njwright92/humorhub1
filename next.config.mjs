@@ -42,7 +42,7 @@ const nextConfig = {
           headers: [
             {
               key: "Access-Control-Allow-Origin",
-              value: "*", // Allow all origins for testing
+              value: "*",
             },
             {
               key: "Access-Control-Allow-Methods",
@@ -66,7 +66,7 @@ const nextConfig = {
       return [
         {
           source: "/sitemap.xml",
-          destination: "/api/sitemap", // Points to your API route for the sitemap
+          destination: "/api/sitemap",
         },
       ];
     } catch (error) {
@@ -76,8 +76,13 @@ const nextConfig = {
   },
 
   images: {
-    domains: ["thehumorhub.com"], // Replace with your image domains
-    formats: ["image/avif", "image/webp"], // Enables modern image formats for optimized loading
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "thehumorhub.com",
+      },
+    ],
+    formats: ["image/avif", "image/webp"],
   },
 };
 
