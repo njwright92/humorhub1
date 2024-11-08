@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import Image from "next/image";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -10,6 +11,7 @@ import {
   AuthError,
 } from "firebase/auth";
 import { XMarkIcon } from "@heroicons/react/24/solid";
+import google from "../../app/google.webp";
 
 // Type for the modal props
 type AuthModalProps = {
@@ -146,9 +148,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             ? "Already have an account? Sign In"
             : "Need an account? Sign Up"}
         </button>
-        <button onClick={handleGoogleSignIn} className="google-signin-button">
-          Sign in with Google
-        </button>
+        <div className="mt-4 mx-auto ">
+          <button onClick={handleGoogleSignIn} className="google-signin-button">
+            <Image src="/google.png" alt="Google Logo" width={20} height={20} />
+            <span className="whitespace-nowrap">Sign in with Google</span>
+          </button>
+        </div>
         <button
           onClick={onClose}
           className="close-button bg-zinc-900 hover:cursor-pointer text-white"

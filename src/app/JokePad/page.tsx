@@ -189,7 +189,7 @@ const Jokes = () => {
       </Head>
 
       <Header />
-      <main className="flex flex-col">
+      <main className="flex flex-col content-with-sidebar">
         <h1 className="title text-2xl font-bold text-center mb-8">
           Welcome to JokePad!
         </h1>

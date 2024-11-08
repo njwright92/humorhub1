@@ -127,7 +127,7 @@ export default function Home() {
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       ></Script>
       <Header />
-      <div className="screen-container">
+      <div className="screen-container content-with-sidebar">
         <HumorHubAPISection />
         <section
           data-aos="fade-up"

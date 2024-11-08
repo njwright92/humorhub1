@@ -182,6 +182,13 @@ span {
   }
 }
 
+/* Custom CSS */
+@media (min-width: 768px) {
+  .content-with-sidebar {
+    margin-left: 3rem; /* Adjust this value to match the width of your sidebar */
+  }
+}
+
 .loading-indicator {
   display: flex;
   flex-direction: column; /* Stack children vertically */
@@ -278,7 +285,7 @@ span {
 }
 
 .btn {
-  @apply bg-orange-500 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:text-zinc-200;
+  @apply bg-orange-500 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105;
 }
 
 .modal-backdrop {
@@ -384,38 +391,30 @@ option {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff;
-  color: #757575;
-  border: 0.0625rem solid #dcdcdc; /* 1px */
-  border-radius: 0.25rem; /* 4px */
-  padding: 0.625rem 1.25rem; /* 10px 20px */
+  background-color: #fffffff3;
+  color: #2a2a2a;
+  border: 1px solid #dcdcdc; /* Light border */
+  border-radius: 9999px; /* Pill shape */
+  padding: 10px 20px;
   font-family: Arial, sans-serif;
-  font-size: 0.875rem; /* 14px */
-  font-weight: 500;
+  font-size: 14px; /* Adjust font size if needed */
+  font-weight: bold;
   cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25); /* Shadow effect */
   transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .google-signin-button:hover {
-  background-color: #f7f7f7;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2); /* 2px 4px */
+  transform: scale(1.05); /* Grow effect */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Slightly deeper shadow on hover */
 }
 
-.google-signin-button:active {
-  background-color: #ececec;
-  box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2); /* 1px 2px */
-}
-
-.google-signin-button::before {
-  content: "";
-  display: inline-block;
-  background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg");
-  background-size: cover;
-  width: 1.125rem; /* 18px */
-  height: 1.125rem; /* 18px */
-  margin-right: 0.625rem; /* 10px */
+.google-signin-button img {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px; /* Space between image and text */
 }
 
 .category-container {

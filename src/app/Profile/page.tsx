@@ -199,7 +199,7 @@ export default function UserProfile() {
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       ></Script>
       <Header />
-      <main className="screen-container">
+      <main className="screen-container content-with-sidebar">
         <h1 className="title text-2xl font-bold text-center mb-6">
           Your Profile
         </h1>

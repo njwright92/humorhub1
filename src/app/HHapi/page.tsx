@@ -198,7 +198,7 @@ const NewsPage = () => {
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       ></Script>
       <Header />
-      <div className="screen-container">
+      <div className="screen-container content-with-sidebar">
         {error && <p className="error-message text-zinc-200">{error}</p>}
         <h1 className="title text-3xl font-bold text-center text-zinc-200 mb-6">
           Hub News

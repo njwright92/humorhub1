@@ -4,7 +4,17 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import dynamic from "next/dynamic";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  NewspaperIcon,
+  PencilSquareIcon,
+  MapPinIcon,
+  PhoneIcon,
+  InformationCircleIcon,
+  UserIcon,
+  CpuChipIcon,
+} from "@heroicons/react/24/solid";
 import SearchBar from "./searchBar";
 import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
@@ -105,139 +115,258 @@ export default function Header() {
   return (
     <>
       <header className="p-1 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
-        <nav className="flex justify-between items-center">
+        <nav className="flex md:flex-col justify-between items-center md:fixed md:h-full md:w-20">
+          {/* Logo for smaller screens */}
           <Link href="/">
             <Image
               src={hh}
               alt="Mic"
               width={50}
               height={50}
-              className="rounded-full cursor-pointer bg-zinc-900 p-1"
+              className="rounded-full cursor-pointer bg-zinc-900 p-2 md:hidden"
               loading="eager"
               style={{ objectFit: "contain" }}
               sizes="(max-width: 768px) 100vw, 250px"
             />
           </Link>
-          {showBanner && eventCount !== null && (
-            <div
-              className="absolute top-0 transform right-10 mt-2 text-zinc-200 bg-zinc-900 rounded-2xl px-4 py-2 shadow-xl animate-bounce 
-          md:text-lg md:px-4 md:py-2 sm:text-md sm:px-2 sm:py-1 xs:text-sm xs:px-2 xs:py12"
-            >
-              {`Weekly Highlights: ${eventCount} New Mics!`} <br />{" "}
-              {`Now adding Comedy Festivals!`}
-            </div>
-          )}
-          <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>
-          <button
-            onClick={toggleMenu}
-            className="text-zinc-900 cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            <Bars3Icon className="h-9 w-9" />
-          </button>
 
-          <div
-            className={`absolute top-0 left-0 w-full bg-zinc-900 text-zinc-200 bg-opacity-75 z-50 transform ${
-              isMenuOpen ? "translate-x-0" : "-translate-x-full"
-            } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
-            style={{ maxHeight: "100vh", overflowY: "auto" }}
-          >
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="self-end cursor-pointer"
-              aria-label="close menu"
-            >
-              <XMarkIcon className="h-9 w-9 text-zinc-200" />
-              <span className="sr-only">Close menu</span>
-            </button>
-            <SearchBar onSearch={handleSearch} />
-            <Link href="/">
-              <Image
-                src={hh}
-                alt="Mic"
-                width={70}
-                height={70}
-                className="rounded-full mt-2 cursor-pointer"
-              />
-            </Link>
-            <div className="nav-link">
+          {/* Sidebar for larger screens */}
+          <div className="hidden md:flex flex-col items-center justify-between h-full p-2 w-20 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg">
+            {/* Top Section - Logo */}
+            <div className="flex flex-col items-center space-y-6 mt-4">
+              <Link href="/" aria-label="Home">
+                <Image
+                  src={hh}
+                  alt="Mic"
+                  width={50}
+                  height={50}
+                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-8 transform transition-transform hover:scale-105"
+                />
+              </Link>
+            </div>
+
+            {/* Middle Section - Navigation Icons */}
+            <div className="flex flex-col items-center justify-center space-y-4 mt-4">
+              <SearchBar onSearch={handleSearch} />
+
+              <Link
+                href="/MicFinder"
+                aria-label="Mic Finder"
+                className="relative group transform transition-transform hover:scale-105"
+              >
+                <MapPinIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+              </Link>
+
+              {/* News */}
               <div
                 onClick={() => {
                   if (isUserSignedIn) {
                     location.href = "/HHapi";
                   } else {
-                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    setIsAuthModalOpen(true);
                   }
                 }}
+                className="cursor-pointer relative group transform transition-transform hover:scale-105"
+                aria-label="News"
               >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  {isUserSignedIn ? "News" : "News"}
-                </span>
+                <NewspaperIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
               </div>
+
+              {/* Comic Bot - Using a Robot Icon */}
               <div
                 onClick={() => {
                   if (isUserSignedIn) {
                     setIsComicBotModalOpen(true);
                   } else {
-                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    setIsAuthModalOpen(true);
                   }
                 }}
+                className="cursor-pointer relative group transform transition-transform hover:scale-105"
+                aria-label="Comic Bot"
               >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
-                </span>
+                <CpuChipIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
               </div>
+
+              {/* Joke Pad */}
               <div
                 onClick={() => {
                   if (isUserSignedIn) {
                     location.href = "/JokePad";
                   } else {
-                    setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    setIsAuthModalOpen(true);
                   }
                 }}
+                className="cursor-pointer relative group transform transition-transform hover:scale-105"
+                aria-label="Joke Pad"
               >
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
-                </span>
+                <PencilSquareIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
               </div>
-              <Link href="/MicFinder">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  Mic Finder
-                </span>
+
+              {/* Contact Us */}
+              <Link
+                href="/contact"
+                aria-label="Contact Us"
+                className="relative group transform transition-transform hover:scale-105"
+              >
+                <PhoneIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
               </Link>
 
-              {isUserSignedIn && (
-                <Link href="/Profile">
-                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                    Profile
-                  </span>
+              {/* About */}
+              <Link
+                href="/about"
+                aria-label="About"
+                className="relative group transform transition-transform hover:scale-105"
+              >
+                <InformationCircleIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+              </Link>
+
+              {/* Profile / Sign In */}
+              {isUserSignedIn ? (
+                <Link
+                  href="/Profile"
+                  aria-label="Profile"
+                  className="relative group transform transition-transform hover:scale-105"
+                >
+                  <UserIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
                 </Link>
-              )}
-
-              <Link href="/contact">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  Contact Us
-                </span>
-              </Link>
-              <Link href="/about">
-                <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                  About
-                </span>
-              </Link>
-              {!isUserSignedIn && (
+              ) : (
                 <button
                   onClick={toggleAuthModal}
-                  className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100 cursor-pointer"
-                  style={{
-                    margin: "0 auto",
-                    display: "block",
-                  }}
+                  className="text-zinc-200 hover:text-orange-500 relative group transform transition-transform hover:scale-105"
+                  aria-label="Sign In/Up"
                 >
-                  Sign In/Up
+                  <UserIcon className="h-6 w-6" />
                 </button>
               )}
             </div>
+
+            {/* Bottom Section - Menu Toggle */}
+            <button
+              onClick={toggleMenu}
+              className="text-zinc-200 hover:text-orange-500 mt-auto"
+              aria-label="Open full menu"
+            >
+              <Bars3Icon className="h-8 w-8 mb-2" />
+            </button>
           </div>
+
+          {/* Top menu with text for smaller screens */}
+          <div className="md:hidden flex justify-between items-center w-full">
+            {showBanner && eventCount !== null && (
+              <div className="absolute top-0 right-10 mt-2 text-zinc-200 bg-zinc-900 rounded-2xl px-4 py-2 shadow-xl animate-bounce md:hidden">
+                {`Weekly Highlights: ${eventCount} New Mics!`} <br />
+                {`Now adding Comedy Festivals!`}
+              </div>
+            )}
+            <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>
+            <button
+              onClick={toggleMenu}
+              className="text-zinc-900 cursor-pointer"
+              aria-label="Toggle menu"
+            >
+              <Bars3Icon className="h-8 w-8" />
+            </button>
+          </div>
+
+          {/* Full menu toggle for smaller screens */}
+          {isMenuOpen && (
+            <div className="fixed top-0 left-0 w-full h-full bg-zinc-900 text-zinc-200 bg-opacity-75 z-50 flex flex-col items-center gap-6 p-4">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="self-end cursor-pointer mb-4"
+                aria-label="Close menu"
+              >
+                <XMarkIcon className="h-9 w-9 text-zinc-200" />
+              </button>
+              <SearchBar onSearch={handleSearch} />
+              <Link href="/">
+                <Image
+                  src={hh}
+                  alt="Mic"
+                  width={50}
+                  height={50}
+                  className="rounded-full mt-2 cursor-pointer"
+                />
+              </Link>
+              <div className="nav-link">
+                <div
+                  onClick={() => {
+                    if (isUserSignedIn) {
+                      location.href = "/HHapi";
+                    } else {
+                      setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    }
+                  }}
+                >
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    {isUserSignedIn ? "News" : "News"}
+                  </span>
+                </div>
+                <div
+                  onClick={() => {
+                    if (isUserSignedIn) {
+                      setIsComicBotModalOpen(true);
+                    } else {
+                      setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    }
+                  }}
+                >
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
+                  </span>
+                </div>
+                <div
+                  onClick={() => {
+                    if (isUserSignedIn) {
+                      location.href = "/JokePad";
+                    } else {
+                      setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    }
+                  }}
+                >
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
+                  </span>
+                </div>
+                <Link href="/MicFinder">
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    Mic Finder
+                  </span>
+                </Link>
+
+                {isUserSignedIn && (
+                  <Link href="/Profile">
+                    <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                      Profile
+                    </span>
+                  </Link>
+                )}
+
+                <Link href="/contact">
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    Contact Us
+                  </span>
+                </Link>
+                <Link href="/about">
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    About
+                  </span>
+                </Link>
+                {!isUserSignedIn && (
+                  <button
+                    onClick={toggleAuthModal}
+                    className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100 cursor-pointer"
+                    style={{
+                      margin: "0 auto",
+                      display: "block",
+                    }}
+                  >
+                    Sign In/Up
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </nav>
       </header>
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />

@@ -667,7 +667,7 @@ const EventsPage = () => {
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       />
       <Header />
-      <div className="screen-container">
+      <div className="screen-container content-with-sidebar">
         <OpenMicBanner />
         <h1 className="title font-bold text-center mb-6">
           Discover Mics and Festivals Near You!
