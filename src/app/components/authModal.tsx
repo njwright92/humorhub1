@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
+  getRedirectResult,
   AuthError,
 } from "firebase/auth";
 import * as firebaseui from "firebaseui";
@@ -18,7 +19,6 @@ type AuthModalProps = {
 
 // Updated email regex to follow modern RFC 5322 standards
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Updated password regex to be at least 8 characters, including letters, numbers, and special characters
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
@@ -41,7 +41,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
       if (!passwordRegex.test(password)) {
         alert(
-          "Your password must be at least 8 characters long, contain a letter, a number, and a special character.",
+          "Your password must be at least 8 characters long, contain a letter, a number, and a special character."
         );
         return;
       }
@@ -76,7 +76,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
       }
     },
-    [email, password, confirmPassword, isSignUp, onClose],
+    [email, password, confirmPassword, isSignUp, onClose]
   );
 
   useEffect(() => {
@@ -84,37 +84,47 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    import("firebaseui").then((firebaseUiModule) => {
-      const authInstance = getAuth();
-      let uiInstance = firebaseUiModule.auth.AuthUI.getInstance();
+    const authInstance = getAuth();
+    let uiInstance = firebaseui.auth.AuthUI.getInstance();
 
-      if (!uiInstance) {
-        uiInstance = new firebaseUiModule.auth.AuthUI(authInstance);
-      }
-      setUi(uiInstance);
+    if (!uiInstance) {
+      uiInstance = new firebaseui.auth.AuthUI(authInstance);
+    }
+    setUi(uiInstance);
 
-      const uiConfig = {
-        callbacks: {
-          signInSuccessWithAuthResult: () => {
-            onClose();
-            return true;
-          },
-          uiShown: () => {
-            const loader = document.getElementById("loader");
-            if (loader) {
-              loader.style.display = "none";
-            }
-          },
+    const uiConfig = {
+      callbacks: {
+        signInSuccessWithAuthResult: () => {
+          onClose();
+          return true;
         },
-        signInFlow: "popup",
-        signInSuccessUrl: "/",
-        signInOptions: [GoogleAuthProvider.PROVIDER_ID],
-        tosUrl: "https://thehumorhub.com/userAgreement",
-        privacyPolicyUrl: "https://thehumorhub.com/privacyPolicy",
-      };
+        uiShown: () => {
+          const loader = document.getElementById("loader");
+          if (loader) {
+            loader.style.display = "none";
+          }
+        },
+      },
+      signInFlow: "redirect",
+      signInSuccessUrl: "/",
+      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
+      tosUrl: "https://thehumorhub.com/userAgreement",
+      privacyPolicyUrl: "https://thehumorhub.com/privacyPolicy",
+    };
 
-      uiInstance.start("#firebaseui-auth-container", uiConfig);
-    });
+    uiInstance.start("#firebaseui-auth-container", uiConfig);
+
+    // Handle redirect result when page loads
+    getRedirectResult(authInstance)
+      .then((result) => {
+        if (result) {
+          const user = result.user;
+          alert(`Welcome ${user.displayName || "User"}!`);
+        }
+      })
+      .catch((error) => {
+        console.error("Redirect error:", error.message);
+      });
 
     return () => {
       if (ui) {
