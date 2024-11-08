@@ -354,6 +354,44 @@ option {
   color: rgb(22, 22, 22);
 }
 
+.google-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #757575;
+  border: 0.0625rem solid #dcdcdc; /* 1px */
+  border-radius: 0.25rem; /* 4px */
+  padding: 0.625rem 1.25rem; /* 10px 20px */
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.google-signin-button:hover {
+  background-color: #f7f7f7;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2); /* 2px 4px */
+}
+
+.google-signin-button:active {
+  background-color: #ececec;
+  box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2); /* 1px 2px */
+}
+
+.google-signin-button::before {
+  content: "";
+  display: inline-block;
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg");
+  background-size: cover;
+  width: 1.125rem; /* 18px */
+  height: 1.125rem; /* 18px */
+  margin-right: 0.625rem; /* 10px */
+}
+
 .category-container {
   margin-top: 2rem;
   padding: 0.5rem;

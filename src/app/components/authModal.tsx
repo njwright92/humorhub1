@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback } from "react";
+"use client";
+
+import React, { useState, useCallback } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  getRedirectResult,
+  signInWithRedirect,
   AuthError,
 } from "firebase/auth";
-import * as firebaseui from "firebaseui";
-import "firebaseui/dist/firebaseui.css";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
 // Type for the modal props
@@ -17,13 +17,12 @@ type AuthModalProps = {
   onClose: () => void;
 };
 
-// Updated email regex to follow modern RFC 5322 standards
+// Email and password validation regex patterns
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-  const [ui, setUi] = useState<firebaseui.auth.AuthUI | null>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -41,7 +40,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
       if (!passwordRegex.test(password)) {
         alert(
-          "Your password must be at least 8 characters long, contain a letter, a number, and a special character."
+          "Your password must be at least 8 characters long, contain a letter, a number, and a special character.",
         );
         return;
       }
@@ -76,62 +75,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
       }
     },
-    [email, password, confirmPassword, isSignUp, onClose]
+    [email, password, confirmPassword, isSignUp, onClose],
   );
 
-  useEffect(() => {
-    if (typeof window === "undefined" || !isOpen) {
-      return;
-    }
-
-    const authInstance = getAuth();
-    let uiInstance = firebaseui.auth.AuthUI.getInstance();
-
-    if (!uiInstance) {
-      uiInstance = new firebaseui.auth.AuthUI(authInstance);
-    }
-    setUi(uiInstance);
-
-    const uiConfig = {
-      callbacks: {
-        signInSuccessWithAuthResult: () => {
-          onClose();
-          return true;
-        },
-        uiShown: () => {
-          const loader = document.getElementById("loader");
-          if (loader) {
-            loader.style.display = "none";
-          }
-        },
-      },
-      signInFlow: "redirect",
-      signInSuccessUrl: "/",
-      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
-      tosUrl: "https://thehumorhub.com/userAgreement",
-      privacyPolicyUrl: "https://thehumorhub.com/privacyPolicy",
-    };
-
-    uiInstance.start("#firebaseui-auth-container", uiConfig);
-
-    // Handle redirect result when page loads
-    getRedirectResult(authInstance)
-      .then((result) => {
-        if (result) {
-          const user = result.user;
-          alert(`Welcome ${user.displayName || "User"}!`);
-        }
-      })
-      .catch((error) => {
-        console.error("Redirect error:", error.message);
-      });
-
-    return () => {
-      if (ui) {
-        ui.delete();
-      }
-    };
-  }, [isOpen, onClose, ui]);
+  const handleGoogleSignIn = () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    signInWithRedirect(auth, provider);
+  };
 
   if (!isOpen) return null;
 
@@ -195,7 +146,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             ? "Already have an account? Sign In"
             : "Need an account? Sign Up"}
         </button>
-        <div id="firebaseui-auth-container"></div>
+        <button onClick={handleGoogleSignIn} className="google-signin-button">
+          Sign in with Google
+        </button>
         <button
           onClick={onClose}
           className="close-button bg-zinc-900 hover:cursor-pointer text-white"
