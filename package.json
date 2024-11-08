@@ -11,6 +11,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@googlemaps/js-api-loader": "^1.16.2",
     "@heroicons/react": "^2.1.1",
     "aos": "^2.3.4",

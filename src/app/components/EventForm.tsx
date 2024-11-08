@@ -8,6 +8,7 @@ import { collection, addDoc } from "firebase/firestore";
 import Modal from "./modal";
 import { getLatLng } from "../utils/geocode";
 import { v4 as uuidv4 } from "uuid";
+import emailjs from "@emailjs/browser";
 
 interface EventData {
   id?: string;
@@ -22,6 +23,7 @@ interface EventData {
   timestamp?: string;
 }
 
+// Define the function to submit the event to Firestore
 const submitEvent = async (eventData: EventData) => {
   try {
     await addDoc(collection(db, "events"), eventData);
@@ -68,6 +70,29 @@ const EventForm: React.FC = () => {
     };
   };
 
+  // Function to send confirmation email using EmailJS
+  const sendConfirmationEmail = async (eventData: EventData) => {
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
+        {
+          name: eventData.name,
+          location: eventData.location,
+          date: eventData.date ? eventData.date.toLocaleDateString() : "N/A",
+          details: eventData.details,
+          isRecurring: eventData.isRecurring ? "Yes" : "No",
+          isFestival: eventData.isFestival ? "Yes" : "No",
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
+      );
+      console.log("Email sent successfully!");
+    } catch (error) {
+      console.error("Failed to send email:", error);
+    }
+  };
+
+  // Updated handleSubmit function to include sending an email with EmailJS
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -101,7 +126,8 @@ const EventForm: React.FC = () => {
           lng,
         });
 
-        await submitEvent(eventData);
+        await submitEvent(eventData); // Submit the event to Firestore
+        await sendConfirmationEmail(eventData); // Send confirmation email
         resetForm();
         setShowModal(false);
         alert(
@@ -110,6 +136,7 @@ const EventForm: React.FC = () => {
       } catch (error) {
         try {
           await addDoc(collection(db, "events"), memoizedEvent);
+          await sendConfirmationEmail(memoizedEvent); // Send confirmation email if location verification fails
           resetForm();
           alert(
             "We couldn't verify the location. We'll review it manually, and it should appear on the events page within 24 hours.",
