@@ -137,7 +137,7 @@ export default function Header() {
           </button>
 
           <div
-            className={`absolute top-0 left-0 w-full bg-zinc-900 bg-opacity-75 z-50 transform ${
+            className={`absolute top-0 left-0 w-full bg-zinc-900 text-zinc-200 bg-opacity-75 z-50 transform ${
               isMenuOpen ? "translate-x-0" : "-translate-x-full"
             } transition-transform duration-300 ease-in-out flex flex-col gap-2 p-4 items-center text-lg`}
             style={{ maxHeight: "100vh", overflowY: "auto" }}

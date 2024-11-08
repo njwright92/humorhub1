@@ -783,7 +783,7 @@ const EventsPage = () => {
         <section className="card-style1">
           <button
             onClick={toggleMapVisibility}
-            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 transition"
+            className="mb-4 text-zinc-100 rounded-lg shadow-lg px-4 py-2 bg-green-500 transition"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
