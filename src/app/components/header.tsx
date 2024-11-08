@@ -104,7 +104,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-1 text-zinc-200 sticky top-0 z-50 bg-gradient-animation">
+      <header className="p-1 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex justify-between items-center">
           <Link href="/">
             <Image
@@ -112,7 +112,7 @@ export default function Header() {
               alt="Mic"
               width={50}
               height={50}
-              className="rounded-full cursor-pointer"
+              className="rounded-full cursor-pointer bg-zinc-900 p-1"
               loading="eager"
               style={{ objectFit: "contain" }}
               sizes="(max-width: 768px) 100vw, 250px"
@@ -120,7 +120,7 @@ export default function Header() {
           </Link>
           {showBanner && eventCount !== null && (
             <div
-              className="absolute top-0 transform right-10 mt-2 text-orange-500 bg-zinc-100 rounded-2xl px-4 py-2 shadow-xl animate-bounce 
+              className="absolute top-0 transform right-10 mt-2 text-zinc-200 bg-zinc-900 rounded-2xl px-4 py-2 shadow-xl animate-bounce 
           md:text-lg md:px-4 md:py-2 sm:text-md sm:px-2 sm:py-1 xs:text-sm xs:px-2 xs:py12"
             >
               {`Weekly Highlights: ${eventCount} New Mics!`} <br />{" "}

@@ -209,8 +209,8 @@ const NewsPage = () => {
               Welcome to the News Hub!
             </h2>
             <p className="text-center mb-4 text-lg">
-              Get real-time comedy, politics, and more with the news hub. Browse
-              top categories and search for the freshest content.
+              Get real time News, and more with the news hub. Browse top
+              categories and search for the freshest content.
             </p>
             <p className="mb-4 mt-4 text-md">
               Discover the latest news on all the top news categories.

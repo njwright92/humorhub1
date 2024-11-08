@@ -23,7 +23,7 @@ const config: Config = {
           200: "#d4d4d8",
         },
         orange: {
-          500: "#ff6b6b",
+          500: "#a8ffdc",
         },
       },
       padding: {
