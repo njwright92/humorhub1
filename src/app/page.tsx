@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -258,7 +258,7 @@ export default function Home() {
               </Link>
               <Link href="/MicFinder">
                 <span
-                  className="btn text-md sm:text-lg items-center py-2 px-4 w-full sm:w-auto mt-6 hover:bg-blue-700 transition-colors cursor-pointer"
+                  className="btn text-md sm:text-lg items-center py-2 px-4 w-full sm:w-auto mt-6 hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_button", {
                       event_category: "Navigation",
