@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { CityProvider } from "./components/cityContext";
@@ -34,13 +32,12 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-const GTM_ID = "GTM-KVJSFKV8"; // Your GTM Container ID
+const GTM_ID = "GTM-KVJSFKV8";
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <head>
-        {/* Google Tag Manager Script */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -54,11 +51,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             `,
           }}
         />
-        {/* End Google Tag Manager Script */}
         <meta charSet="UTF-8" />
         <link rel="apple-touch-icon" href="/apple.png" />
 
-        {/* Favicon */}
         <link
           rel="icon"
           href="/favicon.ico"
@@ -67,7 +62,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           className="rounded-full"
         />
 
-        {/* Open Graph and Twitter Metadata */}
         <meta property="og:site_name" content="Humor Hub" />
         <meta property="og:type" content="website" />
         <meta
@@ -81,7 +75,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         <meta property="og:url" content="https://www.thehumorhub.com/" />
       </head>
       <body>
-        {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -91,7 +84,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             title="Google Tag Manager"
           ></iframe>
         </noscript>
-        {/* End Google Tag Manager (noscript) */}
 
         <CityProvider>
           <EventProvider>

@@ -32,7 +32,7 @@ export default function Footer() {
 
   return (
     <footer
-      style={{ backgroundImage: "linear-gradient(to top, #1f2022, #374151)" }}
+      style={{ backgroundImage: "linear-gradient(to top #374151, #1f2022)" }}
     >
       <hr className="my-6 border-zinc-200 sm:mx-auto dark:border-zinc-700 lg:my-8" />
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">

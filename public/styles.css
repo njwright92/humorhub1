@@ -1354,18 +1354,44 @@ span {
 .bg-gradient-animation {
   background: linear-gradient(45deg, #d4d4d8, #a8ffdc, #d4d4d8);
   background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
+  animation: gradient 24s ease infinite;
 }
 
 @keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+  0%,
+  25% {
+    background: linear-gradient(
+      45deg,
+      #d4d4d8,
+      #a8ffdc,
+      #d4d4d8
+    ); /* Neo-Green */
   }
-  50% {
-    background-position: 100% 50%;
+  33%,
+  58% {
+    background: linear-gradient(
+      45deg,
+      #d4d4d8,
+      #fdd835,
+      #d4d4d8
+    ); /* Comedy Yellow */
+  }
+  66%,
+  91% {
+    background: linear-gradient(
+      45deg,
+      #d4d4d8,
+      #e53935,
+      #d4d4d8
+    ); /* Comedy Red */
   }
   100% {
-    background-position: 0% 50%;
+    background: linear-gradient(
+      45deg,
+      #d4d4d8,
+      #a8ffdc,
+      #d4d4d8
+    ); /* Back to Neo-Green */
   }
 }
 
