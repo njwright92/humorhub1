@@ -264,7 +264,7 @@ export default function Header() {
               className="text-zinc-900 cursor-pointer"
               aria-label="Toggle menu"
             >
-              <Bars3Icon className="h-8 w-8" />
+              <Bars3Icon className="h-8 w-8 mr-4" />
             </button>
           </div>
 
@@ -355,7 +355,7 @@ export default function Header() {
                 {!isUserSignedIn && (
                   <button
                     onClick={toggleAuthModal}
-                    className=" bg-orange-700 rounded-xl p-2 shadow-lg text-zinc-100 cursor-pointer"
+                    className=" bg-green-600 rounded-2xl p-1 shadow-lg text-zinc-100 cursor-pointer"
                     style={{
                       margin: "0 auto",
                       display: "block",

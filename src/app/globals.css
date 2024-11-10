@@ -288,6 +288,62 @@ span {
   @apply bg-orange-500 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105;
 }
 
+.facebook-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4267b2; /* Facebook blue */
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px; /* Pill shape */
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.facebook-signin-button:hover {
+  background-color: #365899;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.facebook-signin-button img {
+  margin-right: 10px;
+}
+
+.twitter-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1da1f2; /* Twitter blue */
+  color: #ffffff;
+  padding: 0.625rem 1.25rem; /* 10px 20px */
+  border-radius: 9999px; /* Fully rounded */
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.twitter-signin-button:hover {
+  background-color: #1a91da; /* Darker Twitter blue on hover */
+}
+
+.twitter-signin-button:active {
+  background-color: #1681c1; /* Even darker on active */
+}
+
+.twitter-signin-button span {
+  margin-left: 0.5rem; /* Add space between icon and text */
+}
+
 .modal-backdrop {
   @apply fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50;
 }

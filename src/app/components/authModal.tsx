@@ -1,17 +1,16 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import Image from "next/image";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  signInWithRedirect,
+  signInWithPopup,
   AuthError,
 } from "firebase/auth";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import google from "../../app/google.webp";
+import Image from "next/image";
 
 // Type for the modal props
 type AuthModalProps = {
@@ -19,7 +18,6 @@ type AuthModalProps = {
   onClose: () => void;
 };
 
-// Email and password validation regex patterns
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -83,7 +81,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const handleGoogleSignIn = () => {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
-    signInWithRedirect(auth, provider);
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log("Google sign-in successful:", result.user);
+        onClose(); // Close the modal on successful sign-in
+      })
+      .catch((error) => {
+        console.error("Error during Google sign-in:", error.message);
+        alert("Google sign-in failed. Please try again.");
+      });
   };
 
   if (!isOpen) return null;
@@ -140,20 +146,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
-        <button
-          onClick={() => setIsSignUp(!isSignUp)}
-          className="toggle-button hover:underline text-blue-500"
-        >
-          {isSignUp
-            ? "Already have an account? Sign In"
-            : "Need an account? Sign Up"}
-        </button>
         <div className="mt-4 mx-auto ">
           <button onClick={handleGoogleSignIn} className="google-signin-button">
             <Image src="/google.png" alt="Google Logo" width={20} height={20} />
             <span className="whitespace-nowrap">Sign in with Google</span>
           </button>
         </div>
+        <button
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="toggle-signup mt-4 text-zinc-900"
+        >
+          {isSignUp
+            ? "Already have an account? Sign In"
+            : "Need an account? Sign Up"}
+        </button>
         <button
           onClick={onClose}
           className="close-button bg-zinc-900 hover:cursor-pointer text-white"

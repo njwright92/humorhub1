@@ -34,8 +34,8 @@ export default function Footer() {
     <footer
       style={{ backgroundImage: "linear-gradient(to top #374151, #1f2022)" }}
     >
-      <hr className="my-6 border-zinc-200 sm:mx-auto dark:border-zinc-700 lg:my-8" />
-      <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+      <hr className="my-4 border-zinc-200 sm:mx-auto dark:border-zinc-700 lg:my-6" />
+      <div className="mx-auto w-full max-w-screen-xl p-2 py-4 lg:py-6 ml-2">
         <h1 className="text-2xl font-semibold text-zinc-200 mb-2 text-center">
           Humor Hub - The Hub of Humor!
         </h1>
@@ -174,7 +174,7 @@ export default function Footer() {
         <div className="sm:flex sm:items-center sm:justify-between mt-4">
           <div className="flex flex-col items-center sm:items-start sm:flex-row-reverse sm:justify-between sm:w-full">
             {isUserSignedIn && (
-              <div className="mb-4 sm:mb-0 sm:ml-4">
+              <div className="mb-4">
                 <ClientSignOutButton />
               </div>
             )}
