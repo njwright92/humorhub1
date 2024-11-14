@@ -23,7 +23,7 @@ const ContactPage: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
-    null,
+    null
   );
 
   // Memoize handleInputChange to avoid re-creating the function on every render
@@ -32,7 +32,7 @@ const ContactPage: React.FC = () => {
       const { name, value } = e.target;
       setFormState((prevState) => ({ ...prevState, [name]: value }));
     },
-    [],
+    []
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +80,7 @@ const ContactPage: React.FC = () => {
       <Header />
       <div className="screen-container mx-auto px-4">
         <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
-          <h1 className="title text-3xl font-bold text-center mb-4">
+          <h1 className="text-zinc-900 text-3xl font-bold text-center mb-4">
             We&rsquo;d Love to Hear From You
           </h1>
           <p className="text-center mb-6 mt-8 text-zinc-900">
