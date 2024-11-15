@@ -239,6 +239,60 @@ span {
   border: none;
 }
 
+.social-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 20rem;
+  margin: 0 auto;
+  padding: 0.25rem 0.7rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific styles for each provider */
+.social-signin-button.google {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #d1d5db;
+  border-radius: 1rem;
+}
+
+.social-signin-button.twitter {
+  background-color: #1da1f2;
+  color: #ffffff;
+  border-radius: 1rem;
+}
+
+.social-signin-button.facebook {
+  background-color: #1877f2;
+  color: #ffffff;
+  border-radius: 1rem;
+}
+
+/* Add these classes to your Tailwind CSS configuration if necessary */
+.social-signin-button {
+  @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
+}
+
+.social-signin-button img {
+  @apply mr-2;
+}
+
+/* Specific styles for each provider */
+.google {
+  @apply bg-white text-black border border-gray-300;
+}
+
+.twitter {
+  @apply bg-blue-500 text-white;
+}
+
+.facebook {
+  @apply bg-blue-600 text-white;
+}
+
 /* Active Button Styles */
 .tab-button-active {
   background-color: #f97316; /* orange-500 */

@@ -6,6 +6,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
+  TwitterAuthProvider,
+  FacebookAuthProvider,
   signInWithPopup,
   AuthError,
 } from "firebase/auth";
@@ -145,24 +147,42 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <button type="submit" className="btn auth-button text-orange-600">
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
+          <p className="mt-4 text-center text-zinc-900">
+            {isSignUp ? (
+              <>
+                Already have an account?{" "}
+                <span
+                  onClick={() => setIsSignUp(false)}
+                  className="text-blue-600 hover:underline cursor-pointer"
+                >
+                  Sign In
+                </span>
+              </>
+            ) : (
+              <>
+                Need an account?{" "}
+                <span
+                  onClick={() => setIsSignUp(true)}
+                  className="text-blue-600 hover:underline cursor-pointer"
+                >
+                  Sign Up
+                </span>
+              </>
+            )}
+          </p>
         </form>
         <div className="mt-4 mx-auto ">
-          <button onClick={handleGoogleSignIn} className="google-signin-button">
+          <button
+            onClick={handleGoogleSignIn}
+            className="social-signin-button google "
+          >
             <Image src="/google.png" alt="Google Logo" width={20} height={20} />
             <span className="whitespace-nowrap">Sign in with Google</span>
           </button>
         </div>
         <button
-          onClick={() => setIsSignUp(!isSignUp)}
-          className="toggle-signup mt-4 text-zinc-900"
-        >
-          {isSignUp
-            ? "Already have an account? Sign In"
-            : "Need an account? Sign Up"}
-        </button>
-        <button
           onClick={onClose}
-          className="close-button bg-zinc-900 hover:cursor-pointer text-white"
+          className="close-button bg-zinc-900 hover:cursor-pointer text-zinc-200"
         >
           <XMarkIcon className="h-9 w-9 text-zinc-900" />
         </button>

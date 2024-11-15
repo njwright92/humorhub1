@@ -23,7 +23,7 @@ const ContactPage: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
-    null
+    null,
   );
 
   // Memoize handleInputChange to avoid re-creating the function on every render
@@ -32,7 +32,7 @@ const ContactPage: React.FC = () => {
       const { name, value } = e.target;
       setFormState((prevState) => ({ ...prevState, [name]: value }));
     },
-    []
+    [],
   );
 
   const handleSubmit = async (e: React.FormEvent) => {

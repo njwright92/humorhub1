@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import ClientSignOutButton from "./ClientSignOut";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import Link from "next/link";
@@ -181,9 +180,22 @@ export default function Footer() {
             <button
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="bg-orange-500 text-zinc-900 text-lg px-2 rounded-full shadow-md m-2 sm:m-0 sm:ml-4"
+              className="text-zinc-200 sm:mb-2"
             >
-              <ArrowUpCircleIcon className="h-20 w-10" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-15 w-10 text-zinc-200 rounded full shadow-xl cursor-pointer focus:outline-none m-2 sm:m-0 sm:mr-2 sm:mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 19V5m-7 7l7-7 7 7"
+                />
+              </svg>
             </button>
             <div className="text-center sm:text-left">
               <span className="text-sm sm:text-center block sm:inline">
