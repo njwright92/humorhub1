@@ -29,7 +29,7 @@ const HumorHubAPISection: React.FC = () => {
         Your Source for Fresh Headlines!
       </h3>
 
-      <div className="rounded-lg shadow-lg bg-zinc-900 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4 xs:p-2">
+      <div className="rounded-lg shadow-lg bg-zinc-750 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4 xs:p-2">
         <div
           onClick={() => {
             if (!isUserSignedIn) {

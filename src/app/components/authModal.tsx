@@ -12,7 +12,6 @@ import {
   AuthError,
 } from "firebase/auth";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
 
 // Type for the modal props
 type AuthModalProps = {

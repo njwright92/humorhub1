@@ -4,17 +4,14 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import dynamic from "next/dynamic";
-import {
-  Bars3Icon,
-  XMarkIcon,
-  NewspaperIcon,
-  PencilSquareIcon,
-  MapPinIcon,
-  PhoneIcon,
-  InformationCircleIcon,
-  UserIcon,
-  CpuChipIcon,
-} from "@heroicons/react/24/solid";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { MicFinderIcon } from "../icons/MicFinderIcon";
+import { NewsIcon } from "../icons/NewsIcon";
+import { ComicBotIcon } from "../icons/ComicBotIcon";
+import { JokePadIcon } from "../icons/JokePadIcon";
+import { ContactIcon } from "../icons/ContactIcon";
+import { AboutIcon } from "../icons/AboutIcon";
+import { UserIconComponent } from "../icons/UserIconComponent";
 import SearchBar from "./searchBar";
 import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
@@ -146,15 +143,16 @@ export default function Header() {
             </div>
 
             {/* Middle Section - Navigation Icons */}
-            <div className="flex flex-col items-center justify-center space-y-4 mt-4">
+            <div className="flex flex-col items-center justify-center space-y-6 mt-4">
               <SearchBar onSearch={handleSearch} />
 
+              {/* Mic Finder */}
               <Link
                 href="/MicFinder"
                 aria-label="Mic Finder"
                 className="relative group transform transition-transform hover:scale-105"
               >
-                <MapPinIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                <MicFinderIcon />
               </Link>
 
               {/* News */}
@@ -169,10 +167,10 @@ export default function Header() {
                 className="cursor-pointer relative group transform transition-transform hover:scale-105"
                 aria-label="News"
               >
-                <NewspaperIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                <NewsIcon />
               </div>
 
-              {/* Comic Bot - Using a Robot Icon */}
+              {/* Comic Bot */}
               <div
                 onClick={() => {
                   if (isUserSignedIn) {
@@ -184,7 +182,7 @@ export default function Header() {
                 className="cursor-pointer relative group transform transition-transform hover:scale-105"
                 aria-label="Comic Bot"
               >
-                <CpuChipIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                <ComicBotIcon />
               </div>
 
               {/* Joke Pad */}
@@ -199,7 +197,7 @@ export default function Header() {
                 className="cursor-pointer relative group transform transition-transform hover:scale-105"
                 aria-label="Joke Pad"
               >
-                <PencilSquareIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                <JokePadIcon />
               </div>
 
               {/* Contact Us */}
@@ -208,7 +206,7 @@ export default function Header() {
                 aria-label="Contact Us"
                 className="relative group transform transition-transform hover:scale-105"
               >
-                <PhoneIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                <ContactIcon />
               </Link>
 
               {/* About */}
@@ -217,7 +215,7 @@ export default function Header() {
                 aria-label="About"
                 className="relative group transform transition-transform hover:scale-105"
               >
-                <InformationCircleIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                <AboutIcon />
               </Link>
 
               {/* Profile / Sign In */}
@@ -227,7 +225,7 @@ export default function Header() {
                   aria-label="Profile"
                   className="relative group transform transition-transform hover:scale-105"
                 >
-                  <UserIcon className="h-6 w-6 text-zinc-200 hover:text-orange-500" />
+                  <UserIconComponent />
                 </Link>
               ) : (
                 <button
@@ -235,7 +233,7 @@ export default function Header() {
                   className="text-zinc-200 hover:text-orange-500 relative group transform transition-transform hover:scale-105"
                   aria-label="Sign In/Up"
                 >
-                  <UserIcon className="h-6 w-6" />
+                  <UserIconComponent />
                 </button>
               )}
             </div>
