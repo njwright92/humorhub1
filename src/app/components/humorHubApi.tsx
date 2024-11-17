@@ -45,8 +45,7 @@ const HumorHubAPISection: React.FC = () => {
             width={200}
             height={200}
             className="rounded-xl shadow-lg -mt-6 sm:mt-0 sm:ml-4 mb-4 cursor-pointer"
-            loading="eager"
-            priority
+            loading="lazy"
             style={{ objectFit: "contain", maxWidth: "80%" }}
             sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
           />

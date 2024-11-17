@@ -247,28 +247,11 @@ span {
   max-width: 20rem;
   margin: 0 auto;
   padding: 0.25rem 0.7rem;
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-/* Specific styles for each provider */
-.social-signin-button.google {
-  background-color: #ffffff;
-  color: #000000;
+  border-radius: 20px;
+  background-color: #fffffff1;
+  color: #0f0e0e;
   border: 1px solid #d1d5db;
-  border-radius: 1rem;
-}
-
-.social-signin-button.twitter {
-  background-color: #1da1f2;
-  color: #ffffff;
-  border-radius: 1rem;
-}
-
-.social-signin-button.facebook {
-  background-color: #1877f2;
-  color: #ffffff;
-  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Add these classes to your Tailwind CSS configuration if necessary */

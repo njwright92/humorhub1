@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -128,7 +128,56 @@ export default function Home() {
       ></Script>
       <Header />
       <div className="screen-container content-with-sidebar">
-        <HumorHubAPISection />
+        <section className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center">
+          <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
+            Mic Finder!
+          </h2>
+          <div className="flex flex-col md:flex-row-reverse items-center w-full">
+            <div className="flex-1 text-center items-center md:text-right">
+              <p className="text-sm sm:text-md mb-4">
+                Looking for your next performance spot? MicFinder connects you
+                with local mics and shows with 1500+ events in 300+ cities,
+                updated weekly.
+              </p>
+              <Suspense fallback={<div>Loading...</div>}>
+                <EventForm />
+              </Suspense>
+            </div>
+            <div className="md:w-1/2 flex items-center justify-center mb-4 md:mb-0">
+              <Link href="/MicFinder">
+                <Image
+                  src={micFinder}
+                  alt="Mic Finder"
+                  width={200}
+                  height={200}
+                  className="rounded-xl shadow-lg cursor-pointer"
+                  priority
+                  style={{ objectFit: "contain", maxWidth: "90%" }}
+                  sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
+                  onClick={() =>
+                    sendDataLayerEvent("click_micfinder_image", {
+                      event_category: "Navigation",
+                      event_label: "MicFinder Image",
+                    })
+                  }
+                />
+              </Link>
+              <Link href="/MicFinder">
+                <span
+                  className="btn text-md sm:text-lg items-center py-2 px-4 w-full sm:w-auto mt-6 hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
+                  onClick={() =>
+                    sendDataLayerEvent("click_micfinder_button", {
+                      event_category: "Navigation",
+                      event_label: "MicFinder Button",
+                    })
+                  }
+                >
+                  Find Your Mic
+                </span>
+              </Link>
+            </div>
+          </div>
+        </section>
         <section
           data-aos="fade-up"
           className="card-style flex flex-col items-center w-full p-4 xs:p-2 sm:p-4"
@@ -221,58 +270,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center">
-          <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
-            Mic Finder!
-          </h2>
-          <div className="flex flex-col md:flex-row-reverse items-center w-full">
-            <div className="flex-1 text-center items-center md:text-right">
-              <p className="text-sm sm:text-md mb-4">
-                Looking for your next performance spot? MicFinder connects you
-                with local mics and shows with 1500+ events in 300+ cities,
-                updated weekly.
-              </p>
-              <Suspense fallback={<div>Loading...</div>}>
-                <EventForm />
-              </Suspense>
-            </div>
-            <div className="md:w-1/2 flex items-center justify-center mb-4 md:mb-0">
-              <Link href="/MicFinder">
-                <Image
-                  src={micFinder}
-                  alt="Mic Finder"
-                  width={200}
-                  height={200}
-                  className="rounded-xl shadow-lg cursor-pointer"
-                  loading="lazy"
-                  style={{ objectFit: "contain", maxWidth: "90%" }}
-                  sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
-                  onClick={() =>
-                    sendDataLayerEvent("click_micfinder_image", {
-                      event_category: "Navigation",
-                      event_label: "MicFinder Image",
-                    })
-                  }
-                />
-              </Link>
-              <Link href="/MicFinder">
-                <span
-                  className="btn text-md sm:text-lg items-center py-2 px-4 w-full sm:w-auto mt-6 hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
-                  onClick={() =>
-                    sendDataLayerEvent("click_micfinder_button", {
-                      event_category: "Navigation",
-                      event_label: "MicFinder Button",
-                    })
-                  }
-                >
-                  Find Your Mic
-                </span>
-              </Link>
-            </div>
-          </div>
-        </section>
-
+        <HumorHubAPISection />
         <ComicBotModal
           isOpen={isComicBotModalOpen}
           onClose={() => setIsComicBotModalOpen(false)}
