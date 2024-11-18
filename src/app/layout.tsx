@@ -53,15 +53,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         />
         <meta charSet="UTF-8" />
         <link rel="apple-touch-icon" href="/apple.png" />
-
-        <link
-          rel="icon"
-          href="/favicon.ico"
-          type="image/x-icon"
-          sizes="any"
-          className="rounded-2xl"
-        />
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:site_name" content="Humor Hub" />
         <meta property="og:type" content="website" />
         <meta
