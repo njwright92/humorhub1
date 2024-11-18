@@ -53,6 +53,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         />
         <meta charSet="UTF-8" />
         <link rel="apple-touch-icon" href="/apple.png" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:site_name" content="Humor Hub" />
         <meta property="og:type" content="website" />
@@ -74,6 +76,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             width="0"
             style={{ display: "none", visibility: "hidden" }}
             title="Google Tag Manager"
+            aria-hidden
           ></iframe>
         </noscript>
 

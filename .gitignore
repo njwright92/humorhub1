@@ -60,3 +60,5 @@ updated_events.json
 events.json
 backend/.env
 backend/new_events.json
+firebase-debug.log
+.firebase/hosting.cHVibGlj.cache
