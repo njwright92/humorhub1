@@ -5,7 +5,6 @@ import Footer from "../components/footer";
 import Header from "../components/header";
 import { useRouter } from "next/navigation";
 import { useHeadline } from "../components/headlinecontext";
-import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 import Loading from "../components/loading";
 import Head from "next/head";
 import Script from "next/script";
@@ -293,9 +292,23 @@ const NewsPage = () => {
                           aria-label="Toggle article details"
                         >
                           {expandedArticle === article.title ? (
-                            <ArrowUpIcon className="h-5 w-5 text-orange-500 drop-shadow-xl" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 text-orange-500 drop-shadow-xl"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                            >
+                              <path d="M12 4l-7 7h4v6h6v-6h4l-7-7z" />
+                            </svg>
                           ) : (
-                            <ArrowDownIcon className="h-5 w-5 text-orange-500" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 text-orange-500"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                            >
+                              <path d="M12 20l7-7h-4v-6h-6v6h-4l7 7z" />
+                            </svg>
                           )}
                         </button>
                         <div className="flex-grow flex flex-col items-center md:items-start">

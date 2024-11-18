@@ -6,9 +6,6 @@ import jokes from "../app/jokes.webp";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect, useState, useCallback, Suspense } from "react";
-import Header from "./components/header";
-import Footer from "./components/footer";
-import HumorHubAPISection from "./components/humorHubApi";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
@@ -17,6 +14,9 @@ import Head from "next/head";
 import Script from "next/script";
 
 // Dynamic imports
+const Header = dynamic(() => import("./components/header"));
+const Footer = dynamic(() => import("./components/footer"));
+const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
 const EventForm = dynamic(() => import("./components/EventForm"));
 const ComicBotModal = dynamic(() => import("./components/comicBotModal"));
 const AuthModal = dynamic(() => import("./components/authModal"));

@@ -11,7 +11,6 @@ import {
   signInWithPopup,
   AuthError,
 } from "firebase/auth";
-import { XMarkIcon } from "@heroicons/react/24/solid";
 
 // Type for the modal props
 type AuthModalProps = {
@@ -283,7 +282,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           onClick={onClose}
           className="close-button bg-zinc-900 hover:cursor-pointer text-zinc-200"
         >
-          <XMarkIcon className="h-9 w-9 text-zinc-900" />
+          <svg
+            className="fill-current h-8 w-8 text-zinc-900"
+            role="button"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <title>Close</title>
+            <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
+          </svg>
         </button>
       </div>
     </div>

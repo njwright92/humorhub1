@@ -10,19 +10,16 @@ import React, {
   Suspense,
 } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { CalendarIcon } from "@heroicons/react/24/solid";
 import { EventContext } from "../components/eventContext";
 import dynamic from "next/dynamic";
 import { app, db, auth } from "../../../firebase.config";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import Header from "../components/header";
-import Footer from "../components/footer";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
 import Script from "next/script";
-import ReactDatePicker from "react-datepicker";
 import { parse, isValid } from "date-fns";
+import ReactDatePicker from "react-datepicker";
 
 function getDistanceFromLatLonInKm(
   lat1: number,
@@ -44,7 +41,14 @@ function getDistanceFromLatLonInKm(
   return R * c;
 }
 
-// Dynamic imports with Suspense for better performance
+const Header = dynamic(() => import("../components/header"), {
+  suspense: true,
+});
+
+const Footer = dynamic(() => import("../components/footer"), {
+  suspense: true,
+});
+
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
@@ -577,11 +581,11 @@ const EventsPage = () => {
         </span>
 
         <span
-          className="absolute top-[-0.5rem] right-[-0.5rem] px-4 py-3 cursor-pointer"
+          className="absolute top-[-0.75rem] right-[-0.75rem] px-4 py-3 cursor-pointer"
           onClick={() => setVisible(false)}
         >
           <svg
-            className="fill-current h-6 w-6 text-red-500"
+            className="fill-current h-6 w-6 text-zinc-200"
             role="button"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -771,10 +775,18 @@ const EventsPage = () => {
                 className="modern-input w-full cursor-pointer"
                 aria-label="Select date"
               />
-              <CalendarIcon
-                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-3/4 cursor-pointer"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 90 90"
+                fill="currentColor"
+                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
                 aria-hidden="true"
-              />
+              >
+                <g>
+                  <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
+                  <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
+                </g>
+              </svg>
             </div>
           </div>
         </div>

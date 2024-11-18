@@ -16,6 +16,7 @@
 # testing
 .vscode/
 /coverage
+/backend
 
 # next.js
 /.next/

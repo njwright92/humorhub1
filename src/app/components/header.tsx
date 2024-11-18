@@ -4,7 +4,6 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import dynamic from "next/dynamic";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import { MicFinderIcon } from "../icons/MicFinderIcon";
 import { NewsIcon } from "../icons/NewsIcon";
 import { ComicBotIcon } from "../icons/ComicBotIcon";
@@ -137,7 +136,7 @@ export default function Header() {
                   alt="Mic"
                   width={50}
                   height={50}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-8 transform transition-transform hover:scale-105"
+                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-2 transform transition-transform hover:scale-105"
                 />
               </Link>
             </div>
@@ -244,7 +243,20 @@ export default function Header() {
               className="text-zinc-200 hover:text-orange-500 mt-auto"
               aria-label="Open full menu"
             >
-              <Bars3Icon className="h-8 w-8 mb-2" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 mb-2"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
             </button>
           </div>
 
@@ -262,7 +274,20 @@ export default function Header() {
               className="text-zinc-900 cursor-pointer"
               aria-label="Toggle menu"
             >
-              <Bars3Icon className="h-8 w-8 mr-4" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 mr-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
             </button>
           </div>
 
@@ -274,7 +299,15 @@ export default function Header() {
                 className="self-end cursor-pointer mb-4"
                 aria-label="Close menu"
               >
-                <XMarkIcon className="h-9 w-9 text-zinc-200" />
+                <svg
+                  className="fill-current h-9 w-9 text-zinc-200"
+                  role="button"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <title>Close</title>
+                  <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
+                </svg>
               </button>
               <SearchBar onSearch={handleSearch} />
               <Link href="/">
