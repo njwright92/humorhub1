@@ -59,7 +59,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           href="/favicon.ico"
           type="image/x-icon"
           sizes="any"
-          className="rounded-full"
+          className="rounded-2xl"
         />
 
         <meta property="og:site_name" content="Humor Hub" />
