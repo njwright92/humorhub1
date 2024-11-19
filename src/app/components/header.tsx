@@ -123,6 +123,7 @@ export default function Header() {
               loading="eager"
               style={{ objectFit: "contain" }}
               sizes="(max-width: 768px) 100vw, 250px"
+              aria-label="Home"
             />
           </Link>
 
@@ -167,6 +168,7 @@ export default function Header() {
                 aria-label="News"
               >
                 <NewsIcon />
+                <span className="sr-only">News</span>
               </div>
 
               {/* Comic Bot */}
@@ -182,6 +184,7 @@ export default function Header() {
                 aria-label="Comic Bot"
               >
                 <ComicBotIcon />
+                <span className="sr-only">Comic Bot</span>
               </div>
 
               {/* Joke Pad */}
@@ -197,6 +200,7 @@ export default function Header() {
                 aria-label="Joke Pad"
               >
                 <JokePadIcon />
+                <span className="sr-only">Joke Pad</span>
               </div>
 
               {/* Contact Us */}
