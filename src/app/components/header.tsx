@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import dynamic from "next/dynamic";
@@ -27,7 +27,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
-  const [eventCount, setEventCount] = useState<number | null>(null);
+  // const [eventCount, setEventCount] = useState<number | null>(null);
   const [showBanner, setShowBanner] = useState(true);
 
   const fetchedOnce = useRef(false);
@@ -37,7 +37,7 @@ export default function Header() {
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    [],
+    []
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -47,25 +47,25 @@ export default function Header() {
   }, []);
 
   // Fetch event count once
-  useEffect(() => {
-    if (fetchedOnce.current) return;
+  // useEffect(() => {
+  //   if (fetchedOnce.current) return;
 
-    const fetchEventCount = async () => {
-      try {
-        const response = await fetch("/api/count-events");
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
+  //   const fetchEventCount = async () => {
+  //     try {
+  //       const response = await fetch("/api/count-events");
+  //       if (!response.ok)
+  //         throw new Error(`HTTP error! status: ${response.status}`);
 
-        const data = await response.json();
-        setEventCount(data.count);
-      } catch (error) {
-        console.error("Error fetching event count:", error);
-      }
-    };
+  //       const data = await response.json();
+  //       setEventCount(data.count);
+  //     } catch (error) {
+  //       console.error("Error fetching event count:", error);
+  //     }
+  //   };
 
-    fetchedOnce.current = true;
-    fetchEventCount();
-  }, []);
+  //   fetchedOnce.current = true;
+  //   fetchEventCount();
+  // }, []);
 
   // Firebase auth listener, clean up on unmount
   useEffect(() => {
@@ -85,14 +85,14 @@ export default function Header() {
     async (searchTerm: string) => {
       const normalizedSearchTerm = searchTerm.toLowerCase().trim();
       const matchingCity = Object.keys(cityContext).find((city) =>
-        city.toLowerCase().includes(normalizedSearchTerm),
+        city.toLowerCase().includes(normalizedSearchTerm)
       );
 
       if (matchingCity) {
         router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
       } else {
         alert(
-          "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!",
+          "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!"
         );
 
         try {
@@ -105,7 +105,7 @@ export default function Header() {
         }
       }
     },
-    [cityContext, router],
+    [cityContext, router]
   );
 
   return (
@@ -260,14 +260,13 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Top menu with text for smaller screens */}
-          <div className="md:hidden flex justify-between items-center w-full">
-            {showBanner && eventCount !== null && (
-              <div className="absolute top-0 right-10 mt-2 text-zinc-200 bg-zinc-900 rounded-2xl px-4 py-2 shadow-xl animate-bounce md:hidden">
-                {`Weekly Highlights: ${eventCount} New Mics!`} <br />
-                {`Now adding Comedy Festivals!`}
+          <div className="flex justify-between items-center w-full">
+            {showBanner && (
+              <div className="absolute top-20 right-10 text-yellow-400 text-lg bg-zinc-700 rounded-full px-2 py-1 shadow-xl animate-bounce">
+                *Now adding Comedy Festivals/competitions!*
               </div>
             )}
+
             <h1 className="text-zinc-900 text-4xl mx-auto">Humor Hub</h1>
             <button
               onClick={toggleMenu}
