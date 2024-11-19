@@ -260,9 +260,9 @@ export default function Header() {
             </button>
           </div>
 
-          <div className="flex justify-between items-center w-full">
+          <div className="flex justify-between w-full">
             {showBanner && (
-              <div className="absolute top-20 right-10 text-yellow-400 text-lg bg-zinc-700 rounded-full px-2 py-1 shadow-xl animate-bounce">
+              <div className="absolute top-20 right-5 mx-auto text-yellow-400 text-md bg-zinc-700 rounded-full p-1 shadow-xl animate-bounce whitespace-nowrap">
                 *Now adding Comedy Festivals/competitions!*
               </div>
             )}
