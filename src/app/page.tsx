@@ -270,7 +270,9 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <HumorHubAPISection />
+        <section data-aos="fade-up">
+          <HumorHubAPISection />
+        </section>
         <ComicBotModal
           isOpen={isComicBotModalOpen}
           onClose={() => setIsComicBotModalOpen(false)}

@@ -127,7 +127,7 @@ export default function Header() {
           </Link>
 
           {/* Sidebar for larger screens */}
-          <div className="hidden md:flex flex-col items-center justify-between h-full p-2 w-20 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg">
+          <div className="hidden md:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg">
             {/* Top Section - Logo */}
             <div className="flex flex-col items-center space-y-6 mt-4">
               <Link href="/" aria-label="Home">

@@ -79,7 +79,6 @@ Copy your Firebase config and add it to your environment variables.
 {
 "dependencies": {
 "@googlemaps/js-api-loader": "^1.16.2",
-"@heroicons/react": "^2.1.1",
 "aos": "^2.3.4",
 "axios": "^1.6.8",
 "firebase": "^10.7.1",

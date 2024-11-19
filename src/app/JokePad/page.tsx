@@ -13,7 +13,6 @@ import {
   deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Head from "next/head";
@@ -46,23 +45,6 @@ const Jokes = () => {
       unsubscribe();
     };
   }, []);
-
-  const fetchJokes = useCallback(async () => {
-    if (!userUID) return;
-
-    const jokeQuery = query(
-      collection(db, "jokes"),
-      where("uid", "==", userUID),
-    );
-    const unsubscribe = onSnapshot(jokeQuery, (querySnapshot) => {
-      const fetchedJokes = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        joke: doc.data().joke,
-      }));
-      setJokes(fetchedJokes);
-    });
-    return () => unsubscribe();
-  }, [userUID]);
 
   useEffect(() => {
     if (!userUID) return;
@@ -255,14 +237,37 @@ const Jokes = () => {
                 <div className="flex justify-between items-center w-full">
                   <p className="flex-grow">{joke.joke}</p>
                   <div className="icon-container flex-shrink-0 flex">
-                    <PencilIcon
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6 m-2 cursor-pointer text-green-500"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       onClick={() => handleEditClick(joke.id)}
-                    />
-                    <TrashIcon
+                    >
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                    </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6 m-2 cursor-pointer text-red-500"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       onClick={() => handleDelete(joke.id)}
-                    />
+                    >
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6l-2 14H7L5 6" />
+                      <path d="M10 11v6" />
+                      <path d="M14 11v6" />
+                      <path d="M9 6V3h6v3" />
+                    </svg>
                   </div>
                 </div>
               )}

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs, DocumentData } from "firebase/firestore";
 
@@ -110,10 +109,22 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center p-1 bg-white text-black rounded-full z-10"
+          className="flex items-center justify-center p-1 bg-zinc-100 text-zinc-900 rounded-full"
           aria-label="Toggle search"
         >
-          <MagnifyingGlassIcon className="h-6 w-6" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
         </button>
       )}
 
