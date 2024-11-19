@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -127,7 +127,11 @@ export default function Home() {
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       ></Script>
       <Header />
+
       <div className="screen-container content-with-sidebar">
+        <h1 className="hidden md:block text-zinc-200 text-4xl justify-center items-center font-bold mb-6 whitespace-nowrap">
+          Humor Hub!
+        </h1>
         <section className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center">
           <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
             Mic Finder!
