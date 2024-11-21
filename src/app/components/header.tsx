@@ -37,7 +37,7 @@ export default function Header() {
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    []
+    [],
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -85,14 +85,14 @@ export default function Header() {
     async (searchTerm: string) => {
       const normalizedSearchTerm = searchTerm.toLowerCase().trim();
       const matchingCity = Object.keys(cityContext).find((city) =>
-        city.toLowerCase().includes(normalizedSearchTerm)
+        city.toLowerCase().includes(normalizedSearchTerm),
       );
 
       if (matchingCity) {
         router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
       } else {
         alert(
-          "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!"
+          "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!",
         );
 
         try {
@@ -105,7 +105,7 @@ export default function Header() {
         }
       }
     },
-    [cityContext, router]
+    [cityContext, router],
   );
 
   return (
@@ -271,7 +271,7 @@ export default function Header() {
               </div>
             )}
 
-            <h1 className="text-zinc-900 text-4xl mx-auto font-bold">
+            <h1 className="text-zinc-900 text-4xl mx-auto font-bold md:hidden">
               Humor Hub!
             </h1>
             <button
