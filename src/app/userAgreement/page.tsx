@@ -41,7 +41,9 @@ const UserAgreement: React.FC = () => {
         />
       </Head>
 
-      <h1 className="title text-center">User Agreement (Terms of Use)</h1>
+      <h1 className="title text-center content-with-sidebar">
+        User Agreement (Terms of Use)
+      </h1>
       <p>
         <strong>Last updated:</strong> 4/10/24
       </p>

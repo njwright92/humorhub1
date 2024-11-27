@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import dynamic from "next/dynamic";
@@ -11,17 +11,16 @@ import { JokePadIcon } from "../icons/JokePadIcon";
 import { ContactIcon } from "../icons/ContactIcon";
 import { AboutIcon } from "../icons/AboutIcon";
 import { UserIconComponent } from "../icons/UserIconComponent";
-import SearchBar from "./searchBar";
 import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
 import hh from "../../app/hh.webp";
 import Image from "next/image";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../../firebase.config";
-import ComicBotModal from "./comicBotModal";
 
+const SearchBar = dynamic(() => import("./searchBar"));
 const AuthModal = dynamic(() => import("./authModal"));
-
+const ComicBotModal = dynamic(() => import("./comicBotModal"));
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,7 +29,7 @@ export default function Header() {
   // const [eventCount, setEventCount] = useState<number | null>(null);
   const [showBanner, setShowBanner] = useState(true);
 
-  const fetchedOnce = useRef(false);
+  // const fetchedOnce = useRef(false);
   const cityContext = useCity();
   const router = useRouter();
 

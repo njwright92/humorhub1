@@ -14,10 +14,12 @@ import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
-import Header from "../components/header";
-import Footer from "../components/footer";
 import Head from "next/head";
 import Script from "next/script";
+import dynamic from "next/dynamic";
+
+const Header = dynamic(() => import("../components/header"), {});
+const Footer = dynamic(() => import("../components/footer"), {});
 
 export default function UserProfile() {
   const [profileImage, setProfileImage] = useState<File | null>(null);

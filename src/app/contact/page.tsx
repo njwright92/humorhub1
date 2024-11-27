@@ -2,10 +2,12 @@
 
 import React, { useCallback, useState } from "react";
 import Head from "next/head";
-import Header from "../components/header";
-import Footer from "../components/footer";
 import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
+import dynamic from "next/dynamic";
+
+const Header = dynamic(() => import("../components/header"), {});
+const Footer = dynamic(() => import("../components/footer"), {});
 
 type ContactFormState = {
   name: string;
@@ -78,7 +80,7 @@ const ContactPage: React.FC = () => {
         />
       </Head>
       <Header />
-      <div className="screen-container mx-auto px-4">
+      <div className="screen-container content-with-sidebar mx-auto p-4">
         <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
           <h1 className="text-zinc-900 text-3xl font-bold text-center mb-4">
             We&rsquo;d Love to Hear From You
@@ -126,7 +128,7 @@ const ContactPage: React.FC = () => {
             <div className="flex flex-col">
               <label
                 htmlFor="name"
-                className="mb-2 font-semibold text-zinc-900"
+                className="mb-2 font-semibold text-zinc-900 mx-auto w-1/2 lg:w-1/4"
               >
                 Your Name:
               </label>
@@ -138,14 +140,14 @@ const ContactPage: React.FC = () => {
                 required
                 value={formState.name}
                 onChange={handleInputChange}
-                className="text-zinc-900 shadow rounded-lg p-2"
+                className="text-zinc-900 shadow rounded-lg p-2 mx-auto w-1/2 lg:w-1/4"
                 aria-label="Name"
               />
             </div>
             <div className="flex flex-col">
               <label
                 htmlFor="email"
-                className="mb-2 font-semibold text-zinc-900"
+                className="mb-2 font-semibold text-zinc-900 w-1/2 lg:w-1/4 mx-auto"
               >
                 Your Email:
               </label>
@@ -157,7 +159,7 @@ const ContactPage: React.FC = () => {
                 required
                 value={formState.email}
                 onChange={handleInputChange}
-                className="text-zinc-900 shadow rounded-lg p-2"
+                className="text-zinc-900 shadow rounded-lg p-2 w-1/2 lg:w-1/4 mx-auto"
                 aria-label="Email"
               />
             </div>

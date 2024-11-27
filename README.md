@@ -77,21 +77,21 @@ Copy your Firebase config and add it to your environment variables.
 ## 📦 Dependencies
 
 {
- "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "@googlemaps/js-api-loader": "^1.16.2",
-    "aos": "^2.3.4",
-    "axios": "^1.6.8",
-    "date-fns": "^4.1.0",
-    "firebase": "^10.7.1",
-    "firebase-admin": "^12.1.0",
-    "next": "^15.0.3",
-    "react": "^18.3.1",
-    "react-datepicker": "^4.25.0",
-    "react-dom": "^18.3.1",
-    "react-window": "^1.8.10",
-    "sharp": "^0.33.2"
-  },
+"dependencies": {
+"@emailjs/browser": "^4.4.1",
+"@googlemaps/js-api-loader": "^1.16.2",
+"aos": "^2.3.4",
+"axios": "^1.6.8",
+"date-fns": "^4.1.0",
+"firebase": "^10.7.1",
+"firebase-admin": "^12.1.0",
+"next": "^15.0.3",
+"react": "^18.3.1",
+"react-datepicker": "^4.25.0",
+"react-dom": "^18.3.1",
+"react-window": "^1.8.10",
+"sharp": "^0.33.2"
+},
 }
 
 ### 🤝 Contributing

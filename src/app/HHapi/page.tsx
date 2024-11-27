@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Footer from "../components/footer";
-import Header from "../components/header";
 import { useRouter } from "next/navigation";
 import { useHeadline } from "../components/headlinecontext";
 import Loading from "../components/loading";
 import Head from "next/head";
 import Script from "next/script";
+import dynamic from "next/dynamic";
+
+const Header = dynamic(() => import("../components/header"), {});
+const Footer = dynamic(() => import("../components/footer"), {});
 
 type Category = "top_stories" | "all_news";
 

@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import Head from "next/head";
-import Header from "../components/header";
-import Footer from "../components/footer";
+import dynamic from "next/dynamic";
 
+const Header = dynamic(() => import("../components/header"), {});
+const Footer = dynamic(() => import("../components/footer"), {});
 const About: React.FC = () => {
   return (
     <>

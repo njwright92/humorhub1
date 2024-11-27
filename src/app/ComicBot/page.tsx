@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, ChangeEvent } from "react";
-import Header from "../components/header";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../../firebase.config";
 import {
@@ -13,8 +12,7 @@ import {
   deleteDoc,
   getDocs,
 } from "firebase/firestore";
-import Footer from "../components/footer";
-import Loading from "../components/loading";
+import dynamic from "next/dynamic";
 import { useHeadline } from "../components/headlinecontext";
 import logo from "../../app/comicLogo.webp";
 import comic from "../../app/favicon.ico";
@@ -33,6 +31,10 @@ type Conversation = {
   id: string;
   messages: ConversationMessage[];
 };
+
+const Header = dynamic(() => import("../components/header"), {});
+const Footer = dynamic(() => import("../components/footer"), {});
+const Loading = dynamic(() => import("../components/loading"), {});
 
 const ComicBot = () => {
   const [allConversations, setAllConversations] = useState<Conversation[]>([]);
