@@ -41,13 +41,9 @@ function getDistanceFromLatLonInKm(
   return R * c;
 }
 
-const Header = dynamic(() => import("../components/header"), {
-  suspense: true,
-});
+const Header = dynamic(() => import("../components/header"), {});
 
-const Footer = dynamic(() => import("../components/footer"), {
-  suspense: true,
-});
+const Footer = dynamic(() => import("../components/footer"), {});
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
