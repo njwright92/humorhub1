@@ -157,7 +157,7 @@ export default function Home() {
                   className="rounded-xl shadow-lg cursor-pointer"
                   priority
                   style={{ objectFit: "contain", maxWidth: "90%" }}
-                  sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
+                  sizes="(max-width: 640px) 60vw, (max-width: 768px) 80vw, 250px"
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_image", {
                       event_category: "Navigation",
@@ -208,8 +208,8 @@ export default function Home() {
                 height={200}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain", maxWidth: "90%" }}
-                sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 640px) 60vw, (max-width: 768px) 80vw, 200px"
               />
             </div>
             <div className="flex-1 text-center md:text-left">
@@ -259,9 +259,10 @@ export default function Home() {
                 height={200}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain", maxWidth: "90%" }}
-                sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 640px) 60vw, (max-width: 768px) 80vw, 200px"
               />
+
               <button className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-green-700 transition-colors mt-4 cursor-pointer">
                 Start Using Jokepad
               </button>

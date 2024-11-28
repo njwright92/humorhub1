@@ -48,9 +48,9 @@ export default function Footer() {
               <Image
                 src={hh}
                 alt="Mic"
-                width={70}
-                height={70}
-                className="rounded-full mr-2 cursor-pointer"
+                width={60}
+                height={60}
+                className="rounded-full ml-4 cursor-pointer"
                 loading="lazy"
                 style={{ objectFit: "contain" }}
                 sizes="(max-width: 768px) 100vw, 250px"
@@ -173,7 +173,7 @@ export default function Footer() {
         <div className="sm:flex sm:items-center sm:justify-between mt-4">
           <div className="flex flex-col items-center sm:items-start sm:flex-row-reverse sm:justify-between sm:w-full">
             {isUserSignedIn && (
-              <div className="mb-4">
+              <div className="mb-4 mr-2">
                 <ClientSignOutButton />
               </div>
             )}

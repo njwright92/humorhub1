@@ -119,9 +119,9 @@ export default function Header() {
               width={50}
               height={50}
               className="rounded-full cursor-pointer bg-zinc-900 p-2 md:hidden"
-              loading="eager"
+              priority
               style={{ objectFit: "contain" }}
-              sizes="(max-width: 768px) 100vw, 250px"
+              sizes="(max-width: 640px) 40px, (max-width: 768px) 45px, 50px"
               aria-label="Home"
             />
           </Link>
