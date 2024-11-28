@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -157,7 +157,7 @@ export default function Home() {
                   className="rounded-xl shadow-lg cursor-pointer"
                   priority
                   style={{ objectFit: "contain", maxWidth: "90%" }}
-                  sizes="(max-width: 640px) 60vw, (max-width: 768px) 80vw, 250px"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 70vw, 200px"
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_image", {
                       event_category: "Navigation",
@@ -209,7 +209,7 @@ export default function Home() {
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
                 style={{ objectFit: "contain" }}
-                sizes="(max-width: 640px) 60vw, (max-width: 768px) 80vw, 200px"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 70vw, 200px"
               />
             </div>
             <div className="flex-1 text-center md:text-left">
