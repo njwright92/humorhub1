@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -157,7 +157,7 @@ export default function Home() {
                   className="rounded-xl shadow-lg cursor-pointer"
                   priority
                   style={{ objectFit: "contain", maxWidth: "90%" }}
-                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 70vw, 200px"
+                  sizes="(max-width: 640px) 40vw, (max-width: 768px) 70vw, 200px"
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_image", {
                       event_category: "Navigation",
@@ -186,15 +186,39 @@ export default function Home() {
           data-aos="fade-up"
           className="card-style flex flex-col items-center w-full p-4 xs:p-2 sm:p-4"
         >
+          {/* Centered Headings */}
           <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center">
             ComicBot
           </h2>
           <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">
             Unfiltered Comedy, No Writer&#39;s Block
           </h3>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-center w-full">
+
+          {/* Main Content */}
+          <div className="flex flex-col md:flex-row items-center justify-between w-full">
+            {/* Text First */}
+            <div className="flex-1 text-center md:text-left md:pr-6 order-2 md:order-1 w-full md:w-1/2 mb-4 md:mb-0">
+              <p className="text-sm sm:text-md mb-4">
+                Stuck on a joke? ComicBot is your unfiltered, comedy-trained
+                chatbot ready to punch through writers block and spark new
+                material... **Coming soon!**
+              </p>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  isUserSignedIn
+                    ? setIsComicBotModalOpen(true)
+                    : setIsAuthModalOpen(true);
+                }}
+                className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-blue-700 transition-colors cursor-pointer"
+              >
+                Try ComicBot Now
+              </button>
+            </div>
+
+            {/* Image Second */}
             <div
-              className="md:w-1/2 flex justify-center mb-4 md:mb-0"
+              className="md:w-1/2 flex justify-center order-1 md:order-2"
               onClick={() =>
                 isUserSignedIn
                   ? setIsComicBotModalOpen(true)
@@ -209,26 +233,8 @@ export default function Home() {
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
                 style={{ objectFit: "contain" }}
-                sizes="(max-width: 640px) 50vw, (max-width: 768px) 70vw, 200px"
+                sizes="(max-width: 640px) 40vw, (max-width: 768px) 70vw, 200px"
               />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <p className="text-sm sm:text-md mb-4">
-                Stuck on a joke? ComicBot is your unfiltered, comedy-trained
-                chatbot ready to punch through writers block and spark new
-                material... &#42;&#42;Coming soon!&#42;&#42;
-              </p>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  isUserSignedIn
-                    ? setIsComicBotModalOpen(true)
-                    : setIsAuthModalOpen(true);
-                }}
-                className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-blue-700 transition-colors cursor-pointer"
-              >
-                Try ComicBot Now
-              </button>
             </div>
           </div>
         </section>
