@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -140,7 +140,7 @@ export default function Home() {
             <div className="flex-1 text-center items-center md:text-right">
               <p className="text-sm sm:text-md mb-4">
                 Looking for your next performance spot? MicFinder connects you
-                with local mics and shows with 1500+ events in 300+ cities,
+                with local mics and shows with 1600+ events in 360+ cities,
                 updated weekly.
               </p>
               <Suspense fallback={<div>Loading...</div>}>
