@@ -152,12 +152,12 @@ export default function Home() {
                 <Image
                   src={micFinder}
                   alt="Mic Finder"
-                  width={200}
-                  height={200}
+                  width={150}
+                  height={150}
                   className="rounded-xl shadow-lg cursor-pointer"
                   priority
-                  style={{ objectFit: "contain", maxWidth: "90%" }}
-                  sizes="(max-width: 640px) 40vw, (max-width: 768px) 70vw, 200px"
+                  style={{ objectFit: "contain", maxWidth: "100%" }}
+                  sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_image", {
                       event_category: "Navigation",
@@ -228,12 +228,12 @@ export default function Home() {
               <Image
                 src={ComicBot}
                 alt="ComicBot - Unfiltered AI Comedy Assistant"
-                width={200}
-                height={200}
+                width={150}
+                height={150}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain" }}
-                sizes="(max-width: 640px) 40vw, (max-width: 768px) 70vw, 200px"
+                style={{ objectFit: "contain", maxWidth: "100%" }}
+                sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
               />
             </div>
           </div>
@@ -261,12 +261,12 @@ export default function Home() {
               <Image
                 src={jokes}
                 alt="Jokepad - Comedy Notebook"
-                width={200}
-                height={200}
+                width={150}
+                height={150}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
-                style={{ objectFit: "contain" }}
-                sizes="(max-width: 640px) 60vw, (max-width: 768px) 80vw, 200px"
+                style={{ objectFit: "contain", maxWidth: "100%" }}
+                sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
               />
 
               <button className="btn text-md sm:text-lg py-2 px-4 w-full sm:w-auto hover:bg-green-700 transition-colors mt-4 cursor-pointer">
