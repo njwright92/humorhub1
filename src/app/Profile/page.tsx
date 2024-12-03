@@ -234,8 +234,8 @@ export default function UserProfile() {
                   <Image
                     src={profileImageObjectURL}
                     alt="Profile Preview"
-                    width={300}
-                    height={300}
+                    width={240}
+                    height={240}
                     className="profile-image rounded-full mx-auto"
                     priority
                   />
