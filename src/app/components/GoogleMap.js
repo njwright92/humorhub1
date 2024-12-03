@@ -235,6 +235,9 @@ const GoogleMap = ({ lat, lng, events }) => {
               title: event.name,
             });
 
+            // Add pointer cursor style to the marker's element
+            marker.element.style.cursor = "pointer";
+
             const infoWindow = new google.maps.InfoWindow({
               maxWidth: 250,
             });
