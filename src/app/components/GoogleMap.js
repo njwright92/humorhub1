@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -33,11 +33,11 @@ const GoogleMap = ({ lat, lng, events }) => {
         });
 
         events.forEach((event) => {
-          const eventLat = parseFloat(event.lat);
-          const eventLng = parseFloat(event.lng);
+          const eventLat = Number(event.lat); // Ensure exact latitude
+          const eventLng = Number(event.lng); // Ensure exact longitude
 
           if (!isNaN(eventLat) && !isNaN(eventLng)) {
-            const position = { lat: eventLat, lng: eventLng };
+            const position = { lat: eventLat, lng: eventLng }; // Use unaltered coordinates
 
             // Create the advanced marker
             const marker = new AdvancedMarkerElement({
