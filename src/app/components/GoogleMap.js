@@ -58,7 +58,9 @@ const GoogleMap = ({ lat, lng, events }) => {
               infoWindow.close();
               infoWindow.setContent(`
                 <div style="padding: .5rem; text-align: center; justify-content: center; background-color: #f5f5f5;">
-                  <h2 style="font-weight: bold; color: black;">${event.name}</h2>
+                  <h2 style="font-weight: bold; color: black;">${
+                    event.name
+                  }</h2>
                   <p style="color: black;">${event.location}</p>
                   <p style="color: black;">${event.date}</p>
                   ${

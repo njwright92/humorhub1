@@ -201,7 +201,7 @@ const Jokes = () => {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="bg-orange-500 hover:bg-orange-700 text-zinc-200 px-4 py-2 rounded-xl shadow-lg text-md transition-all duration-150 ease-in-out hover:animate-pulse"
+                className="bg-orange-500 hover:bg-orange-700 text-zinc-900 px-4 py-2 rounded-xl shadow-lg text-md transition-all duration-150 ease-in-out hover:animate-pulse"
               >
                 Add Joke
               </button>
