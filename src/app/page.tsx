@@ -231,7 +231,7 @@ export default function Home() {
                 width={150}
                 height={150}
                 className="rounded-xl shadow-lg cursor-pointer"
-                loading="lazy"
+                priority
                 style={{ objectFit: "contain", maxWidth: "100%" }}
                 sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
               />

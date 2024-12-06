@@ -261,9 +261,14 @@ export default function Header() {
             </button>
           </div>
 
-          <div className="flex justify-between w-full">
+          <div className="flex justify-between">
             {showBanner && (
-              <div className="absolute top-20 right-5 mx-auto text-yellow-400 text-md bg-zinc-700 rounded-full p-1 shadow-xl animate-bounce whitespace-nowrap">
+              <div
+                className="
+      absolute top-20 left-0 right-0 flex justify-center text-center
+      text-yellow-400 text-md bg-zinc-700 rounded-full p-1 shadow-xl animate-bounce
+      md:fixed md:top-5 md:right-5 md:left-auto"
+              >
                 *Now adding Comedy Festivals/competitions!*
               </div>
             )}

@@ -548,9 +548,6 @@ video {
 .right-3 {
   right: 0.75rem;
 }
-.right-5 {
-  right: 1.25rem;
-}
 .right-\[-0\.75rem\] {
   right: -0.75rem;
 }
@@ -2389,6 +2386,18 @@ option {
 @media (min-width: 768px) {
   .md\:fixed {
     position: fixed;
+  }
+
+  .md\:left-auto {
+    left: auto;
+  }
+
+  .md\:right-5 {
+    right: 1.25rem;
+  }
+
+  .md\:top-5 {
+    top: 1.25rem;
   }
 
   .md\:order-1 {
