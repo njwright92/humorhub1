@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
-import { CityProvider } from "./components/cityContext";
-import { EventProvider } from "./components/eventContext";
 import { HeadlineProvider } from "./components/headlinecontext";
 import "./globals.css";
 import Script from "next/script";
@@ -77,14 +75,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             aria-hidden
           ></iframe>
         </noscript>
-
-        <CityProvider>
-          <EventProvider>
-            <HeadlineProvider>
-              <div>{children}</div>
-            </HeadlineProvider>
-          </EventProvider>
-        </CityProvider>
+        <HeadlineProvider>
+          <div>{children}</div>
+        </HeadlineProvider>
       </body>
     </html>
   );

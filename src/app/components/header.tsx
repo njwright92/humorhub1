@@ -11,11 +11,10 @@ import { JokePadIcon } from "../icons/JokePadIcon";
 import { ContactIcon } from "../icons/ContactIcon";
 import { AboutIcon } from "../icons/AboutIcon";
 import { UserIconComponent } from "../icons/UserIconComponent";
-import { useCity } from "./cityContext";
 import { useRouter } from "next/navigation";
 import hh from "../../app/hh.webp";
 import Image from "next/image";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 
 const SearchBar = dynamic(() => import("./searchBar"));
@@ -28,9 +27,9 @@ export default function Header() {
   const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   // const [eventCount, setEventCount] = useState<number | null>(null);
   const [showBanner, setShowBanner] = useState(true);
+  const [cityList, setCityList] = useState<string[]>([]);
 
   // const fetchedOnce = useRef(false);
-  const cityContext = useCity();
   const router = useRouter();
 
   // Toggle modal and menu
@@ -45,26 +44,25 @@ export default function Header() {
     setIsUserSignedIn(!!user);
   }, []);
 
-  // Fetch event count once
-  // useEffect(() => {
-  //   if (fetchedOnce.current) return;
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "cities"));
+        const fetchedCities: string[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.city) {
+            fetchedCities.push(data.city);
+          }
+        });
+        setCityList(fetchedCities);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
 
-  //   const fetchEventCount = async () => {
-  //     try {
-  //       const response = await fetch("/api/count-events");
-  //       if (!response.ok)
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-
-  //       const data = await response.json();
-  //       setEventCount(data.count);
-  //     } catch (error) {
-  //       console.error("Error fetching event count:", error);
-  //     }
-  //   };
-
-  //   fetchedOnce.current = true;
-  //   fetchEventCount();
-  // }, []);
+    fetchCities();
+  }, []);
 
   // Firebase auth listener, clean up on unmount
   useEffect(() => {
@@ -83,7 +81,7 @@ export default function Header() {
   const handleSearch = useCallback(
     async (searchTerm: string) => {
       const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-      const matchingCity = Object.keys(cityContext).find((city) =>
+      const matchingCity = cityList.find((city) =>
         city.toLowerCase().includes(normalizedSearchTerm),
       );
 
@@ -104,7 +102,7 @@ export default function Header() {
         }
       }
     },
-    [cityContext, router],
+    [cityList, router],
   );
 
   return (

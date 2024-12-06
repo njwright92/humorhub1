@@ -3,17 +3,21 @@
 import React, {
   useState,
   useRef,
-  useContext,
   useEffect,
   useCallback,
   useMemo,
   Suspense,
 } from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { EventContext } from "../components/eventContext";
 import dynamic from "next/dynamic";
 import { app, db, auth } from "../../../firebase.config";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List } from "react-window";
 import Head from "next/head";
@@ -25,7 +29,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 6371; // Earth's radius in kilometers
   const toRad = (value: number) => (value * Math.PI) / 180; // Degrees to radians
@@ -78,7 +82,6 @@ const EventsPage = () => {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const datePickerRef = useRef<ReactDatePicker | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
-  const { saveEvent } = useContext(EventContext);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
@@ -108,7 +111,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -118,14 +121,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates]
+    [cityCoordinates],
   );
 
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -275,7 +278,7 @@ const EventsPage = () => {
         setEvents(fetchedEvents);
       } catch (error) {
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later."
+          "Oops! We couldn't load the events at the moment. Please try again later.",
         );
       }
     };
@@ -325,7 +328,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay;
     },
-    []
+    [],
   );
 
   const filteredEvents = useMemo(() => {
@@ -413,19 +416,28 @@ const EventsPage = () => {
       }
 
       try {
-        await saveEvent(event);
+        const user = auth.currentUser;
+        if (!user) {
+          throw new Error("User not found.");
+        }
+
+        // Create a reference to the user's savedEvents collection
+        const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
+        await setDoc(userSavedEventRef, { ...event, userId: user.uid });
+
         alert("Event saved to your profile successfully!");
       } catch (error) {
         alert(
-          "Oops! Something went wrong while saving the event. Please try again."
+          "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
+
       sendDataLayerEvent("save_event", {
         event_category: "Event Interaction",
         event_label: event.name,
       });
     },
-    [saveEvent, isUserSignedIn]
+    [isUserSignedIn],
   );
 
   // Create a function to sort cities with Spokane WA first
@@ -480,9 +492,9 @@ const EventsPage = () => {
       },
       (error) => {
         alert(
-          "Unable to retrieve your location. Please select a city manually."
+          "Unable to retrieve your location. Please select a city manually.",
         );
-      }
+      },
     );
   }, [findClosestCity]);
 
@@ -550,7 +562,7 @@ const EventsPage = () => {
       (a, b) =>
         spokaneClubFirst(a, b) ||
         new Date(b.googleTimestamp).getTime() -
-          new Date(a.googleTimestamp).getTime()
+          new Date(a.googleTimestamp).getTime(),
     );
 
     return sortedEvents;
@@ -735,8 +747,8 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {sortCitiesWithSpokaneFirst(
                     Object.keys(cityCoordinates).filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
+                      city.toLowerCase().includes(searchTerm.toLowerCase()),
+                    ),
                   ).map((city) => (
                     <li
                       key={city}
@@ -926,8 +938,8 @@ const EventsPage = () => {
 
                     {sortCitiesWithSpokaneFirst(
                       uniqueCities.filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
+                        city.toLowerCase().includes(searchTerm.toLowerCase()),
+                      ),
                     ).map((city) => (
                       <li
                         key={city}
@@ -958,8 +970,8 @@ const EventsPage = () => {
                 ? "All Mics"
                 : "All Festivals"
               : selectedTab === "Mics"
-                ? `All Mics in ${filterCity}`
-                : `All Festivals in ${filterCity}`}
+              ? `All Mics in ${filterCity}`
+              : `All Festivals in ${filterCity}`}
           </h2>
           {selectedTab === "Festivals" && sortedEventsByCity.length === 0 && (
             <p>No festivals found for {filterCity}.</p>

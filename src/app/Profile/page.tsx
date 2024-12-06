@@ -1,15 +1,14 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useContext,
-  useMemo,
-  useCallback,
-  useRef,
-} from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Image from "next/image";
-import { EventContext, Event } from "../components/eventContext";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+} from "firebase/firestore";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -21,13 +20,27 @@ import dynamic from "next/dynamic";
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
 
+type Event = {
+  id: string;
+  date: string;
+  name: string;
+  isRecurring: boolean;
+  location: string;
+  details: string;
+  lng: number;
+  lat: number;
+  googleTimestamp: string;
+  festival?: boolean;
+  userId?: string;
+};
+
 export default function UserProfile() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const { saveEvent, savedEvents, deleteEvent } = useContext(EventContext);
+  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const auth = getAuth();
   const storage = getStorage();
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
@@ -50,39 +63,33 @@ export default function UserProfile() {
     return unsubscribe; // Cleanup the subscription on unmount
   }, [auth]);
 
-  const fetchUserDataAndEvents = useCallback(
-    async (user: User) => {
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const userEventsRef = doc(db, "userEvents", user.uid);
+  const fetchUserDataAndEvents = useCallback(async (user: User) => {
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userRef);
 
-        const [userDocSnap, userEventsDocSnap] = await Promise.all([
-          getDoc(userRef),
-          getDoc(userEventsRef),
-        ]);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          setName(userData?.name || "");
-          setBio(userData?.bio || "");
-          setProfileImageUrl(userData?.profileImageUrl || "");
-        }
-
-        if (userEventsDocSnap.exists() && userEventsDocSnap.data().events) {
-          const eventsFromFirestore: Event[] = userEventsDocSnap.data().events;
-          const newEvents = eventsFromFirestore.filter(
-            (event) => !savedEvents.some((e) => e.id === event.id),
-          );
-
-          newEvents.forEach((event) => saveEvent(event)); // Save only new events
-        }
-      } catch (error) {
-        console.error("Error fetching profile data and events:", error); // Log the error for debugging
-        alert("Oops! We couldn't load your profile data and events.");
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        setName(userData?.name || "");
+        setBio(userData?.bio || "");
+        setProfileImageUrl(userData?.profileImageUrl || "");
       }
-    },
-    [saveEvent, savedEvents],
-  );
+
+      // Fetch saved events directly from 'savedEvents'
+      const q = query(
+        collection(db, "savedEvents"),
+        where("userId", "==", user.uid),
+      );
+      const querySnapshot = await getDocs(q);
+      const fetchedEvents: Event[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Event,
+      );
+      setSavedEvents(fetchedEvents);
+    } catch (error) {
+      console.error("Error fetching profile data and events:", error);
+      alert("Oops! We couldn't load your profile data and events.");
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -128,18 +135,18 @@ export default function UserProfile() {
     }
   }, [auth, name, bio, profileImageUrl]);
 
-  const handleDeleteEvent = useCallback(
-    async (eventId: string) => {
-      try {
-        await deleteEvent(eventId);
-        alert("Event deleted successfully.");
-      } catch (error) {
-        console.error("Error deleting event:", error); // Log the error
-        alert("Oops! Something went wrong while deleting the event.");
-      }
-    },
-    [deleteEvent],
-  );
+  const handleDeleteEvent = useCallback(async (eventId: string) => {
+    try {
+      await deleteDoc(doc(db, "savedEvents", eventId));
+      setSavedEvents((prevEvents) =>
+        prevEvents.filter((e) => e.id !== eventId),
+      );
+      alert("Event deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      alert("Oops! Something went wrong while deleting the event.");
+    }
+  }, []);
 
   const handleEdit = useCallback(() => {
     if (!isUserSignedIn) {
@@ -386,7 +393,7 @@ export default function UserProfile() {
                   />
                 </div>
                 <button
-                  className="btn bg-red-500 hover:bg-red-700 text-zinc-200 font-bold py-1 px-3 rounded hover:animate-pulse transition-colors duration-150 ease-in-out"
+                  className=" bg-red-500 hover:bg-red-700 text-zinc-900 font-bold py-1 px-3 rounded-full hover:animate-pulse transition-colors duration-150 ease-in-out"
                   onClick={() => {
                     handleDeleteEvent(event.id);
                     sendDataLayerEvent("click_delete_saved_event", {
