@@ -1,7 +1,7 @@
 // src/app/icons/AboutIcon.jsx
 import React from "react";
 
-export const AboutIcon = () => (
+const AboutIcon = () => (
   <svg
     className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
     viewBox="0 0 24 24"
@@ -35,3 +35,5 @@ export const AboutIcon = () => (
     <circle cx="12" cy="7" r="0.5" fill="currentColor" />
   </svg>
 );
+
+export default AboutIcon;

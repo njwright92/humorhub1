@@ -1,4 +1,4 @@
-export const NewsIcon = () => (
+const NewsIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
@@ -33,3 +33,5 @@ export const NewsIcon = () => (
     />
   </svg>
 );
+
+export default NewsIcon;

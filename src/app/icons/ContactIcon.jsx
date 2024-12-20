@@ -1,5 +1,5 @@
 // ContactIcon.jsx
-export const ContactIcon = () => (
+const ContactIcon = () => (
   <svg
     className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
     fill="none"
@@ -14,3 +14,5 @@ export const ContactIcon = () => (
     />
   </svg>
 );
+
+export default ContactIcon;

@@ -1,5 +1,5 @@
 // MicFinderIcon.jsx
-export const MicFinderIcon = () => (
+const MicFinderIcon = () => (
   <svg
     className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
     fill="none"
@@ -19,3 +19,5 @@ export const MicFinderIcon = () => (
     />
   </svg>
 );
+
+export default MicFinderIcon;

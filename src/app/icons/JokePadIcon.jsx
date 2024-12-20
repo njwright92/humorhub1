@@ -1,5 +1,5 @@
 // JokePadIcon.jsx
-export const JokePadIcon = () => (
+const JokePadIcon = () => (
   <svg
     className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
     fill="none"
@@ -15,3 +15,5 @@ export const JokePadIcon = () => (
     />
   </svg>
 );
+
+export default JokePadIcon;

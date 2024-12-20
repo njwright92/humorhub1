@@ -1,5 +1,5 @@
 // UserIconComponent.jsx
-export const UserIconComponent = () => (
+const UserIconComponent = () => (
   <svg
     className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
     fill="none"
@@ -15,3 +15,5 @@ export const UserIconComponent = () => (
     <circle cx="12" cy="7" r="4" />
   </svg>
 );
+
+export default UserIconComponent;

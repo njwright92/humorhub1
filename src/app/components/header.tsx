@@ -1,24 +1,30 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import dynamic from "next/dynamic";
-import { MicFinderIcon } from "../icons/MicFinderIcon";
-import { NewsIcon } from "../icons/NewsIcon";
-import { ComicBotIcon } from "../icons/ComicBotIcon";
-import { JokePadIcon } from "../icons/JokePadIcon";
-import { ContactIcon } from "../icons/ContactIcon";
-import { AboutIcon } from "../icons/AboutIcon";
-import { UserIconComponent } from "../icons/UserIconComponent";
 import { useRouter } from "next/navigation";
 import hh from "../../app/hh.webp";
 import Image from "next/image";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 
-const SearchBar = dynamic(() => import("./searchBar"));
-const AuthModal = dynamic(() => import("./authModal"));
+const MicFinderIcon = dynamic(() => import("../icons/MicFinderIcon"));
+const NewsIcon = dynamic(() => import("../icons/NewsIcon"));
+const ComicBotIcon = dynamic(() => import("../icons/ComicBotIcon"));
+const JokePadIcon = dynamic(() => import("../icons/JokePadIcon"));
+const ContactIcon = dynamic(() => import("../icons/ContactIcon"));
+const AboutIcon = dynamic(() => import("../icons/AboutIcon"));
+const UserIconComponent = dynamic(() => import("../icons/UserIconComponent"));
+const SearchBar = dynamic(() => import("./searchBar"), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
+const AuthModal = dynamic(() => import("./authModal"), {
+  ssr: false,
+  loading: () => <div>Loading...</div>,
+});
 const ComicBotModal = dynamic(() => import("./comicBotModal"));
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -28,9 +34,35 @@ export default function Header() {
   // const [eventCount, setEventCount] = useState<number | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const [cityList, setCityList] = useState<string[]>([]);
-
   // const fetchedOnce = useRef(false);
   const router = useRouter();
+
+  function debounce<T extends (...args: any[]) => void>(
+    func: T,
+    wait: number,
+    immediate: boolean = false,
+  ) {
+    let timeout: NodeJS.Timeout | null = null;
+
+    return (...args: Parameters<T>) => {
+      const callNow = immediate && !timeout;
+
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(() => {
+        timeout = null;
+        if (!immediate) {
+          func(...args);
+        }
+      }, wait);
+
+      if (callNow) {
+        func(...args);
+      }
+    };
+  }
 
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
@@ -78,30 +110,31 @@ export default function Header() {
   }, []);
 
   // Handle search functionality
-  const handleSearch = useCallback(
-    async (searchTerm: string) => {
-      const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-      const matchingCity = cityList.find((city) =>
-        city.toLowerCase().includes(normalizedSearchTerm),
-      );
-
-      if (matchingCity) {
-        router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
-      } else {
-        alert(
-          "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!",
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (searchTerm: string) => {
+        const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+        const matchingCity = cityList.find((city) =>
+          city.toLowerCase().includes(normalizedSearchTerm),
         );
 
-        try {
-          await addDoc(collection(db, "searchedCities"), {
-            city: searchTerm,
-            timestamp: new Date(),
-          });
-        } catch (error) {
-          console.error("Error logging searched city:", error);
+        if (matchingCity) {
+          router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
+        } else {
+          alert(
+            "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!",
+          );
+
+          try {
+            await addDoc(collection(db, "searchedCities"), {
+              city: searchTerm,
+              timestamp: new Date(),
+            });
+          } catch (error) {
+            console.error("Error logging searched city:", error);
+          }
         }
-      }
-    },
+      }, 300),
     [cityList, router],
   );
 
@@ -141,8 +174,7 @@ export default function Header() {
 
             {/* Middle Section - Navigation Icons */}
             <div className="flex flex-col items-center justify-center space-y-6 mt-4">
-              <SearchBar onSearch={handleSearch} />
-
+              <SearchBar onSearch={debouncedSearch} />
               {/* Mic Finder */}
               <Link
                 href="/MicFinder"
@@ -316,7 +348,7 @@ export default function Header() {
                   <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
                 </svg>
               </button>
-              <SearchBar onSearch={handleSearch} />
+              <SearchBar onSearch={debouncedSearch} />
               <Link href="/">
                 <Image
                   src={hh}
@@ -324,6 +356,7 @@ export default function Header() {
                   width={50}
                   height={50}
                   className="rounded-full mt-2 cursor-pointer"
+                  priority
                 />
               </Link>
               <div className="nav-link">
