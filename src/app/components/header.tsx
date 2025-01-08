@@ -121,10 +121,6 @@ export default function Header() {
         if (matchingCity) {
           router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
         } else {
-          alert(
-            "Sorry, we couldn't find any matching cities. We're constantly adding more, so please check back soon!",
-          );
-
           try {
             await addDoc(collection(db, "searchedCities"), {
               city: searchTerm,
@@ -174,7 +170,12 @@ export default function Header() {
 
             {/* Middle Section - Navigation Icons */}
             <div className="flex flex-col items-center justify-center space-y-6 mt-4">
-              <SearchBar onSearch={debouncedSearch} />
+              <SearchBar
+                onSearch={debouncedSearch}
+                isUserSignedIn={isUserSignedIn}
+                setIsAuthModalOpen={setIsAuthModalOpen}
+                setIsComicBotModalOpen={setIsComicBotModalOpen}
+              />
               {/* Mic Finder */}
               <Link
                 href="/MicFinder"
@@ -350,7 +351,13 @@ export default function Header() {
                   <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
                 </svg>
               </button>
-              <SearchBar onSearch={debouncedSearch} />
+              <SearchBar
+                onSearch={debouncedSearch}
+                isUserSignedIn={false}
+                setIsAuthModalOpen={function (open: boolean): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
               <Link href="/">
                 <Image
                   src={hh}

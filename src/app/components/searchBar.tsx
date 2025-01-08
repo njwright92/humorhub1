@@ -1,13 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { collection, getDocs, DocumentData } from "firebase/firestore";
-
 import { db } from "../../../firebase.config"; // Adjust path to your config
 
+// Props for the SearchBar
 export interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
+  isUserSignedIn: boolean;
+  setIsAuthModalOpen: (open: boolean) => void;
+  setIsComicBotModalOpen?: (open: boolean) => void;
 }
 
+// City shape from Firestore
 interface City {
   id: string;
   city: string;
@@ -16,91 +20,266 @@ interface City {
     lng: number;
   };
 }
-export default function SearchBar({ onSearch }: SearchBarProps) {
+
+// Extended page interface to store route & auth requirement
+interface PageSuggestion {
+  label: string;
+  route?: string; // If page can be navigated via router.push
+  requiresAuth?: boolean;
+}
+
+// For combining city and page suggestions
+type Suggestion = {
+  type: "page" | "city";
+  label: string;
+  page?: PageSuggestion;
+  cityData?: City;
+};
+
+export default function SearchBar({
+  onSearch,
+  isUserSignedIn,
+  setIsAuthModalOpen,
+  setIsComicBotModalOpen,
+}: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [suggestedCities, setSuggestedCities] = useState<City[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const router = useRouter();
 
-  const normalizeTerm = (term: string) => term.trim().toLowerCase();
+  // Pages & routing references
+  const PAGES: PageSuggestion[] = [
+    { label: "Mic Finder", route: "/MicFinder" },
+    { label: "News", route: "/HHapi" },
+    { label: "Comic Bot", requiresAuth: true }, // We'll open modal if not signed in
+    { label: "Joke Pad", route: "/JokePad", requiresAuth: true },
+    { label: "Contact", route: "/contact" },
+    { label: "About", route: "/about" },
+    { label: "Profile", route: "/Profile", requiresAuth: true },
+  ];
 
-  const fetchCities = async (queryTerm: string) => {
+  // Special keywords that always route to /MicFinder
+  const KEYWORDS_TO_MICFINDER = [
+    "festivals",
+    "open mics",
+    "mics",
+    "competitions",
+  ];
+
+  // Utility to standardize the search term
+  function normalizeTerm(term: string): string {
+    return term.trim().toLowerCase();
+  }
+
+  // 1. Get city suggestions from Firestore
+  async function fetchCities(queryTerm: string): Promise<Suggestion[]> {
     try {
       const citiesRef = collection(db, "cities");
-      const normalizedQueryTerm = queryTerm.toLowerCase();
+      const snapshot = await getDocs(citiesRef);
 
-      const querySnapshot = await getDocs(citiesRef);
-
-      // Filter the snapshot data based on the normalized query term
-      const cities: City[] = querySnapshot.docs
+      return snapshot.docs
         .map((doc) => {
           const data = doc.data() as DocumentData;
+          const cityName = (data.city || "Unknown City").trim();
           return {
-            id: doc.id,
-            city: data.city || "Unknown City",
-            coordinates: {
-              lat: data.coordinates?.lat || 0,
-              lng: data.coordinates?.lng || 0,
+            type: "city" as const,
+            label: cityName,
+            cityData: {
+              id: doc.id,
+              city: cityName,
+              coordinates: {
+                lat: data.coordinates?.lat || 0,
+                lng: data.coordinates?.lng || 0,
+              },
             },
           };
         })
-        .filter((city) =>
-          city.city.toLowerCase().includes(normalizedQueryTerm),
-        );
-
-      setSuggestedCities(cities);
+        .filter((c) => c.label.toLowerCase().includes(queryTerm));
     } catch (error) {
-      console.error("Error fetching cities:", error);
+      // If you don’t want any error logs, just comment this out or handle differently
+      // console.error("Error fetching cities:", error);
+      return [];
     }
-  };
+  }
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const term = e.target.value;
-      setSearchTerm(term);
-      if (term.trim()) {
-        fetchCities(normalizeTerm(term));
-      } else {
-        setSuggestedCities([]);
+  // 2. Filter pages by user input
+  function filterPages(queryTerm: string): Suggestion[] {
+    return PAGES.filter((p) => p.label.toLowerCase().includes(queryTerm)).map(
+      (p) => ({
+        type: "page",
+        label: p.label,
+        page: p,
+      }),
+    );
+  }
+
+  // 3. Load combined suggestions (cities + pages)
+  async function loadSuggestions(term: string) {
+    const normalized = normalizeTerm(term);
+    if (!normalized) {
+      setSuggestions([]);
+      return;
+    }
+
+    // If keyword is in KEYWORDS_TO_MICFINDER, show that first
+    const isMicKeyword = KEYWORDS_TO_MICFINDER.includes(normalized);
+
+    // If user typed "login" or something similar, we might show a direct "Login" suggestion
+    const isLogin = ["login", "sign in", "sign up"].includes(normalized);
+
+    // Fetch in parallel
+    const [citySuggestions, pageSuggestions] = await Promise.all([
+      fetchCities(normalized),
+      Promise.resolve(filterPages(normalized)),
+    ]);
+
+    let combined: Suggestion[] = [...citySuggestions, ...pageSuggestions];
+
+    // Show a login suggestion if user typed "login"
+    if (isLogin) {
+      combined.unshift({
+        type: "page",
+        label: "Login",
+      });
+    }
+
+    // If "festivals" etc. is typed, optionally push a top suggestion for that
+    if (isMicKeyword) {
+      combined.unshift({
+        type: "page",
+        label: "Mic Finder",
+        page: { label: "Mic Finder", route: "/MicFinder" },
+      });
+    }
+
+    setSuggestions(combined);
+  }
+
+  // 4. Handle user input changes
+  async function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    if (term.trim()) {
+      await loadSuggestions(term);
+    } else {
+      setSuggestions([]);
+    }
+  }
+
+  // 5. Handle picking a suggestion from the list
+  function handleSelectSuggestion(suggestion: Suggestion) {
+    if (suggestion.type === "city" && suggestion.cityData) {
+      // City -> route
+      router.push(
+        `/MicFinder?city=${encodeURIComponent(suggestion.cityData.city)}`,
+      );
+      onSearch(suggestion.cityData.city);
+    } else if (suggestion.type === "page" && suggestion.page) {
+      const { route, requiresAuth, label } = suggestion.page;
+
+      // Always show ComicBot modal
+      if (label === "Comic Bot") {
+        setIsComicBotModalOpen?.(true);
       }
-    },
-    [],
-  );
+      // If some other page requires auth but user not signed in
+      else if (requiresAuth && !isUserSignedIn) {
+        setIsAuthModalOpen(true);
+      }
+      // If we have a route, do normal routing
+      else if (route) {
+        router.push(route);
+      }
 
-  const handleCitySelect = (city: City) => {
-    onSearch(city.city); // Call onSearch with the selected city
+      onSearch(label);
+    }
+
     setSearchTerm("");
-    setSuggestedCities([]);
-    router.push(`/MicFinder?city=${encodeURIComponent(city.city)}`);
-  };
+    setSuggestions([]);
+  }
 
-  const handleSearch = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const normalizedSearchTerm = normalizeTerm(searchTerm);
-      if (normalizedSearchTerm) {
-        onSearch(normalizedSearchTerm);
-      }
+  // 6. Handle the normal form submission (Enter key)
+  async function handleSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const normalized = normalizeTerm(searchTerm);
+    if (!normalized) return;
+
+    // 1. Check if it's a known "MicFinder" keyword
+    if (KEYWORDS_TO_MICFINDER.includes(normalized)) {
+      router.push("/MicFinder");
+      onSearch(searchTerm);
       setSearchTerm("");
-    },
-    [onSearch, searchTerm],
-  );
+      setSuggestions([]);
+      return;
+    }
 
-  const handleClearInput = useCallback(() => {
+    // 2. Check if the user typed "login"
+    if (["login", "sign in", "sign up"].includes(normalized)) {
+      setIsAuthModalOpen(true);
+      setSearchTerm("");
+      setSuggestions([]);
+      return;
+    }
+
+    // 3. Check if there's an exact page match
+    const matchedPage = PAGES.find((p) => p.label.toLowerCase() === normalized);
+    if (matchedPage) {
+      if (matchedPage.requiresAuth && !isUserSignedIn) {
+        if (matchedPage.label === "Comic Bot" && setIsComicBotModalOpen) {
+          setIsComicBotModalOpen(true);
+        } else {
+          setIsAuthModalOpen(true);
+        }
+      } else if (matchedPage.route) {
+        router.push(matchedPage.route);
+      }
+      onSearch(matchedPage.label);
+      setSearchTerm("");
+      setSuggestions([]);
+      return;
+    }
+
+    // 4. Check if it matches a city
+    const cityList = await fetchCities(normalized);
+    if (cityList.length > 0 && cityList[0].cityData) {
+      router.push(
+        `/MicFinder?city=${encodeURIComponent(cityList[0].cityData.city)}`,
+      );
+      onSearch(cityList[0].cityData.city);
+      setSearchTerm("");
+      setSuggestions([]);
+      return;
+    }
+
+    // 5. Fallback: Just do onSearch
+    onSearch(searchTerm);
     setSearchTerm("");
-    setSuggestedCities([]);
-    setIsFocused(true);
-  }, []);
+    setSuggestions([]);
+  }
 
-  const handleToggleInput = useCallback(() => {
+  // 7. Clear the search input
+  function handleClearInput() {
+    setSearchTerm("");
+    setSuggestions([]);
+    setIsFocused(true);
+  }
+
+  // 8. Toggle search bar visibility
+  function handleToggleInput() {
     setInputVisible((prev) => !prev);
     setIsFocused(true);
-  }, []);
+  }
 
+  // Focus the input when visible & isFocused
   useEffect(() => {
     if (isFocused && isInputVisible) {
-      document.getElementById("search-input")?.focus();
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement | null;
+      if (searchInput) {
+        searchInput.focus();
+      }
     }
   }, [isFocused, isInputVisible]);
 
@@ -136,14 +315,16 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           <input
             id="search-input"
             type="text"
-            placeholder="Search city or page..."
+            placeholder="Search city, page, or keyword..."
             value={searchTerm}
             onChange={handleInputChange}
             className="p-2 text-black rounded-lg shadow-lg w-full"
+            autoComplete="off"
             autoFocus
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
           />
+
           {searchTerm && (
             <button
               type="button"
@@ -153,6 +334,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
               Clear
             </button>
           )}
+
           <button
             type="submit"
             className="px-3 py-3 text-black rounded-xl shadow-lg bg-zinc-300 mt-2"
@@ -160,15 +342,17 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             Search
           </button>
 
-          {suggestedCities.length > 0 && (
+          {/* Suggestions: pages + cities + special */}
+          {suggestions.length > 0 && (
             <ul className="bg-white w-full shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto">
-              {suggestedCities.map((city) => (
+              {suggestions.map((sug, idx) => (
                 <li
-                  key={city.id}
+                  key={idx}
                   className="p-2 cursor-pointer hover:bg-zinc-200 text-zinc-950"
-                  onClick={() => handleCitySelect(city)}
+                  onMouseDown={() => handleSelectSuggestion(sug)}
                 >
-                  {city.city}
+                  {sug.label}
+                  {sug.type === "city" ? " (city)" : " (page)"}
                 </li>
               ))}
             </ul>
