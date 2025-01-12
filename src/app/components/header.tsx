@@ -302,7 +302,7 @@ export default function Header() {
       text-yellow-400 text-md bg-zinc-700 rounded-full p-1 shadow-xl animate-bounce
       md:fixed md:top-5 md:right-5 md:left-auto"
               >
-                *1800+ events and growing!*
+                *Event list being cleaned soon largest most up to date list!*
                 <br />
                 *Mobile App coming soon!*
               </div>
