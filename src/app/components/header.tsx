@@ -40,7 +40,7 @@ export default function Header() {
   function debounce<T extends (...args: any[]) => void>(
     func: T,
     wait: number,
-    immediate: boolean = false,
+    immediate: boolean = false
   ) {
     let timeout: NodeJS.Timeout | null = null;
 
@@ -67,7 +67,7 @@ export default function Header() {
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    [],
+    []
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -115,7 +115,7 @@ export default function Header() {
       debounce(async (searchTerm: string) => {
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
         const matchingCity = cityList.find((city) =>
-          city.toLowerCase().includes(normalizedSearchTerm),
+          city.toLowerCase().includes(normalizedSearchTerm)
         );
 
         if (matchingCity) {
@@ -131,7 +131,7 @@ export default function Header() {
           }
         }
       }, 300),
-    [cityList, router],
+    [cityList, router]
   );
 
   return (
@@ -302,7 +302,7 @@ export default function Header() {
       text-yellow-400 text-md bg-zinc-700 rounded-full p-1 shadow-xl animate-bounce
       md:fixed md:top-5 md:right-5 md:left-auto"
               >
-                *Event list being cleaned soon largest most up to date list!*
+                *The event list has been cleaned, more up to date than ever!*
                 <br />
                 *Mobile App coming soon!*
               </div>
