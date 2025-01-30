@@ -40,7 +40,7 @@ export default function Header() {
   function debounce<T extends (...args: any[]) => void>(
     func: T,
     wait: number,
-    immediate: boolean = false
+    immediate: boolean = false,
   ) {
     let timeout: NodeJS.Timeout | null = null;
 
@@ -67,7 +67,7 @@ export default function Header() {
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    []
+    [],
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -115,7 +115,7 @@ export default function Header() {
       debounce(async (searchTerm: string) => {
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
         const matchingCity = cityList.find((city) =>
-          city.toLowerCase().includes(normalizedSearchTerm)
+          city.toLowerCase().includes(normalizedSearchTerm),
         );
 
         if (matchingCity) {
@@ -131,7 +131,7 @@ export default function Header() {
           }
         }
       }, 300),
-    [cityList, router]
+    [cityList, router],
   );
 
   return (
