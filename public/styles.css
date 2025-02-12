@@ -674,6 +674,9 @@ video {
 .hidden {
   display: none;
 }
+.h-28 {
+  height: 7rem;
+}
 .h-40 {
   height: 10rem;
 }
@@ -706,6 +709,9 @@ video {
 }
 .min-h-\[60px\] {
   min-height: 60px;
+}
+.min-h-\[6rem\] {
+  min-height: 6rem;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -785,6 +791,9 @@ video {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.resize-y {
+  resize: vertical;
 }
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1038,6 +1047,10 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 .font-bold {
   font-weight: 700;

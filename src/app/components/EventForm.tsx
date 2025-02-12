@@ -21,6 +21,7 @@ interface EventData {
   lat?: number;
   lng?: number;
   timestamp?: string;
+  email?: string; // New - Optional email field
 }
 
 // Define the function to submit the event to Firestore
@@ -43,6 +44,7 @@ const EventForm: React.FC = () => {
     details: "",
     isRecurring: false,
     isFestival: undefined,
+    email: "", // Initialize the optional email field
   });
 
   const [formErrors, setFormErrors] = useState<string>("");
@@ -57,6 +59,7 @@ const EventForm: React.FC = () => {
       details: "",
       isRecurring: false,
       isFestival: undefined,
+      email: "", // Reset the email field
     });
   };
 
@@ -83,6 +86,7 @@ const EventForm: React.FC = () => {
           details: eventData.details,
           isRecurring: eventData.isRecurring ? "Yes" : "No",
           isFestival: eventData.isFestival ? "Yes" : "No",
+          user_email: eventData.email || "N/A", // Pass email if provided
         },
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
       );
@@ -113,8 +117,8 @@ const EventForm: React.FC = () => {
 
       try {
         const response = await getLatLng(memoizedEvent.location);
-
         let lat, lng;
+
         if ("lat" in response && "lng" in response) {
           lat = response.lat;
           lng = response.lng;
@@ -134,6 +138,7 @@ const EventForm: React.FC = () => {
           "Your event has been added successfully! Give it a few hours to appear.",
         );
       } catch (error) {
+        // If geocoding fails
         try {
           await addDoc(collection(db, "events"), memoizedEvent);
           await sendConfirmationEmail(memoizedEvent); // Send confirmation email if location verification fails
@@ -172,7 +177,7 @@ const EventForm: React.FC = () => {
           className="form-container mx-auto justify-center items-center overflow-auto max-h-screen z-50"
         >
           {formErrors && <p className="text-red-500">{formErrors}</p>}
-          <h1 className="text-2xl font-bold text-center text-black mt-4 ">
+          <h1 className="text-2xl font-bold text-center text-black mt-4">
             Add Event Form
           </h1>
           <p className="text-red-500 text-center mb-1">
@@ -213,9 +218,10 @@ const EventForm: React.FC = () => {
             name="details"
             value={event.details}
             onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2"
             required
             autoComplete="off"
+            rows={4}
+            className="text-zinc-900 shadow-xl rounded-lg p-2 h-28 min-h-[6rem] block resize-y"
           />
 
           <h6 className="text-zinc-900 mt-2">Is it a recurring event?:</h6>
@@ -250,6 +256,7 @@ const EventForm: React.FC = () => {
               />
             </div>
           </div>
+
           <h6 className="text-zinc-900 mt-6">
             Is it a festival or competition?
           </h6>
@@ -295,6 +302,28 @@ const EventForm: React.FC = () => {
             placeholderText={`📅 ${new Date().toLocaleDateString()}`}
             className="text-zinc-900 shadow-xl rounded-xl p-2"
           />
+
+          {/* New - Optional email field */}
+          <h6 className="text-zinc-900 mt-4 mb-1 text-center text-xs">
+            Optional: Provide your email for verification
+          </h6>
+          <p className="text-red-500 text-xs text-center mb-1">
+            We&#39;ll send a confirmation if you&#39;d like to verify this event
+            addition.
+          </p>
+          <label htmlFor="email" className="text-zinc-900">
+            Email (optional):
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={event.email || ""}
+            onChange={handleChange}
+            className="text-zinc-900 shadow-xl rounded-lg p-2 mb-4"
+            placeholder="yourname@example.com"
+          />
+          {/* End new section */}
 
           <button type="submit" className="btn">
             Submit Event
