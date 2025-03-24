@@ -299,7 +299,7 @@ export default function Header() {
               <div
                 className="
       absolute top-20 left-0 right-0 flex justify-center text-center
-      text-yellow-400 text-md bg-zinc-700 rounded-full p-1 shadow-xl animate-bounce
+      text-orange-400 text-md bg-zinc-800 rounded-full p-1 shadow-xl animate-bounce
       md:fixed md:top-5 md:right-5 md:left-auto"
               >
                 *The event list is more up to date than ever!*
