@@ -302,7 +302,7 @@ export default function Header() {
       text-orange-400 text-md bg-zinc-800 rounded-full p-1 shadow-xl animate-bounce
       md:fixed md:top-5 md:right-5 md:left-auto"
               >
-                *The event list is more up to date than ever!*
+                *One App to rule all the mics!*
                 <br />
                 *Mobile App coming soon!*
               </div>
