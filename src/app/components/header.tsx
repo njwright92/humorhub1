@@ -40,7 +40,7 @@ export default function Header() {
   function debounce<T extends (...args: any[]) => void>(
     func: T,
     wait: number,
-    immediate: boolean = false,
+    immediate: boolean = false
   ) {
     let timeout: NodeJS.Timeout | null = null;
 
@@ -67,7 +67,7 @@ export default function Header() {
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    [],
+    []
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -115,7 +115,7 @@ export default function Header() {
       debounce(async (searchTerm: string) => {
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
         const matchingCity = cityList.find((city) =>
-          city.toLowerCase().includes(normalizedSearchTerm),
+          city.toLowerCase().includes(normalizedSearchTerm)
         );
 
         if (matchingCity) {
@@ -131,7 +131,7 @@ export default function Header() {
           }
         }
       }, 300),
-    [cityList, router],
+    [cityList, router]
   );
 
   return (
@@ -299,16 +299,34 @@ export default function Header() {
               <div
                 className="
       absolute top-20 left-0 right-0 flex justify-center text-center
-      text-orange-400 text-md bg-zinc-800 rounded-full p-1 shadow-xl animate-bounce
+      text-orange-400 text-sm bg-zinc-800 rounded-2xl p-1 shadow-xl animate-bounce
       md:fixed md:top-5 md:right-5 md:left-auto"
               >
                 *One App to rule all the mics!*
                 <br />
                 *Mobile App coming soon!*
+                <button
+                  onClick={() => setShowBanner(false)}
+                  className="ml-2 text-zinc-100"
+                  aria-label="Close Banner"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
               </div>
             )}
 
-            <h1 className="text-zinc-900 text-4xl mx-auto font-bold md:hidden">
+            <h1 className="text-zinc-900 text-4xl mr-8 font-bold md:hidden">
               Humor Hub!
             </h1>
             <button
