@@ -29,7 +29,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 6371; // Earth's radius in kilometers
   const toRad = (value: number) => (value * Math.PI) / 180; // Degrees to radians
@@ -111,7 +111,7 @@ const EventsPage = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -121,14 +121,14 @@ const EventsPage = () => {
 
       return closestCity;
     },
-    [cityCoordinates]
+    [cityCoordinates],
   );
 
   const searchTimeoutRef = useRef<number | null>(null);
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string }
+    params: { event_category: string; event_label: string },
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -278,7 +278,7 @@ const EventsPage = () => {
         setEvents(fetchedEvents);
       } catch (error) {
         alert(
-          "Oops! We couldn't load the events at the moment. Please try again later."
+          "Oops! We couldn't load the events at the moment. Please try again later.",
         );
       }
     };
@@ -328,7 +328,7 @@ const EventsPage = () => {
 
       return eventDay === selectedDay;
     },
-    []
+    [],
   );
 
   const filteredEvents = useMemo(() => {
@@ -428,7 +428,7 @@ const EventsPage = () => {
         alert("Event saved to your profile successfully!");
       } catch (error) {
         alert(
-          "Oops! Something went wrong while saving the event. Please try again."
+          "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
 
@@ -437,7 +437,7 @@ const EventsPage = () => {
         event_label: event.name,
       });
     },
-    [isUserSignedIn]
+    [isUserSignedIn],
   );
 
   // Create a function to sort cities with Spokane WA first
@@ -492,9 +492,9 @@ const EventsPage = () => {
       },
       (error) => {
         alert(
-          "Unable to retrieve your location. Please select a city manually."
+          "Unable to retrieve your location. Please select a city manually.",
         );
-      }
+      },
     );
   }, [findClosestCity]);
 
@@ -562,7 +562,7 @@ const EventsPage = () => {
       (a, b) =>
         spokaneClubFirst(a, b) ||
         new Date(b.googleTimestamp).getTime() -
-          new Date(a.googleTimestamp).getTime()
+          new Date(a.googleTimestamp).getTime(),
     );
 
     return sortedEvents;
@@ -747,8 +747,8 @@ const EventsPage = () => {
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {sortCitiesWithSpokaneFirst(
                     Object.keys(cityCoordinates).filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
+                      city.toLowerCase().includes(searchTerm.toLowerCase()),
+                    ),
                   ).map((city) => (
                     <li
                       key={city}
@@ -943,8 +943,8 @@ const EventsPage = () => {
 
                     {sortCitiesWithSpokaneFirst(
                       uniqueCities.filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
+                        city.toLowerCase().includes(searchTerm.toLowerCase()),
+                      ),
                     ).map((city) => (
                       <li
                         key={city}

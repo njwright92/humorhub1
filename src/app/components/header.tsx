@@ -304,7 +304,7 @@ export default function Header() {
               >
                 *One App to rule all the mics!*
                 <br />
-                *Mobile App coming soon!*
+                *Now In Australia!*
                 <button
                   onClick={() => setShowBanner(false)}
                   className="ml-2 text-zinc-100"
