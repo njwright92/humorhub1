@@ -23,7 +23,8 @@
     "react-datepicker": "4.25.0",
     "react-dom": "18.3.1",
     "react-window": "1.8.10",
-    "sharp": "0.33.2"
+    "sharp": "0.33.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/aos": "3.0.7",
