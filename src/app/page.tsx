@@ -138,10 +138,12 @@ export default function Home() {
           </h2>
           <div className="flex flex-col md:flex-row-reverse items-center w-full">
             <div className="flex-1 text-center items-center md:text-right">
-              <p className="text-sm sm:text-md mb-4">
-                Looking for your next performance spot? MicFinder connects you
-                with local mics and shows with 1600+ events in 360+ cities,
-                updated weekly.
+              <p className="text-sm sm:text-md lg:text-lg mb-4 box-shadow-md">
+                Looking for your next Mic?
+                <br />
+                MicFinder helps comedians find and share open mics worldwide!
+                <br />
+                With more than 1500 events in 440 cities!
               </p>
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />
