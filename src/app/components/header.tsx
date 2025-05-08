@@ -299,14 +299,15 @@ export default function Header() {
               <div
                 className="
               absolute top-20 left-0 right-0 flex justify-center text-center
-              text-yellow-400 sm:text-sm lg:text-base bg-zinc-900 
+              text-yellow-400 xs:text-xs lg:text-base bg-zinc-900 
               rounded-2xl px-1.7 py-0.3 shadow-xl animate-bounce whitespace-nowrap
               md:fixed md:top-5 md:right-5 md:left-auto"
               >
                 🌍 MicFinder is free for a limited time!
                 <br />
                 Sign up now!
-                <br />$ Explore mics worldwide: Europe Australia and more!
+                <br />
+                🎤 Explore mics worldwide: Europe Australia and more!
                 <button
                   onClick={() => setShowBanner(false)}
                   className="ml-2 text-zinc-200"
