@@ -12,7 +12,7 @@ import { db } from "../../../firebase.config";
 
 const MicFinderIcon = dynamic(() => import("../icons/MicFinderIcon"));
 const NewsIcon = dynamic(() => import("../icons/NewsIcon"));
-const ComicBotIcon = dynamic(() => import("../icons/ComicBotIcon"));
+// const ComicBotIcon = dynamic(() => import("../icons/ComicBotIcon"));
 const JokePadIcon = dynamic(() => import("../icons/JokePadIcon"));
 const ContactIcon = dynamic(() => import("../icons/ContactIcon"));
 const AboutIcon = dynamic(() => import("../icons/AboutIcon"));
@@ -25,12 +25,12 @@ const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
   loading: () => <div>Loading...</div>,
 });
-const ComicBotModal = dynamic(() => import("./comicBotModal"));
+// const ComicBotModal = dynamic(() => import("./comicBotModal"));
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
+  // const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   // const [eventCount, setEventCount] = useState<number | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const [cityList, setCityList] = useState<string[]>([]);
@@ -137,7 +137,7 @@ export default function Header() {
   return (
     <>
       <header className="p-1 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
-        <nav className="flex md:flex-col justify-between items-center md:fixed md:h-full md:w-20">
+        <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
           {/* Logo for smaller screens */}
           <Link href="/">
             <Image
@@ -145,16 +145,15 @@ export default function Header() {
               alt="Mic"
               width={50}
               height={50}
-              className="rounded-full cursor-pointer bg-zinc-900 p-2 md:hidden"
+              className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden"
               priority
               style={{ objectFit: "contain" }}
               sizes="(max-width: 640px) 40px, (max-width: 768px) 45px, 50px"
               aria-label="Home"
             />
           </Link>
-
           {/* Sidebar for larger screens */}
-          <div className="hidden md:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg">
+          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg">
             {/* Top Section - Logo */}
             <div className="flex flex-col items-center space-y-6 mt-4">
               <Link href="/" aria-label="Home">
@@ -174,7 +173,7 @@ export default function Header() {
                 onSearch={debouncedSearch}
                 isUserSignedIn={isUserSignedIn}
                 setIsAuthModalOpen={setIsAuthModalOpen}
-                setIsComicBotModalOpen={setIsComicBotModalOpen}
+                // setIsComicBotModalOpen={setIsComicBotModalOpen}
               />
               {/* Mic Finder */}
               <Link
@@ -202,7 +201,7 @@ export default function Header() {
               </div>
 
               {/* Comic Bot */}
-              <div
+              {/* <div
                 onClick={() => {
                   if (isUserSignedIn) {
                     setIsComicBotModalOpen(true);
@@ -215,7 +214,7 @@ export default function Header() {
               >
                 <ComicBotIcon />
                 <span className="sr-only">Comic Bot</span>
-              </div>
+              </div> */}
 
               {/* Joke Pad */}
               <div
@@ -293,15 +292,11 @@ export default function Header() {
               </svg>
             </button>
           </div>
-
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center xs:px-2 lg:px-4">
             {showBanner && (
               <div
-                className="
-              absolute top-20 left-0 right-0 flex justify-center text-center
-              text-yellow-400 xs:text-xs lg:text-base bg-zinc-900 
-              rounded-2xl px-1.7 py-0.3 shadow-xl animate-bounce whitespace-nowrap
-              md:fixed md:top-5 md:right-5 md:left-auto"
+                className=" absolute top-20 left-0 right-0 flex justify-center text-center px-2 sm:px-4 max-w-[90%]  sm:text-sm md:text-base text-yellow-400 bg-zinc-900 rounded-2xl shadow-xl animate-bounce sm:fixed sm:top-5 md:right-5 sm:left-auto whitespace-normal
+  "
               >
                 🌍 MicFinder is free for a limited time!
                 <br />
@@ -329,17 +324,17 @@ export default function Header() {
               </div>
             )}
 
-            <h1 className="text-zinc-900 text-4xl mr-8 font-bold md:hidden">
+            <h1 className="text-zinc-900 text-4xl mr-8 font-bold sm:hidden justify-center">
               Humor Hub!
             </h1>
             <button
               onClick={toggleMenu}
-              className="text-zinc-900 md:hidden cursor-pointer"
+              className="text-zinc-900 sm:hidden cursor-pointer "
               aria-label="Toggle menu"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 mr-4"
+                className="h-8 w-8"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -353,7 +348,6 @@ export default function Header() {
               </svg>
             </button>
           </div>
-
           {/* Full menu toggle for smaller screens */}
           {isMenuOpen && (
             <div className="fixed top-0 left-0 w-full h-full bg-zinc-900 text-zinc-200 bg-opacity-75 z-50 flex flex-col items-center gap-6 p-4">
@@ -375,7 +369,7 @@ export default function Header() {
               <SearchBar
                 onSearch={debouncedSearch}
                 isUserSignedIn={false}
-                setIsAuthModalOpen={function (open: boolean): void {
+                setIsAuthModalOpen={function (): void {
                   throw new Error("Function not implemented.");
                 }}
               />
@@ -390,6 +384,25 @@ export default function Header() {
                 />
               </Link>
               <div className="nav-link">
+                <Link href="/MicFinder">
+                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    Mic Finder
+                  </span>
+                </Link>
+
+                <div
+                  onClick={() => {
+                    if (isUserSignedIn) {
+                      // setIsComicBotModalOpen(true);
+                    } else {
+                      setIsAuthModalOpen(true); // Open AuthModal if not signed in
+                    }
+                  }}
+                >
+                  {/* <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
+                    {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
+                  </span> */}
+                </div>
                 <div
                   onClick={() => {
                     if (isUserSignedIn) {
@@ -406,19 +419,6 @@ export default function Header() {
                 <div
                   onClick={() => {
                     if (isUserSignedIn) {
-                      setIsComicBotModalOpen(true);
-                    } else {
-                      setIsAuthModalOpen(true); // Open AuthModal if not signed in
-                    }
-                  }}
-                >
-                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                    {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
-                  </span>
-                </div>
-                <div
-                  onClick={() => {
-                    if (isUserSignedIn) {
                       location.href = "/JokePad";
                     } else {
                       setIsAuthModalOpen(true); // Open AuthModal if not signed in
@@ -429,12 +429,6 @@ export default function Header() {
                     {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
                   </span>
                 </div>
-                <Link href="/MicFinder">
-                  <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                    Mic Finder
-                  </span>
-                </Link>
-
                 {isUserSignedIn && (
                   <Link href="/Profile">
                     <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
@@ -471,10 +465,10 @@ export default function Header() {
         </nav>
       </header>
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />
-      <ComicBotModal
+      {/* <ComicBotModal
         isOpen={isComicBotModalOpen}
         onClose={() => setIsComicBotModalOpen(false)}
-      />
+      /> */}
     </>
   );
 }
