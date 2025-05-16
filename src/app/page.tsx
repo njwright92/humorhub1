@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import ComicBot from "../app/Comics.webp";
+// import ComicBot from "../app/Comics.webp";
 import jokes from "../app/jokes.webp";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -18,12 +18,12 @@ const Header = dynamic(() => import("./components/header"));
 const Footer = dynamic(() => import("./components/footer"));
 const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
 const EventForm = dynamic(() => import("./components/EventForm"));
-const ComicBotModal = dynamic(() => import("./components/comicBotModal"));
+// const ComicBotModal = dynamic(() => import("./components/comicBotModal"));
 const AuthModal = dynamic(() => import("./components/authModal"));
 
 export default function Home() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
-  const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
+  // const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Handle user authentication state changes
@@ -128,7 +128,7 @@ export default function Home() {
       ></Script>
       <Header />
 
-      <div className="screen-container content-with-sidebar">
+      <div className="screen-container content-with-sidebar mr-2">
         <h1 className="hidden md:block text-zinc-200 text-4xl justify-center items-center font-bold mb-6 whitespace-nowrap">
           Humor Hub!
         </h1>
@@ -184,21 +184,21 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section
+
+        {/* <section
           data-aos="fade-up"
           className="card-style flex flex-col items-center w-full p-4 xs:p-2 sm:p-4"
         >
-          {/* Centered Headings */}
+          Centered Headings
           <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center">
             ComicBot
           </h2>
           <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">
             Unfiltered Comedy, No Writer&#39;s Block
           </h3>
-
-          {/* Main Content */}
+ 
           <div className="flex flex-col md:flex-row items-center justify-between w-full">
-            {/* Text First */}
+      
             <div className="flex-1 text-center md:text-left md:pr-6 order-2 md:order-1 w-full md:w-1/2 mb-4 md:mb-0">
               <p className="text-sm sm:text-md mb-4">
                 Stuck on a joke? ComicBot is your unfiltered, comedy-trained
@@ -218,7 +218,7 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Image Second */}
+        
             <div
               className="md:w-1/2 flex justify-center order-1 md:order-2"
               onClick={() =>
@@ -239,8 +239,11 @@ export default function Home() {
               />
             </div>
           </div>
-        </section>
+        </section> */}
 
+        <section data-aos="fade-up">
+          <HumorHubAPISection />
+        </section>
         <section
           data-aos="fade-up"
           className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center"
@@ -283,13 +286,10 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section data-aos="fade-up">
-          <HumorHubAPISection />
-        </section>
-        <ComicBotModal
+        {/* <ComicBotModal
           isOpen={isComicBotModalOpen}
           onClose={() => setIsComicBotModalOpen(false)}
-        />
+        /> */}
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}

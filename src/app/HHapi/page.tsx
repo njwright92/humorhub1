@@ -103,14 +103,14 @@ const NewsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setSelectedHeadline, setSelectedDescription } = useHeadline();
   const router = useRouter();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  // const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const handleButtonClick = () => {
-    if (!isButtonDisabled) {
-      alert("ComicBot coming soon!");
-      setIsButtonDisabled(true);
-    }
-  };
+  // const handleButtonClick = () => {
+  //   if (!isButtonDisabled) {
+  //     alert("ComicBot coming soon!");
+  //     setIsButtonDisabled(true);
+  //   }
+  // };
 
   const handleToggleArticle = (title: string) => {
     setExpandedArticle((prev) => (prev === title ? null : title));
@@ -273,9 +273,6 @@ const NewsPage = () => {
                       News
                     </h3>
                   </div>
-                  <p className="text-center md:text-right text-zinc-200 w-full md:w-auto mt-4 md:mt-0">
-                    Send this to ComicBot to get the ball rolling!
-                  </p>
                 </div>
 
                 {fetchedArticles[category as Category]?.map(
@@ -337,7 +334,7 @@ const NewsPage = () => {
                           )}
                         </div>
                       </div>
-                      <div className="mt-4 md:mt-0 md:flex md:flex-col md:items-end">
+                      {/* <div className="mt-4 md:mt-0 md:flex md:flex-col md:items-end">
                         <button
                           onClick={handleButtonClick}
                           className={`btn font-semibold py-2 px-4 rounded hover:bg-green-700 hover:text-zinc-200 transition-colors ${
@@ -350,7 +347,7 @@ const NewsPage = () => {
                         >
                           ComicBot&apos;s Take
                         </button>
-                      </div>
+                      </div> */}
                     </article>
                   ),
                 )}
