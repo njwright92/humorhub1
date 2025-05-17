@@ -5,24 +5,24 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
+  title: "Humor Hub - The Hub of Humor, Open Mics",
   description:
-    "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
+    "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
   keywords:
-    "comedy platform, stand-up comedy, funny jokes, puns, open mic events, comicbot, humor content, AI comedy, comedy writing tools, best jokes, comedy venues",
+    "comedy platform, stand-up comedy, funny jokes, puns, open mic events, humor content, AI comedy, comedy writing tools, best jokes, comedy venues",
   openGraph: {
-    title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
+    title: "Humor Hub - The Hub of Humor, Open Mics",
     description:
-      "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
+      "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
     url: "https://www.thehumorhub.com/",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     creator: "@natebug321",
-    title: "Humor Hub - The Hub of Humor, Open Mics, and ComicBot",
+    title: "Humor Hub - The Hub of Humor, Open Mics",
     description:
-      "Discover the ultimate hub for everything comedy, featuring open mic events, AI-driven ComicBot, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
+      "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
   },
 };
 
