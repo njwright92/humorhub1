@@ -298,11 +298,11 @@ export default function Header() {
                 className=" absolute top-20 left-0 right-0 flex justify-center text-center px-2 sm:px-4 max-w-[90%]  sm:text-sm md:text-base text-yellow-400 bg-zinc-900 rounded-2xl shadow-xl animate-bounce sm:fixed sm:top-5 md:right-5 sm:left-auto whitespace-normal
   "
               >
-                🌍 MicFinder is free for a limited time!
+                🌍 Free for a limited time!
                 <br />
                 Sign up now!
                 <br />
-                🎤 Explore mics worldwide: Europe Australia and more!
+                🎤 Explore mics worldwide: Comedy-Music/Other!
                 <button
                   onClick={() => setShowBanner(false)}
                   className="ml-2 text-zinc-200"

@@ -31,29 +31,23 @@ function getDistanceFromLatLonInKm(
   lat2: number,
   lon2: number,
 ): number {
-  const R = 6371; // Earth's radius in kilometers
-  const toRad = (value: number) => (value * Math.PI) / 180; // Degrees to radians
-
+  const R = 6371;
+  const toRad = (value: number) => (value * Math.PI) / 180;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
-
   const a =
     Math.sin(dLat / 2) ** 2 +
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
 
 const Header = dynamic(() => import("../components/header"), {});
-
 const Footer = dynamic(() => import("../components/footer"), {});
-
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
 });
-
 const EventForm = dynamic(() => import("../components/EventForm"), {
   loading: () => <p>Loading form...</p>,
   ssr: false,
@@ -70,6 +64,7 @@ type Event = {
   details: string;
   isRecurring: boolean;
   festival: boolean;
+  isMusic?: boolean;
 };
 
 type CityCoordinates = {
@@ -94,18 +89,26 @@ const EventsPage = () => {
     lat: number;
     lng: number;
   } | null>(null);
-  const [selectedTab, setSelectedTab] = useState<"Mics" | "Festivals">("Mics"); // State to track selected tab
+  const [selectedTab, setSelectedTab] = useState<
+    "Mics" | "Festivals" | "Other"
+  >("Mics");
 
-  // Function to find the closest city in the database
+  // TAB LOGIC
+  const isTabMatch = useCallback(
+    (event: Event) => {
+      if (selectedTab === "Festivals") return event.festival;
+      if (selectedTab === "Other") return event.isMusic;
+      return !event.festival && !event.isMusic;
+    },
+    [selectedTab],
+  );
+
+  // Closest city logic
   const findClosestCity = useCallback(
     (latitude: number, longitude: number): string | null => {
-      if (Object.keys(cityCoordinates).length === 0) {
-        return null;
-      }
-
+      if (Object.keys(cityCoordinates).length === 0) return null;
       let closestCity: string | null = null;
       let minDistance = Infinity;
-
       for (const [city, coords] of Object.entries(cityCoordinates)) {
         const distance = getDistanceFromLatLonInKm(
           latitude,
@@ -118,7 +121,6 @@ const EventsPage = () => {
           closestCity = city;
         }
       }
-
       return closestCity;
     },
     [cityCoordinates],
@@ -140,8 +142,6 @@ const EventsPage = () => {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
-
-    // Debounce the search event
     if (searchTimeoutRef.current !== null) {
       clearTimeout(searchTimeoutRef.current);
     }
@@ -150,7 +150,7 @@ const EventsPage = () => {
         event_category: "City Search",
         event_label: term,
       });
-    }, 500); // Delay of 500ms
+    }, 500);
   };
 
   // Handle city selection
@@ -159,36 +159,25 @@ const EventsPage = () => {
     setSelectedCity(normalizedCity);
     setFilterCity(normalizedCity);
     setSearchTerm(normalizedCity);
-
-    // Send event to dataLayer
     sendDataLayerEvent("select_city", {
       event_category: "City Selection",
       event_label: normalizedCity,
     });
   };
 
+  // 1. MAP EVENTS FILTER
   const eventsForMap = useMemo(() => {
-    let filteredEvents = events;
+    return events.filter(isTabMatch);
+  }, [events, isTabMatch]);
 
-    // Simplified festival filtering based on selectedTab
-    const isFestivalMatch = (event: Event) =>
-      selectedTab === "Festivals" ? event.festival : !event.festival;
-
-    filteredEvents = filteredEvents.filter(isFestivalMatch);
-
-    return filteredEvents;
-  }, [events, selectedTab]);
-
+  // Map toggle
   const toggleMapVisibility = () => {
     setIsMapVisible((prev) => {
       const newValue = !prev;
-
-      // Send event to dataLayer
       sendDataLayerEvent("toggle_map", {
         event_category: "Map Interaction",
         event_label: newValue ? "Show Map" : "Hide Map",
       });
-
       return newValue;
     });
   };
@@ -226,17 +215,15 @@ const EventsPage = () => {
       setSearchTerm(normalizedCity);
     }
     setIsSecondDropdownOpen(false);
-
-    // Send event to dataLayer
     sendDataLayerEvent("filter_city", {
       event_category: "City Filter",
       event_label: city,
     });
   };
 
+  // 2. CITY FILTER LOGIC (correct tab)
   const eventsByCity = useMemo(() => {
     let filteredEvents = events;
-
     if (filterCity !== "All Cities") {
       const normalizedFilterCity = normalizeCityName(filterCity);
       filteredEvents = filteredEvents.filter((event) => {
@@ -251,28 +238,23 @@ const EventsPage = () => {
         return false;
       });
     }
-
-    // Simplified festival filtering based on selectedTab
-    const isFestivalMatch = (event: Event) =>
-      selectedTab === "Festivals" ? event.festival : !event.festival;
-
-    filteredEvents = filteredEvents.filter(isFestivalMatch);
-
+    filteredEvents = filteredEvents.filter(isTabMatch);
     return filteredEvents;
-  }, [filterCity, events, normalizeCityName, selectedTab]);
+  }, [filterCity, events, normalizeCityName, isTabMatch]);
 
+  // EVENTS FETCH: pulls isMusic
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
-
           const festival = data.festival === true;
-
+          const isMusic = data.isMusic === true;
           return {
             ...data,
             festival,
+            isMusic,
           } as Event;
         });
         setEvents(fetchedEvents);
@@ -282,35 +264,31 @@ const EventsPage = () => {
         );
       }
     };
-
     fetchEvents();
   }, []);
 
+  // Cities fetch
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const db = getFirestore(app);
         const citiesSnapshot = await getDocs(collection(db, "cities"));
         const citiesData: CityCoordinates = {};
-
         citiesSnapshot.docs.forEach((doc) => {
           const cityData = doc.data();
-          const city = cityData.city; // "City State" format
+          const city = cityData.city;
           citiesData[city] = {
             lat: cityData.coordinates.lat,
             lng: cityData.coordinates.lng,
           };
         });
-
         setCityCoordinates(citiesData);
-      } catch (error) {
-        // Handle error if necessary
-      }
+      } catch (error) {}
     };
-
     fetchCities();
   }, []);
 
+  // Recurring event day matching
   const isRecurringEvent = useCallback(
     (eventDate: string, selectedDate: Date): boolean => {
       const dayOfWeekMap: { [key: string]: number } = {
@@ -322,30 +300,26 @@ const EventsPage = () => {
         Friday: 5,
         Saturday: 6,
       };
-
       const eventDay = dayOfWeekMap[eventDate];
       const selectedDay = selectedDate.getDay();
-
       return eventDay === selectedDay;
     },
     [],
   );
 
+  // 3. FULL FILTERED EVENTS for current view
   const filteredEvents = useMemo(() => {
     const normalizedSelectedDate = new Date(selectedDate);
     normalizedSelectedDate.setHours(0, 0, 0, 0);
-
     const lowercasedSearchTerm = searchTerm ? searchTerm.toLowerCase() : null;
     const lowercasedSelectedCity = selectedCity
       ? selectedCity.toLowerCase()
       : "";
-
     return events.filter((event) => {
       const isInSelectedCity =
         !lowercasedSelectedCity ||
         (event.location &&
           event.location.toLowerCase().includes(lowercasedSelectedCity));
-
       let isOnSelectedDate = true;
       if (event.isRecurring) {
         isOnSelectedDate = isRecurringEvent(event.date, selectedDate);
@@ -353,7 +327,6 @@ const EventsPage = () => {
         if (event.date && typeof event.date === "string") {
           let eventDate: Date | undefined = undefined;
           const dateFormats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
-
           for (let format of dateFormats) {
             const parsedDate = parse(event.date, format, new Date());
             if (isValid(parsedDate)) {
@@ -361,7 +334,6 @@ const EventsPage = () => {
               break;
             }
           }
-
           if (!eventDate) {
             isOnSelectedDate = false;
           } else {
@@ -373,22 +345,17 @@ const EventsPage = () => {
           isOnSelectedDate = false;
         }
       }
-
       const matchesSearchTerm = lowercasedSearchTerm
         ? (event.name &&
             event.name.toLowerCase().includes(lowercasedSearchTerm)) ||
           (event.location &&
             event.location.toLowerCase().includes(lowercasedSearchTerm))
         : true;
-
-      const isFestivalMatch =
-        selectedTab === "Festivals" ? event.festival : !event.festival;
-
       return (
         isInSelectedCity &&
         isOnSelectedDate &&
         matchesSearchTerm &&
-        isFestivalMatch
+        isTabMatch(event)
       );
     });
   }, [
@@ -397,41 +364,37 @@ const EventsPage = () => {
     selectedDate,
     isRecurringEvent,
     searchTerm,
-    selectedTab,
+    isTabMatch,
   ]);
 
+  // Auth
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
     });
-
     return unsubscribe;
   }, []);
 
+  // Save event
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
         alert("Please sign in to save events to your profile.");
         return;
       }
-
       try {
         const user = auth.currentUser;
         if (!user) {
           throw new Error("User not found.");
         }
-
-        // Create a reference to the user's savedEvents collection
         const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
         await setDoc(userSavedEventRef, { ...event, userId: user.uid });
-
         alert("Event saved to your profile successfully!");
       } catch (error) {
         alert(
           "Oops! Something went wrong while saving the event. Please try again.",
         );
       }
-
       sendDataLayerEvent("save_event", {
         event_category: "Event Interaction",
         event_label: event.name,
@@ -440,7 +403,7 @@ const EventsPage = () => {
     [isUserSignedIn],
   );
 
-  // Create a function to sort cities with Spokane WA first
+  // Spokane WA first
   const sortCitiesWithSpokaneFirst = (cities: string[]): string[] => {
     return cities.sort((a, b) => {
       if (a === "Spokane WA") return -1;
@@ -452,7 +415,6 @@ const EventsPage = () => {
   const uniqueCities = useMemo(() => {
     const citySet = new Set<string>();
     const lowercasedSearchTerm = searchTerm.toLowerCase();
-
     events.forEach((event) => {
       if (event.location) {
         const parts = event.location.split(", ");
@@ -464,33 +426,28 @@ const EventsPage = () => {
         }
       }
     });
-
-    // Convert set to array and apply sorting with Spokane at the top
     return sortCitiesWithSpokaneFirst(Array.from(citySet));
   }, [events, searchTerm, normalizeCityName]);
 
+  // Geolocation fetch
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported. Please select a city manually.");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
         try {
           const closestCity = findClosestCity(latitude, longitude);
-
           if (closestCity) {
             setSelectedCity(closestCity);
             setFilterCity(closestCity);
           } else {
             alert("No nearby cities found. Please select a city manually.");
           }
-        } catch (error) {
-          // Handle error if necessary
-        }
+        } catch (error) {}
       },
-      (error) => {
+      (_error) => {
         alert(
           "Unable to retrieve your location. Please select a city manually.",
         );
@@ -498,18 +455,17 @@ const EventsPage = () => {
     );
   }, [findClosestCity]);
 
+  // URL search prefill
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const queryTerm = urlParams.get("searchTerm") || "";
     const city = urlParams.get("city");
-
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
     } else if (Object.keys(cityCoordinates).length > 0) {
       fetchUserLocation();
     }
-
     setSearchTerm(queryTerm);
   }, [fetchUserLocation, cityCoordinates]);
 
@@ -519,11 +475,11 @@ const EventsPage = () => {
       setIsDatePickerOpen(false);
     }
   };
-
   const openDatePicker = () => {
     setIsDatePickerOpen((prev) => !prev);
   };
 
+  // Selected city fallback
   const selectedCityCoordinates = useMemo(() => {
     return cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
   }, [selectedCity, cityCoordinates]);
@@ -540,48 +496,42 @@ const EventsPage = () => {
         <GoogleMap
           lat={mapLocation.lat}
           lng={mapLocation.lng}
-          events={eventsForMap} // Use eventsForMap here
+          events={eventsForMap}
         />
       </Suspense>
     ) : null;
-  }, [mapLocation, isMapVisible, eventsForMap]); // Add eventsForMap to dependencies
+  }, [mapLocation, isMapVisible, eventsForMap]);
 
   const MemoizedEventForm = React.memo(EventForm);
 
+  // 4. Event sorting
   const sortedEventsByCity = useMemo(() => {
     const spokaneClubFirst = (a: Event, b: Event) => {
       const aLoc = a?.location || "";
       const bLoc = b?.location || "";
-
       if (aLoc.includes("Spokane Comedy Club")) return -1;
       if (bLoc.includes("Spokane Comedy Club")) return 1;
       return 0;
     };
-
     const sortedEvents = [...eventsByCity].sort(
       (a, b) =>
         spokaneClubFirst(a, b) ||
         new Date(b.googleTimestamp).getTime() -
           new Date(a.googleTimestamp).getTime(),
     );
-
     return sortedEvents;
   }, [eventsByCity]);
 
-  // OpenMicBanner component with visibility timeout
+  // Banner
   const OpenMicBanner = () => {
     const [visible, setVisible] = useState(true);
-
     useEffect(() => {
       const timer = setTimeout(() => {
         setVisible(false);
-      }, 10000); // Hide banner after 10 seconds
-
-      return () => clearTimeout(timer); // Cleanup the timeout
+      }, 10000);
+      return () => clearTimeout(timer);
     }, []);
-
     if (!visible) return null;
-
     return (
       <div className="border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-4">
         <strong className="font-bold">📢 Note: </strong>
@@ -590,7 +540,6 @@ const EventsPage = () => {
           We&apos;re now adding comedy festivals—reach out to get yours featured
           and keep the community laughing!
         </span>
-
         <span
           className="absolute top-[-0.75rem] right-[-0.75rem] px-4 py-3 cursor-pointer"
           onClick={() => setVisible(false)}
@@ -609,6 +558,7 @@ const EventsPage = () => {
     );
   };
 
+  // Row
   const Row = ({
     index,
     style,
@@ -625,6 +575,9 @@ const EventsPage = () => {
           <p className="details-label">📍 Location: {event.location}</p>
           {event.festival && (
             <p className="details-label">🏆 This is a festival!</p>
+          )}
+          {event.isMusic && !event.festival && (
+            <p className="details-label">🎶 This is a Music/Other event!</p>
           )}
           <div className="details-label">
             <span className="details-label">ℹ️ Details:</span>
@@ -651,14 +604,11 @@ const EventsPage = () => {
           name="description"
           content="Jump into the local comedy scene with MicFinder! Whether you're cracking jokes or just soaking them up, find the best open mics, shows, and festivals in your area."
         />
-
         <meta
           name="keywords"
           content="MicFinder, comedy events, stand-up comedy, open mic near me, local mics, comedy festivals, comedy nights, live comedy shows, comedy, jokes, mics"
         />
-
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
-
         <meta
           property="og:title"
           content="MicFinder - Your Go-To Tool for Finding Open Mics and Comedy Festivals"
@@ -687,26 +637,21 @@ const EventsPage = () => {
         <h1 className="title font-bold text-center mb-6">
           Discover Mics and Festivals Near You!
         </h1>
-
         <p className="text-center mt-4 mb-6">
           Got a mic to share or ready to find your next mic? MicFinder is your
           go-to for discovering and adding comedy events—connect with your
           community and keep the laughs going!
         </p>
-
         <div className="text-center mb-8">
           <MemoizedEventForm />
         </div>
-
         <h2 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
           Find your next show or next night out—pick a city and date!
         </h2>
-
         <p className="text-sm text-center mb-4 sm:mb-2 xs:mb-1">
           Dive in and scroll through upcoming events to find your next big gig
           or a night of laughter.
         </p>
-
         <div className="flex flex-col justify-center items-center mt-2">
           <div className="relative w-full max-w-xs min-h-[60px]">
             <div
@@ -714,15 +659,12 @@ const EventsPage = () => {
               onClick={() => {
                 setIsFirstDropdownOpen((prev) => {
                   const newValue = !prev;
-
-                  // Send event when dropdown is opened
                   if (newValue) {
                     sendDataLayerEvent("open_dropdown", {
                       event_category: "Dropdown",
                       event_label: "City Selection Dropdown",
                     });
                   }
-
                   return newValue;
                 });
                 setIsSecondDropdownOpen(false);
@@ -730,7 +672,6 @@ const EventsPage = () => {
             >
               {selectedCity || "Select a City"}
             </div>
-
             {/* Dropdown menu */}
             {isFirstDropdownOpen && (
               <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 max-h-[192px] overflow-y-auto">
@@ -742,7 +683,6 @@ const EventsPage = () => {
                   onChange={handleSearchInputChange}
                   className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
                 />
-
                 {/* Filtered city options */}
                 <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                   {sortCitiesWithSpokaneFirst(
@@ -756,8 +696,6 @@ const EventsPage = () => {
                       onClick={() => {
                         handleCitySelect(city);
                         setIsFirstDropdownOpen(false);
-
-                        // Send event to dataLayer
                         sendDataLayerEvent("click_city_option", {
                           event_category: "City Selection",
                           event_label: city,
@@ -771,7 +709,6 @@ const EventsPage = () => {
               </div>
             )}
           </div>
-
           {/* Date Picker */}
           <div className="flex flex-col justify-center items-center mt-2">
             <div className="relative w-full max-w-xs min-h-[60px]">
@@ -801,7 +738,6 @@ const EventsPage = () => {
             </div>
           </div>
         </div>
-
         {/* Map Component */}
         <section className="card-style1">
           <button
@@ -812,14 +748,15 @@ const EventsPage = () => {
           </button>
           {MemoizedGoogleMap}
         </section>
-
         {/* Event List */}
         <section className="card-style">
           <h2
             className="title-style text-center"
             style={{ borderBottom: "0.15rem solid #f97316" }}
           >
-            {selectedTab === "Mics" ? "Open Mics" : "Festivals"}
+            {selectedTab === "Mics" && "Open Mics"}
+            {selectedTab === "Festivals" && "Festivals"}
+            {selectedTab === "Other" && "Music/Other"}
           </h2>
           {selectedCity === "" ? (
             <p>Please select a city to see events.</p>
@@ -831,6 +768,11 @@ const EventsPage = () => {
                 <p className="details-label">📍 Location: {event.location}</p>
                 {event.festival && (
                   <p className="details-label">🏆 This is a festival!</p>
+                )}
+                {event.isMusic && !event.festival && (
+                  <p className="details-label">
+                    🎶 This is a Music/Other event!
+                  </p>
                 )}
                 <div className="details-label">
                   <span className="details-label">ℹ️ Details:</span>
@@ -850,58 +792,80 @@ const EventsPage = () => {
                 ? `No daily events found for ${
                     selectedCity || "the selected city"
                   } on ${selectedDate.toLocaleDateString()}.`
-                : `No festivals found for ${
+                : selectedTab === "Festivals"
+                ? `No festivals found for ${
+                    selectedCity || "the selected city"
+                  } on ${selectedDate.toLocaleDateString()}`
+                : `No music/other events found for ${
                     selectedCity || "the selected city"
                   } on ${selectedDate.toLocaleDateString()}`}
             </p>
           )}
         </section>
         {/* Tab Buttons */}
-        <div className="tab-container flex justify-center mt-4">
+        <div className="tab-container flex justify-center mt-4 gap-3">
+          {/* Mics (Blue) */}
           <button
-            className={`tab-button ${
-              selectedTab === "Mics"
-                ? "tab-button-active"
-                : "tab-button-inactive"
-            }`}
+            className={`
+      tab-button font-bold px-4 py-2 rounded-full transition
+      ${
+        selectedTab === "Mics"
+          ? "bg-blue-600 text-white ring-2 ring-white ring-offset-2 shadow-lg"
+          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+      }
+    `}
             onClick={() => setSelectedTab("Mics")}
             aria-label="Show Open Mic Events"
           >
             Mics
           </button>
+          {/* Festivals (Purple) */}
           <button
-            className={`tab-button ${
-              selectedTab === "Mics"
-                ? "tab-button-inactive"
-                : "tab-button-active"
-            }`}
+            className={`
+      tab-button font-bold px-4 py-2 rounded-full transition
+      ${
+        selectedTab === "Festivals"
+          ? "bg-purple-700 text-white ring-2 ring-white ring-offset-2 shadow-lg"
+          : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+      }
+    `}
             onClick={() => setSelectedTab("Festivals")}
             aria-label="Show Festival Events"
           >
             Festivals
+          </button>
+          {/* Music/Other (Green) */}
+          <button
+            className={`
+      tab-button font-bold px-4 py-2 rounded-full transition
+      ${
+        selectedTab === "Other"
+          ? "bg-green-600 text-white ring-2 ring-white ring-offset-2 shadow-lg"
+          : "bg-green-100 text-green-700 hover:bg-green-200"
+      }
+    `}
+            onClick={() => setSelectedTab("Other")}
+            aria-label="Show Music/Other Events"
+          >
+            Music/Other
           </button>
         </div>
 
         {/* All Events List */}
         <section className="card-style">
           <div className="flex flex-col justify-center items-center mt-2">
-            {/* Dropdown with search input */}
             <div className="relative w-full max-w-xs">
-              {/* Button to open/close dropdown */}
               <div
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
                 onClick={() => {
                   setIsSecondDropdownOpen((prev) => {
                     const newValue = !prev;
-
-                    // Send event when dropdown is opened
                     if (newValue) {
                       sendDataLayerEvent("open_dropdown", {
                         event_category: "Dropdown",
                         event_label: "City Filter Dropdown",
                       });
                     }
-
                     return newValue;
                   });
                   setIsFirstDropdownOpen(false);
@@ -909,11 +873,8 @@ const EventsPage = () => {
               >
                 {filterCity || "All Cities"}
               </div>
-
-              {/* Dropdown menu */}
               {isSecondDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
-                  {/* Search input inside the dropdown */}
                   <input
                     type="text"
                     placeholder="Search for a city..."
@@ -921,8 +882,6 @@ const EventsPage = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
                   />
-
-                  {/* Filtered city options */}
                   <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
                     <li
                       key="All Cities"
@@ -930,8 +889,6 @@ const EventsPage = () => {
                       onClick={() => {
                         handleCityFilterChange("All Cities");
                         setIsSecondDropdownOpen(false);
-
-                        // Send event to dataLayer
                         sendDataLayerEvent("click_city_filter_option", {
                           event_category: "City Filter",
                           event_label: "All Cities",
@@ -940,7 +897,6 @@ const EventsPage = () => {
                     >
                       All Cities
                     </li>
-
                     {sortCitiesWithSpokaneFirst(
                       uniqueCities.filter((city) =>
                         city.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -952,8 +908,6 @@ const EventsPage = () => {
                         onClick={() => {
                           handleCityFilterChange(city);
                           setIsSecondDropdownOpen(false);
-
-                          // Send event to dataLayer
                           sendDataLayerEvent("click_city_filter_option", {
                             event_category: "City Filter",
                             event_label: city,
@@ -968,20 +922,22 @@ const EventsPage = () => {
               )}
             </div>
           </div>
-
           <h2 className="title-style text-center mt-4">
             {filterCity === "All Cities"
               ? selectedTab === "Mics"
                 ? "All Mics"
-                : "All Festivals"
+                : selectedTab === "Festivals"
+                ? "All Festivals"
+                : "All Music/Other"
               : selectedTab === "Mics"
               ? `All Mics in ${filterCity}`
-              : `All Festivals in ${filterCity}`}
+              : selectedTab === "Festivals"
+              ? `All Festivals in ${filterCity}`
+              : `All Music/Other in ${filterCity}`}
           </h2>
           {selectedTab === "Festivals" && sortedEventsByCity.length === 0 && (
             <p>No festivals found for {filterCity}.</p>
           )}
-
           <List
             height={600}
             itemCount={sortedEventsByCity.length}
