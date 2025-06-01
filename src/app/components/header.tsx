@@ -300,9 +300,9 @@ export default function Header() {
               >
                 🌍 Free for a limited time!
                 <br />
-                Sign up now!
+                Sign up now
                 <br />
-                🎤 Explore mics worldwide: Comedy-Music/Other!
+                🎤 Locations have been updated!!
                 <button
                   onClick={() => setShowBanner(false)}
                   className="ml-2 text-zinc-200"
