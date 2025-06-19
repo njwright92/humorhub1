@@ -935,8 +935,17 @@ const EventsPage = () => {
               ? `All Festivals in ${filterCity}`
               : `All Music/Other in ${filterCity}`}
           </h2>
-          {selectedTab === "Festivals" && sortedEventsByCity.length === 0 && (
-            <p>No festivals found for {filterCity}.</p>
+
+          {sortedEventsByCity.length === 0 && (
+            <p>
+              No{" "}
+              {selectedTab === "Mics"
+                ? "mics"
+                : selectedTab === "Festivals"
+                ? "festivals"
+                : "music/other events"}{" "}
+              found for {filterCity}.
+            </p>
           )}
           <List
             height={600}
