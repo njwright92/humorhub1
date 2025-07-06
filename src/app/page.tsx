@@ -143,7 +143,7 @@ export default function Home() {
                 <br />
                 MicFinder helps comedians find and share open mics worldwide!
                 <br />
-                With more than 1500 events in 440 cities!
+                With more than 1600+ Mics/Festivals in over 500 cities!
               </p>
               <Suspense fallback={<div>Loading...</div>}>
                 <EventForm />
@@ -252,7 +252,7 @@ export default function Home() {
             Jokepad
           </h2>
           <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-center">
-            Your Personal Comedy Notebook
+            Your Comedy Notebook
           </h3>
           <div className="flex flex-col md:flex-row items-center w-full">
             <div

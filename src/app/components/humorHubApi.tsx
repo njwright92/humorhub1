@@ -50,7 +50,7 @@ const HumorHubAPISection: React.FC = () => {
 
         <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0">
           <p className="mb-4 mt-2 sm:mb-2 text-sm xs:text-xs sm:text-sm">
-            Stay in the loop with the latest headlines across all topics—perfect
+            Stay in the loop with the latest headlines across all topics perfect
             for sparking new joke ideas. Get inspired with Humor Hub News.
           </p>
 

@@ -18,7 +18,7 @@
     "date-fns": "4.1.0",
     "firebase": "11.6.1",
     "firebase-admin": "12.1.0",
-    "next": "15.3.1",
+    "next": "^15.3.5",
     "react": "18.3.1",
     "react-datepicker": "4.25.0",
     "react-dom": "18.3.1",

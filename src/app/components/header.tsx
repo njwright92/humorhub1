@@ -295,14 +295,19 @@ export default function Header() {
           <div className="flex justify-between items-center xs:px-2 lg:px-4">
             {showBanner && (
               <div
-                className=" absolute top-20 left-0 right-0 flex justify-center text-center px-2 sm:px-4 max-w-[90%]  sm:text-sm md:text-base text-yellow-400 bg-zinc-900 rounded-2xl shadow-xl animate-bounce sm:fixed sm:top-5 md:right-5 sm:left-auto whitespace-normal
+                className="p-1 absolute top-20 left-0 right-0 flex justify-center text-center px-2 sm:px-4 max-w-[90%]  sm:text-sm md:text-base text-yellow-400 bg-zinc-900 rounded-2xl shadow-xl animate-bounce sm:fixed sm:top-5 md:right-5 sm:left-auto whitespace-normal
   "
               >
                 🌍 Free for a limited time!
                 <br />
-                Sign up now
-                <br />
-                🎤 Locations have been updated!!
+                🎤 Sign up now!!
+                <button
+                  onClick={toggleAuthModal}
+                  className="p-1 m-1 bg-green-700 text-zinc-100 text-sm rounded-xl shadow-xl hover:bg-green-600"
+                  aria-label="Sign In or Sign Up"
+                >
+                  Sign In/Up
+                </button>
                 <button
                   onClick={() => setShowBanner(false)}
                   className="ml-2 text-zinc-200"
