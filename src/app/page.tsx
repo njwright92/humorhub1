@@ -44,7 +44,7 @@ export default function Home() {
 
   function sendDataLayerEvent(
     event_name: string,
-    params: { event_category: string; event_label: string },
+    params: { event_category: string; event_label: string }
   ) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -154,8 +154,8 @@ export default function Home() {
                 <Image
                   src={micFinder}
                   alt="Mic Finder"
-                  width={150}
-                  height={150}
+                  width={125}
+                  height={125}
                   className="rounded-xl shadow-lg cursor-pointer"
                   priority
                   style={{ objectFit: "contain", maxWidth: "100%" }}
@@ -266,8 +266,8 @@ export default function Home() {
               <Image
                 src={jokes}
                 alt="Jokepad - Comedy Notebook"
-                width={150}
-                height={150}
+                width={125}
+                height={125}
                 className="rounded-xl shadow-lg cursor-pointer"
                 loading="lazy"
                 style={{ objectFit: "contain", maxWidth: "100%" }}
@@ -280,8 +280,8 @@ export default function Home() {
             </div>
             <div className="md:w-1/2 flex-1 text-center md:text-left">
               <p className="text-sm sm:text-md mb-4">
-                Jokepad helps you brainstorm, save, and tweak your best lines in
-                one spot. Keep your creative process smooth and organized.
+                Jokepad helps you brainstorm, sanve, and tweak your best lines
+                in one spot. Keep your creative process smooth and organized.
               </p>
             </div>
           </div>

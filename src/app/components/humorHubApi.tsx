@@ -39,12 +39,12 @@ const HumorHubAPISection: React.FC = () => {
           <Image
             src={news}
             alt="Comedy News Update"
-            width={200}
-            height={200}
-            className="rounded-xl shadow-lg -mt-6 sm:mt-0 sm:ml-4 mb-4 cursor-pointer"
+            width={125}
+            height={125}
+            className="rounded-xl shadow-lg cursor-pointer"
             loading="lazy"
-            style={{ objectFit: "contain", maxWidth: "80%" }}
-            sizes="(max-width: 640px) 80vw, (max-width: 768px) 90vw, 250px"
+            style={{ objectFit: "contain", maxWidth: "100%" }}
+            sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
           />
         </div>
 
