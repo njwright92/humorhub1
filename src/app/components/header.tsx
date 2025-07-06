@@ -40,7 +40,7 @@ export default function Header() {
   function debounce<T extends (...args: any[]) => void>(
     func: T,
     wait: number,
-    immediate: boolean = false,
+    immediate: boolean = false
   ) {
     let timeout: NodeJS.Timeout | null = null;
 
@@ -67,7 +67,7 @@ export default function Header() {
   // Toggle modal and menu
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    [],
+    []
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
@@ -115,7 +115,7 @@ export default function Header() {
       debounce(async (searchTerm: string) => {
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
         const matchingCity = cityList.find((city) =>
-          city.toLowerCase().includes(normalizedSearchTerm),
+          city.toLowerCase().includes(normalizedSearchTerm)
         );
 
         if (matchingCity) {
@@ -131,7 +131,7 @@ export default function Header() {
           }
         }
       }, 300),
-    [cityList, router],
+    [cityList, router]
   );
 
   return (
@@ -142,7 +142,7 @@ export default function Header() {
           <Link href="/">
             <Image
               src={hh}
-              alt="Mic"
+              alt="HUMOR HUB LOGO"
               width={50}
               height={50}
               className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden"
