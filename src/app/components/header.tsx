@@ -26,6 +26,7 @@ const AuthModal = dynamic(() => import("./authModal"), {
   loading: () => <div>Loading...</div>,
 });
 // const ComicBotModal = dynamic(() => import("./comicBotModal"));
+
 export default function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -292,11 +293,10 @@ export default function Header() {
               </svg>
             </button>
           </div>
-          <div className="flex justify-between items-center xs:px-2 lg:px-4">
+          {/* <div className="flex justify-between items-center xs:px-2 lg:px-4">
             {showBanner && (
               <div
-                className="p-1 absolute top-20 left-0 right-0 flex justify-center text-center px-2 sm:px-4 max-w-[90%]  sm:text-sm md:text-base text-yellow-400 bg-zinc-900 rounded-2xl shadow-xl animate-bounce sm:fixed sm:top-5 md:right-5 sm:left-auto whitespace-normal
-  "
+                className="p-1 absolute top-20 left-0 right-0 flex justify-center text-center px-2 sm:px-4 max-w-[90%]  sm:text-sm md:text-base text-yellow-400 bg-zinc-900 rounded-2xl shadow-xl animate-bounce sm:fixed sm:top-5 md:right-5 sm:left-auto whitespace-normal"
               >
                 🌍 Free for a limited time!
                 <br />
@@ -327,32 +327,31 @@ export default function Header() {
                   </svg>
                 </button>
               </div>
-            )}
-
-            <h1 className="text-zinc-900 text-4xl mr-8 font-bold sm:hidden justify-center">
-              Humor Hub!
-            </h1>
-            <button
-              onClick={toggleMenu}
-              className="text-zinc-900 sm:hidden cursor-pointer "
-              aria-label="Toggle menu"
+            )} */}
+          <h1 className="text-zinc-900 text-4xl mr-8 font-bold sm:hidden justify-center">
+            Humor Hub!
+          </h1>
+          <button
+            onClick={toggleMenu}
+            className="text-zinc-900 sm:hidden cursor-pointer "
+            aria-label="Toggle menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            </button>
-          </div>
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+
           {/* Full menu toggle for smaller screens */}
           {isMenuOpen && (
             <div className="fixed top-0 left-0 w-full h-full bg-zinc-900 text-zinc-200 bg-opacity-75 z-50 flex flex-col items-center gap-6 p-4">
@@ -405,8 +404,8 @@ export default function Header() {
                   }}
                 >
                   {/* <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
-                    {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
-                  </span> */}
+                  {isUserSignedIn ? "Comic Bot" : "Comic Bot"}
+                </span> */}
                 </div>
                 <div
                   onClick={() => {
@@ -471,9 +470,9 @@ export default function Header() {
       </header>
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />
       {/* <ComicBotModal
-        isOpen={isComicBotModalOpen}
-        onClose={() => setIsComicBotModalOpen(false)}
-      /> */}
+      isOpen={isComicBotModalOpen}
+      onClose={() => setIsComicBotModalOpen(false)}
+    /> */}
     </>
   );
 }
