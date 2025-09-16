@@ -204,16 +204,6 @@ export default function Footer() {
               <span className="text-sm sm:text-center block sm:inline">
                 © {new Date().getFullYear()} Humor Hub™. All rights reserved.
               </span>
-              <p className="italic block sm:inline mt-2 sm:mt-0 sm:ml-4">
-                Crafted with passion by Vanilla Nate!{" "}
-                <a
-                  href="https://njwright92.github.io/paper-kit-portfolio/"
-                  className="underline text-blue-500 transition-colors hover:text-zinc-200"
-                >
-                  Portfolio
-                </a>
-                .
-              </p>
             </div>
           </div>
         </div>

@@ -46,13 +46,12 @@ next-env.d.ts
 package-lock.json
 src/app/components/guide.tsx
 # firebase
-humorhub-73ff9-firebase-adminsdk-oyk79-c27f399854.json
+firebase-debug.log
+.firebase/hosting.cHVibGlj.cache
+humorhub-73ff9-firebase-adminsdk-oyk79-495a37af9e.json
 
-humorhub-73ff9-firebase-adminsdk-oyk79-c9b562fce5.json
 
-#json
 uploadToFirestore.js
-
 citiesToFirestore.js
 cities.json
 eventsToCities.js
@@ -61,5 +60,3 @@ updated_events.json
 events.json
 backend/.env
 backend/new_events.json
-firebase-debug.log
-.firebase/hosting.cHVibGlj.cache
