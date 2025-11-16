@@ -218,7 +218,7 @@ export default function Header() {
               </div> */}
 
               {/* Joke Pad */}
-              <div
+              {/* <div
                 onClick={() => {
                   if (isUserSignedIn) {
                     location.href = "/JokePad";
@@ -231,7 +231,7 @@ export default function Header() {
               >
                 <JokePadIcon />
                 <span className="sr-only">Joke Pad</span>
-              </div>
+              </div> */}
 
               {/* Contact Us */}
               <Link
@@ -420,7 +420,7 @@ export default function Header() {
                     {isUserSignedIn ? "News" : "News"}
                   </span>
                 </div>
-                <div
+                {/* <div
                   onClick={() => {
                     if (isUserSignedIn) {
                       location.href = "/JokePad";
@@ -432,7 +432,7 @@ export default function Header() {
                   <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">
                     {isUserSignedIn ? "Joke Pad" : "Joke Pad"}
                   </span>
-                </div>
+                </div> */}
                 {isUserSignedIn && (
                   <Link href="/Profile">
                     <span className="nav-link bg-zinc-900 rounded-xl p-2 shadow-lg cursor-pointer">

@@ -2,9 +2,8 @@
 
 import React, { useCallback, useState } from "react";
 import Head from "next/head";
-import { db } from "../../../firebase.config";
-import { collection, addDoc } from "firebase/firestore";
 import dynamic from "next/dynamic";
+import emailjs from "@emailjs/browser";
 
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
@@ -14,8 +13,6 @@ type ContactFormState = {
   email: string;
   message: string;
 };
-
-const collectionRef = collection(db, "contacts");
 
 const ContactPage: React.FC = () => {
   const [formState, setFormState] = useState<ContactFormState>({
@@ -28,7 +25,6 @@ const ContactPage: React.FC = () => {
     null,
   );
 
-  // Memoize handleInputChange to avoid re-creating the function on every render
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -39,18 +35,27 @@ const ContactPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting) return;
     setIsSubmitting(true);
-    setSubmitStatus(null); // Reset status before submitting
+    setSubmitStatus(null);
 
     try {
-      await addDoc(collectionRef, formState);
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1 as string,
+        {
+          name: formState.name,
+          email: formState.email,
+          message: formState.message,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
+      );
       setSubmitStatus("success");
-      setFormState({ name: "", email: "", message: "" }); // Reset form
+      setFormState({ name: "", email: "", message: "" });
     } catch (error) {
       setSubmitStatus("error");
     } finally {
-      setIsSubmitting(false); // Always stop submitting
+      setIsSubmitting(false);
     }
   };
 
@@ -60,7 +65,7 @@ const ContactPage: React.FC = () => {
         <title>Contact Us - Humor Hub</title>
         <meta
           name="description"
-          content="Get in touch with Humor Hub for any inquiries, feedback, or support. We're here to help you with anything comedy-related."
+          content="Contact Humor Hub for inquiries, feedback, or support."
         />
         <meta
           name="keywords"
@@ -70,7 +75,7 @@ const ContactPage: React.FC = () => {
         <meta property="og:title" content="Contact Us - Humor Hub" />
         <meta
           property="og:description"
-          content="Get in touch with Humor Hub for any inquiries, feedback, or support. We're here to help you with anything comedy-related."
+          content="Contact Humor Hub for inquiries, feedback, or support."
         />
         <meta property="og:url" content="https://www.thehumorhub.com/contact" />
         <meta property="og:type" content="website" />
@@ -83,45 +88,20 @@ const ContactPage: React.FC = () => {
       <div className="screen-container content-with-sidebar mx-auto p-4">
         <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
           <h1 className="text-zinc-900 text-3xl font-bold text-center mb-4">
-            We&rsquo;d Love to Hear From You
+            Contact Us
           </h1>
-          <p className="text-center mb-6 mt-8 text-zinc-900">
-            Your thoughts matter to us! Whether you have a question, feedback,
-            or need support, we&rsquo;re all ears. Use the form below to reach
-            out, and we promise to get back to you as swiftly as we can.
-            We&#39;re here to ensure your experience with Humor Hub is nothing
-            short of amazing. Thank you for taking the time to connect with us!
-          </p>
           <p className="text-center mb-6 text-zinc-900">
-            Do you have questions about our ComicBot, or need help finding the
-            perfect open mic event? Maybe you have suggestions on how we can
-            improve our platform or just want to share some love. Whatever it
-            is, we&rsquo;re here to listen and help. Your feedback is crucial in
-            helping us make Humor Hub the best comedy resource on the web.
-          </p>
-          <p className="text-center mb-6 text-zinc-900">
-            Want to know more about how we manage and protect your data? We take
-            privacy seriously and are happy to answer any questions you might
-            have. Feel free to ask us about our data practices or anything else
-            related to your experience on our site.
-          </p>
-          <p className="text-center mb-6 text-zinc-900">
-            If you&rsquo;re a comedian, venue, or event organizer, we&rsquo;re
-            especially interested in hearing from you! We are constantly
-            updating our database of open mic events, and we would love to add
-            your events to our platform. Just send us the details, and
-            we&rsquo;ll take care of the rest.
+            Questions, feedback, or support? Use the form below, and we&apos;ll
+            respond promptly.
           </p>
           {submitStatus === "success" && (
             <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg mb-4">
-              Thank you for reaching out! Your message has been sent
-              successfully. We&lsquo;ll get back to you as soon as possible.
+              Message sent successfully. We&apos;ll reply soon.
             </div>
           )}
           {submitStatus === "error" && (
             <div className="bg-red-100 text-red-800 px-4 py-2 rounded-lg mb-4">
-              Oops! Something went wrong while submitting your form. Please try
-              again later.
+              Error submitting form. Please try again.
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -130,7 +110,7 @@ const ContactPage: React.FC = () => {
                 htmlFor="name"
                 className="mb-2 font-semibold text-zinc-900 mx-auto w-1/2 lg:w-1/4"
               >
-                Your Name:
+                Name:
               </label>
               <input
                 type="text"
@@ -149,13 +129,13 @@ const ContactPage: React.FC = () => {
                 htmlFor="email"
                 className="mb-2 font-semibold text-zinc-900 w-1/2 lg:w-1/4 mx-auto"
               >
-                Your Email:
+                Email:
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
-                placeholder="Enter your email address"
+                placeholder="Enter your email"
                 required
                 value={formState.email}
                 onChange={handleInputChange}
@@ -168,12 +148,12 @@ const ContactPage: React.FC = () => {
                 htmlFor="message"
                 className="mb-2 font-semibold text-zinc-900"
               >
-                Your Message:
+                Message:
               </label>
               <textarea
                 id="message"
                 name="message"
-                placeholder="How can we help you?"
+                placeholder="Your message"
                 required
                 value={formState.message}
                 onChange={handleInputChange}
@@ -187,7 +167,7 @@ const ContactPage: React.FC = () => {
               disabled={isSubmitting}
               aria-label="Send Message"
             >
-              Send Message
+              Send
             </button>
           </form>
         </section>

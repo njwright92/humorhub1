@@ -147,12 +147,6 @@ const NewsPage = () => {
     }
   };
 
-  const handleWriteJoke = (title: string, description: string) => {
-    setSelectedHeadline(title);
-    setSelectedDescription(description);
-    router.push("/ComicBot");
-  };
-
   useEffect(() => {
     fetchNews(selectedCategory, selectedSubcategory);
   }, [selectedCategory, selectedSubcategory]);
@@ -168,7 +162,7 @@ const NewsPage = () => {
     <>
       <Head>
         <title>
-          Hub News - Access the Latest top stories in all news categories
+          Hub News - Access the Latest stories in all news categories
         </title>
         <meta
           name="description"
@@ -212,9 +206,6 @@ const NewsPage = () => {
             <p className="text-center mb-4 text-lg">
               Get real time News, and more with the news hub. Browse top
               categories and search for the freshest content.
-            </p>
-            <p className="mb-4 mt-4 text-md">
-              Discover the latest news on all the top news categories.
             </p>
 
             <div className="mb-4 w-full">
@@ -334,20 +325,6 @@ const NewsPage = () => {
                           )}
                         </div>
                       </div>
-                      {/* <div className="mt-4 md:mt-0 md:flex md:flex-col md:items-end">
-                        <button
-                          onClick={handleButtonClick}
-                          className={`btn font-semibold py-2 px-4 rounded hover:bg-green-700 hover:text-zinc-200 transition-colors ${
-                            isButtonDisabled
-                              ? "bg-gray-400 cursor-not-allowed"
-                              : ""
-                          }`}
-                          id="send-joke"
-                          disabled={isButtonDisabled}
-                        >
-                          ComicBot&apos;s Take
-                        </button>
-                      </div> */}
                     </article>
                   ),
                 )}

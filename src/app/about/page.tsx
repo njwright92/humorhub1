@@ -9,16 +9,13 @@ const Footer = dynamic(() => import("../components/footer"), {});
 const About: React.FC = () => (
   <>
     <Head>
-      <title>About Humor Hub – Mission &amp; Tools</title>
+      <title>About Humor Hub Mission &amp; Tools</title>
       <meta
         name="description"
         content="Humor Hub empowers comedians with real-time event listings, AI brainstorming, a digital notebook, and curated news to supercharge your career."
       />
       <link rel="canonical" href="https://www.thehumorhub.com/about" />
-      <meta
-        property="og:title"
-        content="About Humor Hub – Mission &amp; Tools"
-      />
+      <meta property="og:title" content="About Humor Hub Mission &amp; Tools" />
       <meta
         property="og:description"
         content="Discover how Humor Hub helps you find gigs, capture ideas, refine routines, and stay inspired."
@@ -38,9 +35,7 @@ const About: React.FC = () => (
 
       <p className="mb-8">
         Humor Hub was built by working comics who needed a better workflow: find
-        the next gig, brainstorm fresh bits, organize your notebooks, and draw
-        inspiration from real-time headlines. Everything you need in one place,
-        no extra fluff.
+        the next gig, and get inspiration from real-time headlines.
       </p>
 
       <section className="mb-8 text-left">
@@ -48,8 +43,8 @@ const About: React.FC = () => (
           Mic Finder
         </h2>
         <p className="mb-2">
-          Search 460+ cities for open mics, showcases, festivals and
-          competitions. Filter by date, genre or venue size.
+          Search 500+ cities for Comedy Mics, Music/All arts and
+          festivals/Competitions. Filter by date, genre or venue size.
         </p>
         <p>
           Venue managers can list events in seconds. The wider our database, the
@@ -58,7 +53,7 @@ const About: React.FC = () => (
         </p>
       </section>
 
-      <section className="mb-8 text-left">
+      {/* <section className="mb-8 text-left">
         <h2 className="text-2xl font-semibold text-orange-500 mb-2">JokePad</h2>
         <p className="mb-2">
           Your digital comedy notebook: tag by topic, stage, or date. Track
@@ -69,7 +64,7 @@ const About: React.FC = () => (
           Whether it is late-night set prep or on-the-road revisions, JokePad
           keeps your material organized and actionable.
         </p>
-      </section>
+      </section> */}
 
       <section className="mb-8 text-left">
         <h2 className="text-2xl font-semibold text-orange-500 mb-2">

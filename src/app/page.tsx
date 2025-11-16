@@ -244,7 +244,7 @@ export default function Home() {
         <section data-aos="fade-up">
           <HumorHubAPISection />
         </section>
-        <section
+        {/* <section
           data-aos="fade-up"
           className="card-style bg-zinc-900 text-zinc-200 p-4 xs:p-2 sm:p-4 rounded-xl shadow-md flex flex-col items-center"
         >
@@ -285,7 +285,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </section>
+        </section> */}
         {/* <ComicBotModal
           isOpen={isComicBotModalOpen}
           onClose={() => setIsComicBotModalOpen(false)}

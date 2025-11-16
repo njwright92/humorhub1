@@ -536,9 +536,8 @@ const EventsPage = () => {
       <div className="border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-4">
         <strong className="font-bold">📢 Note: </strong>
         <span className="block sm:inline">
-          Keep in mind, events can change frequently in the open mic scene.
-          We&apos;re now adding comedy festivals—reach out to get yours featured
-          and keep the community laughing!
+          Open mic events evolve quickly. See something outdated? Let us know.
+          Help keep the comedy community thriving!
         </span>
         <span
           className="absolute top-[-0.75rem] right-[-0.75rem] px-4 py-3 cursor-pointer"
@@ -638,20 +637,17 @@ const EventsPage = () => {
           Discover Mics and Festivals Near You!
         </h1>
         <p className="text-center mt-4 mb-6">
-          Got a mic to share or ready to find your next mic? MicFinder is your
-          go-to for discovering and adding comedy events—connect with your
-          community and keep the laughs going!
+          Share a mic or find your next one: MicFinder helps you discover and
+          add comedy events to connect with your community and keep the laughs
+          going!
         </p>
         <div className="text-center mb-8">
           <MemoizedEventForm />
         </div>
         <h2 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
-          Find your next show or next night out—pick a city and date!
+          Find your next show or night out. Pick a city and date!
         </h2>
-        <p className="text-sm text-center mb-4 sm:mb-2 xs:mb-1">
-          Dive in and scroll through upcoming events to find your next big gig
-          or a night of laughter.
-        </p>
+
         <div className="flex flex-col justify-center items-center mt-2">
           <div className="relative w-full max-w-xs min-h-[60px]">
             <div
@@ -749,14 +745,17 @@ const EventsPage = () => {
           {MemoizedGoogleMap}
         </section>
         {/* Event List */}
+        <p className="text-md text-center mb-2 sm:mb-1 xs:mb-1">
+          *Scroll through events to find your next Mic or Festival!*
+        </p>
         <section className="card-style">
           <h2
             className="title-style text-center"
             style={{ borderBottom: "0.15rem solid #f97316" }}
           >
-            {selectedTab === "Mics" && "Open Mics"}
+            {selectedTab === "Mics" && "Comedy Mics"}
             {selectedTab === "Festivals" && "Festivals"}
-            {selectedTab === "Other" && "Music/Other"}
+            {selectedTab === "Other" && "Music/All Arts"}
           </h2>
           {selectedCity === "" ? (
             <p>Please select a city to see events.</p>
@@ -817,7 +816,7 @@ const EventsPage = () => {
             onClick={() => setSelectedTab("Mics")}
             aria-label="Show Open Mic Events"
           >
-            Mics
+            Comedy Mics
           </button>
           {/* Festivals (Purple) */}
           <button
@@ -847,7 +846,7 @@ const EventsPage = () => {
             onClick={() => setSelectedTab("Other")}
             aria-label="Show Music/Other Events"
           >
-            Music/Other
+            Music/All arts
           </button>
         </div>
 
@@ -925,25 +924,25 @@ const EventsPage = () => {
           <h2 className="title-style text-center mt-4">
             {filterCity === "All Cities"
               ? selectedTab === "Mics"
-                ? "All Mics"
+                ? "All Comedy Mics"
                 : selectedTab === "Festivals"
                 ? "All Festivals"
-                : "All Music/Other"
+                : "All Music/All Arts"
               : selectedTab === "Mics"
-              ? `All Mics in ${filterCity}`
+              ? `All Comedy Mics in ${filterCity}`
               : selectedTab === "Festivals"
               ? `All Festivals in ${filterCity}`
-              : `All Music/Other in ${filterCity}`}
+              : `All Music/All Arts in ${filterCity}`}
           </h2>
 
           {sortedEventsByCity.length === 0 && (
             <p>
               No{" "}
               {selectedTab === "Mics"
-                ? "mics"
+                ? "Comedy mics"
                 : selectedTab === "Festivals"
                 ? "festivals"
-                : "music/other events"}{" "}
+                : "music/All arts events"}{" "}
               found for {filterCity}.
             </p>
           )}
