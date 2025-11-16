@@ -88,32 +88,12 @@ export default function Footer() {
               <ul className="text-zinc-200">
                 <li className="mb-4">
                   <a
-                    href="https://github.com/njwright92"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline cursor-pointer"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li className="mb-4">
-                  <a
                     href="https://twitter.com/naterbug321"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline cursor-pointer"
                   >
                     X (Twitter)
-                  </a>
-                </li>
-                <li className="mb-4">
-                  <a
-                    href="https://www.linkedin.com/in/nathan-wright-78b237123/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline cursor-pointer"
-                  >
-                    LinkedIn
                   </a>
                 </li>
                 <li className="mb-4">
@@ -136,14 +116,14 @@ export default function Footer() {
                     Instagram
                   </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a
-                    href="https://www.youtube.com/@justforlaughs"
+                    href="https://github.com/njwright92"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:underline cursor-pointer"
                   >
-                    YouTube
+                    GitHub
                   </a>
                 </li>
               </ul>
