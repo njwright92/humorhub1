@@ -675,6 +675,7 @@ const EventsPage = () => {
                 <input
                   type="text"
                   placeholder="Search for a city..."
+                  aria-label="city"
                   value={searchTerm}
                   onChange={handleSearchInputChange}
                   className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
@@ -738,7 +739,7 @@ const EventsPage = () => {
         <section className="card-style1">
           <button
             onClick={toggleMapVisibility}
-            className="mb-4 text-zinc-100 rounded-lg shadow-lg px-4 py-2 bg-green-500 transition cursor-pointer"
+            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-green-400 transition cursor-pointer"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
