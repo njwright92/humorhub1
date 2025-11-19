@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import news from "../../app/news.webp";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+// 💡 FIX: Import the pre-initialized 'auth' instance from your config file
+import { auth } from "../../../firebase.config";
+import { onAuthStateChanged } from "firebase/auth";
 import AuthModal from "./authModal";
 
 const HumorHubAPISection: React.FC = () => {
@@ -10,7 +12,7 @@ const HumorHubAPISection: React.FC = () => {
 
   // Monitor authentication state
   useEffect(() => {
-    const auth = getAuth();
+    // ✅ FIX: Use the imported 'auth' instance directly
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
     });
@@ -18,16 +20,17 @@ const HumorHubAPISection: React.FC = () => {
   }, []);
 
   return (
-    <div className="card-style rounded-lg shadow-lg p-4 xs:p-2 sm:p-4">
-      <h2 className="title-style text-2xl xs:text-xl sm:text-2xl font-bold text-center drop-shadow-md">
+    <div className="card-style rounded-lg shadow-lg p-4 sm:p-4">
+      <h2 className="title-style text-2xl sm:text-2xl font-bold text-center drop-shadow-md">
         Hub News!
       </h2>
       <h3 className="text-center text-md sm:text-lg mb-4 p-2">
         Your Source for Fresh Headlines!
       </h3>
 
-      <div className="rounded-lg shadow-lg bg-zinc-750 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4 xs:p-2">
+      <div className="rounded-lg shadow-lg bg-zinc-750 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4">
         <div
+          className="cursor-pointer transition-transform hover:scale-105"
           onClick={() => {
             if (!isUserSignedIn) {
               setIsAuthModalOpen(true);
@@ -41,7 +44,7 @@ const HumorHubAPISection: React.FC = () => {
             alt="Comedy News Update"
             width={125}
             height={125}
-            className="rounded-xl shadow-lg cursor-pointer"
+            className="rounded-xl shadow-lg"
             loading="lazy"
             style={{ objectFit: "contain", maxWidth: "100%" }}
             sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
@@ -49,7 +52,7 @@ const HumorHubAPISection: React.FC = () => {
         </div>
 
         <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0">
-          <p className="mb-4 mt-2 sm:mb-2 text-sm xs:text-xs sm:text-sm">
+          <p className="mb-4 mt-2 sm:mb-2 text-sm sm:text-sm">
             Looking for something topical? Check out the Hub News!
           </p>
 
@@ -61,19 +64,17 @@ const HumorHubAPISection: React.FC = () => {
                 location.href = "/HHapi";
               }
             }}
-            className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 xs:px-1 sm:px-2 rounded hover:bg-green-600 transition-colors cursor-pointer w-full sm:w-auto"
+            className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors cursor-pointer w-full sm:w-auto"
           >
             Check It Out
           </button>
         </div>
       </div>
 
-      {isAuthModalOpen && (
-        <AuthModal
-          onClose={() => setIsAuthModalOpen(false)}
-          isOpen={isAuthModalOpen}
-        />
-      )}
+      <AuthModal
+        onClose={() => setIsAuthModalOpen(false)}
+        isOpen={isAuthModalOpen}
+      />
     </div>
   );
 };

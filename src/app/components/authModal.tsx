@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+// 💡 FIXED: Import the pre-initialized 'auth' instance from your config file
+import { auth } from "../../../firebase.config";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -18,7 +19,9 @@ type AuthModalProps = {
   onClose: () => void;
 };
 
+// Simplified Regex for basic check (assuming client-side validation is basic)
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Regex: Min 8 chars, 1 letter, 1 number, 1 special char
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
@@ -28,10 +31,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isSignUp, setIsSignUp] = useState<boolean>(true);
 
+  // Common handler for email/password auth
   const handleAuth = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const auth = getAuth();
+
+      // Removed: const auth = getAuth(); (Now imported)
 
       if (!emailRegex.test(email)) {
         alert("Please enter a valid email address.");
@@ -60,8 +65,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
         onClose();
       } catch (error) {
-        if (error instanceof Error) {
-          const authError = error as AuthError;
+        // Corrected type checking for Firebase AuthError
+        const authError = error as AuthError;
+        if (authError.code) {
           switch (authError.code) {
             case "auth/email-already-in-use":
               alert("This email is already in use. Try signing in.");
@@ -72,72 +78,81 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             default:
               alert(`Error: ${authError.message}. Please try again.`);
           }
+        } else {
+          // Handle generic, non-Firebase errors
+          alert(`An unexpected error occurred. Please try again.`);
         }
       }
     },
     [email, password, confirmPassword, isSignUp, onClose],
   );
 
-  const handleGoogleSignIn = () => {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log("Google sign-in successful:", result.user);
-        onClose(); // Close the modal on successful sign-in
-      })
-      .catch((error) => {
-        console.error("Error during Google sign-in:", error.message);
-        alert("Google sign-in failed. Please try again.");
-      });
-  };
+  // Common handler for social sign-in (re-used for all providers)
+  const handleSocialSignIn = useCallback(
+    (
+      provider: GoogleAuthProvider | TwitterAuthProvider | FacebookAuthProvider,
+    ) => {
+      // Removed: const auth = getAuth(); (Now imported)
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log(
+            `${provider.providerId} sign-in successful:`,
+            result.user,
+          );
+          onClose();
+        })
+        .catch((error) => {
+          console.error(`Error during ${provider.providerId} sign-in:`, error);
+          alert(`${provider.providerId} sign-in failed. Please try again.`);
+        });
+    },
+    [onClose],
+  );
+
+  // Specific wrappers to use the generic handler
+  const handleGoogleSignIn = () => handleSocialSignIn(new GoogleAuthProvider());
+  const handleTwitterSignIn = () =>
+    handleSocialSignIn(new TwitterAuthProvider());
+  const handleFacebookSignIn = () =>
+    handleSocialSignIn(new FacebookAuthProvider());
 
   if (!isOpen) return null;
 
-  const handleTwitterSignIn = () => {
-    const auth = getAuth();
-    const provider = new TwitterAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log("Twitter sign-in successful:", result.user);
-        onClose(); // Close the modal on successful sign-in
-      })
-      .catch((error) => {
-        console.error(
-          "Error during Twitter sign-in:",
-          error.code,
-          error.message,
-        );
-        alert("Twitter sign-in failed. Please try again.");
-      });
-  };
-
-  const handleFacebookSignIn = () => {
-    const auth = getAuth();
-    const provider = new FacebookAuthProvider();
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log("Facebook sign-in successful:", result.user);
-        onClose(); // Close the modal on successful sign-in
-      })
-      .catch((error) => {
-        console.error(
-          "Error during Facebook sign-in:",
-          error.code,
-          error.message,
-        );
-        alert("Facebook sign-in failed. Please try again.");
-      });
-  };
-
   return (
-    <div className="modal-backdrop">
-      <div className="modal-container">
-        <h2 className="modal-title">{isSignUp ? "Sign Up" : "Sign In"}</h2>
-        <form onSubmit={handleAuth} className="form-container">
-          <label htmlFor="email" className="text-zinc-900">
+    // Backdrop added for improved focus and dismissability
+    <div className="modal-backdrop fixed inset-0 bg-gray-600 bg-opacity-75 z-50 flex items-center justify-center">
+      <div className="modal-container bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
+        {/* Close Button at the top right */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 transition-colors p-2"
+          aria-label="Close Modal"
+        >
+          <svg
+            className="h-6 w-6"
+            role="button"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+
+        <h2 className="modal-title text-2xl font-bold text-center mb-4 text-zinc-900">
+          {isSignUp ? "Sign Up" : "Sign In"}
+        </h2>
+
+        {/* Email/Password Form */}
+        <form onSubmit={handleAuth} className="form-container space-y-3">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-zinc-900"
+          >
             Email
           </label>
           <input
@@ -147,10 +162,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="input-field"
+            className="input-field w-full p-2 border border-gray-300 rounded"
             autoComplete="email"
           />
-          <label htmlFor="password" className="text-zinc-900">
+
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-zinc-900"
+          >
             Password
           </label>
           <input
@@ -160,12 +179,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="input-field"
+            className="input-field w-full p-2 border border-gray-300 rounded"
             autoComplete={isSignUp ? "new-password" : "current-password"}
           />
+
           {isSignUp && (
             <>
-              <label htmlFor="confirmPassword" className="text-zinc-900">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-zinc-900"
+              >
                 Confirm Password
               </label>
               <input
@@ -175,21 +198,26 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
-                className="input-field"
+                className="input-field w-full p-2 border border-gray-300 rounded"
                 autoComplete="new-password"
               />
             </>
           )}
-          <button type="submit" className="btn auth-button text-orange-600">
+
+          <button
+            type="submit"
+            className="btn w-full py-2 bg-orange-600 text-white font-semibold rounded hover:bg-orange-700 transition-colors mt-4"
+          >
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
-          <p className="mt-4 text-center text-zinc-900">
+
+          <p className="mt-4 text-center text-sm text-zinc-900">
             {isSignUp ? (
               <>
                 Already have an account?{" "}
                 <span
                   onClick={() => setIsSignUp(false)}
-                  className="text-blue-600 hover:underline cursor-pointer"
+                  className="text-blue-600 hover:underline cursor-pointer font-medium"
                 >
                   Sign In
                 </span>
@@ -199,7 +227,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 Need an account?{" "}
                 <span
                   onClick={() => setIsSignUp(true)}
-                  className="text-blue-600 hover:underline cursor-pointer"
+                  className="text-blue-600 hover:underline cursor-pointer font-medium"
                 >
                   Sign Up
                 </span>
@@ -207,10 +235,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             )}
           </p>
         </form>
-        {/* Google Sign-In Button */}
-        <div className="mt-4 mx-auto">
-          <button onClick={handleGoogleSignIn} className="social-signin-button">
-            <span className="mr-2">
+
+        <div className="my-4 flex items-center">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="flex-shrink mx-4 text-gray-500 text-sm">OR</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        {/* Social Sign-In Buttons */}
+        <div className="space-y-2">
+          {/* Google Sign-In Button (Optimized for display) */}
+          <button
+            onClick={handleGoogleSignIn}
+            // 💡 FIX: Added explicit display/layout classes
+            className="social-signin-button w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors bg-white text-zinc-700 font-medium"
+          >
+            <span className="mr-3">
               {/* Google SVG */}
               <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
                 <path
@@ -233,15 +273,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </span>
             <span className="whitespace-nowrap">Sign in with Google</span>
           </button>
-        </div>
 
-        {/* Twitter Sign-In Button */}
-        <div className="mt-2 mx-auto">
+          {/* Twitter Sign-In Button (Optimized for display) */}
           <button
             onClick={handleTwitterSignIn}
-            className="social-signin-button"
+            // 💡 FIX: Added explicit display/layout classes
+            className="social-signin-button w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors bg-white text-zinc-700 font-medium"
           >
-            <span className="mr-2">
+            <span className="mr-3">
               {/* Twitter SVG */}
               <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
                 <path
@@ -253,15 +292,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </span>
             <span className="whitespace-nowrap">Sign in with Twitter</span>
           </button>
-        </div>
 
-        {/* Facebook Sign-In Button */}
-        <div className="mt-2 mx-auto">
+          {/* Facebook Sign-In Button (Optimized for display) */}
           <button
             onClick={handleFacebookSignIn}
-            className="social-signin-button"
+            // 💡 FIX: Added explicit display/layout classes
+            className="social-signin-button w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors bg-white text-zinc-700 font-medium"
           >
-            <span className="mr-2">
+            <span className="mr-3">
               {/* Facebook SVG */}
               <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
                 <path
@@ -277,21 +315,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <span className="whitespace-nowrap">Sign in with Facebook</span>
           </button>
         </div>
-
-        <button
-          onClick={onClose}
-          className="close-button bg-zinc-900 hover:cursor-pointer text-zinc-200"
-        >
-          <svg
-            className="fill-current h-8 w-8 text-zinc-900"
-            role="button"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <title>Close</title>
-            <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
-          </svg>
-        </button>
       </div>
     </div>
   );

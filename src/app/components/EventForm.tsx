@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback, useMemo, ChangeEvent, FormEvent } from "react";
+import { useState, useCallback, ChangeEvent, FormEvent } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+// Assuming firebase.config exports db
 import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import Modal from "./modal";
+// Assuming getLatLng is available in this path
 import { getLatLng } from "../utils/geocode";
 import { v4 as uuidv4 } from "uuid";
 import emailjs from "@emailjs/browser";
@@ -21,92 +23,120 @@ interface EventData {
   lat?: number;
   lng?: number;
   timestamp?: string;
-  email?: string; // New - Optional email field
+  email?: string;
 }
 
 // Define the function to submit the event to Firestore
 const submitEvent = async (eventData: EventData) => {
   try {
     await addDoc(collection(db, "events"), eventData);
+    return true;
   } catch (error) {
-    alert(
-      "Oops! Something went wrong while adding your event. Please try again later.",
-    );
+    console.error("Firestore Submission Error:", error);
+    return false;
   }
 };
 
+// Function to log events that failed geocoding for manual review
+const logManualReviewEvent = async (eventData: EventData, reason: string) => {
+  try {
+    // Log to a separate collection for staff review
+    await addDoc(collection(db, "events_manual_review"), {
+      ...eventData,
+      reason,
+      submissionDate: new Date().toISOString(),
+    });
+    return true;
+  } catch (error) {
+    console.error("Manual Review Logging Error:", error);
+    return false;
+  }
+};
+
+// Function to send confirmation email using EmailJS
+const sendConfirmationEmail = async (eventData: EventData) => {
+  if (!eventData.email) return; // Skip if no email provided
+
+  try {
+    await emailjs.send(
+      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
+      process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
+      {
+        name: eventData.name,
+        location: eventData.location,
+        date: eventData.date
+          ? new Date(eventData.date).toLocaleDateString()
+          : "N/A",
+        details: eventData.details,
+        isRecurring: eventData.isRecurring ? "Yes" : "No",
+        isFestival: eventData.isFestival ? "Yes" : "No",
+        user_email: eventData.email,
+      },
+      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
+    );
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.warn("EmailJS failed to send confirmation email.", error);
+  }
+};
+
+// --- Component ---
+
 const EventForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // New: Prevent double submission
   const [event, setEvent] = useState<EventData>({
     name: "",
     location: "",
     date: null,
     details: "",
     isRecurring: false,
-    isFestival: undefined,
-    email: "", // Initialize the optional email field
+    isFestival: false, // Default to false
+    email: "",
   });
 
   const [formErrors, setFormErrors] = useState<string>("");
 
-  const memoizedEvent = useMemo(() => event, [event]);
+  // Removed: const memoizedEvent = useMemo(() => event, [event]);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setEvent({
       name: "",
       location: "",
       date: null,
       details: "",
       isRecurring: false,
-      isFestival: undefined,
-      email: "", // Reset the email field
+      isFestival: false,
+      email: "",
     });
-  };
+    setFormErrors("");
+  }, []);
 
-  const prepareEventData = (event: EventData): EventData => {
-    const id = uuidv4();
-    const timestamp = event.date ? event.date.toISOString() : "";
-    return {
-      ...event,
-      id,
-      timestamp,
-    };
-  };
+  const prepareEventData = useCallback(
+    (currentEvent: EventData, lat?: number, lng?: number): EventData => {
+      const id = uuidv4();
+      const timestamp = currentEvent.date
+        ? new Date(currentEvent.date).toISOString()
+        : "";
+      return {
+        ...currentEvent,
+        id,
+        timestamp,
+        lat,
+        lng,
+      };
+    },
+    [],
+  );
 
-  // Function to send confirmation email using EmailJS
-  const sendConfirmationEmail = async (eventData: EventData) => {
-    try {
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
-        {
-          name: eventData.name,
-          location: eventData.location,
-          date: eventData.date ? eventData.date.toLocaleDateString() : "N/A",
-          details: eventData.details,
-          isRecurring: eventData.isRecurring ? "Yes" : "No",
-          isFestival: eventData.isFestival ? "Yes" : "No",
-          user_email: eventData.email || "N/A", // Pass email if provided
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
-      );
-      console.log("Email sent successfully!");
-    } catch (error) {
-      console.error("Failed to send email:", error);
-    }
-  };
-
-  // Updated handleSubmit function to include sending an email with EmailJS
+  // Updated handleSubmit function with robust error flow (like the previous successful version)
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
 
-      if (
-        !memoizedEvent.name ||
-        !memoizedEvent.location ||
-        !memoizedEvent.date ||
-        !memoizedEvent.details
-      ) {
+      if (isSubmitting) return;
+
+      if (!event.name || !event.location || !event.date || !event.details) {
         setFormErrors(
           "Please fill in all the required fields to submit your event.",
         );
@@ -114,48 +144,78 @@ const EventForm: React.FC = () => {
       }
 
       setFormErrors("");
+      setIsSubmitting(true);
 
       try {
-        const response = await getLatLng(memoizedEvent.location);
         let lat, lng;
+        let finalEventData: EventData;
 
-        if ("lat" in response && "lng" in response) {
-          lat = response.lat;
-          lng = response.lng;
+        // 1. Attempt Geocoding
+        try {
+          const response = await getLatLng(event.location);
+          if (response && "lat" in response && "lng" in response) {
+            lat = response.lat;
+            lng = response.lng;
+            finalEventData = prepareEventData(event, lat, lng);
+
+            // 2. Submit to main collection
+            const success = await submitEvent(finalEventData);
+            if (!success) {
+              throw new Error("Firestore submission failed after geocoding.");
+            }
+            alert(
+              "Your event has been added successfully! Give it a few hours to appear.",
+            );
+          } else {
+            // Geocoding failed to return valid coords, proceed to manual review log
+            throw new Error(
+              "Geocoding failed or returned invalid coordinates.",
+            );
+          }
+        } catch (geocodeError) {
+          // Geocoding failed, log for manual review
+          console.warn(
+            "Geocoding failed, logging for manual review:",
+            geocodeError,
+          );
+
+          finalEventData = prepareEventData(event);
+          const logSuccess = await logManualReviewEvent(
+            finalEventData,
+            `Geocoding failed for: ${event.location}`,
+          );
+
+          if (logSuccess) {
+            alert(
+              "We couldn't verify the location. We've saved it for manual review and it should appear within 24 hours.",
+            );
+          } else {
+            setFormErrors(
+              "We couldn't verify the location OR save your event for manual review. Please try again later.",
+            );
+            setIsSubmitting(false);
+            return;
+          }
         }
 
-        const eventData = prepareEventData({
-          ...memoizedEvent,
-          lat,
-          lng,
-        });
+        // 3. Send confirmation email (regardless of success in main or review collection)
+        if (event.email) {
+          await sendConfirmationEmail(finalEventData);
+        }
 
-        await submitEvent(eventData); // Submit the event to Firestore
-        await sendConfirmationEmail(eventData); // Send confirmation email
+        // 4. Cleanup
         resetForm();
         setShowModal(false);
-        alert(
-          "Your event has been added successfully! Give it a few hours to appear.",
+      } catch (submitError) {
+        setFormErrors(
+          "An unexpected error occurred during event submission. Please check your network and try again.",
         );
-      } catch (error) {
-        // If geocoding fails
-        try {
-          await addDoc(collection(db, "events"), memoizedEvent);
-          await sendConfirmationEmail(memoizedEvent); // Send confirmation email if location verification fails
-          resetForm();
-          alert(
-            "We couldn't verify the location. We'll review it manually, and it should appear on the events page within 24 hours.",
-          );
-          setShowModal(false);
-        } catch (dbError) {
-          setFormErrors(
-            "We couldn't save your event for manual review. Please try again later.",
-          );
-          setShowModal(false);
-        }
+        console.error("Final Submission Error Path:", submitError);
+      } finally {
+        setIsSubmitting(false);
       }
     },
-    [memoizedEvent],
+    [event, prepareEventData, isSubmitting, resetForm],
   );
 
   const handleChange = useCallback(
@@ -166,15 +226,28 @@ const EventForm: React.FC = () => {
     [],
   );
 
+  // Unified handler for checkboxes to prevent repetition
+  const handleCheckboxChange = useCallback(
+    (name: "isRecurring" | "isFestival", checked: boolean) => {
+      setEvent((prevEvent) => ({ ...prevEvent, [name]: checked }));
+    },
+    [],
+  );
+
   return (
     <>
-      <button className="btn underline" onClick={() => setShowModal(true)}>
+      <button
+        className="btn underline"
+        onClick={() => setShowModal(true)}
+        disabled={isSubmitting}
+      >
         Add Event
       </button>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <form
           onSubmit={handleSubmit}
-          className="form-container mx-auto justify-center items-center overflow-auto max-h-screen z-50"
+          // The critical class is the one that styles the form content inside the Modal
+          className="form-container mx-auto justify-center items-center overflow-auto max-h-[90vh] z-50 bg-white p-6 rounded-lg shadow-2xl"
         >
           {formErrors && <p className="text-red-500">{formErrors}</p>}
           <h1 className="text-2xl font-bold text-center text-black mt-4">
@@ -192,9 +265,10 @@ const EventForm: React.FC = () => {
             name="name"
             value={event.name}
             onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2"
+            className="text-zinc-900 shadow-xl rounded-lg p-2 w-full"
             required
             autoComplete="off"
+            placeholder="e.g., The Comedy Store Open Mic" // 💡 Placeholder added
           />
 
           <label htmlFor="location" className="text-zinc-900">
@@ -206,8 +280,9 @@ const EventForm: React.FC = () => {
             name="location"
             value={event.location}
             onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2"
+            className="text-zinc-900 shadow-xl rounded-lg p-2 w-full"
             required
+            placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA 90069, USA" // 💡 Placeholder added
           />
 
           <label htmlFor="details" className="text-zinc-900">
@@ -221,7 +296,8 @@ const EventForm: React.FC = () => {
             required
             autoComplete="off"
             rows={4}
-            className="text-zinc-900 shadow-xl rounded-lg p-2 h-28 min-h-[6rem] block resize-y"
+            className="text-zinc-900 shadow-xl rounded-lg p-2 h-28 min-h-[6rem] block resize-y w-full"
+            placeholder="e.g., Signup at 7:00 PM, show at 8:00 PM. Hosted by John Doe. Free entry." // 💡 Placeholder added
           />
 
           <h6 className="text-zinc-900 mt-2">Is it a recurring event?:</h6>
@@ -236,9 +312,9 @@ const EventForm: React.FC = () => {
               <input
                 type="checkbox"
                 id="isRecurringYes"
-                name="isRecurring"
-                aria-checked={event.isRecurring === true}
-                onChange={() => setEvent({ ...event, isRecurring: true })}
+                // Check if true, not just non-false
+                checked={event.isRecurring === true}
+                onChange={() => handleCheckboxChange("isRecurring", true)}
                 className="shadow-xl rounded-lg p-2"
               />
             </div>
@@ -249,9 +325,9 @@ const EventForm: React.FC = () => {
               <input
                 type="checkbox"
                 id="isRecurringNo"
-                name="isRecurring"
-                aria-checked={event.isRecurring === false}
-                onChange={() => setEvent({ ...event, isRecurring: false })}
+                // Check if false
+                checked={event.isRecurring === false}
+                onChange={() => handleCheckboxChange("isRecurring", false)}
                 className="shadow-xl rounded-lg p-2"
               />
             </div>
@@ -271,9 +347,8 @@ const EventForm: React.FC = () => {
               <input
                 type="checkbox"
                 id="isFestivalYes"
-                name="isFestival"
-                aria-checked={event.isFestival === true}
-                onChange={() => setEvent({ ...event, isFestival: true })}
+                checked={event.isFestival === true}
+                onChange={() => handleCheckboxChange("isFestival", true)}
                 className="shadow-xl rounded-lg p-2"
               />
             </div>
@@ -284,9 +359,8 @@ const EventForm: React.FC = () => {
               <input
                 type="checkbox"
                 id="isFestivalNo"
-                name="isFestival"
-                aria-checked={event.isFestival === false}
-                onChange={() => setEvent({ ...event, isFestival: false })}
+                checked={event.isFestival === false}
+                onChange={() => handleCheckboxChange("isFestival", false)}
                 className="shadow-xl rounded-lg p-2"
               />
             </div>
@@ -297,13 +371,16 @@ const EventForm: React.FC = () => {
           </label>
           <DatePicker
             id="date"
-            selected={event.date ? new Date(event.date) : null}
+            selected={event.date}
             onChange={(date: Date | null) => setEvent({ ...event, date })}
             placeholderText={`📅 ${new Date().toLocaleDateString()}`}
-            className="text-zinc-900 shadow-xl rounded-xl p-2"
+            className="text-zinc-900 shadow-xl rounded-xl p-2 w-full"
+            dateFormat="MM/dd/yyyy h:mm aa"
+            showTimeSelect
+            timeCaption="Time"
           />
 
-          {/* New - Optional email field */}
+          {/* Optional email field */}
           <h6 className="text-zinc-900 mt-4 mb-1 text-center text-xs">
             Optional: Provide your email for verification
           </h6>
@@ -320,13 +397,12 @@ const EventForm: React.FC = () => {
             name="email"
             value={event.email || ""}
             onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2 mb-4"
+            className="text-zinc-900 shadow-xl rounded-lg p-2 mb-4 w-full"
             placeholder="yourname@example.com"
           />
-          {/* End new section */}
 
-          <button type="submit" className="btn">
-            Submit Event
+          <button type="submit" className="btn" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit Event"}
           </button>
         </form>
       </Modal>
