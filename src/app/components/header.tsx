@@ -13,7 +13,7 @@ import { db } from "../../../firebase.config";
 const MicFinderIcon = dynamic(() => import("../icons/MicFinderIcon"));
 const NewsIcon = dynamic(() => import("../icons/NewsIcon"));
 // const ComicBotIcon = dynamic(() => import("../icons/ComicBotIcon"));
-const JokePadIcon = dynamic(() => import("../icons/JokePadIcon"));
+// const JokePadIcon = dynamic(() => import("../icons/JokePadIcon"));
 const ContactIcon = dynamic(() => import("../icons/ContactIcon"));
 const AboutIcon = dynamic(() => import("../icons/AboutIcon"));
 const UserIconComponent = dynamic(() => import("../icons/UserIconComponent"));
@@ -33,7 +33,7 @@ export default function Header() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   // const [isComicBotModalOpen, setIsComicBotModalOpen] = useState(false);
   // const [eventCount, setEventCount] = useState<number | null>(null);
-  const [showBanner, setShowBanner] = useState(true);
+  // const [showBanner, setShowBanner] = useState(true);
   const [cityList, setCityList] = useState<string[]>([]);
   // const fetchedOnce = useRef(false);
   const router = useRouter();
@@ -104,11 +104,11 @@ export default function Header() {
     return () => unsubscribe();
   }, [handleAuthStateChanged]);
 
-  // Auto-hide banner after 10 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => setShowBanner(false), 10000);
-    return () => clearTimeout(timer);
-  }, []);
+  // // Auto-hide banner after 10 seconds
+  // useEffect(() => {
+  //   const timer = setTimeout(() => setShowBanner(false), 10000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   // Handle search functionality
   const debouncedSearch = useMemo(
@@ -157,7 +157,7 @@ export default function Header() {
           <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg">
             {/* Top Section - Logo */}
             <div className="flex flex-col items-center space-y-6 mt-4">
-              <Link href="/" aria-label="Home">
+              <Link href="/" aria-label="Home" className="relative group">
                 <Image
                   src={hh}
                   alt="Mic"
@@ -165,6 +165,13 @@ export default function Header() {
                   height={50}
                   className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-2 transform transition-transform hover:scale-105"
                 />
+                <span
+                  className="absolute left-14 top-1/2 -translate-y-1/2
+        bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0
+        group-hover:opacity-100 transition"
+                >
+                  Home
+                </span>
               </Link>
             </div>
 
@@ -174,8 +181,8 @@ export default function Header() {
                 onSearch={debouncedSearch}
                 isUserSignedIn={isUserSignedIn}
                 setIsAuthModalOpen={setIsAuthModalOpen}
-                // setIsComicBotModalOpen={setIsComicBotModalOpen}
               />
+
               {/* Mic Finder */}
               <Link
                 href="/MicFinder"
@@ -183,6 +190,13 @@ export default function Header() {
                 className="relative group transform transition-transform hover:scale-105"
               >
                 <MicFinderIcon />
+                <span
+                  className="absolute left-14 top-1/2 -translate-y-1/2
+        bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0
+        group-hover:opacity-100 transition"
+                >
+                  Mic Finder
+                </span>
               </Link>
 
               {/* News */}
@@ -198,40 +212,14 @@ export default function Header() {
                 aria-label="News"
               >
                 <NewsIcon />
-                <span className="sr-only">News</span>
+                <span
+                  className="absolute left-14 top-1/2 -translate-y-1/2
+        bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0
+        group-hover:opacity-100 transition"
+                >
+                  News
+                </span>
               </div>
-
-              {/* Comic Bot */}
-              {/* <div
-                onClick={() => {
-                  if (isUserSignedIn) {
-                    setIsComicBotModalOpen(true);
-                  } else {
-                    setIsAuthModalOpen(true);
-                  }
-                }}
-                className="cursor-pointer relative group transform transition-transform hover:scale-105"
-                aria-label="Comic Bot"
-              >
-                <ComicBotIcon />
-                <span className="sr-only">Comic Bot</span>
-              </div> */}
-
-              {/* Joke Pad */}
-              {/* <div
-                onClick={() => {
-                  if (isUserSignedIn) {
-                    location.href = "/JokePad";
-                  } else {
-                    setIsAuthModalOpen(true);
-                  }
-                }}
-                className="cursor-pointer relative group transform transition-transform hover:scale-105"
-                aria-label="Joke Pad"
-              >
-                <JokePadIcon />
-                <span className="sr-only">Joke Pad</span>
-              </div> */}
 
               {/* Contact Us */}
               <Link
@@ -240,6 +228,13 @@ export default function Header() {
                 className="relative group transform transition-transform hover:scale-105"
               >
                 <ContactIcon />
+                <span
+                  className="absolute left-14 top-1/2 -translate-y-1/2
+        bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0
+        group-hover:opacity-100 transition"
+                >
+                  Contact Us
+                </span>
               </Link>
 
               {/* About */}
@@ -249,6 +244,13 @@ export default function Header() {
                 className="relative group transform transition-transform hover:scale-105"
               >
                 <AboutIcon />
+                <span
+                  className="absolute left-14 top-1/2 -translate-y-1/2
+        bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0
+        group-hover:opacity-100 transition"
+                >
+                  About
+                </span>
               </Link>
 
               {/* Profile / Sign In */}
@@ -259,6 +261,13 @@ export default function Header() {
                   className="relative group transform transition-transform hover:scale-105"
                 >
                   <UserIconComponent />
+                  <span
+                    className="absolute left-14 top-1/2 -translate-y-1/2
+          bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0
+          group-hover:opacity-100 transition"
+                  >
+                    Profile
+                  </span>
                 </Link>
               ) : (
                 <button
@@ -267,10 +276,16 @@ export default function Header() {
                   aria-label="Sign In/Up"
                 >
                   <UserIconComponent />
+                  <span
+                    className="absolute left-14 top-1/2 -translate-y-1/2
+          bg-black text-zinc-100 text-sm px-2 py-1 rounded opacity-0
+          group-hover:opacity-100 transition"
+                  >
+                    Profile
+                  </span>
                 </button>
               )}
             </div>
-
             {/* Bottom Section - Menu Toggle */}
             <button
               onClick={toggleMenu}

@@ -504,17 +504,6 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
 .\!visible {
   visibility: visible !important;
 }
@@ -541,6 +530,9 @@ video {
 }
 .left-0 {
   left: 0px;
+}
+.left-14 {
+  left: 3.5rem;
 }
 .right-0 {
   right: 0px;
@@ -1168,6 +1160,9 @@ video {
 .underline-offset-4 {
   text-underline-offset: 4px;
 }
+.opacity-0 {
+  opacity: 0;
+}
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color),
@@ -1404,62 +1399,23 @@ span {
 }
 
 .bg-gradient-animation {
-  background: linear-gradient(45deg, #d4d4d8, #a8ffdc, #d4d4d8);
+  background: linear-gradient(45deg, #a8ffdc);
   background-size: 400% 400%;
-  animation: gradient 24s ease infinite;
-}
-
-@keyframes gradient {
-  0%,
-  25% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #a8ffdc,
-      #d4d4d8
-    ); /* Neo-Green */
-  }
-  33%,
-  58% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #fdd835,
-      #d4d4d8
-    ); /* Comedy Yellow */
-  }
-  66%,
-  91% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #e53935,
-      #d4d4d8
-    ); /* Comedy Red */
-  }
-  100% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #a8ffdc,
-      #d4d4d8
-    ); /* Back to Neo-Green */
-  }
 }
 
 /* Custom CSS */
 @media (min-width: 768px) {
   .content-with-sidebar {
-    margin-left: 3rem; /* Adjust this value to match the width of your sidebar */
+    margin-left: 3rem;
   }
 }
 
 .loading-indicator {
   display: flex;
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center children horizontally in the container */
-  justify-content: center; /* Center children vertically if needed */
-  width: 100%; /* Take full width of its parent to ensure centering */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .screen-container {
@@ -2295,6 +2251,10 @@ option {
 .group:hover .group-hover\:text-orange-500 {
   --tw-text-opacity: 1;
   color: rgb(168 255 220 / var(--tw-text-opacity, 1));
+}
+
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
 }
 
 @media (min-width: 640px) {

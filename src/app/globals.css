@@ -139,62 +139,23 @@ span {
 }
 
 .bg-gradient-animation {
-  background: linear-gradient(45deg, #d4d4d8, #a8ffdc, #d4d4d8);
+  background: linear-gradient(45deg, #a8ffdc);
   background-size: 400% 400%;
-  animation: gradient 24s ease infinite;
-}
-
-@keyframes gradient {
-  0%,
-  25% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #a8ffdc,
-      #d4d4d8
-    ); /* Neo-Green */
-  }
-  33%,
-  58% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #fdd835,
-      #d4d4d8
-    ); /* Comedy Yellow */
-  }
-  66%,
-  91% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #e53935,
-      #d4d4d8
-    ); /* Comedy Red */
-  }
-  100% {
-    background: linear-gradient(
-      45deg,
-      #d4d4d8,
-      #a8ffdc,
-      #d4d4d8
-    ); /* Back to Neo-Green */
-  }
 }
 
 /* Custom CSS */
 @media (min-width: 768px) {
   .content-with-sidebar {
-    margin-left: 3rem; /* Adjust this value to match the width of your sidebar */
+    margin-left: 3rem;
   }
 }
 
 .loading-indicator {
   display: flex;
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center children horizontally in the container */
-  justify-content: center; /* Center children vertically if needed */
-  width: 100%; /* Take full width of its parent to ensure centering */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .screen-container {
