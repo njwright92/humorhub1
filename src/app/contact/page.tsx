@@ -4,6 +4,7 @@ import React, { useCallback, useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import emailjs from "@emailjs/browser";
+import Link from "next/link";
 
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
@@ -171,6 +172,9 @@ const ContactPage: React.FC = () => {
             </button>
           </form>
         </section>
+        <Link href="/">
+          <span className="text-blue-500 hover:underline">← Back to Home</span>
+        </Link>
       </div>
       <Footer />
     </>

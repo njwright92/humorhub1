@@ -905,7 +905,7 @@ video {
 }
 .bg-orange-500 {
   --tw-bg-opacity: 1;
-  background-color: rgb(168 255 220 / var(--tw-bg-opacity, 1));
+  background-color: rgb(252 211 77 / var(--tw-bg-opacity, 1));
 }
 .bg-purple-100 {
   --tw-bg-opacity: 1;
@@ -970,7 +970,7 @@ video {
   stroke: currentColor;
 }
 .stroke-orange-500 {
-  stroke: #a8ffdc;
+  stroke: #fcd34d;
 }
 .p-1 {
   padding: 0.25rem;
@@ -1102,7 +1102,7 @@ video {
 }
 .text-orange-500 {
   --tw-text-opacity: 1;
-  color: rgb(168 255 220 / var(--tw-text-opacity, 1));
+  color: rgb(252 211 77 / var(--tw-text-opacity, 1));
 }
 .text-orange-600 {
   --tw-text-opacity: 1;
@@ -1152,7 +1152,7 @@ video {
   text-decoration-line: underline;
 }
 .decoration-orange-500 {
-  text-decoration-color: #a8ffdc;
+  text-decoration-color: #fcd34d;
 }
 .decoration-\[0\.125rem\] {
   text-decoration-thickness: 0.125rem;
@@ -1262,10 +1262,12 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* --- 1. CSS Variables --- */
+
 :root {
   --zinc-900: #1f2022;
   --zinc-200: #d4d4d8;
-  --orange-500: #a8ffdc;
+  /* Removed: --orange-500. Using Tailwind's amber-300 instead. */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1277,86 +1279,7 @@ video {
   }
 }
 
-/* Add this in your global.css or component CSS module */
-.gif-button img {
-  transition: transform 0.3s ease-in-out;
-}
-
-.gif-button:hover img {
-  transform: scale(1.1); /* Slight zoom on hover */
-}
-
-@media (min-width: 768px) {
-  /* md screens and up */
-  .video-modal video {
-    width: 500px; /* Standard TikTok video size */
-    height: auto;
-  }
-}
-
-.animate-slide-in {
-  animation: slide-in 0.3s forwards;
-}
-
-.animate-slide-out {
-  animation: slide-out 0.3s forwards;
-}
-
-@keyframes slide-in {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-out {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-}
-
-.video-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 50;
-}
-
-@media (max-width: 768px) {
-  .video-modal video {
-    width: 100%;
-    height: 100vh;
-  }
-}
-
-@media (min-width: 769px) {
-  .video-modal video {
-    width: 350px;
-    height: 600px;
-  }
-}
-
-.guide-container {
-  position: fixed;
-  right: 3rem; /* 3rem from the right */
-  bottom: 3rem; /* 3rem from the bottom */
-  z-index: 1000; /* high z-index to stay on top */
-}
+/* --- 2. Base Styles & Typography --- */
 
 body {
   /* Create a gradient background from zinc-900 to zinc-700 */
@@ -1371,52 +1294,35 @@ h4,
 h5,
 h6,
 .font-comic {
+  /* Keep custom font stack */
   font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "Chalkboard SE",
     "Roboto", sans-serif;
 }
 
-/* Define fonts for p and span elements (Roboto-style font) */
 p,
 span {
+  /* Keep custom font stack */
   font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;
 }
 
-.custom-backdrop {
-  pointer-events: none; /* This allows clicks to "pass through" the backdrop */
+select {
+  /* Retained necessary select styling */
+  color: #d4d4d8;
 }
 
-.custom-dialog {
-  background-color: #d4d4d8;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  z-index: 9999; /* Ensures dialog is above the target element */
+select:required:invalid {
+  color: #d4d4d8;
 }
 
-.custom-dialog::before {
-  content: "";
-  transform: translateY(-50%);
+option[value=""][disabled] {
+  display: none;
 }
 
-.bg-gradient-animation {
-  background: linear-gradient(45deg, #a8ffdc);
-  background-size: 400% 400%;
+option {
+  color: rgb(22, 22, 22);
 }
 
-/* Custom CSS */
-@media (min-width: 768px) {
-  .content-with-sidebar {
-    margin-left: 3rem;
-  }
-}
-
-.loading-indicator {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
+/* --- 3. Tailwind Utility Classes (@apply) --- */
 
 .screen-container {
   display: flex;
@@ -1443,16 +1349,15 @@ span {
     var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-/* Shared styles for all title classes */
+/* Updated to text-amber-300 */
 .title,
 .title-style,
 .subtitle-style {
   font-weight: 700;
   --tw-text-opacity: 1;
-  color: rgb(168 255 220 / var(--tw-text-opacity, 1));
+  color: rgb(252 211 77 / var(--tw-text-opacity, 1));
 }
 
-/* Responsive styles for .title */
 .title {
   margin-top: 2.5rem;
   margin-bottom: 0.5rem;
@@ -1464,18 +1369,21 @@ span {
     var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
     var(--tw-sepia) var(--tw-drop-shadow);
 }
+
 @media (min-width: 640px) {
   .title {
     font-size: 1.875rem;
     line-height: 2.25rem;
   }
 }
+
 @media (min-width: 768px) {
   .title {
     font-size: 2.25rem;
     line-height: 2.5rem;
   }
 }
+
 @media (min-width: 1024px) {
   .title {
     font-size: 3rem;
@@ -1483,7 +1391,6 @@ span {
   }
 }
 
-/* Responsive styles for .title-style */
 .title-style {
   margin-bottom: 0.5rem;
   border-radius: 0.75rem;
@@ -1494,18 +1401,21 @@ span {
     var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
     var(--tw-sepia) var(--tw-drop-shadow);
 }
+
 @media (min-width: 640px) {
   .title-style {
     font-size: 1.5rem;
     line-height: 2rem;
   }
 }
+
 @media (min-width: 768px) {
   .title-style {
     font-size: 1.875rem;
     line-height: 2.25rem;
   }
 }
+
 @media (min-width: 1024px) {
   .title-style {
     font-size: 2.25rem;
@@ -1513,24 +1423,26 @@ span {
   }
 }
 
-/* Responsive styles for .subtitle-style (example if needed) */
 .subtitle-style {
   margin-bottom: 0.5rem;
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
+
 @media (min-width: 640px) {
   .subtitle-style {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
 }
+
 @media (min-width: 768px) {
   .subtitle-style {
     font-size: 1.5rem;
     line-height: 2rem;
   }
 }
+
 @media (min-width: 1024px) {
   .subtitle-style {
     font-size: 1.875rem;
@@ -1538,33 +1450,6 @@ span {
   }
 }
 
-.tab-button {
-  padding: 0.625rem 1.25rem;
-  margin: 0 0.325rem;
-  cursor: pointer;
-  border-radius: 0.325rem;
-  transition:
-    background-color 0.1s,
-    color 0.1s;
-  border: none;
-}
-
-.social-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 20rem;
-  margin: 0 auto;
-  padding: 0.25rem 0.7rem;
-  border-radius: 20px;
-  background-color: #fffffff1;
-  color: #0f0e0e;
-  border: 1px solid #d1d5db;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-/* Add these classes to your Tailwind CSS configuration if necessary */
 .social-signin-button {
   margin-left: auto;
   margin-right: auto;
@@ -1589,7 +1474,6 @@ span {
   margin-right: 0.5rem;
 }
 
-/* Specific styles for each provider */
 .google {
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1614,26 +1498,6 @@ span {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
-/* Active Button Styles */
-.tab-button-active {
-  background-color: #f97316; /* orange-500 */
-  color: #f4f4f5; /* zinc-100 */
-}
-
-.tab-button-active:hover {
-  background-color: #dd6b20; /* Slightly darker orange-500 */
-}
-
-/* Inactive Button Styles */
-.tab-button-inactive {
-  background-color: #f4f4f5; /* zinc-100 */
-  color: #f97316; /* orange-500 */
-}
-
-.tab-button-inactive:hover {
-  background-color: #e4e4e7; /* Slightly darker zinc-100 */
-}
-
 .flex-row-wrap {
   display: flex;
   flex-direction: row;
@@ -1650,23 +1514,7 @@ span {
   margin-bottom: 1.5rem;
 }
 
-.nav-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centers the links horizontally */
-  padding: 0.7rem;
-  margin: 0.2rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  text-decoration: none; /* Removes underline from links */
-  color: inherit; /* Inherits text color from parent */
-  font-size: 1.5rem; /* Adjust the size as needed */
-}
-
-.nav-link:hover {
-  transform: scale(1.05);
-}
-
+/* Updated to bg-amber-300 */
 .btn {
   margin: 0.5rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y))
@@ -1674,7 +1522,7 @@ span {
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   border-radius: 0.75rem;
   --tw-bg-opacity: 1;
-  background-color: rgb(168 255 220 / var(--tw-bg-opacity, 1));
+  background-color: rgb(252 211 77 / var(--tw-bg-opacity, 1));
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   padding-top: 0.25rem;
@@ -1691,69 +1539,12 @@ span {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-
 .btn:hover {
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y))
     rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.facebook-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #4267b2; /* Facebook blue */
-  color: #ffffff;
-  border: none;
-  border-radius: 9999px; /* Pill shape */
-  padding: 10px 20px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.facebook-signin-button:hover {
-  background-color: #365899;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.facebook-signin-button img {
-  margin-right: 10px;
-}
-
-.twitter-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #1da1f2; /* Twitter blue */
-  color: #ffffff;
-  padding: 0.625rem 1.25rem; /* 10px 20px */
-  border-radius: 9999px; /* Fully rounded */
-  font-family: Arial, sans-serif;
-  font-size: 0.875rem; /* 14px */
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.twitter-signin-button:hover {
-  background-color: #1a91da; /* Darker Twitter blue on hover */
-}
-
-.twitter-signin-button:active {
-  background-color: #1681c1; /* Even darker on active */
-}
-
-.twitter-signin-button span {
-  margin-left: 0.5rem; /* Add space between icon and text */
 }
 
 .modal-backdrop {
@@ -1763,8 +1554,7 @@ span {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
-  --tw-bg-opacity: 0.5;
+  background-color: rgb(0 0 0 / 0.5);
 }
 
 .modal-container {
@@ -1929,138 +1719,40 @@ span {
   border-radius: 9999px;
 }
 
-/* Utility classes */
-.rounded-soft {
-  border-radius: 0.635rem; /* 10px equivalent */
-}
-
-.text-accent {
-  color: rgb(var(--orange-500));
-}
-
-select {
-  color: #d4d4d8;
-}
-
-select:required:invalid {
-  color: #d4d4d8;
-}
-
-option[value=""][disabled] {
-  display: none;
-}
-
-option {
-  color: rgb(22, 22, 22);
-}
-
-.google-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fffffff3;
-  color: #2a2a2a;
-  border: 1px solid #dcdcdc; /* Light border */
-  border-radius: 9999px; /* Pill shape */
-  padding: 10px 20px;
-  font-family: Arial, sans-serif;
-  font-size: 14px; /* Adjust font size if needed */
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25); /* Shadow effect */
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.google-signin-button:hover {
-  transform: scale(1.05); /* Grow effect */
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Slightly deeper shadow on hover */
-}
-
-.google-signin-button img {
-  width: 25px;
-  height: 25px;
-  margin-right: 10px; /* Space between image and text */
-}
-
-.category-container {
-  margin-top: 2rem;
-  padding: 0.5rem;
-}
-
-/* Title and line below category title */
-.category-title {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-/* Horizontal line below the title */
-.category-title:after {
-  content: "";
-  display: block;
-  width: 50%;
-  height: 0.125rem;
-  background: #f97316;
-  margin: 0.5rem auto 1.5rem;
-}
-
-.news-item {
-  border-bottom: 0.125rem solid #d4d4d8; /* Light grey border for separation */
-  margin-bottom: 4rem; /* Space between articles */
-  padding-bottom: 3rem; /* Padding below each article */
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
-  text-align: center;
-}
-
-.news-item:last-child {
-  border-bottom: none; /* Remove border for the last item */
-}
-
-.news-description,
-.news-link {
-  display: block; /* Ensure each is on a new line */
-  margin-top: 5px; /* Spacing between title, description, and link */
-  text-align: center;
-}
-
-.news-description {
-  padding: 0.25rem;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
-  margin-bottom: 1 rem;
-  text-align: center;
-}
-
-/* Error message styling */
 .error-message {
-  color: #d9534f;
-  margin: 1rem 0;
-  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity, 1));
 }
 
 .card {
-  background-color: #f5f5f5;
-  padding: 0.5rem;
-  border-radius: 0.625rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 28rem;
+  border-radius: 0.75rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+  padding: 0.625rem;
   text-align: center;
-  margin: 0 auto;
-  max-width: 500px;
-  color: rgb(39, 39, 39);
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
 .instructions {
   margin-bottom: 0.5rem;
-  color: #1f2022;
+  --tw-text-opacity: 1;
+  color: rgb(31 32 34 / var(--tw-text-opacity, 1));
 }
 
 .checkbox-container {
   display: grid;
-  border-radius: 0.625rem;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-items: start;
-  background-color: #d4d4d8;
+  border-radius: 0.75rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(212 212 216 / var(--tw-bg-opacity, 1));
 }
 
 .checkbox-wrapper {
@@ -2068,21 +1760,12 @@ option {
   align-items: center;
 }
 
-.checkbox-container label {
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.checkbox-container label:hover {
-  cursor: pointer;
-}
-
 .bot-message-container {
-  background-color: #f0f0f03c;
-  color: #ffffffdf;
+  border-radius: 0.75rem;
+  background-color: rgb(39 39 42 / 0.25);
   padding: 0.625rem;
-  border-radius: 0.625rem;
-  text-align: start;
+  text-align: left;
+  color: rgb(255 255 255 / 0.9);
 }
 
 .neu-button {
@@ -2100,7 +1783,6 @@ option {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
     var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
     var(--tw-sepia) var(--tw-drop-shadow);
-  /* Neumorphism effect optimized for dark mode */
 }
 
 @keyframes pulse {
@@ -2118,19 +1800,347 @@ option {
 .neu-button:hover {
   text-decoration-line: underline;
   text-decoration-style: dashed;
-  text-decoration-color: #f97316;
+  /* Updated to text-amber-300 */
+  text-decoration-color: #fcd34d;
 }
 
 .glass-effect {
-  background-color: rgb(31 32 34 / var(--tw-bg-opacity, 1));
-  --tw-bg-opacity: 0.4;
+  background-color: rgb(31 32 34 / 0.4);
   --tw-backdrop-blur: blur(12px);
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
     var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
     var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
     var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
     var(--tw-backdrop-sepia);
-  /* Glassmorphism effect in dark mode */
+}
+
+/* --- 4. Required Pure CSS/Custom Selectors --- */
+
+.tab-button {
+  padding: 0.625rem 1.25rem;
+  margin: 0 0.325rem;
+  cursor: pointer;
+  border-radius: 0.325rem;
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+  border: none;
+}
+
+.tab-button-active {
+  /* Using Tailwind's orange-600 (approx. #F97316) for active state contrast */
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 211 77 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(31 32 34 / var(--tw-text-opacity, 1));
+}
+
+.tab-button-active:hover {
+  /* Using Tailwind's amber-400 (approx. #FBBF24) */
+  background-color: #fbbf24;
+}
+
+.tab-button-inactive {
+  /* Inactive is zinc-100 background with amber-300 text */
+  --tw-bg-opacity: 1;
+  background-color: rgb(244 244 245 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(252 211 77 / var(--tw-text-opacity, 1));
+}
+
+.tab-button-inactive:hover {
+  background-color: #e4e4e7; /* Slightly darker zinc-100 */
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.7rem;
+  margin: 0.2rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.5rem;
+}
+
+.nav-link:hover {
+  transform: scale(1.05);
+}
+
+.facebook-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4267b2;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.facebook-signin-button:hover {
+  background-color: #365899;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.facebook-signin-button img {
+  margin-right: 10px;
+}
+
+.twitter-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1da1f2;
+  color: #ffffff;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.twitter-signin-button:hover {
+  background-color: #1a91da;
+}
+
+.twitter-signin-button:active {
+  background-color: #1681c1;
+}
+
+.twitter-signin-button span {
+  margin-left: 0.5rem;
+}
+
+.google-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fffffff3;
+  color: #2a2a2a;
+  border: 1px solid #dcdcdc;
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.google-signin-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.google-signin-button img {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.gif-button img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.gif-button:hover img {
+  transform: scale(1.1);
+}
+
+.video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+@media (min-width: 768px) {
+  .video-modal video {
+    width: 500px;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-modal video {
+    width: 100%;
+    height: 100vh;
+  }
+}
+
+@media (min-width: 769px) {
+  .video-modal video {
+    width: 350px;
+    height: 600px;
+  }
+}
+
+.guide-container {
+  position: fixed;
+  right: 3rem;
+  bottom: 3rem;
+  z-index: 1000;
+}
+
+.custom-backdrop {
+  pointer-events: none;
+}
+
+.custom-dialog {
+  background-color: #d4d4d8;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 9999;
+}
+
+.custom-dialog::before {
+  content: "";
+  transform: translateY(-50%);
+}
+
+/* Updated color in the linear gradient to amber-300 hex */
+.bg-gradient-animation {
+  background: linear-gradient(45deg, #fcd34d);
+  background-size: 400% 400%;
+}
+
+@media (min-width: 768px) {
+  .content-with-sidebar {
+    margin-left: 3rem;
+  }
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.event-item h3::before,
+.event-item p::before {
+  vertical-align: middle;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.rounded-soft {
+  border-radius: 0.635rem;
+}
+
+/* Removed: .text-accent since we are using native text-amber-300 */
+
+.category-container {
+  margin-top: 2rem;
+  padding: 0.5rem;
+}
+
+.category-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.category-title:after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 0.125rem;
+  /* Updated to amber-300 hex */
+  background: #fcd34d;
+  margin: 0.5rem auto 1.5rem;
+}
+
+.news-item {
+  border-bottom: 0.125rem solid #d4d4d8;
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-description,
+.news-link {
+  display: block;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.news-description {
+  padding: 0.25rem;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.checkbox-container label {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.checkbox-container label:hover {
+  cursor: pointer;
+}
+
+/* --- 5. Keyframes --- */
+
+.animate-slide-in {
+  animation: slide-in 0.3s forwards;
+}
+
+.animate-slide-out {
+  animation: slide-out 0.3s forwards;
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 }
 
 .hover\:scale-105:hover {
@@ -2227,7 +2237,7 @@ option {
 
 .hover\:text-orange-500:hover {
   --tw-text-opacity: 1;
-  color: rgb(168 255 220 / var(--tw-text-opacity, 1));
+  color: rgb(252 211 77 / var(--tw-text-opacity, 1));
 }
 
 .hover\:text-zinc-200:hover {
@@ -2250,7 +2260,7 @@ option {
 
 .group:hover .group-hover\:text-orange-500 {
   --tw-text-opacity: 1;
-  color: rgb(168 255 220 / var(--tw-text-opacity, 1));
+  color: rgb(252 211 77 / var(--tw-text-opacity, 1));
 }
 
 .group:hover .group-hover\:opacity-100 {
