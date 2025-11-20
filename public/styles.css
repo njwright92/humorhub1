@@ -504,6 +504,17 @@ video {
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
 }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
 .pointer-events-none {
   pointer-events: none;
 }
@@ -687,6 +698,9 @@ video {
 }
 .h-9 {
   height: 2.25rem;
+}
+.h-\[25rem\] {
+  height: 25rem;
 }
 .h-full {
   height: 100%;
@@ -1232,6 +1246,10 @@ video {
 .text-zinc-400 {
   --tw-text-opacity: 1;
   color: rgb(161 161 170 / var(--tw-text-opacity, 1));
+}
+.text-zinc-500 {
+  --tw-text-opacity: 1;
+  color: rgb(113 113 122 / var(--tw-text-opacity, 1));
 }
 .text-zinc-700 {
   --tw-text-opacity: 1;

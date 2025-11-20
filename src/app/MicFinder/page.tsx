@@ -48,13 +48,21 @@ function getDistanceFromLatLonInKm(
 
 const Header = dynamic(() => import("../components/header"));
 const Footer = dynamic(() => import("../components/footer"));
-// Map needs to be client-side only
+
+// Map loaded only when needed. Fallback matches height to prevent CLS.
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
-  loading: () => <p className="p-4 text-center">Loading map...</p>,
+  loading: () => (
+    <div className="h-[25rem] w-full bg-zinc-200 animate-pulse rounded-xl flex items-center justify-center text-zinc-500">
+      Loading Map...
+    </div>
+  ),
   ssr: false,
 });
+
 const EventForm = dynamic(() => import("../components/EventForm"), {
-  loading: () => <p className="p-4 text-center">Loading form...</p>,
+  loading: () => (
+    <div className="h-24 w-full bg-zinc-100 animate-pulse rounded-xl"></div>
+  ),
   ssr: false,
 });
 
@@ -72,13 +80,16 @@ type Event = {
   isRecurring: boolean;
   festival: boolean;
   isMusic?: boolean;
+  // Optimization: We add this optional property to store the parsed date
+  // so we don't have to re-parse it on every render/filter
+  parsedDateObj?: Date;
 };
 
 type CityCoordinates = {
   [key: string]: { lat: number; lng: number };
 };
 
-// --- Sub-Components (Defined OUTSIDE to prevent re-creation on render) ---
+// --- Sub-Components ---
 
 const OpenMicBanner = () => {
   const [visible, setVisible] = useState(true);
@@ -124,7 +135,6 @@ const Row = React.memo(
     data: { events: Event[]; onSave: (e: Event) => void };
   }) => {
     const event = data.events[index];
-    // Safety check
     if (!event) return null;
 
     return (
@@ -213,7 +223,7 @@ const EventsPage = () => {
     (event: Event) => {
       if (selectedTab === "Festivals") return event.festival;
       if (selectedTab === "Other") return event.isMusic;
-      return !event.festival && !event.isMusic; // Default is Mics
+      return !event.festival && !event.isMusic;
     },
     [selectedTab],
   );
@@ -267,17 +277,33 @@ const EventsPage = () => {
     }, 1000);
   };
 
-  // Fetch Events
+  // Fetch Events - Optimized to Pre-Parse Dates
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
+
+          // Pre-calculate date object here to save CPU during filtering
+          let parsedDateObj: Date | undefined = undefined;
+          if (data.date && typeof data.date === "string") {
+            const formats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
+            for (const fmt of formats) {
+              const parsed = parse(data.date, fmt, new Date());
+              if (isValid(parsed)) {
+                parsed.setHours(0, 0, 0, 0);
+                parsedDateObj = parsed;
+                break;
+              }
+            }
+          }
+
           return {
             ...data,
             festival: data.festival === true,
             isMusic: data.isMusic === true,
+            parsedDateObj, // Store it!
           } as Event;
         });
         setEvents(fetchedEvents);
@@ -316,7 +342,7 @@ const EventsPage = () => {
     [],
   );
 
-  // Geolocation / URL Params
+  // Geolocation
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) return;
 
@@ -332,6 +358,7 @@ const EventsPage = () => {
     );
   }, [findClosestCity]);
 
+  // URL Params
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const queryTerm = urlParams.get("searchTerm") || "";
@@ -346,17 +373,16 @@ const EventsPage = () => {
     setSearchTerm(queryTerm);
   }, [fetchUserLocation, cityCoordinates]);
 
-  // Update map location logic
+  // Update map location
   useEffect(() => {
     if (selectedCity && cityCoordinates[selectedCity]) {
       setMapLocation(cityCoordinates[selectedCity]);
     } else if (cityCoordinates["Spokane WA"]) {
-      // Default fallback
       setMapLocation(cityCoordinates["Spokane WA"]);
     }
   }, [selectedCity, cityCoordinates]);
 
-  // --- Computations (Memoized) ---
+  // --- Computations ---
 
   const sortCitiesWithSpokaneFirst = useCallback((cities: string[]) => {
     return cities.sort((a, b) => {
@@ -366,7 +392,6 @@ const EventsPage = () => {
     });
   }, []);
 
-  // Derive available cities from loaded events
   const allAvailableCities = useMemo(() => {
     const set = new Set<string>();
     events.forEach((event) => {
@@ -380,7 +405,6 @@ const EventsPage = () => {
     return sortCitiesWithSpokaneFirst(Array.from(set));
   }, [events, normalizeCityName, sortCitiesWithSpokaneFirst]);
 
-  // Filter cities for dropdown
   const dropdownCities = useMemo(() => {
     if (!debouncedSearchTerm) return allAvailableCities;
     return allAvailableCities.filter((city) =>
@@ -388,24 +412,20 @@ const EventsPage = () => {
     );
   }, [allAvailableCities, debouncedSearchTerm]);
 
-  // 1. MAP EVENTS FILTER: Shows ALL events in the selected city (ignoring Date/Search)
+  // 1. MAP EVENTS FILTER
   const eventsForMap = useMemo(() => {
     const lowerSelectedCity = selectedCity.toLowerCase();
     return events.filter((event) => {
-      // Must match Tab (Mics/Festivals)
       if (!isTabMatch(event)) return false;
-
-      // Must match City (if one is selected)
       const cityMatch =
         !selectedCity ||
         (event.location &&
           event.location.toLowerCase().includes(lowerSelectedCity));
-
       return cityMatch;
     });
   }, [events, selectedCity, isTabMatch]);
 
-  // 2. TOP LIST FILTER: Specific Date & Search matches
+  // 2. TOP LIST FILTER
   const filteredEventsForView = useMemo(() => {
     const normalizedSelectedDate = new Date(selectedDate);
     normalizedSelectedDate.setHours(0, 0, 0, 0);
@@ -413,13 +433,13 @@ const EventsPage = () => {
     const lowerSelectedCity = selectedCity.toLowerCase();
 
     return events.filter((event) => {
-      // City Check
+      // City
       const cityMatch =
         !selectedCity ||
         (event.location &&
           event.location.toLowerCase().includes(lowerSelectedCity));
 
-      // Date Check
+      // Date (Optimized using pre-calculated parsedDateObj)
       let dateMatch = false;
       if (event.isRecurring) {
         const dayMap: { [key: string]: number } = {
@@ -432,21 +452,13 @@ const EventsPage = () => {
           Saturday: 6,
         };
         dateMatch = dayMap[event.date] === selectedDate.getDay();
-      } else if (event.date) {
-        const formats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
-        for (const fmt of formats) {
-          const parsed = parse(event.date, fmt, new Date());
-          if (isValid(parsed)) {
-            parsed.setHours(0, 0, 0, 0);
-            if (parsed.getTime() === normalizedSelectedDate.getTime()) {
-              dateMatch = true;
-            }
-            break;
-          }
-        }
+      } else if (event.parsedDateObj) {
+        // Compare timestamps directly - extremely fast
+        dateMatch =
+          event.parsedDateObj.getTime() === normalizedSelectedDate.getTime();
       }
 
-      // Search Term Check
+      // Search
       const searchMatch =
         !debouncedSearchTerm ||
         (event.name && event.name.toLowerCase().includes(lowerSearch)) ||
@@ -456,11 +468,10 @@ const EventsPage = () => {
     });
   }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
 
-  // 3. BOTTOM LIST FILTER: All events in city (Virtualized)
+  // 3. BOTTOM LIST FILTER
   const sortedEventsByCity = useMemo(() => {
     let list = events;
 
-    // Filter by City
     if (filterCity !== "All Cities") {
       list = list.filter(
         (e) =>
@@ -470,10 +481,8 @@ const EventsPage = () => {
       );
     }
 
-    // Filter by Tab
     list = list.filter(isTabMatch);
 
-    // Sort (Spokane Comedy Club first, then timestamp)
     return list.sort((a, b) => {
       const aLoc = a.location || "";
       const bLoc = b.location || "";
@@ -566,11 +575,14 @@ const EventsPage = () => {
 
   // --- Memoized UI Components ---
 
-  // FIXED: Used eventsForMap (All events in city) instead of filteredEventsForView (Date specific)
   const MemoizedGoogleMap = useMemo(() => {
     if (!mapLocation || !isMapVisible) return null;
     return (
-      <Suspense fallback={<p className="p-4 text-center">Loading map...</p>}>
+      <Suspense
+        fallback={
+          <div className="h-[25rem] w-full bg-zinc-200 animate-pulse rounded-xl"></div>
+        }
+      >
         <GoogleMap
           lat={mapLocation.lat}
           lng={mapLocation.lng}
@@ -582,7 +594,6 @@ const EventsPage = () => {
 
   const MemoizedEventForm = React.memo(EventForm);
 
-  // Prepare data for List
   const itemData = useMemo(
     () => ({
       events: sortedEventsByCity,
@@ -601,25 +612,7 @@ const EventsPage = () => {
           name="description"
           content="Jump into the local comedy scene with MicFinder!..."
         />
-        <meta
-          name="keywords"
-          content="MicFinder, comedy events, stand-up comedy..."
-        />
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
-        <meta property="og:title" content="MicFinder - Your Go-To Tool..." />
-        <meta
-          property="og:description"
-          content="Locate the top open mic nights..."
-        />
-        <meta
-          property="og:url"
-          content="https://www.thehumorhub.com/MicFinder"
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:image"
-          content="https://www.thehumorhub.com/micfinder.webp"
-        />
       </Head>
       <Script
         strategy="lazyOnload"
@@ -651,8 +644,16 @@ const EventsPage = () => {
         {/* City Selection Dropdown */}
         <div className="flex flex-col justify-center items-center mt-2 relative z-20">
           <div className="relative w-full max-w-xs min-h-[60px]">
+            {/* FIX: Added Label for Accessibility */}
+            <label htmlFor="city-select" className="sr-only">
+              Select a City
+            </label>
             <div
+              id="city-select"
               className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 flex items-center px-3"
+              role="button"
+              aria-haspopup="listbox"
+              aria-expanded={isFirstDropdownOpen}
               onClick={() => {
                 setIsFirstDropdownOpen(!isFirstDropdownOpen);
                 setIsSecondDropdownOpen(false);
@@ -670,10 +671,12 @@ const EventsPage = () => {
                   className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
                   autoFocus
                 />
-                <ul className="text-zinc-900">
+                <ul className="text-zinc-900" role="listbox">
                   {dropdownCities.map((city) => (
                     <li
                       key={city}
+                      role="option"
+                      aria-selected={selectedCity === city}
                       className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
                       onClick={() => handleCitySelect(city)}
                     >
@@ -688,7 +691,12 @@ const EventsPage = () => {
           {/* Date Picker */}
           <div className="flex flex-col justify-center items-center mt-2 w-full max-w-xs relative">
             <div className="relative w-full">
+              {/* FIX: Added Label and ID for Accessibility */}
+              <label htmlFor="event-date-picker" className="sr-only">
+                Select Event Date
+              </label>
               <ReactDatePicker
+                id="event-date-picker"
                 ref={datePickerRef}
                 selected={selectedDate}
                 onChange={(date) => {
@@ -701,8 +709,8 @@ const EventsPage = () => {
                 open={isDatePickerOpen}
                 onClickOutside={() => setIsDatePickerOpen(false)}
                 className="modern-input w-full cursor-pointer"
-                aria-label="Select date"
               />
+              {/* Calendar Icon SVG */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 90 90"
@@ -822,8 +830,15 @@ const EventsPage = () => {
         <section className="card-style">
           <div className="flex flex-col justify-center items-center mt-2 relative z-10">
             <div className="relative w-full max-w-xs">
+              <label htmlFor="city-filter-select" className="sr-only">
+                Filter by City
+              </label>
               <div
+                id="city-filter-select"
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center"
+                role="button"
+                aria-haspopup="listbox"
+                aria-expanded={isSecondDropdownOpen}
                 onClick={() => {
                   setIsSecondDropdownOpen(!isSecondDropdownOpen);
                   setIsFirstDropdownOpen(false);
@@ -841,9 +856,18 @@ const EventsPage = () => {
                     className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
                     autoFocus
                   />
-                  <ul className="max-h-48 overflow-y-auto text-zinc-900">
+                  <ul
+                    className="max-h-48 overflow-y-auto text-zinc-900"
+                    role="listbox"
+                  >
                     <li
-                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
+                      role="option"
+                      aria-selected={filterCity === "All Cities"}
+                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 ${
+                        filterCity === "All Cities"
+                          ? "bg-zinc-200 font-semibold"
+                          : ""
+                      }`}
                       onClick={() => handleCityFilterChange("All Cities")}
                     >
                       All Cities
@@ -851,7 +875,11 @@ const EventsPage = () => {
                     {dropdownCities.map((city) => (
                       <li
                         key={city}
-                        className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
+                        role="option"
+                        aria-selected={filterCity === city}
+                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 ${
+                          filterCity === city ? "bg-zinc-200 font-semibold" : ""
+                        }`}
                         onClick={() => handleCityFilterChange(city)}
                       >
                         {city}
@@ -887,10 +915,6 @@ const EventsPage = () => {
             </p>
           )}
 
-          {/* 
-             Pass data via itemData to allow React Window to work efficiently 
-             without re-rendering Row on every parent render 
-          */}
           <List
             height={600}
             itemCount={sortedEventsByCity.length}
