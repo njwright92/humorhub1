@@ -1,72 +1,82 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
-import ClientSignOutButton from "./ClientSignOut";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../firebase.config"; // Optimized: Import instance directly
+import ClientSignOutButton from "./ClientSignOut";
 import hh from "../../app/hh.webp";
 
 export default function Footer() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
-  const handleAuthStateChanged = useCallback((user: User | null) => {
-    setIsUserSignedIn(!!user);
-  }, []);
-
+  /* 
+     OPTIMIZATION: 
+     We don't need useCallback for the handler here. 
+     Defining it inside useEffect or as a simple function is cheaper 
+     because it runs only once due to the empty dependency array.
+  */
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) =>
-      handleAuthStateChanged(user),
-    );
-    return () => unsubscribe();
-  }, [handleAuthStateChanged]);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsUserSignedIn(!!user);
     });
+    return () => unsubscribe();
   }, []);
+
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <footer
-      style={{ backgroundImage: "linear-gradient(to top #374151, #1f2022)" }}
+      style={{
+        backgroundImage: "linear-gradient(to top, #374151, #1f2022)",
+      }}
     >
       <hr className="my-4 border-zinc-200 sm:mx-auto dark:border-zinc-700 lg:my-6" />
+
       <div className="mx-auto w-full max-w-screen-xl p-2 py-4 lg:py-6">
         <h1 className="text-2xl font-semibold text-zinc-200 mb-2 text-center">
           Humor Hub - The Hub of Humor!
         </h1>
-        <p className="text-md mb-4 text-center">
+        <p className="text-md mb-4 text-center text-zinc-300">
           Connecting comics and fans with events, tools, and more. Join the fun!
         </p>
 
         <div className="md:flex md:justify-between">
-          <div className="mb-6 md:mb-0">
-            <Link href="/">
+          <div className="mb-6 md:mb-0 flex justify-center md:block">
+            <Link href="/" aria-label="Humor Hub Home">
               <Image
                 src={hh}
-                alt="Mic"
+                alt="Humor Hub Logo"
                 width={60}
                 height={60}
-                className="rounded-full ml-4 cursor-pointer"
-                loading="lazy"
+                className="rounded-full md:ml-4 hover:opacity-90 transition-opacity"
                 style={{ objectFit: "contain" }}
-                sizes="(max-width: 768px) 100vw, 250px"
+                // Optimization: Don't lazy load if footer is visible immediately,
+                // but usually footer is below fold, so lazy is good.
+                loading="lazy"
               />
             </Link>
           </div>
+
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 mr-2">
+            {/* Section 1 */}
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
                 Get to Know Us
               </h2>
-              <ul className="text-zinc-200">
-                <li className="mb-4">
+              <ul className="text-zinc-200 space-y-4">
+                <li>
                   <Link
                     href="/about"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline hover:text-white transition-colors"
                   >
                     About Humor Hub
                   </Link>
@@ -74,54 +84,56 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline hover:text-white transition-colors"
                   >
                     Contact Our Team
                   </Link>
                 </li>
               </ul>
             </div>
+
+            {/* Section 2 */}
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
                 Stay Connected
               </h2>
-              <ul className="text-zinc-200">
-                <li className="mb-4">
+              <ul className="text-zinc-200 space-y-4">
+                <li>
                   <a
                     href="https://twitter.com/naterbug321"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline hover:text-white transition-colors"
                   >
                     X (Twitter)
                   </a>
                 </li>
-                <li className="mb-4">
+                <li>
                   <a
                     href="https://www.facebook.com/nate_wrigh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline hover:text-white transition-colors"
                   >
                     Facebook
                   </a>
                 </li>
-                <li className="mb-4">
+                <li>
                   <a
                     href="https://www.instagram.com/nate_wright3"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline hover:text-white transition-colors"
                   >
                     Instagram
                   </a>
                 </li>
-                <li className="mb-4">
+                <li>
                   <a
                     href="https://github.com/njwright92"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline cursor-pointer"
+                    className="hover:underline hover:text-white transition-colors"
                   >
                     GitHub
                   </a>
@@ -129,20 +141,21 @@ export default function Footer() {
               </ul>
             </div>
 
+            {/* Section 3 */}
             <div>
               <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
                 Legal Info
               </h2>
-              <div className="text-zinc-200 flex flex-col">
+              <div className="text-zinc-200 flex flex-col space-y-4">
                 <Link
                   href="/userAgreement"
-                  className="cursor-pointer mb-1 hover:underline"
+                  className="hover:underline hover:text-white transition-colors"
                 >
                   User Agreement
                 </Link>
                 <Link
                   href="/privacyPolicy"
-                  className="cursor-pointer mt-1 hover:underline"
+                  className="hover:underline hover:text-white transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -150,26 +163,28 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="sm:flex sm:items-center sm:justify-between mt-4">
+
+        <div className="sm:flex sm:items-center sm:justify-between mt-8">
           <div className="flex flex-col items-center sm:items-start sm:flex-row-reverse sm:justify-between sm:w-full">
             {isUserSignedIn && (
-              <div className="mb-4 mr-2">
+              <div className="mb-4 sm:mb-0 sm:mr-2">
                 <ClientSignOutButton />
               </div>
             )}
-            <div className="flex justify-center mb-8 mr-8">
+
+            {/* Scroll To Top Button */}
+            <div className="flex justify-center mb-6 sm:mb-0 sm:mr-8 relative h-8 w-8">
               <button
                 onClick={scrollToTop}
                 aria-label="Back to top"
-                className="cursor-pointer absolute z-10 rounded-full bg-clip-padding border text-token-text-secondary border-token-border-light bg-zinc-900 w-8 h-8 flex items-center justify-center text-zinc-200 shadow-xl focus:outline-none hover:bg-zinc-800"
+                className="rounded-full bg-zinc-900 w-8 h-8 flex items-center justify-center text-zinc-200 shadow-xl focus:outline-none hover:bg-zinc-700 transition-colors border border-zinc-600"
               >
                 <svg
-                  width="24"
-                  height="24"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-zinc-200 items-center justify-center"
                 >
                   <path
                     fillRule="evenodd"
@@ -180,8 +195,12 @@ export default function Footer() {
                 </svg>
               </button>
             </div>
+
             <div className="text-center sm:text-left">
-              <span className="text-sm sm:text-center block sm:inline">
+              <span
+                className="text-sm text-zinc-400 block sm:inline"
+                suppressHydrationWarning // Prevents server/client mismatch error on Date
+              >
                 © {new Date().getFullYear()} Humor Hub™. All rights reserved.
               </span>
             </div>

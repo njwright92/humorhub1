@@ -19,11 +19,13 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList as List, areEqual } from "react-window";
 import Head from "next/head";
 import Script from "next/script";
 import { parse, isValid } from "date-fns";
 import ReactDatePicker from "react-datepicker";
+
+// --- Utility Functions ---
 
 function getDistanceFromLatLonInKm(
   lat1: number,
@@ -42,16 +44,21 @@ function getDistanceFromLatLonInKm(
   return R * c;
 }
 
-const Header = dynamic(() => import("../components/header"), {});
-const Footer = dynamic(() => import("../components/footer"), {});
+// --- Dynamic Imports ---
+
+const Header = dynamic(() => import("../components/header"));
+const Footer = dynamic(() => import("../components/footer"));
+// Map needs to be client-side only
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
-  loading: () => <p>Loading map...</p>,
+  loading: () => <p className="p-4 text-center">Loading map...</p>,
   ssr: false,
 });
 const EventForm = dynamic(() => import("../components/EventForm"), {
-  loading: () => <p>Loading form...</p>,
+  loading: () => <p className="p-4 text-center">Loading form...</p>,
   ssr: false,
 });
+
+// --- Types ---
 
 type Event = {
   googleTimestamp: any;
@@ -71,11 +78,97 @@ type CityCoordinates = {
   [key: string]: { lat: number; lng: number };
 };
 
+// --- Sub-Components (Defined OUTSIDE to prevent re-creation on render) ---
+
+const OpenMicBanner = () => {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
+  if (!visible) return null;
+  return (
+    <div className="border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-4 bg-white">
+      <strong className="font-bold">📢 Note: </strong>
+      <span className="block sm:inline">
+        Open mic events evolve quickly. See something outdated? Let us know.
+        Help keep the comedy community thriving!
+      </span>
+      <span
+        className="absolute top-0 right-0 px-2 py-1 cursor-pointer"
+        onClick={() => setVisible(false)}
+      >
+        <svg
+          className="fill-current h-6 w-6 text-red-400 hover:text-red-600"
+          role="button"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+        >
+          <title>Close</title>
+          <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
+        </svg>
+      </span>
+    </div>
+  );
+};
+
+// Virtualized Row Component
+const Row = React.memo(
+  ({
+    index,
+    style,
+    data,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+    data: { events: Event[]; onSave: (e: Event) => void };
+  }) => {
+    const event = data.events[index];
+    // Safety check
+    if (!event) return null;
+
+    return (
+      <div style={style}>
+        <div className="event-item mt-2 mx-2">
+          <h3 className="text-lg font-semibold">{event.name}</h3>
+          <p className="details-label">📅 Date: {event.date}</p>
+          <p className="details-label">📍 Location: {event.location}</p>
+          {event.festival && (
+            <p className="details-label text-purple-600 font-bold">
+              🏆 This is a festival!
+            </p>
+          )}
+          {event.isMusic && !event.festival && (
+            <p className="details-label text-green-600 font-bold">
+              🎶 This is a Music/Other event!
+            </p>
+          )}
+          <div className="details-label">
+            <span className="details-label">ℹ️ Details:</span>
+            <div dangerouslySetInnerHTML={{ __html: event.details }} />
+          </div>
+          <button
+            className="btn mt-1 mb-1 px-2 py-1"
+            onClick={() => data.onSave(event)}
+          >
+            Save Event
+          </button>
+        </div>
+      </div>
+    );
+  },
+  areEqual,
+);
+
+Row.displayName = "EventRow";
+
+// --- Main Component ---
+
 const EventsPage = () => {
+  // State
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const datePickerRef = useRef<ReactDatePicker | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,22 +186,45 @@ const EventsPage = () => {
     "Mics" | "Festivals" | "Other"
   >("Mics");
 
-  // TAB LOGIC
+  // Debounce for search
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  const datePickerRef = useRef<ReactDatePicker | null>(null);
+  const searchTimeoutRef = useRef<number | null>(null);
+
+  // Constants / Helpers
+  const normalizeCityName = useCallback((name: string) => name.trim(), []);
+
+  const sendDataLayerEvent = useCallback(
+    (
+      event_name: string,
+      params: { event_category: string; event_label: string },
+    ) => {
+      if (typeof window !== "undefined") {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: event_name, ...params });
+      }
+    },
+    [],
+  );
+
+  // Tab Filter Logic
   const isTabMatch = useCallback(
     (event: Event) => {
       if (selectedTab === "Festivals") return event.festival;
       if (selectedTab === "Other") return event.isMusic;
-      return !event.festival && !event.isMusic;
+      return !event.festival && !event.isMusic; // Default is Mics
     },
     [selectedTab],
   );
 
-  // Closest city logic
+  // Geo Logic
   const findClosestCity = useCallback(
     (latitude: number, longitude: number): string | null => {
       if (Object.keys(cityCoordinates).length === 0) return null;
       let closestCity: string | null = null;
       let minDistance = Infinity;
+
       for (const [city, coords] of Object.entries(cityCoordinates)) {
         const distance = getDistanceFromLatLonInKm(
           latitude,
@@ -126,340 +242,101 @@ const EventsPage = () => {
     [cityCoordinates],
   );
 
-  const searchTimeoutRef = useRef<number | null>(null);
+  // --- Effects ---
 
-  function sendDataLayerEvent(
-    event_name: string,
-    params: { event_category: string; event_label: string },
-  ) {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: event_name,
-      ...params,
-    });
-  }
+  // Debounce Search Term
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
+  // GA Tracking for search
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
-    if (searchTimeoutRef.current !== null) {
-      clearTimeout(searchTimeoutRef.current);
-    }
+
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+
     searchTimeoutRef.current = window.setTimeout(() => {
       sendDataLayerEvent("search_city", {
         event_category: "City Search",
         event_label: term,
       });
-    }, 500);
+    }, 1000);
   };
 
-  // Handle city selection
-  const handleCitySelect = (city: string) => {
-    const normalizedCity = normalizeCityName(city);
-    setSelectedCity(normalizedCity);
-    setFilterCity(normalizedCity);
-    setSearchTerm(normalizedCity);
-    sendDataLayerEvent("select_city", {
-      event_category: "City Selection",
-      event_label: normalizedCity,
-    });
-  };
-
-  // 1. MAP EVENTS FILTER
-  const eventsForMap = useMemo(() => {
-    return events.filter(isTabMatch);
-  }, [events, isTabMatch]);
-
-  // Map toggle
-  const toggleMapVisibility = () => {
-    setIsMapVisible((prev) => {
-      const newValue = !prev;
-      sendDataLayerEvent("toggle_map", {
-        event_category: "Map Interaction",
-        event_label: newValue ? "Show Map" : "Hide Map",
-      });
-      return newValue;
-    });
-  };
-
-  useEffect(() => {
-    if (selectedCity && cityCoordinates[selectedCity]) {
-      setMapLocation(cityCoordinates[selectedCity]);
-    }
-  }, [selectedCity, cityCoordinates]);
-
-  const handleOnItemsRendered = ({
-    overscanStopIndex,
-  }: {
-    overscanStopIndex: number;
-  }) => {
-    if (
-      overscanStopIndex >= loadedItems - 1 &&
-      loadedItems < eventsByCity.length
-    ) {
-      setLoadedItems((prev) => Math.min(prev + 5, eventsByCity.length));
-    }
-  };
-
-  const normalizeCityName = useCallback((name: string) => name.trim(), []);
-
-  const handleCityFilterChange = (city: string) => {
-    if (city === "All Cities") {
-      setFilterCity(city);
-      setSelectedCity("");
-      setSearchTerm("");
-    } else {
-      const normalizedCity = normalizeCityName(city);
-      setFilterCity(normalizedCity);
-      setSelectedCity(normalizedCity);
-      setSearchTerm(normalizedCity);
-    }
-    setIsSecondDropdownOpen(false);
-    sendDataLayerEvent("filter_city", {
-      event_category: "City Filter",
-      event_label: city,
-    });
-  };
-
-  // 2. CITY FILTER LOGIC (correct tab)
-  const eventsByCity = useMemo(() => {
-    let filteredEvents = events;
-    if (filterCity !== "All Cities") {
-      const normalizedFilterCity = normalizeCityName(filterCity);
-      filteredEvents = filteredEvents.filter((event) => {
-        const location = event.location;
-        if (location && typeof location === "string") {
-          const locationParts = location.split(",");
-          return (
-            locationParts.length > 1 &&
-            normalizeCityName(locationParts[1].trim()) === normalizedFilterCity
-          );
-        }
-        return false;
-      });
-    }
-    filteredEvents = filteredEvents.filter(isTabMatch);
-    return filteredEvents;
-  }, [filterCity, events, normalizeCityName, isTabMatch]);
-
-  // EVENTS FETCH: pulls isMusic
+  // Fetch Events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
-          const festival = data.festival === true;
-          const isMusic = data.isMusic === true;
           return {
             ...data,
-            festival,
-            isMusic,
+            festival: data.festival === true,
+            isMusic: data.isMusic === true,
           } as Event;
         });
         setEvents(fetchedEvents);
       } catch (error) {
-        alert(
-          "Oops! We couldn't load the events at the moment. Please try again later.",
-        );
+        console.error("Error fetching events:", error);
       }
     };
     fetchEvents();
   }, []);
 
-  // Cities fetch
+  // Fetch Cities
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const db = getFirestore(app);
-        const citiesSnapshot = await getDocs(collection(db, "cities"));
+        const dbInstance = getFirestore(app);
+        const citiesSnapshot = await getDocs(collection(dbInstance, "cities"));
         const citiesData: CityCoordinates = {};
         citiesSnapshot.docs.forEach((doc) => {
           const cityData = doc.data();
-          const city = cityData.city;
-          citiesData[city] = {
+          citiesData[cityData.city] = {
             lat: cityData.coordinates.lat,
             lng: cityData.coordinates.lng,
           };
         });
         setCityCoordinates(citiesData);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
     };
     fetchCities();
   }, []);
 
-  // Recurring event day matching
-  const isRecurringEvent = useCallback(
-    (eventDate: string, selectedDate: Date): boolean => {
-      const dayOfWeekMap: { [key: string]: number } = {
-        Sunday: 0,
-        Monday: 1,
-        Tuesday: 2,
-        Wednesday: 3,
-        Thursday: 4,
-        Friday: 5,
-        Saturday: 6,
-      };
-      const eventDay = dayOfWeekMap[eventDate];
-      const selectedDay = selectedDate.getDay();
-      return eventDay === selectedDay;
-    },
+  // Auth State
+  useEffect(
+    () => onAuthStateChanged(auth, (user) => setIsUserSignedIn(!!user)),
     [],
   );
 
-  // 3. FULL FILTERED EVENTS for current view
-  const filteredEvents = useMemo(() => {
-    const normalizedSelectedDate = new Date(selectedDate);
-    normalizedSelectedDate.setHours(0, 0, 0, 0);
-    const lowercasedSearchTerm = searchTerm ? searchTerm.toLowerCase() : null;
-    const lowercasedSelectedCity = selectedCity
-      ? selectedCity.toLowerCase()
-      : "";
-    return events.filter((event) => {
-      const isInSelectedCity =
-        !lowercasedSelectedCity ||
-        (event.location &&
-          event.location.toLowerCase().includes(lowercasedSelectedCity));
-      let isOnSelectedDate = true;
-      if (event.isRecurring) {
-        isOnSelectedDate = isRecurringEvent(event.date, selectedDate);
-      } else {
-        if (event.date && typeof event.date === "string") {
-          let eventDate: Date | undefined = undefined;
-          const dateFormats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
-          for (let format of dateFormats) {
-            const parsedDate = parse(event.date, format, new Date());
-            if (isValid(parsedDate)) {
-              eventDate = parsedDate;
-              break;
-            }
-          }
-          if (!eventDate) {
-            isOnSelectedDate = false;
-          } else {
-            eventDate.setHours(0, 0, 0, 0);
-            isOnSelectedDate =
-              eventDate.getTime() === normalizedSelectedDate.getTime();
-          }
-        } else {
-          isOnSelectedDate = false;
-        }
-      }
-      const matchesSearchTerm = lowercasedSearchTerm
-        ? (event.name &&
-            event.name.toLowerCase().includes(lowercasedSearchTerm)) ||
-          (event.location &&
-            event.location.toLowerCase().includes(lowercasedSearchTerm))
-        : true;
-      return (
-        isInSelectedCity &&
-        isOnSelectedDate &&
-        matchesSearchTerm &&
-        isTabMatch(event)
-      );
-    });
-  }, [
-    events,
-    selectedCity,
-    selectedDate,
-    isRecurringEvent,
-    searchTerm,
-    isTabMatch,
-  ]);
-
-  // Auth
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-    });
-    return unsubscribe;
-  }, []);
-
-  // Save event
-  const handleEventSave = useCallback(
-    async (event: Event) => {
-      if (!isUserSignedIn) {
-        alert("Please sign in to save events to your profile.");
-        return;
-      }
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          throw new Error("User not found.");
-        }
-        const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
-        await setDoc(userSavedEventRef, { ...event, userId: user.uid });
-        alert("Event saved to your profile successfully!");
-      } catch (error) {
-        alert(
-          "Oops! Something went wrong while saving the event. Please try again.",
-        );
-      }
-      sendDataLayerEvent("save_event", {
-        event_category: "Event Interaction",
-        event_label: event.name,
-      });
-    },
-    [isUserSignedIn],
-  );
-
-  // Spokane WA first
-  const sortCitiesWithSpokaneFirst = (cities: string[]): string[] => {
-    return cities.sort((a, b) => {
-      if (a === "Spokane WA") return -1;
-      if (b === "Spokane WA") return 1;
-      return a.localeCompare(b);
-    });
-  };
-
-  const uniqueCities = useMemo(() => {
-    const citySet = new Set<string>();
-    const lowercasedSearchTerm = searchTerm.toLowerCase();
-    events.forEach((event) => {
-      if (event.location) {
-        const parts = event.location.split(", ");
-        if (parts.length > 1) {
-          const normalizedCity = normalizeCityName(parts[1].trim());
-          if (normalizedCity.toLowerCase().includes(lowercasedSearchTerm)) {
-            citySet.add(normalizedCity);
-          }
-        }
-      }
-    });
-    return sortCitiesWithSpokaneFirst(Array.from(citySet));
-  }, [events, searchTerm, normalizeCityName]);
-
-  // Geolocation fetch
+  // Geolocation / URL Params
   const fetchUserLocation = useCallback(() => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported. Please select a city manually.");
-      return;
-    }
+    if (!navigator.geolocation) return;
+
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
-        try {
-          const closestCity = findClosestCity(latitude, longitude);
-          if (closestCity) {
-            setSelectedCity(closestCity);
-            setFilterCity(closestCity);
-          } else {
-            alert("No nearby cities found. Please select a city manually.");
-          }
-        } catch (error) {}
+        const closestCity = findClosestCity(latitude, longitude);
+        if (closestCity) {
+          setSelectedCity(closestCity);
+          setFilterCity(closestCity);
+        }
       },
-      (_error) => {
-        alert(
-          "Unable to retrieve your location. Please select a city manually.",
-        );
-      },
+      (err) => console.log("Geolocation denied or failed", err),
     );
   }, [findClosestCity]);
 
-  // URL search prefill
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const queryTerm = urlParams.get("searchTerm") || "";
     const city = urlParams.get("city");
+
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
@@ -469,129 +346,250 @@ const EventsPage = () => {
     setSearchTerm(queryTerm);
   }, [fetchUserLocation, cityCoordinates]);
 
-  const handleDateChange = (date: Date | null) => {
-    if (date) {
-      setSelectedDate(date);
-      setIsDatePickerOpen(false);
+  // Update map location logic
+  useEffect(() => {
+    if (selectedCity && cityCoordinates[selectedCity]) {
+      setMapLocation(cityCoordinates[selectedCity]);
+    } else if (cityCoordinates["Spokane WA"]) {
+      // Default fallback
+      setMapLocation(cityCoordinates["Spokane WA"]);
     }
-  };
-  const openDatePicker = () => {
-    setIsDatePickerOpen((prev) => !prev);
-  };
-
-  // Selected city fallback
-  const selectedCityCoordinates = useMemo(() => {
-    return cityCoordinates[selectedCity] || cityCoordinates["Spokane WA"];
   }, [selectedCity, cityCoordinates]);
 
-  useEffect(() => {
-    if (selectedCityCoordinates) {
-      setMapLocation(selectedCityCoordinates);
-    }
-  }, [selectedCityCoordinates]);
+  // --- Computations (Memoized) ---
 
+  const sortCitiesWithSpokaneFirst = useCallback((cities: string[]) => {
+    return cities.sort((a, b) => {
+      if (a === "Spokane WA") return -1;
+      if (b === "Spokane WA") return 1;
+      return a.localeCompare(b);
+    });
+  }, []);
+
+  // Derive available cities from loaded events
+  const allAvailableCities = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((event) => {
+      if (event.location) {
+        const parts = event.location.split(",");
+        if (parts.length > 1) {
+          set.add(normalizeCityName(parts[1].trim()));
+        }
+      }
+    });
+    return sortCitiesWithSpokaneFirst(Array.from(set));
+  }, [events, normalizeCityName, sortCitiesWithSpokaneFirst]);
+
+  // Filter cities for dropdown
+  const dropdownCities = useMemo(() => {
+    if (!debouncedSearchTerm) return allAvailableCities;
+    return allAvailableCities.filter((city) =>
+      city.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    );
+  }, [allAvailableCities, debouncedSearchTerm]);
+
+  // 1. MAP EVENTS FILTER: Shows ALL events in the selected city (ignoring Date/Search)
+  const eventsForMap = useMemo(() => {
+    const lowerSelectedCity = selectedCity.toLowerCase();
+    return events.filter((event) => {
+      // Must match Tab (Mics/Festivals)
+      if (!isTabMatch(event)) return false;
+
+      // Must match City (if one is selected)
+      const cityMatch =
+        !selectedCity ||
+        (event.location &&
+          event.location.toLowerCase().includes(lowerSelectedCity));
+
+      return cityMatch;
+    });
+  }, [events, selectedCity, isTabMatch]);
+
+  // 2. TOP LIST FILTER: Specific Date & Search matches
+  const filteredEventsForView = useMemo(() => {
+    const normalizedSelectedDate = new Date(selectedDate);
+    normalizedSelectedDate.setHours(0, 0, 0, 0);
+    const lowerSearch = debouncedSearchTerm.toLowerCase();
+    const lowerSelectedCity = selectedCity.toLowerCase();
+
+    return events.filter((event) => {
+      // City Check
+      const cityMatch =
+        !selectedCity ||
+        (event.location &&
+          event.location.toLowerCase().includes(lowerSelectedCity));
+
+      // Date Check
+      let dateMatch = false;
+      if (event.isRecurring) {
+        const dayMap: { [key: string]: number } = {
+          Sunday: 0,
+          Monday: 1,
+          Tuesday: 2,
+          Wednesday: 3,
+          Thursday: 4,
+          Friday: 5,
+          Saturday: 6,
+        };
+        dateMatch = dayMap[event.date] === selectedDate.getDay();
+      } else if (event.date) {
+        const formats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
+        for (const fmt of formats) {
+          const parsed = parse(event.date, fmt, new Date());
+          if (isValid(parsed)) {
+            parsed.setHours(0, 0, 0, 0);
+            if (parsed.getTime() === normalizedSelectedDate.getTime()) {
+              dateMatch = true;
+            }
+            break;
+          }
+        }
+      }
+
+      // Search Term Check
+      const searchMatch =
+        !debouncedSearchTerm ||
+        (event.name && event.name.toLowerCase().includes(lowerSearch)) ||
+        (event.location && event.location.toLowerCase().includes(lowerSearch));
+
+      return cityMatch && dateMatch && searchMatch && isTabMatch(event);
+    });
+  }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
+
+  // 3. BOTTOM LIST FILTER: All events in city (Virtualized)
+  const sortedEventsByCity = useMemo(() => {
+    let list = events;
+
+    // Filter by City
+    if (filterCity !== "All Cities") {
+      list = list.filter(
+        (e) =>
+          e.location &&
+          normalizeCityName(e.location.split(",")[1] || "").trim() ===
+            filterCity,
+      );
+    }
+
+    // Filter by Tab
+    list = list.filter(isTabMatch);
+
+    // Sort (Spokane Comedy Club first, then timestamp)
+    return list.sort((a, b) => {
+      const aLoc = a.location || "";
+      const bLoc = b.location || "";
+      const aClub = aLoc.includes("Spokane Comedy Club");
+      const bClub = bLoc.includes("Spokane Comedy Club");
+
+      if (aClub && !bClub) return -1;
+      if (!aClub && bClub) return 1;
+
+      const tA = new Date(a.googleTimestamp).getTime();
+      const tB = new Date(b.googleTimestamp).getTime();
+      return tB - tA;
+    });
+  }, [events, filterCity, isTabMatch, normalizeCityName]);
+
+  // --- Handlers ---
+
+  const handleCitySelect = (city: string) => {
+    const normalized = normalizeCityName(city);
+    setSelectedCity(normalized);
+    setFilterCity(normalized);
+    setSearchTerm(normalized);
+    setDebouncedSearchTerm(normalized);
+    setIsFirstDropdownOpen(false);
+    sendDataLayerEvent("select_city", {
+      event_category: "City Selection",
+      event_label: normalized,
+    });
+  };
+
+  const handleCityFilterChange = (city: string) => {
+    if (city === "All Cities") {
+      setFilterCity(city);
+      setSelectedCity("");
+      setSearchTerm("");
+    } else {
+      const normalized = normalizeCityName(city);
+      setFilterCity(normalized);
+      setSelectedCity(normalized);
+      setSearchTerm(normalized);
+    }
+    setIsSecondDropdownOpen(false);
+    sendDataLayerEvent("filter_city", {
+      event_category: "City Filter",
+      event_label: city,
+    });
+  };
+
+  const handleEventSave = useCallback(
+    async (event: Event) => {
+      if (!isUserSignedIn)
+        return alert("Please sign in to save events to your profile.");
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("User not found.");
+        const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
+        await setDoc(userSavedEventRef, { ...event, userId: user.uid });
+        alert("Event saved to your profile successfully!");
+        sendDataLayerEvent("save_event", {
+          event_category: "Event Interaction",
+          event_label: event.name,
+        });
+      } catch (error) {
+        console.error(error);
+        alert("Oops! Something went wrong. Please try again.");
+      }
+    },
+    [isUserSignedIn, sendDataLayerEvent],
+  );
+
+  const toggleMapVisibility = () => {
+    setIsMapVisible((prev) => {
+      const newVal = !prev;
+      sendDataLayerEvent("toggle_map", {
+        event_category: "Map Interaction",
+        event_label: newVal ? "Show Map" : "Hide Map",
+      });
+      return newVal;
+    });
+  };
+
+  const handleOnItemsRendered = ({ overscanStopIndex }: any) => {
+    if (
+      overscanStopIndex >= loadedItems - 1 &&
+      loadedItems < sortedEventsByCity.length
+    ) {
+      setLoadedItems((prev) => Math.min(prev + 5, sortedEventsByCity.length));
+    }
+  };
+
+  // --- Memoized UI Components ---
+
+  // FIXED: Used eventsForMap (All events in city) instead of filteredEventsForView (Date specific)
   const MemoizedGoogleMap = useMemo(() => {
-    return mapLocation && isMapVisible ? (
-      <Suspense fallback={<p>Loading map...</p>}>
+    if (!mapLocation || !isMapVisible) return null;
+    return (
+      <Suspense fallback={<p className="p-4 text-center">Loading map...</p>}>
         <GoogleMap
           lat={mapLocation.lat}
           lng={mapLocation.lng}
           events={eventsForMap}
         />
       </Suspense>
-    ) : null;
+    );
   }, [mapLocation, isMapVisible, eventsForMap]);
 
   const MemoizedEventForm = React.memo(EventForm);
 
-  // 4. Event sorting
-  const sortedEventsByCity = useMemo(() => {
-    const spokaneClubFirst = (a: Event, b: Event) => {
-      const aLoc = a?.location || "";
-      const bLoc = b?.location || "";
-      if (aLoc.includes("Spokane Comedy Club")) return -1;
-      if (bLoc.includes("Spokane Comedy Club")) return 1;
-      return 0;
-    };
-    const sortedEvents = [...eventsByCity].sort(
-      (a, b) =>
-        spokaneClubFirst(a, b) ||
-        new Date(b.googleTimestamp).getTime() -
-          new Date(a.googleTimestamp).getTime(),
-    );
-    return sortedEvents;
-  }, [eventsByCity]);
-
-  // Banner
-  const OpenMicBanner = () => {
-    const [visible, setVisible] = useState(true);
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 10000);
-      return () => clearTimeout(timer);
-    }, []);
-    if (!visible) return null;
-    return (
-      <div className="border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-4">
-        <strong className="font-bold">📢 Note: </strong>
-        <span className="block sm:inline">
-          Open mic events evolve quickly. See something outdated? Let us know.
-          Help keep the comedy community thriving!
-        </span>
-        <span
-          className="absolute top-[-0.75rem] right-[-0.75rem] px-4 py-3 cursor-pointer"
-          onClick={() => setVisible(false)}
-        >
-          <svg
-            className="fill-current h-6 w-6 text-zinc-200"
-            role="button"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <title>Close</title>
-            <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
-          </svg>
-        </span>
-      </div>
-    );
-  };
-
-  // Row
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => {
-    const event = sortedEventsByCity[index];
-    return (
-      <div style={style}>
-        <div key={event.id} className="event-item mt-2">
-          <h3 className="text-lg font-semibold">{event.name}</h3>
-          <p className="details-label">📅 Date: {event.date}</p>
-          <p className="details-label">📍 Location: {event.location}</p>
-          {event.festival && (
-            <p className="details-label">🏆 This is a festival!</p>
-          )}
-          {event.isMusic && !event.festival && (
-            <p className="details-label">🎶 This is a Music/Other event!</p>
-          )}
-          <div className="details-label">
-            <span className="details-label">ℹ️ Details:</span>
-            <div dangerouslySetInnerHTML={{ __html: event.details }} />
-          </div>
-          <button
-            className="btn mt-1 mb-1 px-2 py-1"
-            onClick={() => handleEventSave(event)}
-          >
-            Save Event
-          </button>
-        </div>
-      </div>
-    );
-  };
+  // Prepare data for List
+  const itemData = useMemo(
+    () => ({
+      events: sortedEventsByCity,
+      onSave: handleEventSave,
+    }),
+    [sortedEventsByCity, handleEventSave],
+  );
 
   return (
     <>
@@ -601,20 +599,17 @@ const EventsPage = () => {
         </title>
         <meta
           name="description"
-          content="Jump into the local comedy scene with MicFinder! Whether you're cracking jokes or just soaking them up, find the best open mics, shows, and festivals in your area."
+          content="Jump into the local comedy scene with MicFinder!..."
         />
         <meta
           name="keywords"
-          content="MicFinder, comedy events, stand-up comedy, open mic near me, local mics, comedy festivals, comedy nights, live comedy shows, comedy, jokes, mics"
+          content="MicFinder, comedy events, stand-up comedy..."
         />
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
-        <meta
-          property="og:title"
-          content="MicFinder - Your Go-To Tool for Finding Open Mics and Comedy Festivals"
-        />
+        <meta property="og:title" content="MicFinder - Your Go-To Tool..." />
         <meta
           property="og:description"
-          content="Locate the top open mic nights, stand-up comedy shows, and festivals in your region with MicFinder. Perfect for comedians and fans seeking local events."
+          content="Locate the top open mic nights..."
         />
         <meta
           property="og:url"
@@ -630,9 +625,12 @@ const EventsPage = () => {
         strategy="lazyOnload"
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       />
+
       <Header />
+
       <div className="screen-container content-with-sidebar">
         <OpenMicBanner />
+
         <h1 className="title font-bold text-center mb-6">
           Discover Mics and Festivals Near You!
         </h1>
@@ -641,63 +639,43 @@ const EventsPage = () => {
           add comedy events to connect with your community and keep the laughs
           going!
         </p>
+
         <div className="text-center mb-8">
           <MemoizedEventForm />
         </div>
+
         <h2 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
           Find your next show or night out. Pick a city and date!
         </h2>
 
-        <div className="flex flex-col justify-center items-center mt-2">
+        {/* City Selection Dropdown */}
+        <div className="flex flex-col justify-center items-center mt-2 relative z-20">
           <div className="relative w-full max-w-xs min-h-[60px]">
             <div
-              className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
+              className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 flex items-center px-3"
               onClick={() => {
-                setIsFirstDropdownOpen((prev) => {
-                  const newValue = !prev;
-                  if (newValue) {
-                    sendDataLayerEvent("open_dropdown", {
-                      event_category: "Dropdown",
-                      event_label: "City Selection Dropdown",
-                    });
-                  }
-                  return newValue;
-                });
+                setIsFirstDropdownOpen(!isFirstDropdownOpen);
                 setIsSecondDropdownOpen(false);
               }}
             >
               {selectedCity || "Select a City"}
             </div>
-            {/* Dropdown menu */}
             {isFirstDropdownOpen && (
-              <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 max-h-[192px] overflow-y-auto">
-                {/* Search input inside the dropdown */}
+              <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 absolute top-full left-0 max-h-[192px] overflow-y-auto z-30">
                 <input
                   type="text"
                   placeholder="Search for a city..."
-                  aria-label="city"
                   value={searchTerm}
                   onChange={handleSearchInputChange}
-                  className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
+                  className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
+                  autoFocus
                 />
-                {/* Filtered city options */}
-                <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
-                  {sortCitiesWithSpokaneFirst(
-                    Object.keys(cityCoordinates).filter((city) =>
-                      city.toLowerCase().includes(searchTerm.toLowerCase()),
-                    ),
-                  ).map((city) => (
+                <ul className="text-zinc-900">
+                  {dropdownCities.map((city) => (
                     <li
                       key={city}
-                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
-                      onClick={() => {
-                        handleCitySelect(city);
-                        setIsFirstDropdownOpen(false);
-                        sendDataLayerEvent("click_city_option", {
-                          event_category: "City Selection",
-                          event_label: city,
-                        });
-                      }}
+                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
+                      onClick={() => handleCitySelect(city)}
                     >
                       {city}
                     </li>
@@ -706,17 +684,22 @@ const EventsPage = () => {
               </div>
             )}
           </div>
+
           {/* Date Picker */}
-          <div className="flex flex-col justify-center items-center mt-2">
-            <div className="relative w-full max-w-xs min-h-[60px]">
+          <div className="flex flex-col justify-center items-center mt-2 w-full max-w-xs relative">
+            <div className="relative w-full">
               <ReactDatePicker
                 ref={datePickerRef}
                 selected={selectedDate}
-                onChange={handleDateChange}
-                onFocus={openDatePicker}
+                onChange={(date) => {
+                  if (date) {
+                    setSelectedDate(date);
+                    setIsDatePickerOpen(false);
+                  }
+                }}
+                onFocus={() => setIsDatePickerOpen(true)}
                 open={isDatePickerOpen}
                 onClickOutside={() => setIsDatePickerOpen(false)}
-                onSelect={() => setIsDatePickerOpen(false)}
                 className="modern-input w-full cursor-pointer"
                 aria-label="Select date"
               />
@@ -724,8 +707,7 @@ const EventsPage = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 90 90"
                 fill="currentColor"
-                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
-                aria-hidden="true"
+                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer pointer-events-none"
               >
                 <g>
                   <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
@@ -735,20 +717,23 @@ const EventsPage = () => {
             </div>
           </div>
         </div>
-        {/* Map Component */}
+
+        {/* Map Section */}
         <section className="card-style1">
           <button
             onClick={toggleMapVisibility}
-            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-green-400 transition cursor-pointer"
+            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-green-400 transition cursor-pointer hover:bg-green-500"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
           {MemoizedGoogleMap}
         </section>
-        {/* Event List */}
+
         <p className="text-md text-center mb-2 sm:mb-1 xs:mb-1">
           *Scroll through events to find your next Mic or Festival!*
         </p>
+
+        {/* Top List: Specific City/Date Matches */}
         <section className="card-style">
           <h2
             className="title-style text-center"
@@ -758,19 +743,24 @@ const EventsPage = () => {
             {selectedTab === "Festivals" && "Festivals"}
             {selectedTab === "Other" && "Music/All Arts"}
           </h2>
+
           {selectedCity === "" ? (
-            <p>Please select a city to see events.</p>
-          ) : filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
+            <p className="text-center py-4">
+              Please select a city above to see events.
+            </p>
+          ) : filteredEventsForView.length > 0 ? (
+            filteredEventsForView.map((event) => (
               <div key={event.id} className="event-item mt-2">
                 <h3 className="text-lg font-semibold">{event.name}</h3>
                 <p className="details-label">📅 Date: {event.date}</p>
                 <p className="details-label">📍 Location: {event.location}</p>
                 {event.festival && (
-                  <p className="details-label">🏆 This is a festival!</p>
+                  <p className="details-label text-purple-600 font-bold">
+                    🏆 This is a festival!
+                  </p>
                 )}
                 {event.isMusic && !event.festival && (
-                  <p className="details-label">
+                  <p className="details-label text-green-600 font-bold">
                     🎶 This is a Music/Other event!
                   </p>
                 )}
@@ -787,132 +777,82 @@ const EventsPage = () => {
               </div>
             ))
           ) : (
-            <p>
-              {selectedTab === "Mics"
-                ? `No daily events found for ${
-                    selectedCity || "the selected city"
-                  } on ${selectedDate.toLocaleDateString()}.`
-                : selectedTab === "Festivals"
-                ? `No festivals found for ${
-                    selectedCity || "the selected city"
-                  } on ${selectedDate.toLocaleDateString()}`
-                : `No music/other events found for ${
-                    selectedCity || "the selected city"
-                  } on ${selectedDate.toLocaleDateString()}`}
+            <p className="text-center py-4">
+              No {selectedTab.toLowerCase()} found for {selectedCity} on{" "}
+              {selectedDate.toLocaleDateString()}.
             </p>
           )}
         </section>
+
         {/* Tab Buttons */}
         <div className="tab-container flex justify-center mt-4 gap-3">
-          {/* Mics (Blue) */}
           <button
-            className={`
-      tab-button font-bold px-4 py-2 rounded-full transition
-      ${
-        selectedTab === "Mics"
-          ? "bg-blue-600 text-white ring-2 ring-white ring-offset-2 shadow-lg"
-          : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-      }
-    `}
+            className={`tab-button font-bold px-4 py-2 rounded-full transition ${
+              selectedTab === "Mics"
+                ? "bg-blue-600 text-white ring-2 ring-white shadow-lg"
+                : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+            }`}
             onClick={() => setSelectedTab("Mics")}
-            aria-label="Show Open Mic Events"
           >
             Comedy Mics
           </button>
-          {/* Festivals (Purple) */}
           <button
-            className={`
-      tab-button font-bold px-4 py-2 rounded-full transition
-      ${
-        selectedTab === "Festivals"
-          ? "bg-purple-700 text-white ring-2 ring-white ring-offset-2 shadow-lg"
-          : "bg-purple-100 text-purple-800 hover:bg-purple-200"
-      }
-    `}
+            className={`tab-button font-bold px-4 py-2 rounded-full transition ${
+              selectedTab === "Festivals"
+                ? "bg-purple-700 text-white ring-2 ring-white shadow-lg"
+                : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+            }`}
             onClick={() => setSelectedTab("Festivals")}
-            aria-label="Show Festival Events"
           >
             Festivals
           </button>
-          {/* Music/Other (Green) */}
           <button
-            className={`
-      tab-button font-bold px-4 py-2 rounded-full transition
-      ${
-        selectedTab === "Other"
-          ? "bg-green-600 text-white ring-2 ring-white ring-offset-2 shadow-lg"
-          : "bg-green-100 text-green-700 hover:bg-green-200"
-      }
-    `}
+            className={`tab-button font-bold px-4 py-2 rounded-full transition ${
+              selectedTab === "Other"
+                ? "bg-green-600 text-white ring-2 ring-white shadow-lg"
+                : "bg-green-100 text-green-700 hover:bg-green-200"
+            }`}
             onClick={() => setSelectedTab("Other")}
-            aria-label="Show Music/Other Events"
           >
             Music/All arts
           </button>
         </div>
 
-        {/* All Events List */}
+        {/* Bottom List: All events in city (Virtualized) */}
         <section className="card-style">
-          <div className="flex flex-col justify-center items-center mt-2">
+          <div className="flex flex-col justify-center items-center mt-2 relative z-10">
             <div className="relative w-full max-w-xs">
               <div
-                className="modern-input cursor-pointer bg-zinc-100 text-zinc-900"
+                className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center"
                 onClick={() => {
-                  setIsSecondDropdownOpen((prev) => {
-                    const newValue = !prev;
-                    if (newValue) {
-                      sendDataLayerEvent("open_dropdown", {
-                        event_category: "Dropdown",
-                        event_label: "City Filter Dropdown",
-                      });
-                    }
-                    return newValue;
-                  });
+                  setIsSecondDropdownOpen(!isSecondDropdownOpen);
                   setIsFirstDropdownOpen(false);
                 }}
               >
                 {filterCity || "All Cities"}
               </div>
               {isSecondDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 z-10 bg-zinc-100 shadow-md rounded-lg mt-1">
+                <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-md rounded-lg mt-1 overflow-hidden">
                   <input
                     type="text"
                     placeholder="Search for a city..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 rounded-xl shadow-xl"
+                    onChange={handleSearchInputChange}
+                    className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
+                    autoFocus
                   />
-                  <ul className="max-h-48 overflow-y-auto bg-zinc-100 text-zinc-900">
+                  <ul className="max-h-48 overflow-y-auto text-zinc-900">
                     <li
-                      key="All Cities"
-                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
-                      onClick={() => {
-                        handleCityFilterChange("All Cities");
-                        setIsSecondDropdownOpen(false);
-                        sendDataLayerEvent("click_city_filter_option", {
-                          event_category: "City Filter",
-                          event_label: "All Cities",
-                        });
-                      }}
+                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
+                      onClick={() => handleCityFilterChange("All Cities")}
                     >
                       All Cities
                     </li>
-                    {sortCitiesWithSpokaneFirst(
-                      uniqueCities.filter((city) =>
-                        city.toLowerCase().includes(searchTerm.toLowerCase()),
-                      ),
-                    ).map((city) => (
+                    {dropdownCities.map((city) => (
                       <li
                         key={city}
-                        className="px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-xl shadow-xl"
-                        onClick={() => {
-                          handleCityFilterChange(city);
-                          setIsSecondDropdownOpen(false);
-                          sendDataLayerEvent("click_city_filter_option", {
-                            event_category: "City Filter",
-                            event_label: city,
-                          });
-                        }}
+                        className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
+                        onClick={() => handleCityFilterChange(city)}
                       >
                         {city}
                       </li>
@@ -922,36 +862,41 @@ const EventsPage = () => {
               )}
             </div>
           </div>
+
           <h2 className="title-style text-center mt-4">
             {filterCity === "All Cities"
-              ? selectedTab === "Mics"
-                ? "All Comedy Mics"
-                : selectedTab === "Festivals"
-                ? "All Festivals"
-                : "All Music/All Arts"
-              : selectedTab === "Mics"
-              ? `All Comedy Mics in ${filterCity}`
-              : selectedTab === "Festivals"
-              ? `All Festivals in ${filterCity}`
-              : `All Music/All Arts in ${filterCity}`}
+              ? `All ${
+                  selectedTab === "Mics"
+                    ? "Mics"
+                    : selectedTab === "Festivals"
+                    ? "Festivals"
+                    : "Arts"
+                }`
+              : `All ${
+                  selectedTab === "Mics"
+                    ? "Mics"
+                    : selectedTab === "Festivals"
+                    ? "Festivals"
+                    : "Arts"
+                } in ${filterCity}`}
           </h2>
 
           {sortedEventsByCity.length === 0 && (
-            <p>
-              No{" "}
-              {selectedTab === "Mics"
-                ? "Comedy mics"
-                : selectedTab === "Festivals"
-                ? "festivals"
-                : "music/All arts events"}{" "}
-              found for {filterCity}.
+            <p className="text-center py-4">
+              No events found for {filterCity}.
             </p>
           )}
+
+          {/* 
+             Pass data via itemData to allow React Window to work efficiently 
+             without re-rendering Row on every parent render 
+          */}
           <List
             height={600}
             itemCount={sortedEventsByCity.length}
             itemSize={385}
             width="100%"
+            itemData={itemData}
             onItemsRendered={handleOnItemsRendered}
           >
             {Row}

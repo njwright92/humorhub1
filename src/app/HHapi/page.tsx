@@ -1,20 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useHeadline } from "../components/headlinecontext";
-import Loading from "../components/loading";
+import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import Script from "next/script";
-import dynamic from "next/dynamic";
+import Loading from "../components/loading";
 
-const Header = dynamic(() => import("../components/header"), {});
-const Footer = dynamic(() => import("../components/footer"), {});
+// OPTIMIZATION: Static imports for layout stability
+import Header from "../components/header";
+import Footer from "../components/footer";
 
+// --- Types ---
 type Category = "top_stories" | "all_news";
 
-const categories: Category[] = ["top_stories", "all_news"];
-const subcategories = [
+type Article = {
+  uuid: string; // API provides UUID
+  title: string;
+  url: string;
+  description: string;
+};
+
+type ArticlesByCategory = {
+  [key in Category]?: Article[];
+};
+
+// --- Constants ---
+const CATEGORIES: Category[] = ["top_stories", "all_news"];
+const SUBCATEGORIES = [
   "general",
   "science",
   "sports",
@@ -27,70 +38,11 @@ const subcategories = [
   "travel",
 ];
 
-type Article = {
-  title: string;
-  url: string;
-  description: string;
-};
+// Access token directly (Client Side)
+const NEWS_API_TOKEN = process.env.NEXT_PUBLIC_NEWS_API;
 
-type ArticlesByCategory = {
-  [key in Category]?: Article[];
-};
-
-let NEWS_API_TOKEN: string | undefined = process.env.NEXT_PUBLIC_NEWS_API;
-
-const fetchCategoryNews = async (category: Category, subcategory: string) => {
-  try {
-    const requestOptions = {
-      method: "GET",
-    };
-
-    const params = {
-      api_token: NEWS_API_TOKEN,
-      locale: "us,ca",
-      language: "en",
-      limit: "10",
-      categories: subcategory,
-    };
-
-    const query = Object.keys(params)
-      .map(
-        (k) =>
-          `${encodeURIComponent(k)}=${encodeURIComponent(
-            params[k as keyof typeof params] as string,
-          )}`,
-      )
-      .join("&");
-
-    let endpoint = "";
-
-    switch (category) {
-      case "top_stories":
-        endpoint = `https://api.thenewsapi.com/v1/news/top`;
-        break;
-      case "all_news":
-      default:
-        endpoint = `https://api.thenewsapi.com/v1/news/all`;
-        break;
-    }
-
-    const response = await fetch(`${endpoint}?${query}`, requestOptions);
-
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return data.data.filter(
-      (article: Article) => article.title && article.description,
-    ); // Filter out articles without titles or descriptions
-  } catch (error) {
-    throw new Error("Failed to fetch news");
-  }
-};
-
-const NewsPage = () => {
+export default function NewsPage() {
+  // --- State ---
   const [selectedCategory, setSelectedCategory] =
     useState<Category>("all_news");
   const [selectedSubcategory, setSelectedSubcategory] =
@@ -99,64 +51,97 @@ const NewsPage = () => {
     {},
   );
   const [error, setError] = useState("");
-  const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
+  const [expandedArticleTitle, setExpandedArticleTitle] = useState<
+    string | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { setSelectedHeadline, setSelectedDescription } = useHeadline();
-  const router = useRouter();
-  // const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  // const handleButtonClick = () => {
-  //   if (!isButtonDisabled) {
-  //     alert("ComicBot coming soon!");
-  //     setIsButtonDisabled(true);
-  //   }
-  // };
+  // --- Fetch Logic ---
+  // Wrapped in useCallback to ensure stability
+  const fetchNews = useCallback(
+    async (category: Category, subcategory: string) => {
+      if (!NEWS_API_TOKEN) {
+        setError("API Token is missing.");
+        return;
+      }
 
-  const handleToggleArticle = (title: string) => {
-    setExpandedArticle((prev) => (prev === title ? null : title));
-  };
+      setIsLoading(true);
+      setError("");
 
-  const handleCategoryChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const category = event.target.value as Category;
-    setSelectedCategory(category);
-    fetchNews(category, selectedSubcategory);
-  };
+      try {
+        const endpoint =
+          category === "top_stories"
+            ? `https://api.thenewsapi.com/v1/news/top`
+            : `https://api.thenewsapi.com/v1/news/all`;
 
-  const handleSubcategoryChange = async (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const subcategory = event.target.value;
-    setSelectedSubcategory(subcategory);
-    fetchNews(selectedCategory, subcategory);
-  };
+        // Construct Query Params
+        const params = new URLSearchParams({
+          api_token: NEWS_API_TOKEN,
+          locale: "us,ca",
+          language: "en",
+          limit: "10",
+          categories: subcategory,
+        });
 
-  const fetchNews = async (category: Category, subcategory: string) => {
-    setIsLoading(true);
-    try {
-      const fetchedArticles = await fetchCategoryNews(category, subcategory);
-      setFetchedArticles({ [category]: fetchedArticles });
-      setExpandedArticle(null);
-    } catch (error) {
-      setError(
-        "Oops! We couldn't fetch the articles at the moment. Please try again later.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        const response = await fetch(`${endpoint}?${params.toString()}`);
 
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Filter out bad data
+        const validArticles = data.data.filter(
+          (article: Article) => article.title && article.description,
+        );
+
+        setFetchedArticles({ [category]: validArticles });
+        setExpandedArticleTitle(null); // Reset expanded view on new fetch
+      } catch (err) {
+        console.error(err);
+        setError(
+          "Oops! We couldn't fetch the articles at the moment. Please try again later.",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
+
+  // --- Effects ---
   useEffect(() => {
     fetchNews(selectedCategory, selectedSubcategory);
-  }, [selectedCategory, selectedSubcategory]);
+  }, [selectedCategory, selectedSubcategory, fetchNews]);
+
+  // --- Handlers ---
+  const handleToggleArticle = (title: string) => {
+    setExpandedArticleTitle((prev) => (prev === title ? null : title));
+  };
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    setSelectedCategory(event.target.value as Category);
+  };
+
+  const handleSubcategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    setSelectedSubcategory(event.target.value);
+  };
 
   const resetNews = () => {
     setSelectedCategory("all_news");
     setSelectedSubcategory("general");
-    setExpandedArticle(null);
+    setExpandedArticleTitle(null);
     setError("");
   };
+
+  // Helper to capitalize text
+  const formatText = (text: string) =>
+    text.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
   return (
     <>
@@ -166,11 +151,11 @@ const NewsPage = () => {
         </title>
         <meta
           name="description"
-          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news directly to your platform."
+          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news."
         />
         <meta
           name="keywords"
-          content="Humor Hub API, comedy API, jokes API, comedy content, integrate comedy"
+          content="Humor Hub API, comedy API, jokes API, comedy content"
         />
         <link rel="canonical" href="https://www.thehumorhub.com/HHapi" />
         <meta
@@ -179,7 +164,7 @@ const NewsPage = () => {
         />
         <meta
           property="og:description"
-          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news directly to your platform."
+          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news."
         />
         <meta property="og:url" content="https://www.thehumorhub.com/HHapi" />
         <meta property="og:type" content="website" />
@@ -188,17 +173,27 @@ const NewsPage = () => {
           content="https://www.thehumorhub.com/images/og-image-hhapi.jpg"
         />
       </Head>
+
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
-      ></Script>
+      />
+
       <Header />
+
       <div className="screen-container content-with-sidebar">
-        {error && <p className="error-message text-zinc-200">{error}</p>}
+        {error && (
+          <p className="error-message text-red-400 text-center mb-4 font-bold">
+            {error}
+          </p>
+        )}
+
         <h1 className="title text-3xl font-bold text-center text-zinc-200 mb-6">
           Hub News
         </h1>
+
         <div className="min-h-screen bg-zinc-900 flex flex-col items-center p-4">
+          {/* --- Controls Section --- */}
           <section className="bg-zinc-200 text-zinc-900 p-8 rounded-xl drop-shadow-md max-w-md w-full mx-2 mb-4">
             <h2 className="text-center text-2xl font-bold mb-4">
               Welcome to the News Hub!
@@ -209,33 +204,39 @@ const NewsPage = () => {
             </p>
 
             <div className="mb-4 w-full">
-              <label className="block mb-2">Choose Category:</label>
+              <label className="block mb-2 font-semibold">
+                Choose Category:
+              </label>
               <select
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                className="mb-4 p-2 rounded-xl shadow-lg bg-zinc text-zinc-900 w-full"
+                className="mb-4 p-2 rounded-xl shadow-lg bg-white text-zinc-900 w-full outline-none"
               >
-                {categories.map((category) => (
+                {CATEGORIES.map((category) => (
                   <option key={category} value={category}>
-                    {category.replace("_", " ").toUpperCase()}
+                    {formatText(category)}
                   </option>
                 ))}
               </select>
             </div>
+
             <div className="mb-4 w-full">
-              <label className="block mb-2">Choose Subcategory:</label>
+              <label className="block mb-2 font-semibold">
+                Choose Subcategory:
+              </label>
               <select
                 value={selectedSubcategory}
                 onChange={handleSubcategoryChange}
-                className="mb-4 p-2 rounded-xl shadow-lg bg-zinc text-zinc-900 w-full"
+                className="mb-4 p-2 rounded-xl shadow-lg bg-white text-zinc-900 w-full outline-none"
               >
-                {subcategories.map((subcategory) => (
+                {SUBCATEGORIES.map((subcategory) => (
                   <option key={subcategory} value={subcategory}>
-                    {subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}
+                    {formatText(subcategory)}
                   </option>
                 ))}
               </select>
             </div>
+
             <div className="flex justify-center mt-4">
               <button
                 onClick={resetNews}
@@ -245,46 +246,47 @@ const NewsPage = () => {
               </button>
             </div>
           </section>
+
+          {/* --- Results Section --- */}
           {isLoading ? (
             <Loading />
           ) : (
-            Object.keys(fetchedArticles).map((category) => (
-              <section
-                key={category}
-                className="category-container mb-8 w-full"
-              >
-                <div className="flex flex-col text-zinc-200 mb-4 md:flex-row md:items-center">
-                  <div className="flex-grow">
-                    <h2 className="category-title text-center text-3xl font-bold mb-2 w-full">
-                      {category.replace("_", " ").toUpperCase()}
+            Object.keys(fetchedArticles).map((categoryKey) => {
+              const cat = categoryKey as Category;
+              const articles = fetchedArticles[cat];
+
+              if (!articles || articles.length === 0) return null;
+
+              return (
+                <section
+                  key={cat}
+                  className="category-container mb-8 w-full max-w-4xl"
+                >
+                  <div className="text-center mb-6">
+                    <h2 className="text-3xl font-bold text-zinc-100 mb-2">
+                      {formatText(cat)}
                     </h2>
-                    <h3 className="text-center text-xl font-bold mb-2 w-full underline underline-offset-4 decoration-orange-500 decoration-[0.125rem]">
-                      {selectedSubcategory.charAt(0).toUpperCase() +
-                        selectedSubcategory.slice(1)}{" "}
-                      News
+                    <h3 className="text-xl font-bold text-zinc-300 underline underline-offset-4 decoration-orange-500 decoration-[0.125rem]">
+                      {formatText(selectedSubcategory)} News
                     </h3>
                   </div>
-                </div>
 
-                {fetchedArticles[category as Category]?.map(
-                  (article, index) => (
+                  {articles.map((article, index) => (
                     <article
-                      key={index}
-                      className="news-item flex flex-col md:flex-row items-center justify-between bg-zinc-800 p-4 rounded-lg mb-4"
+                      key={`${article.uuid}-${index}`}
+                      className="news-item flex flex-col md:flex-row items-start justify-between bg-zinc-800 p-4 rounded-lg mb-4 transition-colors hover:bg-zinc-750"
                     >
-                      <div className="flex-1 flex items-center">
+                      <div className="flex-1 flex items-start w-full">
                         <button
                           onClick={() => handleToggleArticle(article.title)}
-                          className="mr-2"
-                          aria-expanded={
-                            expandedArticle === article.title ? "true" : "false"
-                          }
+                          className="mr-3 mt-1 flex-shrink-0"
+                          aria-expanded={expandedArticleTitle === article.title}
                           aria-label="Toggle article details"
                         >
-                          {expandedArticle === article.title ? (
+                          {expandedArticleTitle === article.title ? (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-orange-500 drop-shadow-xl"
+                              className="h-6 w-6 text-orange-500 drop-shadow-xl"
                               viewBox="0 0 24 24"
                               fill="currentColor"
                             >
@@ -293,7 +295,7 @@ const NewsPage = () => {
                           ) : (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-orange-500"
+                              className="h-6 w-6 text-orange-500"
                               viewBox="0 0 24 24"
                               fill="currentColor"
                             >
@@ -301,41 +303,41 @@ const NewsPage = () => {
                             </svg>
                           )}
                         </button>
-                        <div className="flex-grow flex flex-col items-center md:items-start">
+
+                        <div className="flex-grow flex flex-col">
                           <h3
                             onClick={() => handleToggleArticle(article.title)}
-                            className="cursor-pointer text-zinc-400 text-xl"
+                            className="cursor-pointer text-zinc-300 text-xl font-semibold hover:text-orange-400 transition-colors"
                           >
                             {article.title}
                           </h3>
-                          {expandedArticle === article.title && (
-                            <>
-                              <p className="news-description text-zinc-200">
+
+                          {expandedArticleTitle === article.title && (
+                            <div className="mt-3 animate-fade-in-down">
+                              <p className="news-description text-zinc-200 mb-2 leading-relaxed">
                                 {article.description}
                               </p>
                               <a
                                 href={article.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="news-link text-blue-500 underline"
+                                className="news-link text-blue-400 hover:text-blue-300 underline"
                               >
                                 Read full article
                               </a>
-                            </>
+                            </div>
                           )}
                         </div>
                       </div>
                     </article>
-                  ),
-                )}
-              </section>
-            ))
+                  ))}
+                </section>
+              );
+            })
           )}
         </div>
       </div>
       <Footer />
     </>
   );
-};
-
-export default NewsPage;
+}

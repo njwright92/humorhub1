@@ -1,23 +1,37 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Optimized client-side routing
+import dynamic from "next/dynamic";
 import news from "../../app/news.webp";
-// 💡 FIX: Import the pre-initialized 'auth' instance from your config file
 import { auth } from "../../../firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
-import AuthModal from "./authModal";
+
+// Dynamic import for the modal to reduce initial bundle size
+const AuthModal = dynamic(() => import("./authModal"));
 
 const HumorHubAPISection: React.FC = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const router = useRouter();
 
   // Monitor authentication state
   useEffect(() => {
-    // ✅ FIX: Use the imported 'auth' instance directly
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
     });
-    return () => unsubscribe(); // Clean up subscription on unmount
+    return () => unsubscribe();
   }, []);
+
+  // Optimized Action Handler
+  const handleAction = useCallback(() => {
+    if (isUserSignedIn) {
+      router.push("/HHapi"); // Instant SPA navigation
+    } else {
+      setIsAuthModalOpen(true);
+    }
+  }, [isUserSignedIn, router]);
 
   return (
     <div className="card-style rounded-lg shadow-lg p-4 sm:p-4">
@@ -29,15 +43,14 @@ const HumorHubAPISection: React.FC = () => {
       </h3>
 
       <div className="rounded-lg shadow-lg bg-zinc-750 text-zinc-200 flex flex-col sm:flex-row-reverse items-center justify-center p-4">
+        {/* Image Container */}
         <div
           className="cursor-pointer transition-transform hover:scale-105"
-          onClick={() => {
-            if (!isUserSignedIn) {
-              setIsAuthModalOpen(true);
-            } else {
-              location.href = "/HHapi";
-            }
-          }}
+          onClick={handleAction}
+          role="button"
+          tabIndex={0}
+          aria-label="Go to News Section"
+          onKeyDown={(e) => e.key === "Enter" && handleAction()}
         >
           <Image
             src={news}
@@ -51,19 +64,14 @@ const HumorHubAPISection: React.FC = () => {
           />
         </div>
 
-        <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0">
+        {/* Text & Button Container */}
+        <div className="flex-1 text-center sm:text-left mt-2 sm:mt-0 sm:mr-4">
           <p className="mb-4 mt-2 sm:mb-2 text-sm sm:text-sm">
             Looking for something topical? Check out the Hub News!
           </p>
 
           <button
-            onClick={() => {
-              if (!isUserSignedIn) {
-                setIsAuthModalOpen(true);
-              } else {
-                location.href = "/HHapi";
-              }
-            }}
+            onClick={handleAction}
             className="btn bg-green-500 text-zinc-200 font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors cursor-pointer w-full sm:w-auto"
           >
             Check It Out
@@ -71,10 +79,16 @@ const HumorHubAPISection: React.FC = () => {
         </div>
       </div>
 
-      <AuthModal
-        onClose={() => setIsAuthModalOpen(false)}
-        isOpen={isAuthModalOpen}
-      />
+      {/* 
+         Conditional Rendering: Only render Modal code if it's open.
+         This keeps the DOM lighter.
+      */}
+      {isAuthModalOpen && (
+        <AuthModal
+          onClose={() => setIsAuthModalOpen(false)}
+          isOpen={isAuthModalOpen}
+        />
+      )}
     </div>
   );
 };

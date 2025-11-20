@@ -1,10 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ReactNode } from "react";
 import { HeadlineProvider } from "./components/headlinecontext";
 import "./globals.css";
 import Script from "next/script";
 
-// 💡 Using an array for keywords is cleaner and standard practice.
+export const viewport: Viewport = {
+  themeColor: "#18181b", // Matches bg-zinc-900
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics",
   description:
@@ -21,7 +26,10 @@ export const metadata: Metadata = {
     "best jokes",
     "comedy venues",
   ],
-  // 💡 Note: og:site_name is now included here instead of manual <meta> tags.
+  // 💡 OPTIMIZATION: Handle Icons here, not via JavaScript injection
+  icons: {
+    apple: "/apple.png",
+  },
   openGraph: {
     title: "Humor Hub - The Go-To Platform for Everything Comedy",
     description:
@@ -37,7 +45,6 @@ export const metadata: Metadata = {
     description:
       "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
   },
-  // Charset and Viewport are handled automatically by Next.js when omitted here.
 };
 
 interface RootLayoutProps {
@@ -49,16 +56,14 @@ const GTM_ID = "GTM-KVJSFKV8";
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
-      {/* 🛑 REMOVED MANUAL <head> TAG 
-          (This prevents hydration errors and leverages Next.js automatic metadata handling) 
-      */}
-
-      {/* 1. GTM SCRIPT OPTIMIZATION 
-          Using strategy="worker" offloads the script to a web worker, reducing main thread blocking. 
+      {/* 
+         1. GTM SCRIPT 
+         Using 'afterInteractive' is the safest, high-perf method for GTM.
+         'worker' often breaks DOM triggers (clicks, form submits) unless heavily configured.
       */}
       <Script
         id="gtm-script"
-        strategy="worker"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -70,26 +75,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         }}
       />
 
-      {/* 2. APPLE TOUCH ICON SCRIPT OPTIMIZATION 
-          Using lazyOnload ensures this non-critical resource loads after the main content.
-      */}
-      <Script
-        id="apple-touch-icon-link"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
-          const link = document.createElement('link');
-          link.rel = 'apple-touch-icon';
-          link.href = '/apple.png';
-          document.head.appendChild(link);
-        `,
-        }}
-      />
-
       <body>
-        {/* 3. GTM NOSCRIPT TAG 
-            Must be the first element inside <body>. Added aria-hidden="true" for accessibility.
-        */}
+        {/* 2. GTM NOSCRIPT (Must be first inside body) */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -101,9 +88,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
           ></iframe>
         </noscript>
 
-        {/* 4. REMOVED REDUNDANT DIV
-            The children are wrapped directly by HeadlineProvider.
-        */}
+        {/* 3. MAIN CONTENT */}
         <HeadlineProvider>{children}</HeadlineProvider>
       </body>
     </html>
