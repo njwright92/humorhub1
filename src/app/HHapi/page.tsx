@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import Script from "next/script";
+import Image from "next/image"; // Good practice to have if you add images later
+import Link from "next/link";
 import Loading from "../components/loading";
 
 // OPTIMIZATION: Static imports for layout stability
@@ -13,10 +15,12 @@ import Footer from "../components/footer";
 type Category = "top_stories" | "all_news";
 
 type Article = {
-  uuid: string; // API provides UUID
+  uuid: string;
   title: string;
   url: string;
   description: string;
+  image_url?: string; // Added optional image support if API provides it
+  source?: string;
 };
 
 type ArticlesByCategory = {
@@ -38,7 +42,6 @@ const SUBCATEGORIES = [
   "travel",
 ];
 
-// Access token directly (Client Side)
 const NEWS_API_TOKEN = process.env.NEXT_PUBLIC_NEWS_API;
 
 export default function NewsPage() {
@@ -57,7 +60,6 @@ export default function NewsPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // --- Fetch Logic ---
-  // Wrapped in useCallback to ensure stability
   const fetchNews = useCallback(
     async (category: Category, subcategory: string) => {
       if (!NEWS_API_TOKEN) {
@@ -74,7 +76,6 @@ export default function NewsPage() {
             ? `https://api.thenewsapi.com/v1/news/top`
             : `https://api.thenewsapi.com/v1/news/all`;
 
-        // Construct Query Params
         const params = new URLSearchParams({
           api_token: NEWS_API_TOKEN,
           locale: "us,ca",
@@ -91,13 +92,12 @@ export default function NewsPage() {
 
         const data = await response.json();
 
-        // Filter out bad data
         const validArticles = data.data.filter(
           (article: Article) => article.title && article.description,
         );
 
         setFetchedArticles({ [category]: validArticles });
-        setExpandedArticleTitle(null); // Reset expanded view on new fetch
+        setExpandedArticleTitle(null);
       } catch (err) {
         console.error(err);
         setError(
@@ -139,38 +139,16 @@ export default function NewsPage() {
     setError("");
   };
 
-  // Helper to capitalize text
   const formatText = (text: string) =>
     text.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
   return (
     <>
       <Head>
-        <title>
-          Hub News - Access the Latest stories in all news categories
-        </title>
+        <title>Hub News - Latest Comedy & World Stories</title>
         <meta
           name="description"
-          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news."
-        />
-        <meta
-          name="keywords"
-          content="Humor Hub API, comedy API, jokes API, comedy content"
-        />
-        <link rel="canonical" href="https://www.thehumorhub.com/HHapi" />
-        <meta
-          property="og:title"
-          content="Humor Hub API - Access the Latest Comedy Content"
-        />
-        <meta
-          property="og:description"
-          content="Integrate with Humor Hub's API to get the latest jokes, events, and comedy news."
-        />
-        <meta property="og:url" content="https://www.thehumorhub.com/HHapi" />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:image"
-          content="https://www.thehumorhub.com/images/og-image-hhapi.jpg"
+          content="Get the latest jokes, events, and comedy news with Humor Hub."
         />
       </Head>
 
@@ -181,75 +159,79 @@ export default function NewsPage() {
 
       <Header />
 
-      <div className="screen-container content-with-sidebar">
-        {error && (
-          <p className="error-message text-red-400 text-center mb-4 font-bold">
-            {error}
-          </p>
-        )}
-
-        <h1 className="title text-3xl font-bold text-center text-zinc-200 mb-6">
+      <main className="screen-container content-with-sidebar bg-transparent">
+        {/* Page Title - Styled to match Home Page */}
+        <h1 className="title text-4xl md:text-6xl font-extrabold text-center mb-8 tracking-wide">
           Hub News
         </h1>
 
-        <div className="min-h-screen bg-zinc-900 flex flex-col items-center p-4">
-          {/* --- Controls Section --- */}
-          <section className="bg-zinc-200 text-zinc-900 p-8 rounded-xl drop-shadow-md max-w-md w-full mx-2 mb-4">
-            <h2 className="text-center text-2xl font-bold mb-4">
-              Welcome to the News Hub!
+        {error && (
+          <div className="max-w-2xl mx-auto bg-red-900/50 border-2 border-red-500 p-4 rounded-xl mb-6">
+            <p className="text-red-200 font-bold text-center">{error}</p>
+          </div>
+        )}
+
+        <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
+          {/* --- Controls Section (Card Style) --- */}
+          <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl w-full max-w-2xl mx-auto mb-10 border border-zinc-700">
+            <h2 className="font-comic text-2xl font-bold mb-4 text-amber-300">
+              Filter the Feed
             </h2>
-            <p className="text-center mb-4 text-lg">
-              Get real time News, and more with the news hub. Browse top
-              categories and search for the freshest content.
+            <p className="text-zinc-300 mb-6 text-md leading-relaxed">
+              Browse top categories and search for the freshest content.
             </p>
 
-            <div className="mb-4 w-full">
-              <label className="block mb-2 font-semibold">
-                Choose Category:
-              </label>
-              <select
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-                className="mb-4 p-2 rounded-xl shadow-lg bg-white text-zinc-900 w-full outline-none"
-              >
-                {CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {formatText(category)}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+              <div className="flex flex-col text-left">
+                <label className="mb-2 font-bold text-zinc-200 text-sm uppercase tracking-wider">
+                  Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                  className="bg-zinc-800 border-4 border-zinc-600 p-2 rounded-lg shadow-md text-zinc-200 focus:border-amber-300 cursor-pointer"
+                >
+                  {CATEGORIES.map((category) => (
+                    <option key={category} value={category}>
+                      {formatText(category)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex flex-col text-left">
+                <label className="mb-2 font-bold text-zinc-200 text-sm uppercase tracking-wider">
+                  Subcategory
+                </label>
+                <select
+                  value={selectedSubcategory}
+                  onChange={handleSubcategoryChange}
+                  className="bg-zinc-800 border-4 border-zinc-600 p-2 rounded-lg shadow-md text-zinc-200 focus:border-amber-300 cursor-pointer"
+                >
+                  {SUBCATEGORIES.map((subcategory) => (
+                    <option key={subcategory} value={subcategory}>
+                      {formatText(subcategory)}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="mb-4 w-full">
-              <label className="block mb-2 font-semibold">
-                Choose Subcategory:
-              </label>
-              <select
-                value={selectedSubcategory}
-                onChange={handleSubcategoryChange}
-                className="mb-4 p-2 rounded-xl shadow-lg bg-white text-zinc-900 w-full outline-none"
-              >
-                {SUBCATEGORIES.map((subcategory) => (
-                  <option key={subcategory} value={subcategory}>
-                    {formatText(subcategory)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-8">
               <button
                 onClick={resetNews}
-                className="bg-red-500 text-zinc-200 font-semibold py-2 px-4 rounded-2xl shadow-xl hover:bg-red-600 transition-colors"
+                className="px-2 py-1 bg-red-700 hover:bg-red-600 text-zinc-200 font-medium rounded-lg"
               >
-                Reset
+                Reset Filters
               </button>
             </div>
           </section>
 
           {/* --- Results Section --- */}
           {isLoading ? (
-            <Loading />
+            <div className="py-10">
+              <Loading />
+            </div>
           ) : (
             Object.keys(fetchedArticles).map((categoryKey) => {
               const cat = categoryKey as Category;
@@ -260,83 +242,116 @@ export default function NewsPage() {
               return (
                 <section
                   key={cat}
-                  className="category-container mb-8 w-full max-w-4xl"
+                  className="w-full animate-slide-in"
+                  aria-live="polite"
                 >
-                  <div className="text-center mb-6">
-                    <h2 className="text-3xl font-bold text-zinc-100 mb-2">
+                  <div className="text-center mb-8">
+                    <h2 className="text-3xl md:text-4xl font-bold text-amber-300 underline mb-4">
                       {formatText(cat)}
                     </h2>
-                    <h3 className="text-xl font-bold text-zinc-300 underline underline-offset-4 decoration-orange-500 decoration-[0.125rem]">
-                      {formatText(selectedSubcategory)} News
+
+                    <h3 className="text-2xl font-medium text-zinc-200 mt-4 mb-4">
+                      {formatText(selectedSubcategory)} Headlines
                     </h3>
                   </div>
 
-                  {articles.map((article, index) => (
-                    <article
-                      key={`${article.uuid}-${index}`}
-                      className="news-item flex flex-col md:flex-row items-start justify-between bg-zinc-800 p-4 rounded-lg mb-4 transition-colors hover:bg-zinc-750"
-                    >
-                      <div className="flex-1 flex items-start w-full">
-                        <button
-                          onClick={() => handleToggleArticle(article.title)}
-                          className="mr-3 mt-1 flex-shrink-0"
-                          aria-expanded={expandedArticleTitle === article.title}
-                          aria-label="Toggle article details"
-                        >
-                          {expandedArticleTitle === article.title ? (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6 text-orange-500 drop-shadow-xl"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path d="M12 4l-7 7h4v6h6v-6h4l-7-7z" />
-                            </svg>
-                          ) : (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6 text-orange-500"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path d="M12 20l7-7h-4v-6h-6v6h-4l7 7z" />
-                            </svg>
-                          )}
-                        </button>
-
-                        <div className="flex-grow flex flex-col">
-                          <h3
+                  <div className="space-y-4">
+                    {articles.map((article, index) => (
+                      <article
+                        key={`${article.uuid}-${index}`}
+                        className={`
+                          bg-zinc-800/80 backdrop-blur-sm border-l-4 
+                          ${
+                            expandedArticleTitle === article.title
+                              ? "border-amber-300 bg-zinc-800"
+                              : "border-zinc-600"
+                          }
+                          p-5 rounded-r-xl shadow-md transition-all duration-300 hover:bg-zinc-700
+                        `}
+                      >
+                        <div className="flex items-start gap-4">
+                          {/* Toggle Icon */}
+                          <button
                             onClick={() => handleToggleArticle(article.title)}
-                            className="cursor-pointer text-zinc-300 text-xl font-semibold hover:text-orange-400 transition-colors"
+                            className="mt-1 text-amber-300 hover:text-amber-200 transition-colors flex-shrink-0 p-1 focus:outline-none focus:ring-2 focus:ring-amber-300 rounded"
+                            aria-expanded={
+                              expandedArticleTitle === article.title
+                            }
+                            aria-label={
+                              expandedArticleTitle === article.title
+                                ? "Collapse article"
+                                : "Expand article"
+                            }
                           >
-                            {article.title}
-                          </h3>
-
-                          {expandedArticleTitle === article.title && (
-                            <div className="mt-3 animate-fade-in-down">
-                              <p className="news-description text-zinc-200 mb-2 leading-relaxed">
-                                {article.description}
-                              </p>
-                              <a
-                                href={article.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="news-link text-blue-400 hover:text-blue-300 underline"
+                            {expandedArticleTitle === article.title ? (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={3}
                               >
-                                Read full article
-                              </a>
-                            </div>
-                          )}
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                            ) : (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={3}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            )}
+                          </button>
+
+                          {/* Content */}
+                          <div className="flex-grow">
+                            <h3
+                              onClick={() => handleToggleArticle(article.title)}
+                              className="cursor-pointer text-lg md:text-xl font-bold text-zinc-100 hover:text-amber-300 transition-colors leading-tight"
+                            >
+                              {article.title}
+                            </h3>
+
+                            {/* Expanded Content */}
+                            {expandedArticleTitle === article.title && (
+                              <div className="mt-4 pt-4 border-t border-zinc-600 animate-slide-in">
+                                <p className="text-zinc-300 mb-4 leading-relaxed text-md">
+                                  {article.description}
+                                </p>
+                                <a
+                                  href={article.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn text-sm inline-block hover:scale-100"
+                                >
+                                  Read Full Article &rarr;
+                                </a>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </article>
-                  ))}
+                      </article>
+                    ))}
+                  </div>
                 </section>
               );
             })
           )}
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

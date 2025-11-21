@@ -213,16 +213,16 @@ export default function SearchBar({
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center p-1 bg-zinc-100 text-zinc-900 rounded-full hover:bg-zinc-200 transition-colors"
+          className="flex items-center justify-center p-1 bg-zinc-100 text-zinc-900 rounded-full transform transition-colors"
           aria-label="Toggle search"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
+            className="h-8 w-8"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
@@ -243,7 +243,7 @@ export default function SearchBar({
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-72 sm:w-80 z-50">
           <form
             onSubmit={handleSearch}
-            className="flex flex-col items-center rounded-lg bg-white shadow-xl p-2 animate-fade-in-down border border-zinc-200"
+            className="flex flex-col items-center rounded-lg bg-zinc-100 shadow-xl p-2 animate-fade-in-down border border-zinc-200"
           >
             <input
               ref={inputRef}
@@ -258,14 +258,14 @@ export default function SearchBar({
             <div className="flex gap-2 w-full mt-2">
               <button
                 type="button"
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-700 rounded-lg bg-zinc-200 hover:bg-zinc-300 transition-colors"
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-200 hover:bg-zinc-300 transition-colors"
                 onClick={closeSearchBar}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-2 py-2 text-sm font-semibold text-white rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-700 transition-colors"
               >
                 Search
               </button>

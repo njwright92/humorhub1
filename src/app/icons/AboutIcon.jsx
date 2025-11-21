@@ -3,7 +3,7 @@ import React from "react";
 
 const AboutIcon = () => (
   <svg
-    className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
+    className="h-8 w-8 text-zinc-900 group-hover:text-zinc-700 transition-colors"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"

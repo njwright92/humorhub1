@@ -53,19 +53,6 @@ const About: React.FC = () => (
         </p>
       </section>
 
-      {/* <section className="mb-8 text-left">
-        <h2 className="text-2xl font-semibold text-orange-500 mb-2">JokePad</h2>
-        <p className="mb-2">
-          Your digital comedy notebook: tag by topic, stage, or date. Track
-          audience reactions, log notes on delivery, and revisit old riffs with
-          search, sort, and archive functionality.
-        </p>
-        <p>
-          Whether it is late-night set prep or on-the-road revisions, JokePad
-          keeps your material organized and actionable.
-        </p>
-      </section> */}
-
       <section className="mb-8 text-left">
         <h2 className="text-2xl font-semibold text-orange-500 mb-2">
           Hub News
@@ -79,7 +66,9 @@ const About: React.FC = () => (
       </section>
 
       <Link href="/">
-        <span className="text-blue-500 hover:underline">← Back to Home</span>
+        <span className="text-blue-500 hover:underline mt-2">
+          ← Back to Home
+        </span>
       </Link>
     </div>
 

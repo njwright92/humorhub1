@@ -173,7 +173,9 @@ const ContactPage: React.FC = () => {
           </form>
         </section>
         <Link href="/">
-          <span className="text-blue-500 hover:underline">← Back to Home</span>
+          <span className="text-blue-500 hover:underline mt-2">
+            ← Back to Home
+          </span>
         </Link>
       </div>
       <Footer />

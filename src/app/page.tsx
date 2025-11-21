@@ -47,43 +47,60 @@ export default function Home() {
     <>
       <Header />
 
-      <div className="screen-container content-with-sidebar mr-2">
-        <h1 className="hidden md:block text-zinc-200 text-4xl font-bold mb-6">
+      <div className="screen-container content-with-sidebar">
+        <h1 className="hidden md:block text-zinc-200 text-6xl font-bold mb-6 tracking-wide">
           Humor Hub!
         </h1>
 
-        {/* --- Hero Section --- */}
-        <section className="card-style bg-zinc-900 text-zinc-200 p-4 sm:p-4 rounded-xl shadow-md flex flex-col items-center">
-          <h2 className="title-style text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
-            Mic Finder!
-          </h2>
+        <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl max-w-5xl mx-auto">
+          {/* Title */}
+          <h2 className="title-style mb-8 text-center sm:mb-10">Mic Finder!</h2>
 
-          <div className="flex flex-col md:flex-row-reverse items-center w-full">
-            <div className="flex-1 text-center items-center md:text-right">
-              <p className="text-sm sm:text-md lg:text-lg mb-4 box-shadow-md text-zinc-300">
+          {/* Layout: Stack (Mobile) -> Row (Desktop) */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
+            {/* LEFT SIDE */}
+            <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
+              <p className="text-md md:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
                 Looking for your next Mic?
                 <br />
-                MicFinder helps comedians find and share open mics worldwide!
+                <span className="font-bold">MicFinder</span> helps comedians
+                find and share open mics worldwide!
                 <br />
-                With more than 1600+ Mics/Festivals in over 500 cities!
+                <span className="mt-2 block">
+                  More than 1600+ Mics/Festivals in over 500 cities!
+                </span>
               </p>
-              <EventForm />
-            </div>
 
-            <div className="md:w-1/2 flex items-center justify-center gap-4 mb-4 md:mb-0">
+              <EventForm />
+
+              {/* CLEANED UP: Applied classes directly to Link, removed wrapper div & span */}
               <Link
                 href="/MicFinder"
-                className="flex items-center justify-center"
+                className="btn w-80 text-center self-center"
+                onClick={() =>
+                  sendDataLayerEvent("click_micfinder_button", {
+                    event_category: "Navigation",
+                    event_label: "MicFinder Button",
+                  })
+                }
               >
+                Find Your Mic!
+              </Link>
+            </div>
+
+            {/* RIGHT SIDE */}
+            <div className="flex-1 flex justify-center md:justify-end w-full md:w-auto">
+              <Link href="/MicFinder" className="relative group">
+                {/* Glow Effect */}
+                <div className="absolute -inset-1 bg-amber-300 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200"></div>
                 <Image
                   src={micFinder}
-                  alt="Mic Finder"
-                  width={125}
-                  height={125}
-                  className="rounded-xl shadow-lg cursor-pointer transition-transform hover:scale-105"
-                  priority // Load immediately (Above the Fold)
-                  style={{ objectFit: "contain", maxWidth: "100%" }}
-                  sizes="(max-width: 640px) 40vw, (max-width: 1024px) 60vw, 150px"
+                  alt="Mic Finder Logo"
+                  width={200}
+                  height={200}
+                  className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+                  priority
+                  style={{ objectFit: "contain" }}
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_image", {
                       event_category: "Navigation",
@@ -91,19 +108,6 @@ export default function Home() {
                     })
                   }
                 />
-              </Link>
-              <Link href="/MicFinder">
-                <span
-                  className="btn text-md sm:text-lg py-2 px-4 whitespace-nowrap"
-                  onClick={() =>
-                    sendDataLayerEvent("click_micfinder_button", {
-                      event_category: "Navigation",
-                      event_label: "MicFinder Button",
-                    })
-                  }
-                >
-                  Find Your Mic
-                </span>
               </Link>
             </div>
           </div>

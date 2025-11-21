@@ -7,25 +7,14 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-// Ensure you import specific instances from your config to avoid initialization delays
 import { db, auth } from "../../../firebase.config";
 import hh from "../../app/hh.webp";
-
-/* 
-   OPTIMIZATION NOTE: 
-   Import Icons directly. Dynamic importing small icons causes 
-   layout shifts (flickering) and unnecessary network requests. 
-*/
 import MicFinderIcon from "../icons/MicFinderIcon";
 import NewsIcon from "../icons/NewsIcon";
 import ContactIcon from "../icons/ContactIcon";
 import AboutIcon from "../icons/AboutIcon";
 import UserIconComponent from "../icons/UserIconComponent";
 
-/* 
-   Keep SearchBar and AuthModal dynamic because they contain 
-   heavier logic/forms that aren't needed strictly on First Contentful Paint 
-*/
 const SearchBar = dynamic(() => import("./searchBar"), {
   ssr: false,
   loading: () => null,
@@ -63,6 +52,17 @@ export default function Header() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [cityList, setCityList] = useState<string[]>([]);
   const router = useRouter();
+  // 1. Add this state to remember where to go
+  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
+
+  // 2. Add this effect to redirect automatically after sign in
+  useEffect(() => {
+    if (isUserSignedIn && pendingRedirect) {
+      router.push(pendingRedirect);
+      setPendingRedirect(null);
+      setIsAuthModalOpen(false);
+    }
+  }, [isUserSignedIn, pendingRedirect, router]);
 
   const debouncedSearchRef = useRef<((term: string) => void) | null>(null);
 
@@ -113,11 +113,22 @@ export default function Header() {
     return () => unsub();
   }, []);
 
-  /* Navigation Helper: Uses router.push for SPA performance instead of location.href */
+  /* UPDATED: Sets pending redirect for News */
   const handleNewsClick = useCallback(() => {
     if (isUserSignedIn) {
       router.push("/HHapi");
     } else {
+      setPendingRedirect("/HHapi"); // Remember we want to go to News
+      setIsAuthModalOpen(true);
+    }
+  }, [isUserSignedIn, router]);
+
+  /* NEW: Sets pending redirect for Profile */
+  const handleProfileClick = useCallback(() => {
+    if (isUserSignedIn) {
+      router.push("/Profile");
+    } else {
+      setPendingRedirect("/Profile"); // Remember we want to go to Profile
       setIsAuthModalOpen(true);
     }
   }, [isUserSignedIn, router]);
@@ -179,108 +190,127 @@ export default function Header() {
           </Link>
 
           {/* --- Sidebar (Desktop) --- */}
-          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-zinc-800 bg-opacity-90 left-0 z-50 shadow-lg transition-all">
+          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300 bg-opacity-90 left-0 z-50 shadow-lg transition-all">
             {/* Top Logo */}
             <div className="flex flex-col items-center space-y-6 mt-4">
               <Link href="/" aria-label="Home" className="relative group">
                 <Image
                   src={hh}
                   alt="Mic"
-                  width={50}
-                  height={50}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-2 transform transition-transform hover:scale-105"
+                  width={60}
+                  height={60}
+                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-2 transform transition-transform hover:scale-110 shadow-md"
                   priority
                 />
-                <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                {/* Home Tooltip */}
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
                   Home
                 </span>
               </Link>
             </div>
 
             {/* Nav Icons */}
-            <div className="flex flex-col items-center justify-center space-y-6 mt-4">
-              <div className="h-6 w-full">
+            <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full text-zinc-900 ">
+              <div className="h-8 w-8 transform transition-transform hover:scale-110">
                 <SearchBar
                   onSearch={handleOnSearch}
                   isUserSignedIn={isUserSignedIn}
                   setIsAuthModalOpen={setIsAuthModalOpen}
                 />
               </div>
+
+              {/* 1. Mic Finder */}
               <Link
                 href="/MicFinder"
                 aria-label="Mic Finder"
-                className="relative group transform transition-transform hover:scale-105"
+                className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
               >
                 <MicFinderIcon />
-                <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
                   Mic Finder
                 </span>
               </Link>
 
-              {/* News Button (Not a Link because of conditional logic) */}
-              <button
-                onClick={handleNewsClick}
-                aria-label="News"
-                className="relative group transform transition-transform hover:scale-105"
-              >
-                <NewsIcon />
-                <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                  News
-                </span>
-              </button>
+              {/* 2. News (Conditional: Link if signed in, Button if not) */}
+              {isUserSignedIn ? (
+                <Link
+                  href="/HHapi"
+                  aria-label="News"
+                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                >
+                  <NewsIcon />
+                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
+                    News
+                  </span>
+                </Link>
+              ) : (
+                <button
+                  onClick={handleNewsClick}
+                  aria-label="News (Sign In Required)"
+                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                >
+                  <NewsIcon />
+                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
+                    News
+                  </span>
+                </button>
+              )}
 
-              <Link
-                href="/contact"
-                aria-label="Contact Us"
-                className="relative group transform transition-transform hover:scale-105"
-              >
-                <ContactIcon />
-                <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                  Contact Us
-                </span>
-              </Link>
-
-              <Link
-                href="/about"
-                aria-label="About"
-                className="relative group transform transition-transform hover:scale-105"
-              >
-                <AboutIcon />
-                <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                  About
-                </span>
-              </Link>
-
-              {/* Auth Button/Link */}
+              {/* 3. Profile (Conditional Link vs Button) */}
               {isUserSignedIn ? (
                 <Link
                   href="/Profile"
                   aria-label="Profile"
-                  className="relative group transform transition-transform hover:scale-105"
+                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
                 >
                   <UserIconComponent />
-                  <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
                     Profile
                   </span>
                 </Link>
               ) : (
                 <button
-                  onClick={toggleAuthModal}
-                  className="text-zinc-200 hover:text-orange-500 relative group transform transition-transform hover:scale-105"
-                  aria-label="Sign In/Up"
+                  /* UPDATED: Use handleProfileClick instead of toggleAuthModal */
+                  onClick={handleProfileClick}
+                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                  aria-label="Sign In"
                 >
                   <UserIconComponent />
-                  <span className="absolute left-14 top-1/2 -translate-y-1/2 bg-black text-zinc-100 text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none">
+                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
                     Profile
                   </span>
                 </button>
               )}
+
+              {/* 4. Contact Us */}
+              <Link
+                href="/contact"
+                aria-label="Contact Us"
+                className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+              >
+                <ContactIcon />
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  Contact Us
+                </span>
+              </Link>
+
+              {/* 5. About */}
+              <Link
+                href="/about"
+                aria-label="About"
+                className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+              >
+                <AboutIcon />
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
+                  About
+                </span>
+              </Link>
             </div>
 
             {/* Menu Toggle (Desktop Sidebar Bottom) */}
             <button
               onClick={toggleMenu}
-              className="text-zinc-200 hover:text-orange-500 mt-auto mb-2"
+              className="text-zinc-900 hover:text-zinc-700 mt-auto mb-4 transform transition-transform hover:scale-110"
               aria-label="Open full menu"
             >
               <svg
@@ -356,8 +386,8 @@ export default function Header() {
                 <Image
                   src={hh}
                   alt="Mic"
-                  width={60}
-                  height={60}
+                  width={70}
+                  height={70}
                   className="rounded-full mt-2 cursor-pointer"
                   priority
                 />
@@ -371,25 +401,47 @@ export default function Header() {
                   Mic Finder
                 </Link>
 
-                <button
-                  onClick={() => {
-                    setIsMenuOpen(false); // Close menu on click
-                    handleNewsClick();
-                  }}
-                  className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
-                >
-                  News
-                </button>
+                {/* NEWS: Link if Signed In, Button if Signed Out */}
+                {isUserSignedIn ? (
+                  <Link
+                    href="/HHapi"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                  >
+                    News
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleNewsClick(); /* Sets pending redirect to /HHapi */
+                    }}
+                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                  >
+                    News
+                  </button>
+                )}
 
-                {isUserSignedIn && (
+                {/* PROFILE: Link if Signed In, Button if Signed Out */}
+                {isUserSignedIn ? (
                   <Link
                     href="/Profile"
-                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
                   >
                     Profile
                   </Link>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleProfileClick(); /* Sets pending redirect to /Profile */
+                    }}
+                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                  >
+                    Profile
+                  </button>
                 )}
-
                 <Link
                   href="/contact"
                   className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition"

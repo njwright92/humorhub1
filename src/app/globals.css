@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Rubik:wght@300;400;500;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,17 +7,19 @@
 /* --- 1. Base & Variables --- */
 
 :root {
-  --zinc-900: #1f2022;
-  --zinc-200: #d4d4d8;
+  /* UPDATED COLORS */
+  --zinc-900: #2e2c28;
+  --zinc-200: #f4f4f5;
+  --accent-color: #b35a30; /* Replaces the old yellow */
 }
 
 body {
-  /* UPDATED: Subtler gradient from Zinc-900 to Zinc-800 */
+  /* Subtler gradient using new Zinc-900 */
   background-image: linear-gradient(to bottom, var(--zinc-900), #27272a);
   color: var(--zinc-200);
 }
 
-/* Typography Stacks */
+/* UPDATED Typography Stacks */
 h1,
 h2,
 h3,
@@ -23,21 +27,23 @@ h4,
 h5,
 h6,
 .font-comic {
-  font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "Chalkboard SE",
-    "Roboto", sans-serif;
+  font-family: "Comic Neue", "Comic Sans MS", "Segoe UI",
+    "Arial Rounded MT Bold", "Arial", sans-serif;
 }
 
 p,
-span {
-  font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;
+span,
+body {
+  font-family: "Rubik", "Segoe UI", "Roboto", "Helvetica Neue", "Helvetica",
+    "Arial", sans-serif;
 }
 
 /* Form Defaults */
 select {
-  color: #d4d4d8;
+  color: var(--zinc-200);
 }
 select:required:invalid {
-  color: #d4d4d8;
+  color: var(--zinc-200);
 }
 option {
   color: rgb(22, 22, 22);
@@ -75,23 +81,23 @@ option[value=""][disabled] {
 .title,
 .title-style,
 .subtitle-style {
-  @apply text-amber-300 font-bold;
+  @apply text-amber-300 font-bold tracking-wide; /* Uses new color via tailwind config */
 }
 
 .title {
-  @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-10 mb-2 rounded-xl drop-shadow-md;
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl mt-10 mb-2 rounded-xl drop-shadow-lg font-bold;
 }
 
 .title-style {
-  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 rounded-xl drop-shadow-md;
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl mb-2 rounded-xl drop-shadow-md font-bold;
 }
 
 .subtitle-style {
-  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2;
+  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2 font-bold;
 }
 
 .the-text {
-  @apply block text-zinc-300 text-sm font-semibold mb-2;
+  @apply block text-zinc-200 text-sm font-semibold mb-2;
 }
 
 .micFinderTitle {
@@ -106,7 +112,7 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105;
+  @apply bg-amber-300 text-zinc-900 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold;
 }
 
 .neu-button {
@@ -114,7 +120,8 @@ option[value=""][disabled] {
 }
 
 .neu-button:hover {
-  text-decoration: underline dashed #fcd34d;
+  /* Updated to new accent color */
+  text-decoration: underline dashed #b35a30;
 }
 
 .btn:hover,
@@ -169,7 +176,8 @@ option[value=""][disabled] {
 }
 
 .bg-gradient-animation {
-  background: linear-gradient(45deg, #fcd34d);
+  /* Updated to new accent color */
+  background: linear-gradient(45deg, #b35a30);
   background-size: 400% 400%;
 }
 
@@ -236,7 +244,7 @@ option[value=""][disabled] {
   @apply bg-amber-300 text-zinc-900;
 }
 .tab-button-active:hover {
-  background-color: #fbbf24;
+  background-color: #a0512b; /* Darkened version of new accent */
 }
 .tab-button-inactive {
   @apply bg-zinc-100 text-amber-300;
@@ -247,7 +255,7 @@ option[value=""][disabled] {
 
 /* News */
 .news-item {
-  border-bottom: 0.125rem solid #d4d4d8;
+  border-bottom: 0.125rem solid #d4d4d8; /* Using standard hex for borders usually okay, or use var */
   margin-bottom: 4rem;
   padding-bottom: 3rem;
   text-align: center;
@@ -277,16 +285,15 @@ option[value=""][disabled] {
   display: block;
   width: 50%;
   height: 0.125rem;
-  background: #fcd34d;
+  background: #b35a30; /* Updated to new accent */
   margin: 0.5rem auto 1.5rem;
 }
 
 /* --- 6. Social Buttons (Custom CSS) --- */
-
+/* ... (Social buttons styles kept exactly as provided) ... */
 .social-signin-button {
   @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
 }
-
 .facebook-signin-button,
 .twitter-signin-button,
 .google-signin-button {
@@ -300,7 +307,6 @@ option[value=""][disabled] {
     box-shadow 0.3s ease,
     transform 0.2s ease;
 }
-
 .facebook-signin-button {
   background-color: #4267b2;
   color: #ffffff;
@@ -315,7 +321,6 @@ option[value=""][disabled] {
 .facebook-signin-button img {
   margin-right: 10px;
 }
-
 .twitter-signin-button {
   background-color: #1da1f2;
   color: #ffffff;
@@ -332,7 +337,6 @@ option[value=""][disabled] {
 .twitter-signin-button span {
   margin-left: 0.5rem;
 }
-
 .google-signin-button {
   background-color: #fffffff3;
   color: #2a2a2a;
@@ -353,7 +357,7 @@ option[value=""][disabled] {
 }
 
 /* --- 7. Video Modal & Guide --- */
-
+/* ... (Video/Guide styles kept exactly as provided) ... */
 .video-modal {
   position: fixed;
   top: 0;
@@ -382,7 +386,6 @@ option[value=""][disabled] {
     height: 600px;
   }
 }
-
 .guide-container {
   position: fixed;
   right: 3rem;
@@ -405,14 +408,13 @@ option[value=""][disabled] {
 }
 
 /* --- 8. Animations --- */
-
+/* ... (Animation styles kept exactly as provided) ... */
 .animate-slide-in {
   animation: slide-in 0.3s forwards;
 }
 .animate-slide-out {
   animation: slide-out 0.3s forwards;
 }
-
 @keyframes slide-in {
   0% {
     transform: translateX(-100%);

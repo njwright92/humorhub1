@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { ReactNode } from "react";
-import { HeadlineProvider } from "./components/headlinecontext";
 import "./globals.css";
 import Script from "next/script";
 
@@ -89,7 +88,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
         </noscript>
 
         {/* 3. MAIN CONTENT */}
-        <HeadlineProvider>{children}</HeadlineProvider>
+        {children}
       </body>
     </html>
   );

@@ -8,7 +8,6 @@ import React, {
   useMemo,
   Suspense,
 } from "react";
-// OPTIMIZATION: Removed React-Datepicker CSS and Component imports
 import dynamic from "next/dynamic";
 import { app, db, auth } from "../../../firebase.config";
 import {
@@ -23,6 +22,8 @@ import { FixedSizeList as List, areEqual } from "react-window";
 import Head from "next/head";
 import Script from "next/script";
 import { parse, isValid } from "date-fns";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 // --- Utility Functions ---
 
@@ -45,10 +46,6 @@ function getDistanceFromLatLonInKm(
 
 // --- Dynamic Imports ---
 
-const Header = dynamic(() => import("../components/header"));
-const Footer = dynamic(() => import("../components/footer"));
-
-// Map loaded only when needed. Fallback matches height to prevent CLS.
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => (
     <div className="h-[25rem] w-full rounded-xl flex items-center justify-center text-zinc-500">
@@ -96,7 +93,7 @@ const OpenMicBanner = () => {
 
   return (
     <div
-      className={`border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-2 bg-white ${
+      className={`border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-2 bg-zinc-100 ${
         visible ? "" : "invisible"
       }`}
     >
@@ -255,23 +252,19 @@ const EventsPage = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      // Only log analytics if there is an actual search term
+      if (searchTerm.trim().length > 2) {
+        sendDataLayerEvent("search_city", {
+          event_category: "City Search",
+          event_label: searchTerm,
+        });
+      }
     }, 300);
     return () => clearTimeout(handler);
-  }, [searchTerm]);
+  }, [searchTerm, sendDataLayerEvent]);
 
-  // GA Tracking for search
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-
-    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-
-    searchTimeoutRef.current = window.setTimeout(() => {
-      sendDataLayerEvent("search_city", {
-        event_category: "City Search",
-        event_label: term,
-      });
-    }, 1000);
+    setSearchTerm(e.target.value);
   };
 
   // Fetch Events
@@ -339,21 +332,38 @@ const EventsPage = () => {
     [],
   );
 
-  // Geolocation
+  // Geolocation Handler - FIXED: Updates UI and SearchTerm
   const fetchUserLocation = useCallback(() => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
         const closestCity = findClosestCity(latitude, longitude);
         if (closestCity) {
-          setSelectedCity(closestCity);
-          setFilterCity(closestCity);
+          const normalized = normalizeCityName(closestCity);
+
+          // UPDATE ALL STATES TO REFLECT LOCATION
+          setSelectedCity(normalized);
+          setFilterCity(normalized);
+          setSearchTerm(normalized);
+          setDebouncedSearchTerm(normalized);
+
+          sendDataLayerEvent("auto_locate", {
+            event_category: "Geolocation",
+            event_label: normalized,
+          });
+        } else {
+          console.log("No supported cities found nearby.");
         }
       },
-      (err) => console.log("Geolocation denied or failed", err),
+      (err) => {
+        console.log("Geolocation denied or failed", err);
+      },
     );
-  }, [findClosestCity]);
+  }, [findClosestCity, normalizeCityName, sendDataLayerEvent]);
 
   // URL Params
   useEffect(() => {
@@ -364,11 +374,11 @@ const EventsPage = () => {
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
-    } else if (Object.keys(cityCoordinates).length > 0) {
+    } else if (Object.keys(cityCoordinates).length > 0 && !selectedCity) {
       fetchUserLocation();
     }
-    setSearchTerm(queryTerm);
-  }, [fetchUserLocation, cityCoordinates]);
+    if (queryTerm) setSearchTerm(queryTerm);
+  }, [fetchUserLocation, cityCoordinates, selectedCity]);
 
   // Update map location
   useEffect(() => {
@@ -409,7 +419,6 @@ const EventsPage = () => {
     );
   }, [allAvailableCities, debouncedSearchTerm]);
 
-  // 1. MAP EVENTS FILTER
   const eventsForMap = useMemo(() => {
     const lowerSelectedCity = selectedCity.toLowerCase();
     return events.filter((event) => {
@@ -422,7 +431,6 @@ const EventsPage = () => {
     });
   }, [events, selectedCity, isTabMatch]);
 
-  // 2. TOP LIST FILTER
   const filteredEventsForView = useMemo(() => {
     const normalizedSelectedDate = new Date(selectedDate);
     normalizedSelectedDate.setHours(0, 0, 0, 0);
@@ -461,7 +469,6 @@ const EventsPage = () => {
     });
   }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
 
-  // 3. BOTTOM LIST FILTER
   const sortedEventsByCity = useMemo(() => {
     let list = events;
 
@@ -557,7 +564,6 @@ const EventsPage = () => {
     });
   };
 
-  // Helper to get YYYY-MM-DD using the User's LOCAL timezone
   const getFormattedDateForInput = (date: Date) => {
     return date.toLocaleDateString("en-CA");
   };
@@ -565,10 +571,7 @@ const EventsPage = () => {
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value) return;
     const [year, month, day] = e.target.value.split("-").map(Number);
-
-    // Note: month is 0-indexed in JS Dates (0 = Jan, 1 = Feb, etc.)
     const newDate = new Date(year, month - 1, day);
-
     setSelectedDate(newDate);
   };
 
@@ -612,18 +615,17 @@ const EventsPage = () => {
           content="Jump into the local comedy scene with MicFinder!..."
         />
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        <link rel="preconnect" href="https://apis.google.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
       </Head>
       <Script
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
       />
 
@@ -657,7 +659,6 @@ const EventsPage = () => {
             </label>
             <div
               id="city-select"
-              // Optimized: Centered text
               className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 flex items-center justify-center text-center px-3"
               role="button"
               aria-haspopup="listbox"
@@ -680,12 +681,22 @@ const EventsPage = () => {
                   autoFocus
                 />
                 <ul className="text-zinc-900" role="listbox">
+                  {/* 💡 GEOLOCATION BUTTON FIXED HERE */}
+                  <li
+                    className="px-4 py-3 cursor-pointer bg-green-50 hover:bg-green-100 text-center font-bold text-green-700 border-b border-zinc-200 flex justify-center items-center gap-2"
+                    onClick={() => {
+                      fetchUserLocation();
+                      setIsFirstDropdownOpen(false);
+                    }}
+                  >
+                    <span>📍</span> Use My Current Location
+                  </li>
+
                   {dropdownCities.map((city) => (
                     <li
                       key={city}
                       role="option"
                       aria-selected={selectedCity === city}
-                      // Optimized: Centered text
                       className="px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center"
                       onClick={() => handleCitySelect(city)}
                     >
@@ -697,7 +708,7 @@ const EventsPage = () => {
             )}
           </div>
 
-          {/* Date Picker - NATIVE HTML5 REPLACEMENT */}
+          {/* Date Picker */}
           <div className="flex flex-col justify-center items-center mt-2 w-full max-w-xs relative">
             <div className="relative w-full">
               <label htmlFor="event-date-picker" className="sr-only">
@@ -710,7 +721,6 @@ const EventsPage = () => {
                 onChange={handleDateChange}
                 className="modern-input w-full cursor-pointer text-center appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               />
-              {/* Calendar Icon SVG - Positioned absolutely under the click area of the date input */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 90 90"
@@ -726,7 +736,7 @@ const EventsPage = () => {
           </div>
         </div>
 
-        {/* Map Section - Optimized for CLS with fixed height and centering */}
+        {/* Map Section */}
         <section className="w-full h-[25rem] rounded-xl shadow-md relative border border-zinc-200 mt-6 overflow-hidden">
           {!isMapVisible ? (
             <div className="w-full h-full flex items-center justify-center">
@@ -754,7 +764,7 @@ const EventsPage = () => {
           *Scroll through events to find your next Mic or Festival!*
         </p>
 
-        {/* Top List: Specific City/Date Matches */}
+        {/* Top List */}
         <section className="card-style">
           <h2
             className="title-style text-center"
@@ -839,7 +849,7 @@ const EventsPage = () => {
           </button>
         </div>
 
-        {/* Bottom List: All events in city (Virtualized) */}
+        {/* Bottom List */}
         <section className="card-style">
           <div className="flex flex-col justify-center items-center mt-2 relative z-10">
             <div className="relative w-full max-w-xs">
@@ -848,7 +858,6 @@ const EventsPage = () => {
               </label>
               <div
                 id="city-filter-select"
-                // Optimized: Centered text
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center"
                 role="button"
                 aria-haspopup="listbox"
@@ -877,7 +886,6 @@ const EventsPage = () => {
                     <li
                       role="option"
                       aria-selected={filterCity === "All Cities"}
-                      // Optimized: Centered text
                       className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${
                         filterCity === "All Cities"
                           ? "bg-zinc-200 font-semibold"
@@ -892,7 +900,6 @@ const EventsPage = () => {
                         key={city}
                         role="option"
                         aria-selected={filterCity === city}
-                        // Optimized: Centered text
                         className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${
                           filterCity === city ? "bg-zinc-200 font-semibold" : ""
                         }`}

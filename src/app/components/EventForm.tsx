@@ -3,11 +3,8 @@
 import { useState, useCallback, ChangeEvent, FormEvent } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// Assuming firebase.config exports db
 import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
-import Modal from "./modal";
-// Assuming getLatLng is available in this path
 import { getLatLng } from "../utils/geocode";
 import { v4 as uuidv4 } from "uuid";
 import emailjs from "@emailjs/browser";
@@ -26,7 +23,8 @@ interface EventData {
   email?: string;
 }
 
-// Define the function to submit the event to Firestore
+// --- Helper Functions ---
+
 const submitEvent = async (eventData: EventData) => {
   try {
     await addDoc(collection(db, "events"), eventData);
@@ -37,10 +35,8 @@ const submitEvent = async (eventData: EventData) => {
   }
 };
 
-// Function to log events that failed geocoding for manual review
 const logManualReviewEvent = async (eventData: EventData, reason: string) => {
   try {
-    // Log to a separate collection for staff review
     await addDoc(collection(db, "events_manual_review"), {
       ...eventData,
       reason,
@@ -53,10 +49,8 @@ const logManualReviewEvent = async (eventData: EventData, reason: string) => {
   }
 };
 
-// Function to send confirmation email using EmailJS
 const sendConfirmationEmail = async (eventData: EventData) => {
-  if (!eventData.email) return; // Skip if no email provided
-
+  if (!eventData.email) return;
   try {
     await emailjs.send(
       process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
@@ -74,30 +68,27 @@ const sendConfirmationEmail = async (eventData: EventData) => {
       },
       process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
     );
-    console.log("Email sent successfully!");
   } catch (error) {
     console.warn("EmailJS failed to send confirmation email.", error);
   }
 };
 
-// --- Component ---
+// --- Main Component ---
 
 const EventForm: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // New: Prevent double submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [event, setEvent] = useState<EventData>({
     name: "",
     location: "",
     date: null,
     details: "",
     isRecurring: false,
-    isFestival: false, // Default to false
+    isFestival: false,
     email: "",
   });
 
   const [formErrors, setFormErrors] = useState<string>("");
-
-  // Removed: const memoizedEvent = useMemo(() => event, [event]);
 
   const resetForm = useCallback(() => {
     setEvent({
@@ -129,11 +120,9 @@ const EventForm: React.FC = () => {
     [],
   );
 
-  // Updated handleSubmit function with robust error flow (like the previous successful version)
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-
       if (isSubmitting) return;
 
       if (!event.name || !event.location || !event.date || !event.details) {
@@ -150,7 +139,7 @@ const EventForm: React.FC = () => {
         let lat, lng;
         let finalEventData: EventData;
 
-        // 1. Attempt Geocoding
+        // 1. Geocoding
         try {
           const response = await getLatLng(event.location);
           if (response && "lat" in response && "lng" in response) {
@@ -158,27 +147,19 @@ const EventForm: React.FC = () => {
             lng = response.lng;
             finalEventData = prepareEventData(event, lat, lng);
 
-            // 2. Submit to main collection
             const success = await submitEvent(finalEventData);
-            if (!success) {
+            if (!success)
               throw new Error("Firestore submission failed after geocoding.");
-            }
             alert(
               "Your event has been added successfully! Give it a few hours to appear.",
             );
           } else {
-            // Geocoding failed to return valid coords, proceed to manual review log
             throw new Error(
               "Geocoding failed or returned invalid coordinates.",
             );
           }
         } catch (geocodeError) {
-          // Geocoding failed, log for manual review
-          console.warn(
-            "Geocoding failed, logging for manual review:",
-            geocodeError,
-          );
-
+          console.warn("Geocoding failed, logging for manual review.");
           finalEventData = prepareEventData(event);
           const logSuccess = await logManualReviewEvent(
             finalEventData,
@@ -191,24 +172,23 @@ const EventForm: React.FC = () => {
             );
           } else {
             setFormErrors(
-              "We couldn't verify the location OR save your event for manual review. Please try again later.",
+              "We couldn't verify the location OR save your event. Please try again later.",
             );
             setIsSubmitting(false);
             return;
           }
         }
 
-        // 3. Send confirmation email (regardless of success in main or review collection)
+        // 2. Email
         if (event.email) {
           await sendConfirmationEmail(finalEventData);
         }
 
-        // 4. Cleanup
         resetForm();
         setShowModal(false);
       } catch (submitError) {
         setFormErrors(
-          "An unexpected error occurred during event submission. Please check your network and try again.",
+          "An unexpected error occurred. Please check your network and try again.",
         );
         console.error("Final Submission Error Path:", submitError);
       } finally {
@@ -226,7 +206,6 @@ const EventForm: React.FC = () => {
     [],
   );
 
-  // Unified handler for checkboxes to prevent repetition
   const handleCheckboxChange = useCallback(
     (name: "isRecurring" | "isFestival", checked: boolean) => {
       setEvent((prevEvent) => ({ ...prevEvent, [name]: checked }));
@@ -237,175 +216,225 @@ const EventForm: React.FC = () => {
   return (
     <>
       <button
-        className="btn underline"
+        className="bg-green-600 hover:bg-green-700 text-zinc-900 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
         onClick={() => setShowModal(true)}
         disabled={isSubmitting}
       >
         Add Event
       </button>
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <form
-          onSubmit={handleSubmit}
-          // The critical class is the one that styles the form content inside the Modal
-          className="form-container mx-auto justify-center items-center overflow-auto max-h-[90vh] z-50 bg-white p-6 rounded-lg shadow-2xl"
+
+      {/* INLINE MODAL LOGIC */}
+      {showModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          onClick={() => setShowModal(false)} // Close on backdrop click
         >
-          {formErrors && <p className="text-red-500">{formErrors}</p>}
-          <h1 className="text-2xl font-bold text-center text-black mt-4">
-            Add Event Form
-          </h1>
-          <p className="text-red-500 text-center mb-1">
-            Please fill in all fields correctly.
-          </p>
-          <label htmlFor="eventName" className="text-zinc-900">
-            Event Name:
-          </label>
-          <input
-            type="text"
-            id="eventName"
-            name="name"
-            value={event.name}
-            onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2 w-full"
-            required
-            autoComplete="off"
-            placeholder="e.g., The Comedy Store Open Mic" // 💡 Placeholder added
-          />
+          {/* Wrapper to stop click propagation so clicking form doesn't close it */}
+          <div
+            className="relative w-full max-w-md max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 z-[110] text-zinc-500 hover:text-red-500 transition-colors"
+              aria-label="Close Modal"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
 
-          <label htmlFor="location" className="text-zinc-900">
-            Location must include full address:
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={event.location}
-            onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2 w-full"
-            required
-            placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA 90069, USA" // 💡 Placeholder added
-          />
+            <form
+              onSubmit={handleSubmit}
+              className="form-container w-full overflow-auto bg-zinc-100 p-6 rounded-xl shadow-2xl border-2 border-zinc-200"
+            >
+              {formErrors && (
+                <p className="text-red-600 font-bold mb-2 text-center">
+                  {formErrors}
+                </p>
+              )}
+              <h1 className="text-3xl font-bold text-center text-zinc-900 mb-2 font-comic">
+                Event Form
+              </h1>
+              <p className="text-red-500 text-center mb-4 text-sm font-semibold">
+                Please fill in all fields correctly.
+              </p>
 
-          <label htmlFor="details" className="text-zinc-900">
-            Details:
-          </label>
-          <textarea
-            id="details"
-            name="details"
-            value={event.details}
-            onChange={handleChange}
-            required
-            autoComplete="off"
-            rows={4}
-            className="text-zinc-900 shadow-xl rounded-lg p-2 h-28 min-h-[6rem] block resize-y w-full"
-            placeholder="e.g., Signup at 7:00 PM, show at 8:00 PM. Hosted by John Doe. Free entry." // 💡 Placeholder added
-          />
-
-          <h6 className="text-zinc-900 mt-2">Is it a recurring event?:</h6>
-          <p className="text-red-500 text-sm">
-            If yes specify day of the week in details.
-          </p>
-          <div className="flex flex-row justify-center space-x-8">
-            <div className="flex flex-col items-center text-center">
-              <label htmlFor="isRecurringYes" className="text-zinc-900">
-                Yes
+              <label
+                htmlFor="eventName"
+                className="block text-zinc-900 font-bold mb-1"
+              >
+                Event Name:
               </label>
               <input
-                type="checkbox"
-                id="isRecurringYes"
-                // Check if true, not just non-false
-                checked={event.isRecurring === true}
-                onChange={() => handleCheckboxChange("isRecurring", true)}
-                className="shadow-xl rounded-lg p-2"
+                type="text"
+                id="eventName"
+                name="name"
+                value={event.name}
+                onChange={handleChange}
+                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-4 focus:border-green-500 outline-none"
+                required
+                autoComplete="off"
+                placeholder="e.g., The Comedy Store Open Mic"
               />
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <label htmlFor="isRecurringNo" className="text-zinc-900">
-                No
+
+              <label
+                htmlFor="location"
+                className="block text-zinc-900 font-bold mb-1"
+              >
+                Location (Full Address):
               </label>
               <input
-                type="checkbox"
-                id="isRecurringNo"
-                // Check if false
-                checked={event.isRecurring === false}
-                onChange={() => handleCheckboxChange("isRecurring", false)}
-                className="shadow-xl rounded-lg p-2"
+                type="text"
+                id="location"
+                name="location"
+                value={event.location}
+                onChange={handleChange}
+                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-4 focus:border-green-500 outline-none"
+                required
+                placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
               />
-            </div>
+
+              <label
+                htmlFor="details"
+                className="block text-zinc-900 font-bold mb-1"
+              >
+                Details:
+              </label>
+              <textarea
+                id="details"
+                name="details"
+                value={event.details}
+                onChange={handleChange}
+                required
+                autoComplete="off"
+                rows={4}
+                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-4 focus:border-green-500 outline-none resize-y"
+                placeholder="Time, Host, Entry Fee, etc."
+              />
+
+              {/* Checkbox Groups */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                {/* Recurring */}
+                <div className="bg-zinc-100 p-2 rounded-lg text-center">
+                  <h6 className="text-zinc-900 font-bold text-sm">
+                    Recurring?
+                  </h6>
+                  <div className="flex justify-center gap-4 mt-2">
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={event.isRecurring === true}
+                        onChange={() =>
+                          handleCheckboxChange("isRecurring", true)
+                        }
+                        className="accent-green-500 w-4 h-4"
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={event.isRecurring === false}
+                        onChange={() =>
+                          handleCheckboxChange("isRecurring", false)
+                        }
+                        className="accent-red-500 w-4 h-4"
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+
+                {/* Festival */}
+                <div className="bg-zinc-100 p-2 rounded-lg text-center">
+                  <h6 className="text-zinc-900 font-bold text-sm">Festival?</h6>
+                  <div className="flex justify-center gap-4 mt-2">
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={event.isFestival === true}
+                        onChange={() =>
+                          handleCheckboxChange("isFestival", true)
+                        }
+                        className="accent-green-500 w-4 h-4"
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={event.isFestival === false}
+                        onChange={() =>
+                          handleCheckboxChange("isFestival", false)
+                        }
+                        className="accent-red-500 w-4 h-4"
+                      />
+                      No
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <label
+                htmlFor="date"
+                className="block text-zinc-900 font-bold mb-1"
+              >
+                Date & Time:
+              </label>
+              <div className="mb-4">
+                <DatePicker
+                  id="date"
+                  selected={event.date}
+                  onChange={(date: Date | null) => setEvent({ ...event, date })}
+                  placeholderText="Select Date & Time"
+                  className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full focus:border-green-500 outline-none"
+                  dateFormat="MM/dd/yyyy h:mm aa"
+                  showTimeSelect
+                  timeCaption="Time"
+                  wrapperClassName="w-full"
+                />
+              </div>
+
+              <label
+                htmlFor="email"
+                className="block text-zinc-900 font-bold mb-1 text-sm"
+              >
+                Email (Optional for Verification):
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={event.email || ""}
+                onChange={handleChange}
+                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-6 focus:border-green-500 outline-none"
+                placeholder="yourname@example.com"
+              />
+
+              <button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700 text-zinc-900 font-bold py-3 rounded-xl shadow-lg transform transition hover:scale-[1.02]"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Submit Event"}
+              </button>
+            </form>
           </div>
-
-          <h6 className="text-zinc-900 mt-6">
-            Is it a festival or competition?
-          </h6>
-          <p className="text-red-500 text-sm">
-            Check if this event is a festival or competition.
-          </p>
-          <div className="flex flex-row justify-center space-x-8">
-            <div className="flex flex-col items-center text-center">
-              <label htmlFor="isFestivalYes" className="text-zinc-900">
-                Yes
-              </label>
-              <input
-                type="checkbox"
-                id="isFestivalYes"
-                checked={event.isFestival === true}
-                onChange={() => handleCheckboxChange("isFestival", true)}
-                className="shadow-xl rounded-lg p-2"
-              />
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <label htmlFor="isFestivalNo" className="text-zinc-900">
-                No
-              </label>
-              <input
-                type="checkbox"
-                id="isFestivalNo"
-                checked={event.isFestival === false}
-                onChange={() => handleCheckboxChange("isFestival", false)}
-                className="shadow-xl rounded-lg p-2"
-              />
-            </div>
-          </div>
-
-          <label htmlFor="date" className="text-zinc-900 mt-2">
-            Date:
-          </label>
-          <DatePicker
-            id="date"
-            selected={event.date}
-            onChange={(date: Date | null) => setEvent({ ...event, date })}
-            placeholderText={`📅 ${new Date().toLocaleDateString()}`}
-            className="text-zinc-900 shadow-xl rounded-xl p-2 w-full"
-            dateFormat="MM/dd/yyyy h:mm aa"
-            showTimeSelect
-            timeCaption="Time"
-          />
-
-          {/* Optional email field */}
-          <h6 className="text-zinc-900 mt-4 mb-1 text-center text-xs">
-            Optional: Provide your email for verification
-          </h6>
-          <p className="text-red-500 text-xs text-center mb-1">
-            We&#39;ll send a confirmation if you&#39;d like to verify this event
-            addition.
-          </p>
-          <label htmlFor="email" className="text-zinc-900">
-            Email (optional):
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={event.email || ""}
-            onChange={handleChange}
-            className="text-zinc-900 shadow-xl rounded-lg p-2 mb-4 w-full"
-            placeholder="yourname@example.com"
-          />
-
-          <button type="submit" className="btn" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit Event"}
-          </button>
-        </form>
-      </Modal>
+        </div>
+      )}
     </>
   );
 };

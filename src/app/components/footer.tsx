@@ -4,19 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../firebase.config"; // Optimized: Import instance directly
+import { auth } from "../../../firebase.config";
 import ClientSignOutButton from "./ClientSignOut";
 import hh from "../../app/hh.webp";
 
 export default function Footer() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
 
-  /* 
-     OPTIMIZATION: 
-     We don't need useCallback for the handler here. 
-     Defining it inside useEffect or as a simple function is cheaper 
-     because it runs only once due to the empty dependency array.
-  */
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
@@ -35,48 +29,51 @@ export default function Footer() {
 
   return (
     <footer
-      style={{
-        backgroundImage: "linear-gradient(to top, #27272a, #1f2022)",
-      }}
+      className="bg-black md:ml-20"
+      aria-labelledby="footer-heading"
+      id="footer"
     >
-      <hr className="my-4 border-zinc-200 sm:mx-auto dark:border-zinc-700 lg:my-6" />
+      <hr className="my-4 border-zinc-800 sm:mx-auto lg:my-6" />
 
-      <div className="mx-auto w-full max-w-screen-xl p-2 py-4 lg:py-6">
-        <h1 className="text-2xl font-semibold text-zinc-200 mb-2 text-center">
+      <div className="mx-auto w-full max-w-screen-2xl p-4 py-6 lg:py-8">
+        {/* Main Footer Header */}
+        <h1 className="text-2xl md:text-4xl font-bold text-zinc-200 mb-2 text-center tracking-wide">
           Humor Hub - The Hub of Humor!
         </h1>
-        <p className="text-md mb-4 text-center text-zinc-300">
+        <p className="text-md md:text-xl mb-8 text-center text-zinc-400 max-w-2xl mx-auto">
           Connecting comics and fans with events, tools, and more. Join the fun!
         </p>
 
-        <div className="md:flex md:justify-between">
-          <div className="mb-6 md:mb-0 flex justify-center md:block">
-            <Link href="/" aria-label="Humor Hub Home">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+          {/* --- Logo Section (Bigger & Centered on Desktop) --- */}
+          <div className="mb-6 md:mb-0 flex justify-center md:w-1/4 md:justify-start md:pl-10">
+            <Link href="/" aria-label="Humor Hub Home" className="group">
               <Image
                 src={hh}
                 alt="Humor Hub Logo"
-                width={60}
-                height={60}
-                className="rounded-full md:ml-4 hover:opacity-90 transition-opacity"
-                style={{ objectFit: "contain" }}
-                // Optimization: Don't lazy load if footer is visible immediately,
-                // but usually footer is below fold, so lazy is good.
+                /* UPDATED: 60px on mobile, 120px on desktop */
+                width={120}
+                height={120}
+                className="rounded-full shadow-xl transition-transform transform group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-800 group-hover:border-amber-300"
+                style={{ objectFit: "contain", width: "auto", height: "auto" }} // helper for next/image aspect ratio
+                sizes="(max-width: 768px) 60px, 120px"
                 loading="lazy"
               />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 mr-2">
+          {/* --- Links Grid --- */}
+          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:w-3/4 md:pr-10">
             {/* Section 1 */}
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
+              <h2 className="mb-4 md:mb-6 text-sm md:text-lg font-bold text-amber-300 uppercase tracking-wider">
                 Get to Know Us
               </h2>
-              <ul className="text-zinc-200 space-y-4">
+              <ul className="text-zinc-300 space-y-3 md:space-y-4 font-medium">
                 <li>
                   <Link
                     href="/about"
-                    className="hover:underline hover:text-white transition-colors"
+                    className="hover:text-white hover:underline transition-colors md:text-lg"
                   >
                     About Humor Hub
                   </Link>
@@ -84,7 +81,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="hover:underline hover:text-white transition-colors"
+                    className="hover:text-white hover:underline transition-colors md:text-lg"
                   >
                     Contact Our Team
                   </Link>
@@ -94,16 +91,16 @@ export default function Footer() {
 
             {/* Section 2 */}
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
+              <h2 className="mb-4 md:mb-6 text-sm md:text-lg font-bold text-amber-300 uppercase tracking-wider">
                 Stay Connected
               </h2>
-              <ul className="text-zinc-200 space-y-4">
+              <ul className="text-zinc-300 space-y-3 md:space-y-4 font-medium">
                 <li>
                   <a
                     href="https://twitter.com/naterbug321"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline hover:text-white transition-colors"
+                    className="hover:text-white hover:underline transition-colors md:text-lg"
                   >
                     X (Twitter)
                   </a>
@@ -113,7 +110,7 @@ export default function Footer() {
                     href="https://www.facebook.com/nate_wrigh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline hover:text-white transition-colors"
+                    className="hover:text-white hover:underline transition-colors md:text-lg"
                   >
                     Facebook
                   </a>
@@ -123,7 +120,7 @@ export default function Footer() {
                     href="https://www.instagram.com/nate_wright3"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline hover:text-white transition-colors"
+                    className="hover:text-white hover:underline transition-colors md:text-lg"
                   >
                     Instagram
                   </a>
@@ -133,7 +130,7 @@ export default function Footer() {
                     href="https://github.com/njwright92"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline hover:text-white transition-colors"
+                    className="hover:text-white hover:underline transition-colors md:text-lg"
                   >
                     GitHub
                   </a>
@@ -143,19 +140,19 @@ export default function Footer() {
 
             {/* Section 3 */}
             <div>
-              <h2 className="mb-6 text-sm font-semibold text-orange-500 uppercase">
+              <h2 className="mb-4 md:mb-6 text-sm md:text-lg font-bold text-amber-300 uppercase tracking-wider">
                 Legal Info
               </h2>
-              <div className="text-zinc-200 flex flex-col space-y-4">
+              <div className="text-zinc-300 flex flex-col space-y-3 md:space-y-4 font-medium">
                 <Link
                   href="/userAgreement"
-                  className="hover:underline hover:text-white transition-colors"
+                  className="hover:text-white hover:underline transition-colors md:text-lg"
                 >
                   User Agreement
                 </Link>
                 <Link
                   href="/privacyPolicy"
-                  className="hover:underline hover:text-white transition-colors"
+                  className="hover:text-white hover:underline transition-colors md:text-lg"
                 >
                   Privacy Policy
                 </Link>
@@ -164,27 +161,30 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="sm:flex sm:items-center sm:justify-between mt-8">
-          <div className="flex flex-col items-center sm:items-start sm:flex-row-reverse sm:justify-between sm:w-full">
-            {isUserSignedIn && (
-              <div className="mb-4 sm:mb-0 sm:mr-2">
-                <ClientSignOutButton />
-              </div>
-            )}
+        {/* --- Bottom Bar --- */}
+        <div className="sm:flex sm:items-center sm:justify-between mt-10 border-t border-zinc-800 pt-6">
+          <div className="flex flex-col items-center sm:items-center sm:flex-row-reverse sm:justify-between w-full">
+            {/* Right Side (Desktop) / Top (Mobile) - Controls */}
+            <div className="flex items-center gap-4 mb-4 sm:mb-0">
+              {isUserSignedIn && (
+                <div className="transform hover:scale-105 transition-transform">
+                  <ClientSignOutButton />
+                </div>
+              )}
 
-            {/* Scroll To Top Button */}
-            <div className="flex justify-center mb-6 sm:mb-0 sm:mr-8 relative h-8 w-8">
+              {/* Scroll To Top Button - Bigger on desktop */}
               <button
                 onClick={scrollToTop}
                 aria-label="Back to top"
-                className="rounded-full bg-zinc-900 w-8 h-8 flex items-center justify-center text-zinc-200 shadow-xl focus:outline-none hover:bg-zinc-700 transition-colors border border-zinc-600"
+                className="rounded-full bg-zinc-800 hover:bg-zinc-700 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-amber-300 shadow-lg transition-all hover:scale-110 border border-zinc-700"
               >
                 <svg
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5 md:w-7 md:h-7"
                 >
                   <path
                     fillRule="evenodd"
@@ -196,10 +196,11 @@ export default function Footer() {
               </button>
             </div>
 
+            {/* Left Side (Desktop) / Bottom (Mobile) - Copyright */}
             <div className="text-center sm:text-left">
               <span
-                className="text-sm text-zinc-400 block sm:inline"
-                suppressHydrationWarning // Prevents server/client mismatch error on Date
+                className="text-sm md:text-md text-zinc-400 block sm:inline font-mono"
+                suppressHydrationWarning
               >
                 © {new Date().getFullYear()} Humor Hub™. All rights reserved.
               </span>

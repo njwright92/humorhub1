@@ -1,7 +1,7 @@
 // ContactIcon.jsx
 const ContactIcon = () => (
   <svg
-    className="h-6 w-6 text-zinc-200 group-hover:text-orange-500 transition-colors"
+    className="h-8 w-8 text-zinc-900 group-hover:text-zinc-700 transition-colors"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
