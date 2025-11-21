@@ -28,13 +28,12 @@ import UserIconComponent from "../icons/UserIconComponent";
 */
 const SearchBar = dynamic(() => import("./searchBar"), {
   ssr: false,
-  loading: () => (
-    <div className="h-10 w-full animate-pulse bg-zinc-800 rounded"></div>
-  ), // Placeholder to prevent layout shift
+  loading: () => null,
 });
 
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
+  loading: () => null,
 });
 
 /* Stable debounce helper */
@@ -200,12 +199,13 @@ export default function Header() {
 
             {/* Nav Icons */}
             <div className="flex flex-col items-center justify-center space-y-6 mt-4">
-              <SearchBar
-                onSearch={handleOnSearch}
-                isUserSignedIn={isUserSignedIn}
-                setIsAuthModalOpen={setIsAuthModalOpen}
-              />
-
+              <div className="h-6 w-full">
+                <SearchBar
+                  onSearch={handleOnSearch}
+                  isUserSignedIn={isUserSignedIn}
+                  setIsAuthModalOpen={setIsAuthModalOpen}
+                />
+              </div>
               <Link
                 href="/MicFinder"
                 aria-label="Mic Finder"

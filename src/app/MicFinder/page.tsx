@@ -8,7 +8,7 @@ import React, {
   useMemo,
   Suspense,
 } from "react";
-import "react-datepicker/dist/react-datepicker.css";
+// OPTIMIZATION: Removed React-Datepicker CSS and Component imports
 import dynamic from "next/dynamic";
 import { app, db, auth } from "../../../firebase.config";
 import {
@@ -23,7 +23,6 @@ import { FixedSizeList as List, areEqual } from "react-window";
 import Head from "next/head";
 import Script from "next/script";
 import { parse, isValid } from "date-fns";
-import ReactDatePicker from "react-datepicker";
 
 // --- Utility Functions ---
 
@@ -52,7 +51,7 @@ const Footer = dynamic(() => import("../components/footer"));
 // Map loaded only when needed. Fallback matches height to prevent CLS.
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => (
-    <div className="h-[25rem] w-full bg-zinc-200 animate-pulse rounded-xl flex items-center justify-center text-zinc-500">
+    <div className="h-[25rem] w-full rounded-xl flex items-center justify-center text-zinc-500">
       Loading Map...
     </div>
   ),
@@ -60,9 +59,7 @@ const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
 });
 
 const EventForm = dynamic(() => import("../components/EventForm"), {
-  loading: () => (
-    <div className="h-24 w-full bg-zinc-100 animate-pulse rounded-xl"></div>
-  ),
+  loading: () => <div className="h-16 mb-4 w-full rounded-xl"></div>,
   ssr: false,
 });
 
@@ -80,9 +77,8 @@ type Event = {
   isRecurring: boolean;
   festival: boolean;
   isMusic?: boolean;
-  // Optimization: We add this optional property to store the parsed date
-  // so we don't have to re-parse it on every render/filter
   parsedDateObj?: Date;
+  numericTimestamp?: number;
 };
 
 type CityCoordinates = {
@@ -97,9 +93,13 @@ const OpenMicBanner = () => {
     const timer = setTimeout(() => setVisible(false), 10000);
     return () => clearTimeout(timer);
   }, []);
-  if (!visible) return null;
+
   return (
-    <div className="border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-4 bg-white">
+    <div
+      className={`border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-2 bg-white ${
+        visible ? "" : "invisible"
+      }`}
+    >
       <strong className="font-bold">📢 Note: </strong>
       <span className="block sm:inline">
         Open mic events evolve quickly. See something outdated? Let us know.
@@ -139,7 +139,7 @@ const Row = React.memo(
 
     return (
       <div style={style}>
-        <div className="event-item mt-2 mx-2">
+        <div className="event-item mt-2 mx-2 h-[96%] flex flex-col justify-center">
           <h3 className="text-lg font-semibold">{event.name}</h3>
           <p className="details-label">📅 Date: {event.date}</p>
           <p className="details-label">📍 Location: {event.location}</p>
@@ -158,7 +158,7 @@ const Row = React.memo(
             <div dangerouslySetInnerHTML={{ __html: event.details }} />
           </div>
           <button
-            className="btn mt-1 mb-1 px-2 py-1"
+            className="btn mt-1 mb-1 px-2 py-1 self-center"
             onClick={() => data.onSave(event)}
           >
             Save Event
@@ -178,12 +178,10 @@ const EventsPage = () => {
   // State
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
-  const [loadedItems, setLoadedItems] = useState(5);
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
@@ -199,7 +197,6 @@ const EventsPage = () => {
   // Debounce for search
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const datePickerRef = useRef<ReactDatePicker | null>(null);
   const searchTimeoutRef = useRef<number | null>(null);
 
   // Constants / Helpers
@@ -277,15 +274,13 @@ const EventsPage = () => {
     }, 1000);
   };
 
-  // Fetch Events - Optimized to Pre-Parse Dates
+  // Fetch Events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "userEvents"));
         const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
-
-          // Pre-calculate date object here to save CPU during filtering
           let parsedDateObj: Date | undefined = undefined;
           if (data.date && typeof data.date === "string") {
             const formats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
@@ -298,12 +293,14 @@ const EventsPage = () => {
               }
             }
           }
-
           return {
             ...data,
             festival: data.festival === true,
             isMusic: data.isMusic === true,
-            parsedDateObj, // Store it!
+            parsedDateObj,
+            numericTimestamp: data.googleTimestamp
+              ? new Date(data.googleTimestamp).getTime()
+              : 0,
           } as Event;
         });
         setEvents(fetchedEvents);
@@ -433,13 +430,11 @@ const EventsPage = () => {
     const lowerSelectedCity = selectedCity.toLowerCase();
 
     return events.filter((event) => {
-      // City
       const cityMatch =
         !selectedCity ||
         (event.location &&
           event.location.toLowerCase().includes(lowerSelectedCity));
 
-      // Date (Optimized using pre-calculated parsedDateObj)
       let dateMatch = false;
       if (event.isRecurring) {
         const dayMap: { [key: string]: number } = {
@@ -453,12 +448,10 @@ const EventsPage = () => {
         };
         dateMatch = dayMap[event.date] === selectedDate.getDay();
       } else if (event.parsedDateObj) {
-        // Compare timestamps directly - extremely fast
         dateMatch =
           event.parsedDateObj.getTime() === normalizedSelectedDate.getTime();
       }
 
-      // Search
       const searchMatch =
         !debouncedSearchTerm ||
         (event.name && event.name.toLowerCase().includes(lowerSearch)) ||
@@ -492,8 +485,8 @@ const EventsPage = () => {
       if (aClub && !bClub) return -1;
       if (!aClub && bClub) return 1;
 
-      const tA = new Date(a.googleTimestamp).getTime();
-      const tB = new Date(b.googleTimestamp).getTime();
+      const tA = a.numericTimestamp || 0;
+      const tB = b.numericTimestamp || 0;
       return tB - tA;
     });
   }, [events, filterCity, isTabMatch, normalizeCityName]);
@@ -564,13 +557,19 @@ const EventsPage = () => {
     });
   };
 
-  const handleOnItemsRendered = ({ overscanStopIndex }: any) => {
-    if (
-      overscanStopIndex >= loadedItems - 1 &&
-      loadedItems < sortedEventsByCity.length
-    ) {
-      setLoadedItems((prev) => Math.min(prev + 5, sortedEventsByCity.length));
-    }
+  // Helper to get YYYY-MM-DD using the User's LOCAL timezone
+  const getFormattedDateForInput = (date: Date) => {
+    return date.toLocaleDateString("en-CA");
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return;
+    const [year, month, day] = e.target.value.split("-").map(Number);
+
+    // Note: month is 0-indexed in JS Dates (0 = Jan, 1 = Feb, etc.)
+    const newDate = new Date(year, month - 1, day);
+
+    setSelectedDate(newDate);
   };
 
   // --- Memoized UI Components ---
@@ -633,7 +632,7 @@ const EventsPage = () => {
           going!
         </p>
 
-        <div className="text-center mb-8">
+        <div className="text-center mb-4 h-16 w-full rounded-xl">
           <MemoizedEventForm />
         </div>
 
@@ -644,13 +643,13 @@ const EventsPage = () => {
         {/* City Selection Dropdown */}
         <div className="flex flex-col justify-center items-center mt-2 relative z-20">
           <div className="relative w-full max-w-xs min-h-[60px]">
-            {/* FIX: Added Label for Accessibility */}
             <label htmlFor="city-select" className="sr-only">
               Select a City
             </label>
             <div
               id="city-select"
-              className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 flex items-center px-3"
+              // Optimized: Centered text
+              className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 flex items-center justify-center text-center px-3"
               role="button"
               aria-haspopup="listbox"
               aria-expanded={isFirstDropdownOpen}
@@ -677,7 +676,8 @@ const EventsPage = () => {
                       key={city}
                       role="option"
                       aria-selected={selectedCity === city}
-                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200"
+                      // Optimized: Centered text
+                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center"
                       onClick={() => handleCitySelect(city)}
                     >
                       {city}
@@ -688,34 +688,25 @@ const EventsPage = () => {
             )}
           </div>
 
-          {/* Date Picker */}
+          {/* Date Picker - NATIVE HTML5 REPLACEMENT */}
           <div className="flex flex-col justify-center items-center mt-2 w-full max-w-xs relative">
             <div className="relative w-full">
-              {/* FIX: Added Label and ID for Accessibility */}
               <label htmlFor="event-date-picker" className="sr-only">
                 Select Event Date
               </label>
-              <ReactDatePicker
+              <input
                 id="event-date-picker"
-                ref={datePickerRef}
-                selected={selectedDate}
-                onChange={(date) => {
-                  if (date) {
-                    setSelectedDate(date);
-                    setIsDatePickerOpen(false);
-                  }
-                }}
-                onFocus={() => setIsDatePickerOpen(true)}
-                open={isDatePickerOpen}
-                onClickOutside={() => setIsDatePickerOpen(false)}
-                className="modern-input w-full cursor-pointer"
+                type="date"
+                value={getFormattedDateForInput(selectedDate)}
+                onChange={handleDateChange}
+                className="modern-input w-full cursor-pointer text-center appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               />
-              {/* Calendar Icon SVG */}
+              {/* Calendar Icon SVG - Positioned absolutely under the click area of the date input */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 90 90"
                 fill="currentColor"
-                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer pointer-events-none"
+                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none z-10"
               >
                 <g>
                   <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
@@ -726,18 +717,31 @@ const EventsPage = () => {
           </div>
         </div>
 
-        {/* Map Section */}
-        <section className="card-style1">
-          <button
-            onClick={toggleMapVisibility}
-            className="mb-4 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-green-400 transition cursor-pointer hover:bg-green-500"
-          >
-            {isMapVisible ? "Hide Map" : "Show Map"}
-          </button>
-          {MemoizedGoogleMap}
+        {/* Map Section - Optimized for CLS with fixed height and centering */}
+        <section className="w-full h-[25rem] rounded-xl shadow-md relative border border-zinc-200 mt-6 overflow-hidden">
+          {!isMapVisible ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <button
+                onClick={toggleMapVisibility}
+                className="text-zinc-900 rounded-lg shadow-lg px-6 py-3 bg-green-400 transition cursor-pointer hover:bg-green-500 font-bold text-lg"
+              >
+                Show Map
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={toggleMapVisibility}
+                className="absolute top-4 right-4 z-10 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-white/90 hover:bg-white transition cursor-pointer font-semibold"
+              >
+                Hide Map
+              </button>
+              {MemoizedGoogleMap}
+            </>
+          )}
         </section>
 
-        <p className="text-md text-center mb-2 sm:mb-1 xs:mb-1">
+        <p className="text-md text-center mb-2 sm:mb-1 xs:mb-1 mt-6">
           *Scroll through events to find your next Mic or Festival!*
         </p>
 
@@ -835,7 +839,8 @@ const EventsPage = () => {
               </label>
               <div
                 id="city-filter-select"
-                className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center"
+                // Optimized: Centered text
+                className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center"
                 role="button"
                 aria-haspopup="listbox"
                 aria-expanded={isSecondDropdownOpen}
@@ -863,7 +868,8 @@ const EventsPage = () => {
                     <li
                       role="option"
                       aria-selected={filterCity === "All Cities"}
-                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 ${
+                      // Optimized: Centered text
+                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${
                         filterCity === "All Cities"
                           ? "bg-zinc-200 font-semibold"
                           : ""
@@ -877,7 +883,8 @@ const EventsPage = () => {
                         key={city}
                         role="option"
                         aria-selected={filterCity === city}
-                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 ${
+                        // Optimized: Centered text
+                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${
                           filterCity === city ? "bg-zinc-200 font-semibold" : ""
                         }`}
                         onClick={() => handleCityFilterChange(city)}
@@ -921,7 +928,6 @@ const EventsPage = () => {
             itemSize={385}
             width="100%"
             itemData={itemData}
-            onItemsRendered={handleOnItemsRendered}
           >
             {Row}
           </List>

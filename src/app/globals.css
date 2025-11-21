@@ -2,31 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* --- 1. CSS Variables --- */
+/* --- 1. Base & Variables --- */
 
 :root {
   --zinc-900: #1f2022;
   --zinc-200: #d4d4d8;
-  /* Removed: --orange-500. Using Tailwind's amber-300 instead. */
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 250, 250, 250;
-    --background-start-rgb: 10, 10, 10;
-    --background-end-rgb: 25, 25, 25;
-    --accent-color: 268, 255, 220;
-  }
-}
-
-/* --- 2. Base Styles & Typography --- */
 
 body {
-  /* Create a gradient background from zinc-900 to zinc-700 */
-  background-image: linear-gradient(to bottom, var(--zinc-900), #2d3748);
+  /* UPDATED: Subtler gradient from Zinc-900 to Zinc-800 */
+  background-image: linear-gradient(to bottom, var(--zinc-900), #27272a);
   color: var(--zinc-200);
 }
 
+/* Typography Stacks */
 h1,
 h2,
 h3,
@@ -34,46 +23,55 @@ h4,
 h5,
 h6,
 .font-comic {
-  /* Keep custom font stack */
   font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "Chalkboard SE",
     "Roboto", sans-serif;
 }
 
 p,
 span {
-  /* Keep custom font stack */
   font-family: "Roboto", "Arial", "Helvetica", "Verdana", sans-serif;
 }
 
+/* Form Defaults */
 select {
-  /* Retained necessary select styling */
   color: #d4d4d8;
 }
-
 select:required:invalid {
   color: #d4d4d8;
 }
-
+option {
+  color: rgb(22, 22, 22);
+}
 option[value=""][disabled] {
   display: none;
 }
 
-option {
-  color: rgb(22, 22, 22);
-}
-
-/* --- 3. Tailwind Utility Classes (@apply) --- */
+/* --- 2. Layout & Containers --- */
 
 .screen-container {
   @apply flex flex-col min-h-screen p-4 text-zinc-200 text-center;
 }
 
+/* Consolidated card styles */
 .card-style,
 .card-style1 {
   @apply flex-grow bg-transparent text-zinc-200 p-4 mt-10 mb-10 shadow-2xl;
 }
 
-/* Updated to text-amber-300 */
+.content-with-sidebar {
+  @apply md:ml-12;
+}
+
+.flex-row-wrap {
+  @apply flex flex-row flex-wrap sm:flex-nowrap;
+}
+
+.section-style {
+  @apply mb-6;
+}
+
+/* --- 3. Typography Classes --- */
+
 .title,
 .title-style,
 .subtitle-style {
@@ -92,139 +90,31 @@ option {
   @apply text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2;
 }
 
-.social-signin-button {
-  @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
-}
-
-.social-signin-button img {
-  @apply mr-2;
-}
-
-.google {
-  @apply bg-white text-black border border-gray-300;
-}
-
-.twitter {
-  @apply bg-blue-500 text-white;
-}
-
-.facebook {
-  @apply bg-blue-600 text-white;
-}
-
-.flex-row-wrap {
-  @apply flex flex-row flex-wrap sm:flex-nowrap;
-}
-
-.section-style {
-  @apply mb-6;
-}
-
-/* Updated to bg-amber-300 */
-.btn {
-  @apply bg-amber-300 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105;
-}
-
-.modal-backdrop {
-  @apply fixed inset-0 bg-black/50 flex justify-center items-center z-50;
-}
-
-.modal-container {
-  @apply bg-zinc-300 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
-}
-
-.modal-title {
-  @apply text-center mb-4 text-black text-xl;
-}
-
-.form-container {
-  @apply flex flex-col gap-1 bg-zinc-300;
-}
-
-.input-field,
-.standard-input,
-.modern-input {
-  @apply border-4 border-zinc-600 p-2 rounded-lg shadow-md text-zinc-900;
-}
-
-.close-button {
-  @apply absolute top-2 right-2 text-zinc-200 cursor-pointer bg-transparent border-none text-xl hover:text-zinc-300;
-}
-
-.standard-input:focus,
-.modern-input:focus {
-  @apply outline-none border-zinc-300 shadow-md;
-}
-
-.standard-input {
-  @apply border-zinc-400 px-4 py-2 bg-zinc-800;
-}
-
 .the-text {
   @apply block text-zinc-300 text-sm font-semibold mb-2;
 }
 
 .micFinderTitle {
-  @apply flex justify-center items-center text-3xl font-bold text-zinc-200;
-}
-
-@media (min-width: 768px) {
-  .micFinderTitle {
-    @apply text-4xl;
-  }
-}
-
-.event-item {
-  @apply p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200;
-}
-
-.event-item h3 {
-  @apply text-lg font-semibold mb-1;
-}
-
-.event-item p {
-  @apply text-sm mb-2;
-}
-
-.event-item .details {
-  @apply align-middle;
-}
-
-.event-item h3::before,
-.event-item p::before {
-  @apply text-xl align-middle;
-}
-
-.profile-image {
-  @apply rounded-full mx-auto;
+  @apply flex justify-center items-center text-3xl font-bold text-zinc-200 md:text-4xl;
 }
 
 .error-message {
   @apply text-red-500 my-4 font-bold;
 }
 
-.card {
-  @apply bg-gray-100 p-2.5 rounded-xl text-center mx-auto max-w-md text-gray-800;
-}
+/* --- 4. UI Components (Buttons, Inputs, Cards) --- */
 
-.instructions {
-  @apply mb-2 text-zinc-900;
-}
-
-.checkbox-container {
-  @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-xl;
-}
-
-.checkbox-wrapper {
-  @apply flex items-center;
-}
-
-.bot-message-container {
-  @apply bg-zinc-800/25 text-white/90 p-2.5 rounded-xl text-left;
+/* Buttons */
+.btn {
+  @apply bg-amber-300 text-zinc-900 px-2 py-1 m-2 rounded-xl shadow-lg transform transition-transform hover:scale-105;
 }
 
 .neu-button {
   @apply bg-zinc-900 text-zinc-200 rounded-xl drop-shadow-lg px-2 py-1;
+}
+
+.neu-button:hover {
+  text-decoration: underline dashed #fcd34d;
 }
 
 .btn:hover,
@@ -233,49 +123,88 @@ option {
   @apply animate-pulse;
 }
 
-.neu-button:hover {
-  text-decoration-line: underline;
-  text-decoration-style: dashed;
-  /* Updated to text-amber-300 */
-  text-decoration-color: #fcd34d;
+.gif-button img {
+  transition: transform 0.3s ease-in-out;
+}
+.gif-button:hover img {
+  transform: scale(1.1);
+}
+
+/* Inputs */
+.input-field,
+.standard-input,
+.modern-input {
+  @apply border-4 border-zinc-600 p-2 rounded-lg shadow-md text-zinc-900;
+}
+
+.standard-input,
+.modern-input {
+  @apply outline-none focus:border-zinc-300 focus:shadow-md;
+}
+
+.standard-input {
+  @apply border-zinc-400 px-4 py-2 bg-zinc-800;
+}
+
+/* Modals */
+.modal-backdrop {
+  @apply fixed inset-0 bg-black/50 flex justify-center items-center z-50;
+}
+
+.modal-container {
+  @apply bg-zinc-300 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
+}
+
+.close-button {
+  @apply absolute top-2 right-2 text-zinc-200 cursor-pointer bg-transparent border-none text-xl hover:text-zinc-300;
+}
+
+/* Cards & Misc */
+.card {
+  @apply bg-gray-100 p-2.5 rounded-xl text-center mx-auto max-w-md text-gray-800;
 }
 
 .glass-effect {
   @apply bg-zinc-900/40 backdrop-blur-md;
 }
 
-/* --- 4. Required Pure CSS/Custom Selectors --- */
-
-.tab-button {
-  padding: 0.625rem 1.25rem;
-  margin: 0 0.325rem;
-  cursor: pointer;
-  border-radius: 0.325rem;
-  transition:
-    background-color 0.1s,
-    color 0.1s;
-  border: none;
+.bg-gradient-animation {
+  background: linear-gradient(45deg, #fcd34d);
+  background-size: 400% 400%;
 }
 
-.tab-button-active {
-  /* Using Tailwind's orange-600 (approx. #F97316) for active state contrast */
-  @apply bg-amber-300 text-zinc-900;
+/* --- 5. Specific Features --- */
+
+/* Event List */
+.event-item {
+  @apply p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200;
+}
+.event-item h3 {
+  @apply text-lg font-semibold mb-1;
+}
+.event-item p {
+  @apply text-sm mb-2;
+}
+.event-item h3::before,
+.event-item p::before {
+  @apply text-xl align-middle;
 }
 
-.tab-button-active:hover {
-  /* Using Tailwind's amber-400 (approx. #FBBF24) */
-  background-color: #fbbf24;
+/* Profile & Checkboxes */
+.profile-image {
+  @apply rounded-full mx-auto;
+}
+.checkbox-container {
+  @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-xl;
+}
+.checkbox-container label {
+  @apply cursor-pointer transition-colors duration-200;
+}
+.checkbox-wrapper {
+  @apply flex items-center;
 }
 
-.tab-button-inactive {
-  /* Inactive is zinc-100 background with amber-300 text */
-  @apply bg-zinc-100 text-amber-300;
-}
-
-.tab-button-inactive:hover {
-  background-color: #e4e4e7; /* Slightly darker zinc-100 */
-}
-
+/* Navigation */
 .nav-link {
   display: flex;
   flex-direction: column;
@@ -288,104 +217,142 @@ option {
   color: inherit;
   font-size: 1.5rem;
 }
-
 .nav-link:hover {
   transform: scale(1.05);
 }
 
-.facebook-signin-button {
+/* Tabs */
+.tab-button {
+  padding: 0.625rem 1.25rem;
+  margin: 0 0.325rem;
+  cursor: pointer;
+  border-radius: 0.325rem;
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+  border: none;
+}
+.tab-button-active {
+  @apply bg-amber-300 text-zinc-900;
+}
+.tab-button-active:hover {
+  background-color: #fbbf24;
+}
+.tab-button-inactive {
+  @apply bg-zinc-100 text-amber-300;
+}
+.tab-button-inactive:hover {
+  background-color: #e4e4e7;
+}
+
+/* News */
+.news-item {
+  border-bottom: 0.125rem solid #d4d4d8;
+  margin-bottom: 4rem;
+  padding-bottom: 3rem;
+  text-align: center;
+}
+.news-item:last-child {
+  border-bottom: none;
+}
+.news-description,
+.news-link {
+  display: block;
+  margin-top: 5px;
+  text-align: center;
+}
+.news-description {
+  padding: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Categories */
+.category-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.category-title:after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 0.125rem;
+  background: #fcd34d;
+  margin: 0.5rem auto 1.5rem;
+}
+
+/* --- 6. Social Buttons (Custom CSS) --- */
+
+.social-signin-button {
+  @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
+}
+
+.facebook-signin-button,
+.twitter-signin-button,
+.google-signin-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4267b2;
-  color: #ffffff;
-  border: none;
   border-radius: 9999px;
-  padding: 10px 20px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   transition:
     background-color 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
 }
 
+.facebook-signin-button {
+  background-color: #4267b2;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
 .facebook-signin-button:hover {
   background-color: #365899;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 .facebook-signin-button img {
   margin-right: 10px;
 }
 
 .twitter-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: #1da1f2;
   color: #ffffff;
   padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
-  font-family: Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
 }
-
 .twitter-signin-button:hover {
   background-color: #1a91da;
 }
-
 .twitter-signin-button:active {
   background-color: #1681c1;
 }
-
 .twitter-signin-button span {
   margin-left: 0.5rem;
 }
 
 .google-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: #fffffff3;
   color: #2a2a2a;
   border: 1px solid #dcdcdc;
-  border-radius: 9999px;
   padding: 10px 20px;
-  font-family: Arial, sans-serif;
   font-size: 14px;
   font-weight: bold;
-  cursor: pointer;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
 }
-
 .google-signin-button:hover {
   transform: scale(1.05);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
-
 .google-signin-button img {
   width: 25px;
   height: 25px;
   margin-right: 10px;
 }
 
-.gif-button img {
-  transition: transform 0.3s ease-in-out;
-}
-
-.gif-button:hover img {
-  transform: scale(1.1);
-}
+/* --- 7. Video Modal & Guide --- */
 
 .video-modal {
   position: fixed;
@@ -399,21 +366,16 @@ option {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 50;
 }
-
+.video-modal video {
+  width: 100%;
+  height: 100vh;
+}
 @media (min-width: 768px) {
   .video-modal video {
     width: 500px;
     height: auto;
   }
 }
-
-@media (max-width: 768px) {
-  .video-modal video {
-    width: 100%;
-    height: 100vh;
-  }
-}
-
 @media (min-width: 769px) {
   .video-modal video {
     width: 350px;
@@ -427,11 +389,9 @@ option {
   bottom: 3rem;
   z-index: 1000;
 }
-
 .custom-backdrop {
   pointer-events: none;
 }
-
 .custom-dialog {
   background-color: #d4d4d8;
   border-radius: 10px;
@@ -439,106 +399,16 @@ option {
   padding: 10px;
   z-index: 9999;
 }
-
 .custom-dialog::before {
   content: "";
   transform: translateY(-50%);
 }
 
-/* Updated color in the linear gradient to amber-300 hex */
-.bg-gradient-animation {
-  background: linear-gradient(45deg, #fcd34d);
-  background-size: 400% 400%;
-}
-
-@media (min-width: 768px) {
-  .content-with-sidebar {
-    margin-left: 3rem;
-  }
-}
-
-.loading-indicator {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.event-item h3::before,
-.event-item p::before {
-  @apply text-xl align-middle;
-}
-
-.rounded-soft {
-  border-radius: 0.635rem;
-}
-
-/* Removed: .text-accent since we are using native text-amber-300 */
-
-.category-container {
-  margin-top: 2rem;
-  padding: 0.5rem;
-}
-
-.category-title {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.category-title:after {
-  content: "";
-  display: block;
-  width: 50%;
-  height: 0.125rem;
-  /* Updated to amber-300 hex */
-  background: #fcd34d;
-  margin: 0.5rem auto 1.5rem;
-}
-
-.news-item {
-  border-bottom: 0.125rem solid #d4d4d8;
-  margin-bottom: 4rem;
-  padding-bottom: 3rem;
-  transition: background-color 0.3s;
-  text-align: center;
-}
-
-.news-item:last-child {
-  border-bottom: none;
-}
-
-.news-description,
-.news-link {
-  display: block;
-  margin-top: 5px;
-  text-align: center;
-}
-
-.news-description {
-  padding: 0.25rem;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.checkbox-container label {
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.checkbox-container label:hover {
-  cursor: pointer;
-}
-
-/* --- 5. Keyframes --- */
+/* --- 8. Animations --- */
 
 .animate-slide-in {
   animation: slide-in 0.3s forwards;
 }
-
 .animate-slide-out {
   animation: slide-out 0.3s forwards;
 }
@@ -553,7 +423,6 @@ option {
     opacity: 1;
   }
 }
-
 @keyframes slide-out {
   0% {
     transform: translateX(0);
