@@ -443,12 +443,6 @@ textarea {
 2. Set the default placeholder color to the user's configured gray 400 color.
 */
 
-input::-moz-placeholder,
-textarea::-moz-placeholder {
-  opacity: 1; /* 1 */
-  color: #9ca3af; /* 2 */
-}
-
 input::placeholder,
 textarea::placeholder {
   opacity: 1; /* 1 */
@@ -536,6 +530,7 @@ video {
   position: relative;
 }
 .sticky {
+  position: -webkit-sticky;
   position: sticky;
 }
 .inset-0 {
@@ -1287,9 +1282,11 @@ video {
   color: rgb(31 32 34 / var(--tw-text-opacity, 1));
 }
 .underline {
+  -webkit-text-decoration-line: underline;
   text-decoration-line: underline;
 }
 .decoration-orange-500 {
+  -webkit-text-decoration-color: #fcd34d;
   text-decoration-color: #fcd34d;
 }
 .decoration-\[0\.125rem\] {
@@ -1382,6 +1379,11 @@ video {
 }
 .backdrop-blur-sm {
   --tw-backdrop-blur: blur(4px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+    var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
+    var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
+    var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+    var(--tw-backdrop-sepia);
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
     var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
     var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
@@ -1389,9 +1391,35 @@ video {
     var(--tw-backdrop-sepia);
 }
 .transition {
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    fill,
+    stroke,
+    opacity,
+    box-shadow,
+    transform,
+    filter,
+    -webkit-text-decoration-color,
+    -webkit-backdrop-filter;
   transition-property: color, background-color, border-color,
     text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
     backdrop-filter;
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    opacity,
+    box-shadow,
+    transform,
+    filter,
+    backdrop-filter,
+    -webkit-text-decoration-color,
+    -webkit-backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -1401,8 +1429,23 @@ video {
   transition-duration: 150ms;
 }
 .transition-colors {
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    fill,
+    stroke,
+    -webkit-text-decoration-color;
   transition-property: color, background-color, border-color,
     text-decoration-color, fill, stroke;
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    -webkit-text-decoration-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -1841,6 +1884,11 @@ option[value=""][disabled] {
 .glass-effect {
   background-color: rgb(31 32 34 / 0.4);
   --tw-backdrop-blur: blur(12px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+    var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
+    var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
+    var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+    var(--tw-backdrop-sepia);
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
     var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale)
     var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
@@ -1899,8 +1947,23 @@ option[value=""][disabled] {
 }
 .checkbox-container label {
   cursor: pointer;
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    fill,
+    stroke,
+    -webkit-text-decoration-color;
   transition-property: color, background-color, border-color,
     text-decoration-color, fill, stroke;
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    text-decoration-color,
+    fill,
+    stroke,
+    -webkit-text-decoration-color;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
 }
@@ -2276,6 +2339,7 @@ option[value=""][disabled] {
   color: rgb(212 212 216 / var(--tw-text-opacity, 1));
 }
 .hover\:underline:hover {
+  -webkit-text-decoration-line: underline;
   text-decoration-line: underline;
 }
 .hover\:opacity-90:hover {

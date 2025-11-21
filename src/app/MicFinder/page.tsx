@@ -612,6 +612,15 @@ const EventsPage = () => {
           content="Jump into the local comedy scene with MicFinder!..."
         />
         <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="preconnect" href="https://apis.google.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
       </Head>
       <Script
         strategy="lazyOnload"
