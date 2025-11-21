@@ -216,7 +216,7 @@ const EventForm: React.FC = () => {
   return (
     <>
       <button
-        className="bg-green-600 hover:bg-green-700 text-zinc-900 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
+        className="bg-green-600 hover:bg-green-700 text-black px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
         onClick={() => setShowModal(true)}
         disabled={isSubmitting}
       >

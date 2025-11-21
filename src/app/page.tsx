@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
-
-// Static imports for Layout Stability (CLS optimization)
+import Head from "next/head";
+import Script from "next/script";
 import Header from "./components/header";
 import Footer from "./components/footer";
 
@@ -33,20 +33,39 @@ export default function Home() {
   const sendDataLayerEvent = useCallback(
     (
       event_name: string,
-      params: { event_category: string; event_label: string },
+      params: { event_category: string; event_label: string }
     ) => {
       if (typeof window !== "undefined") {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: event_name, ...params });
       }
     },
-    [],
+    []
   );
 
   return (
     <>
+      <Head>
+        <title>Humor Hub - The Hub of Humor, Open Mics</title>
+        <meta
+          name="description"
+          content="Jump into the local comedy scene with Humor Hub!..."
+        />
+        <link rel="canonical" href="https://www.thehumorhub.com/" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+      </Head>
+      <Script
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
+      />
       <Header />
-
       <div className="screen-container content-with-sidebar">
         <h1 className="hidden md:block text-zinc-200 text-6xl font-bold mb-6 tracking-wide">
           Humor Hub!
@@ -76,7 +95,7 @@ export default function Home() {
               {/* CLEANED UP: Applied classes directly to Link, removed wrapper div & span */}
               <Link
                 href="/MicFinder"
-                className="btn w-80 text-center self-center"
+                className="btn w-80 text-center self-center text-black"
                 onClick={() =>
                   sendDataLayerEvent("click_micfinder_button", {
                     event_category: "Navigation",
@@ -92,7 +111,6 @@ export default function Home() {
             <div className="flex-1 flex justify-center md:justify-end w-full md:w-auto">
               <Link href="/MicFinder" className="relative group">
                 {/* Glow Effect */}
-                <div className="absolute -inset-1 bg-amber-300 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200"></div>
                 <Image
                   src={micFinder}
                   alt="Mic Finder Logo"

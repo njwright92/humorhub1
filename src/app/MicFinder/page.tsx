@@ -2,7 +2,6 @@
 
 import React, {
   useState,
-  useRef,
   useEffect,
   useCallback,
   useMemo,
@@ -193,8 +192,6 @@ const EventsPage = () => {
 
   // Debounce for search
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
-  const searchTimeoutRef = useRef<number | null>(null);
 
   // Constants / Helpers
   const normalizeCityName = useCallback((name: string) => name.trim(), []);

@@ -112,7 +112,7 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-zinc-900 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold;
+  @apply bg-amber-300 text-black px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold;
 }
 
 .neu-button {

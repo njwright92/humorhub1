@@ -62,8 +62,6 @@ const HumorHubAPISection: React.FC = () => {
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && handleAction()}
           >
-            <div className="absolute -inset-1 bg-amber-300 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200"></div>
-
             <Image
               src={news}
               alt="Comedy News Update"
