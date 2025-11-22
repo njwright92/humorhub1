@@ -8,17 +8,11 @@ import React, {
   Suspense,
 } from "react";
 import dynamic from "next/dynamic";
-import { app, db, auth } from "../../../firebase.config";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  setDoc,
-} from "firebase/firestore";
+import { db, auth } from "../../../firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List, areEqual } from "react-window";
 import { parse, isValid } from "date-fns";
+import Link from "next/link";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import EventForm from "../components/EventForm";
@@ -73,44 +67,6 @@ type Event = {
 
 type CityCoordinates = {
   [key: string]: { lat: number; lng: number };
-};
-
-// --- Sub-Components ---
-
-const OpenMicBanner = () => {
-  const [visible, setVisible] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(false), 10000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <div
-      className={`border border-red-400 text-red-700 px-2 py-1 rounded-xl shadow-xl relative text-center mb-2 bg-zinc-200 ${
-        visible ? "" : "invisible"
-      }`}
-    >
-      <strong className="font-bold">📢 Note: </strong>
-      <span className="block sm:inline">
-        Open mic events evolve quickly. See something outdated? Let us know.
-        Help keep the comedy community thriving!
-      </span>
-      <span
-        className="absolute top-0 right-0 px-2 py-1 cursor-pointer"
-        onClick={() => setVisible(false)}
-      >
-        <svg
-          className="fill-current h-6 w-6 text-red-400 hover:text-red-600"
-          role="button"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-        >
-          <title>Close</title>
-          <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
-        </svg>
-      </span>
-    </div>
-  );
 };
 
 // Virtualized Row Component
@@ -183,7 +139,6 @@ const EventsPage = () => {
   const [selectedTab, setSelectedTab] = useState<
     "Mics" | "Festivals" | "Other"
   >("Mics");
-  const [isFormActive, setIsFormActive] = useState(false);
 
   // Debounce for search
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -244,7 +199,6 @@ const EventsPage = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-      // Only log analytics if there is an actual search term
       if (searchTerm.trim().length > 2) {
         sendDataLayerEvent("search_city", {
           event_category: "City Search",
@@ -259,12 +213,41 @@ const EventsPage = () => {
     setSearchTerm(e.target.value);
   };
 
-  // Fetch Events
+  // --- Optimized Data Fetching ---
   useEffect(() => {
-    const fetchEvents = async () => {
+    let mounted = true;
+
+    const loadData = async () => {
+      // 1. Check Cache First (Instant Render)
+      const cachedEvents = sessionStorage.getItem("hh_events");
+      const cachedCities = sessionStorage.getItem("hh_city_coords");
+
+      if (cachedEvents && cachedCities) {
+        if (mounted) {
+          const parsedEvents = JSON.parse(cachedEvents).map((e: any) => ({
+            ...e,
+            parsedDateObj: e.parsedDateObj
+              ? new Date(e.parsedDateObj)
+              : undefined,
+          }));
+          setEvents(parsedEvents);
+          setCityCoordinates(JSON.parse(cachedCities));
+        }
+        return;
+      }
+
       try {
-        const querySnapshot = await getDocs(collection(db, "userEvents"));
-        const fetchedEvents: Event[] = querySnapshot.docs.map((doc) => {
+        // 2. Dynamic Import of Firestore SDK
+        const { collection, getDocs } = await import("firebase/firestore");
+
+        // 3. Parallel Fetching
+        const [eventsSnapshot, citiesSnapshot] = await Promise.all([
+          getDocs(collection(db, "userEvents")),
+          getDocs(collection(db, "cities")),
+        ]);
+
+        // Process Events
+        const fetchedEvents: Event[] = eventsSnapshot.docs.map((doc) => {
           const data = doc.data();
           let parsedDateObj: Date | undefined = undefined;
           if (data.date && typeof data.date === "string") {
@@ -279,6 +262,7 @@ const EventsPage = () => {
             }
           }
           return {
+            id: doc.id,
             ...data,
             festival: data.festival === true,
             isMusic: data.isMusic === true,
@@ -288,20 +272,8 @@ const EventsPage = () => {
               : 0,
           } as Event;
         });
-        setEvents(fetchedEvents);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
-    fetchEvents();
-  }, []);
 
-  // Fetch Cities
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const dbInstance = getFirestore(app);
-        const citiesSnapshot = await getDocs(collection(dbInstance, "cities"));
+        // Process Cities
         const citiesData: CityCoordinates = {};
         citiesSnapshot.docs.forEach((doc) => {
           const cityData = doc.data();
@@ -310,32 +282,44 @@ const EventsPage = () => {
             lng: cityData.coordinates.lng,
           };
         });
-        setCityCoordinates(citiesData);
+
+        if (mounted) {
+          setEvents(fetchedEvents);
+          setCityCoordinates(citiesData);
+          sessionStorage.setItem("hh_events", JSON.stringify(fetchedEvents));
+          sessionStorage.setItem("hh_city_coords", JSON.stringify(citiesData));
+        }
       } catch (error) {
-        console.error("Error fetching cities:", error);
+        console.error("Error loading data:", error);
       }
     };
-    fetchCities();
+
+    if ("requestIdleCallback" in window) {
+      (window as any).requestIdleCallback(() => loadData());
+    } else {
+      setTimeout(loadData, 100);
+    }
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Auth State
   useEffect(() => {
     let unsub: any;
-
-    // We delay this by 800ms so the heavy map and list load FIRST
     const timer = setTimeout(() => {
       unsub = onAuthStateChanged(auth, (user) => {
         setIsUserSignedIn(!!user);
       });
     }, 800);
-
     return () => {
       clearTimeout(timer);
       if (unsub) unsub();
     };
   }, []);
 
-  // Geolocation Handler - FIXED: Updates UI and SearchTerm
+  // Geolocation Handler
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
@@ -347,8 +331,6 @@ const EventsPage = () => {
         const closestCity = findClosestCity(latitude, longitude);
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
-
-          // UPDATE ALL STATES TO REFLECT LOCATION
           setSelectedCity(normalized);
           setFilterCity(normalized);
           setSearchTerm(normalized);
@@ -377,11 +359,10 @@ const EventsPage = () => {
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
-    } else if (Object.keys(cityCoordinates).length > 0 && !selectedCity) {
-      fetchUserLocation();
     }
+
     if (queryTerm) setSearchTerm(queryTerm);
-  }, [fetchUserLocation, cityCoordinates, selectedCity]);
+  }, [cityCoordinates]);
 
   // Update map location
   useEffect(() => {
@@ -423,17 +404,10 @@ const EventsPage = () => {
   }, [allAvailableCities, debouncedSearchTerm]);
 
   const eventsForMap = useMemo(() => {
-    const lowerSelectedCity = selectedCity.toLowerCase();
-    return events.filter((event) => {
-      if (!isTabMatch(event)) return false;
-      const cityMatch =
-        !selectedCity ||
-        (event.location &&
-          event.location.toLowerCase().includes(lowerSelectedCity));
-      return cityMatch;
-    });
-  }, [events, selectedCity, isTabMatch]);
+    return events.filter((event) => isTabMatch(event));
+  }, [events, isTabMatch]);
 
+  // List filter logic
   const filteredEventsForView = useMemo(() => {
     const normalizedSelectedDate = new Date(selectedDate);
     normalizedSelectedDate.setHours(0, 0, 0, 0);
@@ -521,11 +495,13 @@ const EventsPage = () => {
       setFilterCity(city);
       setSelectedCity("");
       setSearchTerm("");
+      setDebouncedSearchTerm("");
     } else {
       const normalized = normalizeCityName(city);
       setFilterCity(normalized);
       setSelectedCity(normalized);
       setSearchTerm(normalized);
+      setDebouncedSearchTerm(normalized);
     }
     setIsSecondDropdownOpen(false);
     sendDataLayerEvent("filter_city", {
@@ -538,18 +514,27 @@ const EventsPage = () => {
     async (event: Event) => {
       if (!isUserSignedIn)
         return alert("Please sign in to save events to your profile.");
+
       try {
         const user = auth.currentUser;
         if (!user) throw new Error("User not found.");
+
+        if (!event.id) throw new Error("Event ID missing.");
+
+        const { doc, setDoc, collection } = await import("firebase/firestore");
+
+        const { parsedDateObj, ...dataToSave } = event;
+
         const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
-        await setDoc(userSavedEventRef, { ...event, userId: user.uid });
+        await setDoc(userSavedEventRef, { ...dataToSave, userId: user.uid });
+
         alert("Event saved to your profile successfully!");
         sendDataLayerEvent("save_event", {
           event_category: "Event Interaction",
           event_label: event.name,
         });
       } catch (error) {
-        console.error(error);
+        console.error("Save failed:", error);
         alert("Oops! Something went wrong. Please try again.");
       }
     },
@@ -611,7 +596,20 @@ const EventsPage = () => {
     <>
       <Header />
       <div className="screen-container content-with-sidebar">
-        <OpenMicBanner />
+        <div className="border border-red-400 text-red-700 px-3 py-2 rounded-lg shadow-md text-center mb-3 bg-zinc-200 text-xs sm:text-sm">
+          <p className="m-0">
+            <strong className="font-bold">📢 Note: </strong>
+            Open mic events evolve quickly. See something outdated?{" "}
+            <Link
+              href="/contact"
+              className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
+            >
+              Contact Us
+            </Link>{" "}
+            to let us know. Help keep the comedy community thriving!
+          </p>
+        </div>
+
         <h1 className="title font-bold text-center mb-6">MicFinder</h1>
         <h2 className="subtitle-style font-medium text-center mb-6">
           Discover Mics and Festivals Near You!
@@ -659,7 +657,6 @@ const EventsPage = () => {
                   autoFocus
                 />
                 <ul className="text-zinc-900" role="listbox">
-                  {/* 💡 GEOLOCATION BUTTON FIXED HERE */}
                   <li
                     className="px-4 py-3 cursor-pointer bg-green-50 hover:bg-green-100 text-center font-bold text-green-700 border-b border-zinc-200 flex justify-center items-center gap-2"
                     onClick={() => {

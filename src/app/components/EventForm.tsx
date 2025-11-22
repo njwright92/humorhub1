@@ -8,7 +8,7 @@ const EventFormContent = dynamic(() => import("./EventFormContent"), {
   ssr: false,
   loading: () => (
     // Loading state matches the real button exactly to prevent layout shift
-    <button className="bg-green-700 text-zinc-900 px-2 py-1 rounded-xl shadow-lg font-bold text-lg tracking-wide cursor-wait">
+    <button className="bg-green-600 text-zinc-950 px-2 py-1 rounded-xl shadow-lg font-bold text-lg tracking-wide cursor-wait">
       Loading...
     </button>
   ),
@@ -39,7 +39,7 @@ export default function EventForm() {
 
   return (
     <button
-      className="bg-green-700 hover:bg-green-800 text-zinc-900 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
+      className="bg-green-600 hover:bg-green-800 text-zinc-950 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
     >

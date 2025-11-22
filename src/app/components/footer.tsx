@@ -66,7 +66,7 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:w-3/4 md:pr-10">
             {/* Section 1 */}
             <div>
-              <h2 className="mb-4 md:mb-6 text-sm md:text-lg font-bold text-amber-300 uppercase tracking-wider">
+              <h2 className="mb-4 md:mb-6 text-md md:text-lg font-bold text-amber-300 uppercase tracking-wider">
                 Get to Know Us
               </h2>
               <ul className="text-zinc-300 space-y-3 md:space-y-4 font-medium">
@@ -91,7 +91,7 @@ export default function Footer() {
 
             {/* Section 2 */}
             <div>
-              <h2 className="mb-4 md:mb-6 text-sm md:text-lg font-bold text-amber-300 uppercase tracking-wider">
+              <h2 className="mb-4 md:mb-6 text-md md:text-lg font-bold text-amber-300 uppercase tracking-wider">
                 Stay Connected
               </h2>
               <ul className="text-zinc-300 space-y-3 md:space-y-4 font-medium">
@@ -140,7 +140,7 @@ export default function Footer() {
 
             {/* Section 3 */}
             <div>
-              <h2 className="mb-4 md:mb-6 text-sm md:text-lg font-bold text-amber-300 uppercase tracking-wider">
+              <h2 className="mb-4 md:mb-6 text-md md:text-lg font-bold text-amber-300 uppercase tracking-wider">
                 Legal Info
               </h2>
               <div className="text-zinc-300 flex flex-col space-y-3 md:space-y-4 font-medium">
@@ -197,9 +197,9 @@ export default function Footer() {
             </div>
 
             {/* Left Side (Desktop) / Bottom (Mobile) - Copyright */}
-            <div className="text-center sm:text-left">
+            <div className="text-left">
               <span
-                className="text-sm md:text-md text-zinc-400 block sm:inline font-mono"
+                className="text-xs md:text-sm text-zinc-400 block sm:inline font-mono"
                 suppressHydrationWarning
               >
                 © {new Date().getFullYear()} Humor Hub™. All rights reserved.
