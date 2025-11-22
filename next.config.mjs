@@ -2,14 +2,13 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  reactStrictMode: true, // Does not hurt performance in production
+  reactStrictMode: true,
   compress: true,
 
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
 
-  // 2. BUNDLE OPTIMIZATION
   experimental: {
     optimizePackageImports: [
       "firebase/app",
@@ -21,6 +20,7 @@ const nextConfig = {
       "date-fns",
       "aos",
     ],
+    optimizeCss: true,
   },
 
   images: {

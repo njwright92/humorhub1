@@ -213,7 +213,7 @@ export default function SearchBar({
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center p-1 bg-zinc-100 text-zinc-900 rounded-full transform transition-colors"
+          className="flex items-center justify-center p-1 bg-zinc-200 text-zinc-900 rounded-full transform transition-colors"
           aria-label="Toggle search"
         >
           <svg
@@ -243,7 +243,7 @@ export default function SearchBar({
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-72 sm:w-80 z-50">
           <form
             onSubmit={handleSearch}
-            className="flex flex-col items-center rounded-lg bg-zinc-100 shadow-xl p-2 animate-fade-in-down border border-zinc-200"
+            className="flex flex-col items-center rounded-lg bg-zinc-200 shadow-xl p-2 animate-fade-in-down border border-zinc-400"
           >
             <input
               ref={inputRef}
@@ -251,7 +251,7 @@ export default function SearchBar({
               placeholder="Search city, page, or keyword..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-2 text-black rounded-lg bg-zinc-50 w-full outline-none border border-transparent focus:border-orange-500 transition-colors"
+              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full outline-none border border-transparent focus:border-orange-500 transition-colors"
               autoComplete="off"
             />
 

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- 1. Custom CSS Variables --- */
 :root {
   --zinc-900: #2e2c28;
   --zinc-200: #f4f4f5;

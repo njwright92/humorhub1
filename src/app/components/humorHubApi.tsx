@@ -69,7 +69,7 @@ const HumorHubAPISection: React.FC = () => {
               height={180}
               placeholder="blur"
               className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
-              priority={false}
+              loading="lazy"
               style={{ objectFit: "cover" }}
             />
           </div>

@@ -17,7 +17,7 @@ export default function Home() {
     const initAOS = async () => {
       const AOS = (await import("aos")).default;
       await import("aos/dist/aos.css");
-      AOS.init({ duration: 1000, once: true });
+      AOS.init({ duration: 600, once: true });
     };
     initAOS();
   }, []);
@@ -87,7 +87,7 @@ export default function Home() {
                   height={180}
                   placeholder="blur"
                   className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
-                  priority
+                  loading="lazy"
                   style={{ objectFit: "contain" }}
                   onClick={() =>
                     sendDataLayerEvent("click_micfinder_image", {

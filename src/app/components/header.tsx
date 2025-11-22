@@ -207,7 +207,7 @@ export default function Header() {
                   width={60}
                   height={60}
                   className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-2 transform transition-transform hover:scale-110 shadow-md"
-                  priority
+                  loading="lazy"
                 />
                 {/* Home Tooltip */}
                 <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">

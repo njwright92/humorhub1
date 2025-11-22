@@ -77,13 +77,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
-        <link rel="preconnect" href="https://securetoken.googleapis.com" />
-      </head>
-
-      <body
-        className={`${comicNeue.variable} ${rubik.variable} bg-zinc-900 text-zinc-200 antialiased`}
-      >
         <Script
           id="gtm-script"
           strategy="lazyOnload"
@@ -97,17 +90,13 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
             `,
           }}
         />
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-            title="Google Tag Manager Noscript"
-            aria-hidden="true"
-          ></iframe>
-        </noscript>
+        <link rel="preconnect" href="https://apis.google.com" />
+        <link rel="preconnect" href="https://humorhub-73ff9.firebaseapp.com" />
+      </head>
 
+      <body
+        className={`${comicNeue.variable} ${rubik.variable} bg-zinc-900 text-zinc-200 antialiased`}
+      >
         {children}
       </body>
     </html>
