@@ -41,7 +41,7 @@ const ClientSignOutButton: React.FC = React.memo(() => {
     <button
       onClick={handleSignOut}
       disabled={loading}
-      className="bg-red-500 text-zinc-100 px-4 py-1 rounded-full transition-transform transform hover:scale-105 hover:underline focus:outline-none disabled:opacity-50"
+      className="bg-red-700 text-zinc-200 px-4 py-1 rounded-full transition-transform transform hover:scale-105 hover:underline focus:outline-none disabled:opacity-50"
     >
       {loading ? "Signing Out..." : "Sign Out"}
     </button>

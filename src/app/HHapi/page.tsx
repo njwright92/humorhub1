@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import Script from "next/script";
-import Image from "next/image"; // Good practice to have if you add images later
-import Link from "next/link";
 import Loading from "../components/loading";
 
 // OPTIMIZATION: Static imports for layout stability

@@ -1,25 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&family=Rubik:wght@300;400;500;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* --- 1. Base & Variables --- */
-
 :root {
-  /* UPDATED COLORS */
   --zinc-900: #2e2c28;
   --zinc-200: #f4f4f5;
-  --accent-color: #b35a30; /* Replaces the old yellow */
+  --accent-color: #b35a30;
 }
 
 body {
-  /* Subtler gradient using new Zinc-900 */
   background-image: linear-gradient(to bottom, var(--zinc-900), #27272a);
   color: var(--zinc-200);
 }
 
-/* UPDATED Typography Stacks */
 h1,
 h2,
 h3,
@@ -27,15 +20,13 @@ h4,
 h5,
 h6,
 .font-comic {
-  font-family: "Comic Neue", "Comic Sans MS", "Segoe UI",
-    "Arial Rounded MT Bold", "Arial", sans-serif;
+  font-family: var(--font-comic-neue), "Comic Sans MS", "Arial", sans-serif;
 }
 
 p,
 span,
 body {
-  font-family: "Rubik", "Segoe UI", "Roboto", "Helvetica Neue", "Helvetica",
-    "Arial", sans-serif;
+  font-family: var(--font-rubik), "Segoe UI", "Helvetica", "Arial", sans-serif;
 }
 
 /* Form Defaults */
@@ -112,7 +103,7 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-black px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold;
+  @apply bg-amber-300 text-white px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-medium;
 }
 
 .neu-button {

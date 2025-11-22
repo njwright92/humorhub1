@@ -29,7 +29,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-black md:ml-20"
+      className="bg-#2e2c28 md:ml-20"
       aria-labelledby="footer-heading"
       id="footer"
     >

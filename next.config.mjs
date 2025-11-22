@@ -2,7 +2,7 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: true, // Does not hurt performance in production
   compress: true,
 
   compiler: {
@@ -11,13 +11,16 @@ const nextConfig = {
 
   // 2. BUNDLE OPTIMIZATION
   experimental: {
+    // Added 'aos' and 'firebase/app' to this list to reduce bundle size
     optimizePackageImports: [
+      "firebase/app",
       "firebase/auth",
       "firebase/firestore",
       "react-datepicker",
       "@emailjs/browser",
       "uuid",
       "date-fns",
+      "aos",
     ],
   },
 
@@ -35,7 +38,6 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Cache static assets for 1 year
         source:
           "/:all*(svg|jpg|jpeg|png|gif|webp|ico|woff|woff2|ttf|otf|js|css)",
         headers: [
@@ -46,7 +48,6 @@ const nextConfig = {
         ],
       },
       {
-        // Global Security Headers
         source: "/:path*",
         headers: [
           { key: "X-DNS-Prefetch-Control", value: "on" },

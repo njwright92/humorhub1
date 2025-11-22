@@ -105,12 +105,19 @@ export default function Header() {
     };
   }, []);
 
-  /* Auth listener */
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-    });
-    return () => unsub();
+    let unsub: any; // Delaying this check allows LCP (First Paint) to happen immediately
+
+    const timer = setTimeout(() => {
+      unsub = onAuthStateChanged(auth, (user) => {
+        setIsUserSignedIn(!!user);
+      });
+    }, 800); // 800ms delay moves this off the critical path
+
+    return () => {
+      clearTimeout(timer);
+      if (unsub) unsub();
+    };
   }, []);
 
   /* UPDATED: Sets pending redirect for News */
@@ -389,7 +396,7 @@ export default function Header() {
                   width={70}
                   height={70}
                   className="rounded-full mt-2 cursor-pointer"
-                  priority
+                  loading="lazy"
                 />
               </Link>
 

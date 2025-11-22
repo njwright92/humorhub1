@@ -18,11 +18,10 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { FixedSizeList as List, areEqual } from "react-window";
-import Head from "next/head";
-import Script from "next/script";
 import { parse, isValid } from "date-fns";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import EventForm from "../components/EventForm";
 
 // --- Utility Functions ---
 
@@ -51,11 +50,6 @@ const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
       Loading Map...
     </div>
   ),
-  ssr: false,
-});
-
-const EventForm = dynamic(() => import("../components/EventForm"), {
-  loading: () => <div className="h-16 mb-4 w-full rounded-xl"></div>,
   ssr: false,
 });
 
@@ -92,7 +86,7 @@ const OpenMicBanner = () => {
 
   return (
     <div
-      className={`border border-red-400 text-red-500 px-2 py-1 rounded-xl shadow-xl relative text-center mb-2 bg-zinc-100 ${
+      className={`border border-red-400 text-red-700 px-2 py-1 rounded-xl shadow-xl relative text-center mb-2 bg-zinc-200 ${
         visible ? "" : "invisible"
       }`}
     >
@@ -189,6 +183,7 @@ const EventsPage = () => {
   const [selectedTab, setSelectedTab] = useState<
     "Mics" | "Festivals" | "Other"
   >("Mics");
+  const [isFormActive, setIsFormActive] = useState(false);
 
   // Debounce for search
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -324,10 +319,21 @@ const EventsPage = () => {
   }, []);
 
   // Auth State
-  useEffect(
-    () => onAuthStateChanged(auth, (user) => setIsUserSignedIn(!!user)),
-    [],
-  );
+  useEffect(() => {
+    let unsub: any;
+
+    // We delay this by 800ms so the heavy map and list load FIRST
+    const timer = setTimeout(() => {
+      unsub = onAuthStateChanged(auth, (user) => {
+        setIsUserSignedIn(!!user);
+      });
+    }, 800);
+
+    return () => {
+      clearTimeout(timer);
+      if (unsub) unsub();
+    };
+  }, []);
 
   // Geolocation Handler - FIXED: Updates UI and SearchTerm
   const fetchUserLocation = useCallback(() => {
@@ -603,60 +609,35 @@ const EventsPage = () => {
 
   return (
     <>
-      <Head>
-        <title>
-          MicFinder - Your Comedy HQ: Open Mics, Shows & Festivals Near You
-        </title>
-        <meta
-          name="description"
-          content="Jump into the local comedy scene with MicFinder!..."
-        />
-        <link rel="canonical" href="https://www.thehumorhub.com/MicFinder" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-      </Head>
-      <Script
-        strategy="afterInteractive"
-        src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
-      />
-
       <Header />
-
       <div className="screen-container content-with-sidebar">
         <OpenMicBanner />
-
-        <h1 className="title font-bold text-center mb-6">
+        <h1 className="title font-bold text-center mb-6">MicFinder</h1>
+        <h2 className="subtitle-style font-medium text-center mb-6">
           Discover Mics and Festivals Near You!
-        </h1>
+        </h2>
         <p className="text-center mt-4 mb-6">
           Share a mic or find your next one: MicFinder helps you discover and
           add comedy events to connect with your community and keep the laughs
           going!
         </p>
-
         <div className="text-center mb-4 h-16 w-full rounded-xl">
           <MemoizedEventForm />
         </div>
-
-        <h2 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
+        <h3 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
           Find your next show or night out. Pick a city and date!
-        </h2>
-
+        </h3>
         {/* City Selection Dropdown */}
         <div className="flex flex-col justify-center items-center mt-2 relative z-20">
           <div className="relative w-full max-w-xs min-h-[60px]">
-            <label htmlFor="city-select" className="sr-only">
+            <p id="city-select-label" className="sr-only">
               Select a City
-            </label>
+            </p>
             <div
               id="city-select"
-              className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 flex items-center justify-center text-center px-3"
+              aria-labelledby="city-select-label"
+              tabIndex={0}
+              className="modern-input cursor-pointer bg-zinc-200 text-zinc-900 flex items-center justify-center text-center px-3"
               role="button"
               aria-haspopup="listbox"
               aria-expanded={isFirstDropdownOpen}

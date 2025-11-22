@@ -5,18 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
-import Head from "next/head";
-import Script from "next/script";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import EventForm from "./components/EventForm";
 
-// Dynamic Imports for interactive/heavy components
 const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
-const EventForm = dynamic(() => import("./components/EventForm"), {
-  loading: () => (
-    <div className="h-24 w-full animate-pulse bg-zinc-800 rounded-xl"></div>
-  ),
-});
 
 export default function Home() {
   // Lazy-load AOS Animation Library
@@ -33,38 +26,18 @@ export default function Home() {
   const sendDataLayerEvent = useCallback(
     (
       event_name: string,
-      params: { event_category: string; event_label: string }
+      params: { event_category: string; event_label: string },
     ) => {
       if (typeof window !== "undefined") {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: event_name, ...params });
       }
     },
-    []
+    [],
   );
 
   return (
     <>
-      <Head>
-        <title>Humor Hub - The Hub of Humor, Open Mics</title>
-        <meta
-          name="description"
-          content="Jump into the local comedy scene with Humor Hub!..."
-        />
-        <link rel="canonical" href="https://www.thehumorhub.com/" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-      </Head>
-      <Script
-        strategy="afterInteractive"
-        src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
-      />
       <Header />
       <div className="screen-container content-with-sidebar">
         <h1 className="hidden md:block text-zinc-200 text-6xl font-bold mb-6 tracking-wide">
@@ -72,14 +45,13 @@ export default function Home() {
         </h1>
 
         <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl max-w-5xl mx-auto">
-          {/* Title */}
-          <h2 className="title-style mb-8 text-center sm:mb-10">Mic Finder!</h2>
+          <h2 className="title-style mb-8 text-center sm:mb-10 text-amber-300">
+            Mic Finder!
+          </h2>
 
-          {/* Layout: Stack (Mobile) -> Row (Desktop) */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
-            {/* LEFT SIDE */}
             <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
-              <p className="text-md md:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
+              <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
                 Looking for your next Mic?
                 <br />
                 <span className="font-bold">MicFinder</span> helps comedians
@@ -92,10 +64,9 @@ export default function Home() {
 
               <EventForm />
 
-              {/* CLEANED UP: Applied classes directly to Link, removed wrapper div & span */}
               <Link
                 href="/MicFinder"
-                className="btn w-80 text-center self-center text-black"
+                className="btn w-80 text-center self-center transform transition-transform duration-300 group-hover:scale-105"
                 onClick={() =>
                   sendDataLayerEvent("click_micfinder_button", {
                     event_category: "Navigation",
@@ -107,15 +78,14 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* RIGHT SIDE */}
             <div className="flex-1 flex justify-center md:justify-end w-full md:w-auto">
               <Link href="/MicFinder" className="relative group">
-                {/* Glow Effect */}
                 <Image
                   src={micFinder}
                   alt="Mic Finder Logo"
-                  width={200}
-                  height={200}
+                  width={180}
+                  height={180}
+                  placeholder="blur"
                   className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
                   priority
                   style={{ objectFit: "contain" }}
@@ -131,7 +101,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* --- News API Section (Handles its own Auth) --- */}
         <section data-aos="fade-up">
           <HumorHubAPISection />
         </section>

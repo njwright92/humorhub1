@@ -48,7 +48,11 @@
     "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
   },
   "browserslist": [
-    "defaults",
+    "chrome >= 95",
+    "safari >= 15.4",
+    "ios >= 15.4",
+    "firefox >= 95",
+    "edge >= 95",
     "not IE 11"
   ]
 }

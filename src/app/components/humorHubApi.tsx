@@ -36,7 +36,7 @@ const HumorHubAPISection: React.FC = () => {
 
       <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
         <div className="flex-1 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
-          <p className="text-md md:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
+          <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
             Your Source for <span className="font-bold">Fresh Headlines!</span>
             <br />
             Looking for something topical?
@@ -65,8 +65,9 @@ const HumorHubAPISection: React.FC = () => {
             <Image
               src={news}
               alt="Comedy News Update"
-              width={200}
-              height={200}
+              width={180}
+              height={180}
+              placeholder="blur"
               className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
               priority={false}
               style={{ objectFit: "cover" }}
