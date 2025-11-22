@@ -739,6 +739,9 @@ video {
 .w-9 {
   width: 2.25rem;
 }
+.w-\[95\%\] {
+  width: 95%;
+}
 .w-full {
   width: 100%;
 }
@@ -1079,6 +1082,10 @@ video {
 .bg-zinc-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(244 244 245 / var(--tw-bg-opacity, 1));
+}
+.bg-zinc-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(161 161 170 / var(--tw-bg-opacity, 1));
 }
 .bg-zinc-50 {
   --tw-bg-opacity: 1;

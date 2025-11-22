@@ -86,8 +86,8 @@ const ContactPage: React.FC = () => {
         />
       </Head>
       <Header />
-      <div className="screen-container content-with-sidebar mx-auto p-4">
-        <section className="bg-zinc-200 shadow-lg rounded-lg p-6 mt-10">
+      <div className="screen-container bg-zinc-900 content-with-sidebar mx-auto p-4">
+        <section className="bg-zinc-400 shadow-lg rounded-lg p-6 mt-10">
           <h1 className="text-zinc-900 text-3xl font-bold text-center mb-4">
             Contact Us
           </h1>

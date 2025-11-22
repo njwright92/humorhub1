@@ -44,7 +44,7 @@ export default function Home() {
           Humor Hub!
         </h1>
 
-        <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl max-w-5xl mx-auto">
+        <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl w-[95%] mx-auto">
           <h2 className="title-style mb-8 text-center sm:mb-10 text-amber-300">
             Mic Finder!
           </h2>

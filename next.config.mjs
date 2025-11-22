@@ -11,7 +11,6 @@ const nextConfig = {
 
   // 2. BUNDLE OPTIMIZATION
   experimental: {
-    // Added 'aos' and 'firebase/app' to this list to reduce bundle size
     optimizePackageImports: [
       "firebase/app",
       "firebase/auth",
