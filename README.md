@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Website Status](https://img.shields.io/website-up-down-green-red/http/thehumorhub.com.svg?label=Status&style=for-the-badge)](https://thehumorhub.com/)
+[![Website Status](https://img.shields.io/website-up-down-green-red/http/thehumorhub.com.svg?label=Status&style=for-the-badge)](https://wwww.thehumorhub.com/)
 [![GitHub stars](https://img.shields.io/github/stars/njwright92/humor-hub.svg?style=for-the-badge&color=yellow)](https://github.com/njwright92/humorhub1/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
