@@ -1,120 +1,131 @@
-[![Website Status](https://img.shields.io/website-up-down-green-red/http/thehumorhub.com.svg)](https://thehumorhub.com/)
-[![GitHub stars](https://img.shields.io/github/stars/njwright92/humor-hub.svg)](https://github.com/njwright92/humorhub1/stargazers)
+<div align="center">
 
-# Humor Hub
+[![Website Status](https://img.shields.io/website-up-down-green-red/http/thehumorhub.com.svg?label=Status&style=for-the-badge)](https://thehumorhub.com/)
+[![GitHub stars](https://img.shields.io/github/stars/njwright92/humor-hub.svg?style=for-the-badge&color=yellow)](https://github.com/njwright92/humorhub1/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-_Elevate your comedy with Humor Hub, the ultimate platform for comedians, writers, and performers._
+# HUMOR HUB
 
-Humor Hub is an all-in-one comedy platform designed to boost your comedic creativity and streamline the process of finding performance opportunities. With over **1,300 open mic events** across **290+ US cities**, it has become a premier resource for comics nationwide. This platform combines various tools and features to assist comedians, writers, and performers in crafting and refining their material, discovering open mic events, and staying updated with the latest comedy news.
+**The Definitive Digital Ecosystem for Comedians & Performers**
 
-## 🚀 Features
+[**Visit Live Site**](https://thehumorhub.com/)
 
-- ### 🎤 **Mic Finder**
+</div>
 
-  Discover and share live performance stages for comedy, music, and poetry. With a vast and continuously growing database of events, finding your next stage has never been easier.
+---
 
-- ### 📝 **Jokepad**
+## 📖 Overview
 
-  A cloud-synced comedy workshop for organizing and developing your comedic ideas. Keep your material organized, accessible, and ready to refine anytime, anywhere.
+**Humor Hub** is a robust, full-stack platform engineered to modernize the workflow of stand-up comedians, writers, and live performers. By bridging the gap between talent and opportunity, the application provides a centralized interface for venue discovery and material development.
 
-- ### 🤖 **ComicBot** _(Coming Soon)_
+Currently serving as a premier resource for the industry, the platform aggregates real-time data for over **1,300 live open mic events** across **290+ US cities**, utilizing geospatial technology to connect performers with their next stage.
 
-  Your AI-powered comedy assistant, helping you brainstorm, refine, and enhance your jokes and sketches. Get personalized feedback and take your comedy writing to the next level.
+## 🚀 Key Features
 
-- ### 📰 **HumorHub API**
-  Access the latest news and trends to fuel your comedic material. Stay informed and inspired with up-to-date content tailored for comedians.
+### 🎤 Geo-Spatial Event Discovery
 
-## 🛠️ Technologies Used
+A high-performance "Mic Finder" engine that allows users to discover, filter, and share live performance stages for comedy, music, and poetry.
 
-- \*\*Formated with prettier for consitancy
-- **Frontend**: React, Next.js, Tailwind CSS
-- **Backend**: Node.js, Express.js
-- **Database**: Firebase Firestore
-- **Authentication**: Firebase Auth
-- **Maps and Location**: Google Maps API
-- **Animations**: AOS (Animate on Scroll)
-- **Deployment**: Vercel
+- **Scalable Database:** Manages a continuously expanding dataset of 1,300+ events.
+- **Location Services:** Integrated Google Maps API for precise event geolocation and routing.
+
+### 📰 The HumorHub Aggregator
+
+A curated content stream tailored for comedic professionals.
+
+- **Real-Time News:** Fetches and filters trending news topics to inspire fresh comedic material.
+- **Trend Analysis:** Keeps performers ahead of the curve with up-to-date cultural context.
+
+---
+
+## 🛠️ Architecture & Tech Stack
+
+This project utilizes a modern **Next.js 15** framework, leveraging server-side rendering and static generation for optimal performance and SEO. Codebase is formatted with Prettier for strict consistency.
+
+| Domain                 | Technology                                                   |
+| :--------------------- | :----------------------------------------------------------- |
+| **Core Framework**     | **Next.js 15**, **React 18**, Node.js                        |
+| **Styling & UI**       | **Tailwind CSS**, AOS (Animate On Scroll)                    |
+| **Backend & Auth**     | **Firebase Authentication**, Firebase Admin SDK              |
+| **Database**           | **Cloud Firestore** (NoSQL)                                  |
+| **Geospatial**         | **Google Maps JavaScript API** (`@googlemaps/js-api-loader`) |
+| **Utilities**          | `date-fns` (Time manipulation), `axios` (HTTP requests)      |
+| **Image Optimization** | `sharp`                                                      |
+| **Deployment**         | **Vercel** (CI/CD Integration)                               |
+
+---
 
 ## 🎯 Getting Started
 
+Follow these steps to set up the environment locally.
+
 ### Prerequisites
 
-- **Node.js** (v14 or later)
+- **Node.js** (v14+ recommended)
 - **npm** or **yarn**
-- **Firebase** project setup
+- A configured **Firebase** project
 
-### Installation
+### Installation Guide
 
-1. Clone the repository:
+1.  **Clone the repository**
 
-   - \*\* git clone https://github.com/njwright92/humor-hub.git
-     cd humor-hub
+    ```bash
+    git clone https://github.com/njwright92/humor-hub.git
+    cd humor-hub
+    ```
 
-2. Install dependencies:
+2.  **Install dependencies**
 
-- \*\* npm install
+    ```bash
+    npm install
+    ```
 
-3.  Set up Firebase Authentication:
+3.  **Environment Configuration**
+    Create a `.env.local` file in the root directory. Add your Firebase and Google Maps credentials:
 
-Create a Firebase project.
-Enable Email/Password authentication.
-Copy your Firebase config and add it to your environment variables.
+    ```bash
+    NEXT_PUBLIC_FIREBASE_API_KEY=your_key
+    NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_key
+    # Add other specific Firebase config variables here
+    ```
 
-4. Run the development server:
+4.  **Launch Development Server**
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-- \*\* npm run dev
+---
 
-## 📖 Usage
+## 🤝 Contributing
 
-- \*\* Mic Finder: Discover open mic events and share your own. With over 1,300 events across 250+ cities, find the perfect spot to perform.
+Contributions are a vital part of the open-source community. We welcome issues and pull requests to help make Humor Hub better.
 
-- \*\* Jokepad: Use the workshop to organize and develop your jokes. Keep your material organized and accessible from anywhere.
+1.  **Fork** the Project.
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3.  **Commit** your Changes (`git commit -m 'Add some AmazingFeature'`).
+4.  **Push** to the Branch (`git push origin feature/AmazingFeature`).
+5.  Open a **Pull Request**.
 
-- \*\* ComicBot (Coming Soon): Access the AI assistant to help with your comedy writing. Enhance your creativity with intelligent suggestions.
+---
 
-- \*\* HumorHub News: Fetch the latest comedy news for fresh material. Stay ahead with trending topics and stories.
+## 📫 Contact & Author
 
-## 📦 Dependencies
+**Nate W.** — _Full Stack Developer_
 
-{
-"dependencies": {
-"@emailjs/browser": "^4.4.1",
-"@googlemaps/js-api-loader": "^1.16.2",
-"aos": "^2.3.4",
-"axios": "^1.6.8",
-"date-fns": "^4.1.0",
-"firebase": "^10.7.1",
-"firebase-admin": "^12.1.0",
-"next": "^15.0.3",
-"react": "^18.3.1",
-"react-datepicker": "^4.25.0",
-"react-dom": "^18.3.1",
-"react-window": "^1.8.10",
-"sharp": "^0.33.2"
-},
-}
+- **GitHub:** [njwright92](https://github.com/njwright92)
+- **Email:** [thehumorhub777@gmail.com](mailto:thehumorhub777@gmail.com)
 
-### 🤝 Contributing
+_Feel free to reach out for collaborations, feature requests, or to connect regarding software engineering opportunities._
 
-Contributions are welcome! Please fork the repository and create a pull request with your changes.
+---
 
-Fork the repository.
-Create a feature branch (git checkout -b feature/your-feature).
-Commit your changes (git commit -m 'Add your feature').
-Push to the branch (git push origin feature/your-feature).
-Open a pull request.
+<div align="center">
+    
+**License**
+<br>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### 📫 Contact
+_Made with ❤️, ☕, and a dash of humor._
 
-Author: Nate W.
-Email: thehumorhub777@gmail.com
-GitHub: njwright92
-Feel free to reach out with questions, suggestions, or just to connect!
-
-#### 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-Elevate your comedy with Humor Hub, the ultimate platform for comedians, writers, and performers. Join our community and take your craft to new heights!
-
-\*\* Made with ❤️ and a dash of humor by Nate.
+</div>
