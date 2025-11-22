@@ -75,9 +75,9 @@ export default function Header() {
   /* Fetch list of cities once on mount */
   useEffect(() => {
     let mounted = true;
+
     const fetchCities = async () => {
       try {
-        // Check if we have cached cities in sessionStorage to save a read (Optional advanced optimization)
         const cached = sessionStorage.getItem("hh_cities");
         if (cached) {
           setCityList(JSON.parse(cached));
@@ -99,20 +99,31 @@ export default function Header() {
         console.error("Error fetching cities:", err);
       }
     };
-    fetchCities();
+
+    // THE UPGRADE: Check if browser supports idle callback
+    if ("requestIdleCallback" in window) {
+      // Wait until browser is idle, but force run after 2 seconds if it never idles
+      (window as any).requestIdleCallback(() => fetchCities(), {
+        timeout: 2000,
+      });
+    } else {
+      // Fallback for Safari/Older browsers
+      setTimeout(() => fetchCities(), 1000);
+    }
+
     return () => {
       mounted = false;
     };
   }, []);
 
   useEffect(() => {
-    let unsub: any; // Delaying this check allows LCP (First Paint) to happen immediately
+    let unsub: any;
 
     const timer = setTimeout(() => {
       unsub = onAuthStateChanged(auth, (user) => {
         setIsUserSignedIn(!!user);
       });
-    }, 800); // 800ms delay moves this off the critical path
+    }, 500);
 
     return () => {
       clearTimeout(timer);
@@ -120,22 +131,20 @@ export default function Header() {
     };
   }, []);
 
-  /* UPDATED: Sets pending redirect for News */
   const handleNewsClick = useCallback(() => {
-    if (isUserSignedIn) {
+    if (isUserSignedIn || auth.currentUser) {
       router.push("/HHapi");
     } else {
-      setPendingRedirect("/HHapi"); // Remember we want to go to News
+      setPendingRedirect("/HHapi");
       setIsAuthModalOpen(true);
     }
   }, [isUserSignedIn, router]);
 
-  /* NEW: Sets pending redirect for Profile */
   const handleProfileClick = useCallback(() => {
-    if (isUserSignedIn) {
+    if (isUserSignedIn || auth.currentUser) {
       router.push("/Profile");
     } else {
-      setPendingRedirect("/Profile"); // Remember we want to go to Profile
+      setPendingRedirect("/Profile");
       setIsAuthModalOpen(true);
     }
   }, [isUserSignedIn, router]);
@@ -152,7 +161,6 @@ export default function Header() {
       if (matchingCity) {
         router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
       } else {
-        // Log failed/new search terms for analytics
         try {
           await addDoc(collection(db, "searchedCities"), {
             city: searchTerm,
@@ -190,7 +198,7 @@ export default function Header() {
               width={50}
               height={50}
               className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden"
-              priority // High priority for LCP
+              priority
               style={{ objectFit: "contain" }}
               sizes="(max-width: 640px) 40px, 50px"
             />
@@ -223,6 +231,7 @@ export default function Header() {
                   onSearch={handleOnSearch}
                   isUserSignedIn={isUserSignedIn}
                   setIsAuthModalOpen={setIsAuthModalOpen}
+                  cities={cityList}
                 />
               </div>
 
@@ -387,6 +396,7 @@ export default function Header() {
                 onSearch={handleOnSearch}
                 isUserSignedIn={false}
                 setIsAuthModalOpen={setIsAuthModalOpen}
+                cities={cityList}
               />
 
               <Link href="/">

@@ -2,19 +2,25 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import news from "../../app/news.webp";
 import { auth } from "../../../firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
 
-const AuthModal = dynamic(() => import("./authModal"));
+const AuthModal = dynamic(() => import("./authModal"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const HumorHubAPISection: React.FC = () => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingRedirect, setPendingRedirect] = useState(false);
   const router = useRouter();
 
+  // 1. Auth Listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsUserSignedIn(!!user);
@@ -22,13 +28,25 @@ const HumorHubAPISection: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleAction = useCallback(() => {
-    if (isUserSignedIn) {
+  // 2. Auto-Redirect after successful sign-in
+  useEffect(() => {
+    if (isUserSignedIn && pendingRedirect) {
+      router.push("/HHapi");
+      setPendingRedirect(false);
+      setIsAuthModalOpen(false);
+    }
+  }, [isUserSignedIn, pendingRedirect, router]);
+
+  // 3. Handler for Guest Users (Optimistic Check)
+  const handleAuthClick = useCallback(() => {
+    // If React state is slow but Firebase is ready, go immediately
+    if (auth.currentUser) {
       router.push("/HHapi");
     } else {
+      setPendingRedirect(true);
       setIsAuthModalOpen(true);
     }
-  }, [isUserSignedIn, router]);
+  }, [router]);
 
   return (
     <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl max-w-5xl mx-auto">
@@ -46,33 +64,57 @@ const HumorHubAPISection: React.FC = () => {
             </span>
           </p>
 
-          <button
-            onClick={handleAction}
-            className="btn w-80 text-center self-center md:self-end"
-          >
-            Check It Out
-          </button>
+          {/* CONDITIONAL: Link (Prefetch) if signed in, Button (Auth Check) if not */}
+          {isUserSignedIn ? (
+            <Link
+              href="/HHapi"
+              className="btn w-80 text-center self-center md:self-end"
+            >
+              Check It Out
+            </Link>
+          ) : (
+            <button
+              onClick={handleAuthClick}
+              className="btn w-80 text-center self-center md:self-end"
+            >
+              Check It Out
+            </button>
+          )}
         </div>
 
         <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
-          <div
-            className="relative group cursor-pointer"
-            onClick={handleAction}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && handleAction()}
-          >
-            <Image
-              src={news}
-              alt="Comedy News Update"
-              width={180}
-              height={180}
-              placeholder="blur"
-              className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
-              loading="lazy"
-              style={{ objectFit: "cover" }}
-            />
-          </div>
+          {/* CONDITIONAL: Wrapped in Link if signed in, div/onClick if not */}
+          {isUserSignedIn ? (
+            <Link href="/HHapi" className="relative group cursor-pointer">
+              <Image
+                src={news}
+                alt="Comedy News Update"
+                width={180}
+                height={180}
+                className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+                loading="lazy"
+                style={{ objectFit: "contain" }}
+              />
+            </Link>
+          ) : (
+            <div
+              className="relative group cursor-pointer"
+              onClick={handleAuthClick}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handleAuthClick()}
+            >
+              <Image
+                src={news}
+                alt="Comedy News Update"
+                width={180}
+                height={180}
+                className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+                loading="lazy"
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+          )}
         </div>
       </div>
       {isAuthModalOpen && (

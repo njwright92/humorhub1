@@ -3,36 +3,47 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
-// This tells Next.js: "Don't look at EventFormContent (or Firebase) yet!"
+// Dynamic Import of the Heavy Content
 const EventFormContent = dynamic(() => import("./EventFormContent"), {
   ssr: false,
   loading: () => (
-    <button className="bg-green-700 text-black px-2 py-1 rounded-xl font-bold text-lg opacity-50 cursor-wait">
+    // Loading state matches the real button exactly to prevent layout shift
+    <button className="bg-green-700 text-zinc-900 px-2 py-1 rounded-xl shadow-lg font-bold text-lg tracking-wide cursor-wait">
       Loading...
     </button>
   ),
 });
 
 export default function EventForm() {
-  // State to track if we should load the heavy stuff
+  // 1. Should we load the bundle? (Hover or Click triggers this)
   const [shouldLoad, setShouldLoad] = useState(false);
 
+  // 2. Did the user click? (If yes, tell the modal to open immediately)
+  const [wasClicked, setWasClicked] = useState(false);
+
+  const handleMouseEnter = () => {
+    // Just prefetch the code, don't auto-open the modal
+    setShouldLoad(true);
+  };
+
+  const handleClick = () => {
+    // Load the code AND open the modal
+    setWasClicked(true);
+    setShouldLoad(true);
+  };
+
+  if (shouldLoad) {
+    // Pass "wasClicked" to the heavy component
+    return <EventFormContent initialOpen={wasClicked} />;
+  }
+
   return (
-    <>
-      {shouldLoad ? (
-        <EventFormContent />
-      ) : (
-        <button
-          // FACADE: Matches your button style exactly, costs 0KB
-          className="bg-green-600 hover:bg-green-700 text-black px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
-          // On Click: Load the form
-          onClick={() => setShouldLoad(true)}
-          // On Hover: Start loading in background (so it's ready when they click)
-          onMouseEnter={() => setShouldLoad(true)}
-        >
-          Add Event
-        </button>
-      )}
-    </>
+    <button
+      className="bg-green-700 hover:bg-green-800 text-zinc-900 px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+    >
+      Add Event
+    </button>
   );
 }

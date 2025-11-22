@@ -23,6 +23,10 @@ interface EventData {
   email?: string;
 }
 
+interface EventFormContentProps {
+  initialOpen?: boolean;
+}
+
 // --- Helper Functions ---
 
 const submitEvent = async (eventData: EventData) => {
@@ -75,8 +79,11 @@ const sendConfirmationEmail = async (eventData: EventData) => {
 
 // --- Main Component ---
 
-const EventForm: React.FC = () => {
-  const [showModal, setShowModal] = useState(false);
+const EventFormContent: React.FC<EventFormContentProps> = ({
+  initialOpen = false,
+}) => {
+  // Initialize state with the prop passed from the Facade
+  const [showModal, setShowModal] = useState(initialOpen);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [event, setEvent] = useState<EventData>({
     name: "",
@@ -227,14 +234,12 @@ const EventForm: React.FC = () => {
       {showModal && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
-          onClick={() => setShowModal(false)} // Close on backdrop click
+          onClick={() => setShowModal(false)}
         >
-          {/* Wrapper to stop click propagation so clicking form doesn't close it */}
           <div
             className="relative w-full max-w-md max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 z-[110] text-zinc-500 hover:text-red-500 transition-colors"
@@ -325,9 +330,7 @@ const EventForm: React.FC = () => {
                 placeholder="Time, Host, Entry Fee, etc."
               />
 
-              {/* Checkbox Groups */}
               <div className="grid grid-cols-2 gap-4 mb-4">
-                {/* Recurring */}
                 <div className="bg-zinc-100 p-2 rounded-lg text-center">
                   <h6 className="text-zinc-900 font-bold text-sm">
                     Recurring?
@@ -358,7 +361,6 @@ const EventForm: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Festival */}
                 <div className="bg-zinc-100 p-2 rounded-lg text-center">
                   <h6 className="text-zinc-900 font-bold text-sm">Festival?</h6>
                   <div className="flex justify-center gap-4 mt-2">
@@ -439,4 +441,4 @@ const EventForm: React.FC = () => {
   );
 };
 
-export default EventForm;
+export default EventFormContent;

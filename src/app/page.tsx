@@ -58,12 +58,10 @@ export default function Home() {
                 find and share open mics worldwide!
                 <br />
                 <span className="mt-2 block">
-                  More than 1600+ Mics/Festivals in over 500 cities!
+                  More than 1400 Mics/Festivals in over 500 cities!
                 </span>
               </p>
-
               <EventForm />
-
               <Link
                 href="/MicFinder"
                 className="btn w-80 text-center self-center transform transition-transform duration-300 group-hover:scale-105"
@@ -77,7 +75,6 @@ export default function Home() {
                 Find Your Mic!
               </Link>
             </div>
-
             <div className="flex-1 flex justify-center md:justify-end w-full md:w-auto">
               <Link href="/MicFinder" className="relative group">
                 <Image
@@ -85,7 +82,6 @@ export default function Home() {
                   alt="Mic Finder Logo"
                   width={180}
                   height={180}
-                  placeholder="blur"
                   className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
                   loading="lazy"
                   style={{ objectFit: "contain" }}
@@ -100,12 +96,10 @@ export default function Home() {
             </div>
           </div>
         </section>
-
         <section data-aos="fade-up">
           <HumorHubAPISection />
         </section>
       </div>
-
       <Footer />
     </>
   );

@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { collection, getDocs, DocumentData } from "firebase/firestore";
-import { db } from "../../../firebase.config";
 
 // --- Types ---
 
@@ -12,6 +10,7 @@ export interface SearchBarProps {
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   setIsComicBotModalOpen?: (open: boolean) => void;
+  cities: string[]; // Received from parent (Header)
 }
 
 interface City {
@@ -58,65 +57,15 @@ export default function SearchBar({
   isUserSignedIn,
   setIsAuthModalOpen,
   setIsComicBotModalOpen,
+  cities, // Data passed down from Header
 }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
 
-  // Cache cities
-  const [allCities, setAllCities] = useState<City[]>([]);
-  const [citiesLoaded, setCitiesLoaded] = useState(false);
-
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 1. Fetch Data (Optimized: Runs once)
-  useEffect(() => {
-    let mounted = true;
-
-    const loadCities = async () => {
-      const cached =
-        typeof window !== "undefined"
-          ? sessionStorage.getItem("hh_cities_full")
-          : null;
-      if (cached) {
-        if (mounted) {
-          setAllCities(JSON.parse(cached));
-          setCitiesLoaded(true);
-        }
-        return;
-      }
-
-      try {
-        const citiesRef = collection(db, "cities");
-        const snapshot = await getDocs(citiesRef);
-        const cities: City[] = snapshot.docs.map((doc) => {
-          const data = doc.data() as DocumentData;
-          return {
-            id: doc.id,
-            city: (data.city || "Unknown City").trim(),
-          };
-        });
-
-        if (mounted) {
-          setAllCities(cities);
-          setCitiesLoaded(true);
-          sessionStorage.setItem("hh_cities_full", JSON.stringify(cities));
-        }
-      } catch (error) {
-        console.error("Error loading cities:", error);
-      }
-    };
-
-    if (!citiesLoaded && isInputVisible) {
-      loadCities();
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, [citiesLoaded, isInputVisible]);
-
-  // 2. Memoized Suggestions
+  // 1. Memoized Suggestions (Uses the passed 'cities' prop directly)
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
     if (!normalized) return [];
@@ -144,18 +93,23 @@ export default function SearchBar({
 
     // Cities (Limit 5)
     let count = 0;
-    for (const c of allCities) {
+    for (const cityName of cities) {
       if (count >= 5) break;
-      if (c.city.toLowerCase().includes(normalized)) {
-        results.push({ type: "city", label: c.city, cityData: c });
+      if (cityName.toLowerCase().includes(normalized)) {
+        results.push({
+          type: "city",
+          label: cityName,
+          // Construct object to match expected type structure
+          cityData: { id: cityName, city: cityName },
+        });
         count++;
       }
     }
 
     return results;
-  }, [searchTerm, allCities]);
+  }, [searchTerm, cities]);
 
-  // 3. Actions
+  // 2. Actions
   const closeSearchBar = () => {
     setSearchTerm("");
     setInputVisible(false);
@@ -233,13 +187,6 @@ export default function SearchBar({
       )}
 
       {isInputVisible && (
-        /* 
-           CSS EXPLANATION FOR FIX:
-           - left-1/2 -translate-x-1/2: Centered on Mobile
-           - sm:left-full: On Desktop (sidebar), position 100% to the right of the icon
-           - sm:ml-4: Add a gap so it's not touching the sidebar
-           - sm:translate-x-0: Remove the mobile centering
-        */
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-72 sm:w-80 z-50">
           <form
             onSubmit={handleSearch}

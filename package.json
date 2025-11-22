@@ -14,7 +14,6 @@
     "@emailjs/browser": "4.4.1",
     "@googlemaps/js-api-loader": "1.16.2",
     "aos": "2.3.4",
-    "axios": "1.12.2",
     "date-fns": "4.1.0",
     "firebase": "11.6.1",
     "firebase-admin": "12.1.0",
