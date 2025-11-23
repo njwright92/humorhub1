@@ -43,22 +43,20 @@ export default function Home() {
         <h1 className="hidden md:block text-zinc-200 text-6xl font-bold mb-6 tracking-wide">
           Humor Hub!
         </h1>
-
         <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl w-[95%] mx-auto">
           <h2 className="title-style mb-8 text-center sm:mb-10 text-amber-300">
             Mic Finder!
           </h2>
-
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
             <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
               <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
                 Looking for your next Mic?
                 <br />
                 <span className="font-bold">MicFinder</span> helps comedians
-                find and share open mics worldwide!
+                find and share Mics worldwide!
                 <br />
                 <span className="mt-2 block">
-                  More than 1400 Mics/Festivals in over 500 cities!
+                  With 1000s of open mic listings, find your next Mic now!
                 </span>
               </p>
               <EventForm />
