@@ -6,8 +6,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  TwitterAuthProvider,
-  FacebookAuthProvider,
   signInWithPopup,
   AuthError,
 } from "firebase/auth";
@@ -23,7 +21,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-// --- 1. OPTIMIZATION: Memoized Icons (Prevents re-render on form typing) ---
+// --- Icons ---
 
 const GoogleIcon = memo(() => (
   <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
@@ -47,33 +45,6 @@ const GoogleIcon = memo(() => (
 ));
 GoogleIcon.displayName = "GoogleIcon";
 
-const TwitterIcon = memo(() => (
-  <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
-    <path
-      d="M20 3.924a8.212 8.212 0 01-2.357.646 4.111 4.111 0 001.804-2.27c-.792.47-1.67.812-2.605.996A4.103 4.103 0 009.85 7.038a11.645 11.645 0 01-8.458-4.287 4.118 4.118 0 00-.555 2.066 4.1 4.1 0 001.825 3.415 4.074 4.074 0 01-1.858-.513v.052a4.105 4.105 0 003.29 4.022 4.01 4.01 0 01-1.852.072 4.106 4.106 0 003.833 2.85A8.268 8.268 0 010 16.411a11.602 11.602 0 006.29 1.846c7.547 0 11.674-6.253 11.674-11.675 0-.18-.004-.355-.01-.53.8-.58 1.496-1.3 2.046-2.125"
-      fill="#55ACEE"
-      fillRule="evenodd"
-    />
-  </svg>
-));
-TwitterIcon.displayName = "TwitterIcon";
-
-const FacebookIcon = memo(() => (
-  <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
-    <path
-      d="M18.896 0H1.104C.494 0 0 .494 0 1.104v17.792C0 19.506.494 20 1.104 20h9.588v-7.745H8.077V9.326h2.615V7.118c0-2.593 1.583-4.006 3.894-4.006 1.108 0 2.062.082 2.338.12v2.713l-1.606.001c-1.259 0-1.504.599-1.504 1.478v1.94h3.008l-.392 2.929h-2.616V20h5.127C19.506 20 20 19.506 20 18.896V1.104C20 .494 19.506 0 18.896 0z"
-      fill="#1877F2"
-    />
-    <path
-      d="M13.5 20v-7.745h2.616l.392-2.929H13.5V7.386c0-.879.245-1.478 1.504-1.478l1.606-.001V3.193c-.276-.038-1.23-.12-2.338-.12-2.311 0-3.894 1.413-3.894 4.006v2.208H8.077v2.929h2.615V20h2.808z"
-      fill="#FFF"
-    />
-  </svg>
-));
-FacebookIcon.displayName = "FacebookIcon";
-
-// --- 2. OPTIMIZATION: Memoized Helper Button ---
-
 interface SocialButtonProps {
   onClick: () => void;
   icon: React.ReactNode;
@@ -84,7 +55,7 @@ const SocialSignInButton = memo<SocialButtonProps>(
   ({ onClick, icon, label }) => (
     <button
       onClick={onClick}
-      className="social-signin-button w-full flex items-center justify-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors bg-white text-zinc-700 font-medium"
+      className="social-signin-button w-full flex items-center justify-center p-2 rounded-lg shadow-lg transition-colors bg-zinc-100 text-zinc-900"
     >
       <span className="mr-3">{icon}</span>
       <span className="whitespace-nowrap">{label}</span>
@@ -99,7 +70,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isSignUp, setIsSignUp] = useState<boolean>(true);
+
+  // CHANGED: Variable is now 'isSignIn' and defaults to TRUE
+  const [isSignIn, setIsSignIn] = useState<boolean>(true);
 
   const handleAuth = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -115,16 +88,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         );
         return;
       }
-      if (isSignUp && password !== confirmPassword) {
+
+      // Logic flipped: If NOT signing in, we are signing up
+      if (!isSignIn && password !== confirmPassword) {
         alert("Passwords do not match.");
         return;
       }
 
       try {
-        if (isSignUp) {
+        if (!isSignIn) {
+          // SIGN UP LOGIC
           await createUserWithEmailAndPassword(auth, email, password);
           alert("Sign-up successful! Please update your profile.");
         } else {
+          // SIGN IN LOGIC
           await signInWithEmailAndPassword(auth, email, password);
           alert("Sign-in successful! Welcome back.");
         }
@@ -139,6 +116,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             case "auth/wrong-password":
               alert("Incorrect password. Please try again.");
               break;
+            case "auth/user-not-found":
+              alert("No user found with this email. Please sign up.");
+              break;
             default:
               alert(`Error: ${authError.message}. Please try again.`);
           }
@@ -147,13 +127,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
       }
     },
-    [email, password, confirmPassword, isSignUp, onClose],
+    [email, password, confirmPassword, isSignIn, onClose],
   );
 
   const handleSocialSignIn = useCallback(
-    (
-      provider: GoogleAuthProvider | TwitterAuthProvider | FacebookAuthProvider,
-    ) => {
+    (provider: GoogleAuthProvider) => {
       signInWithPopup(auth, provider)
         .then((result) => {
           console.log(
@@ -173,11 +151,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop fixed inset-0 bg-gray-600 bg-opacity-75 z-50 flex items-center justify-center backdrop-blur-sm">
-      <div className="modal-container bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
+    <div className="modal-backdrop fixed inset-0 bg-zinc-600 bg-opacity-75 z-50 flex items-center justify-center backdrop-blur-sm">
+      <div className="modal-container bg-zinc-100 p-6 rounded-lg shadow-lg max-w-sm w-full relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-900 transition-colors p-2"
+          className="absolute top-2 right-2 text-zinc-900 hover:text-zinc-950 transition-colors p-2"
           aria-label="Close Modal"
         >
           <svg
@@ -196,14 +174,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         </button>
 
         <h2 className="modal-title text-2xl font-bold text-center mb-4 text-zinc-900">
-          {isSignUp ? "Sign Up" : "Sign In"}
+          {isSignIn ? "Sign In" : "Sign Up"}
         </h2>
 
         <form onSubmit={handleAuth} className="form-container space-y-3">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-zinc-900"
-          >
+          <label htmlFor="email" className="block text-sm text-zinc-900">
             Email
           </label>
           <input
@@ -213,14 +188,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="input-field w-full p-2 border border-gray-300 rounded"
+            className="input-field w-full p-2 rounded-lg"
             autoComplete="email"
           />
 
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-zinc-900"
-          >
+          <label htmlFor="password" className="block text-sm text-zinc-900">
             Password
           </label>
           <input
@@ -230,15 +202,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="input-field w-full p-2 border border-gray-300 rounded"
-            autoComplete={isSignUp ? "new-password" : "current-password"}
+            className="input-field w-full p-2 rounded-lg"
+            autoComplete={isSignIn ? "current-password" : "new-password"}
           />
 
-          {isSignUp && (
+          {!isSignIn && (
             <>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-zinc-900"
+                className="block text-sm text-zinc-900"
               >
                 Confirm Password
               </label>
@@ -249,7 +221,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
-                className="input-field w-full p-2 border border-gray-300 rounded"
+                className="input-field w-full p-2 rounded-lg"
                 autoComplete="new-password"
               />
             </>
@@ -257,66 +229,54 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
           <button
             type="submit"
-            className="btn w-full py-2 bg-orange-600 text-white font-semibold rounded hover:bg-orange-700 transition-colors mt-4"
+            className={`w-full py-2 text-zinc-100 font-medium rounded-lg shadow-lg transition-colors mt-2 ${
+              isSignIn
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
           >
-            {isSignUp ? "Sign Up" : "Sign In"}
+            {isSignIn ? "Sign In" : "Sign Up"}
           </button>
 
           <p className="mt-4 text-center text-sm text-zinc-900">
-            {isSignUp ? (
-              <>
-                Already have an account?{" "}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(false)}
-                  className="text-blue-600 hover:underline cursor-pointer font-medium"
-                >
-                  Sign In
-                </button>
-              </>
-            ) : (
+            {isSignIn ? (
               <>
                 Need an account?{" "}
                 <button
                   type="button"
-                  onClick={() => setIsSignUp(true)}
-                  className="text-blue-600 hover:underline cursor-pointer font-medium"
+                  onClick={() => setIsSignIn(false)}
+                  className="text-blue-600 underline cursor-pointer font-medium"
                 >
                   Sign Up
+                </button>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setIsSignIn(true)}
+                  className="text-blue-600 underline cursor-pointer font-medium"
+                >
+                  Sign In
                 </button>
               </>
             )}
           </p>
         </form>
 
-        <div className="my-4 flex items-center">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="flex-shrink mx-4 text-gray-500 text-sm">OR</span>
-          <div className="flex-grow border-t border-gray-300"></div>
+        <div className="my-2 flex items-center">
+          <p className="flex-shrink mx-auto text-zinc-900 text-sm">OR</p>
         </div>
 
-        <div className="space-y-2">
-          {/* Social Buttons - now efficient due to memoization */}
-          <SocialSignInButton
-            onClick={() => handleSocialSignIn(new GoogleAuthProvider())}
-            icon={<GoogleIcon />}
-            label="Sign in with Google"
-          />
-          <SocialSignInButton
-            onClick={() => handleSocialSignIn(new TwitterAuthProvider())}
-            icon={<TwitterIcon />}
-            label="Sign in with Twitter"
-          />
-          <SocialSignInButton
-            onClick={() => handleSocialSignIn(new FacebookAuthProvider())}
-            icon={<FacebookIcon />}
-            label="Sign in with Facebook"
-          />
-        </div>
+        <SocialSignInButton
+          onClick={() => handleSocialSignIn(new GoogleAuthProvider())}
+          icon={<GoogleIcon />}
+          label="Sign in with Google"
+        />
       </div>
     </div>
   );
 };
 
-// 3. OPTIMIZATION: Memoize the entire modal
 export default memo(AuthModal);

@@ -133,7 +133,7 @@ option[value=""][disabled] {
 .input-field,
 .standard-input,
 .modern-input {
-  @apply border-4 border-zinc-600 p-2 rounded-lg shadow-md text-zinc-900;
+  @apply border-2 border-zinc-500 p-2 rounded-lg shadow-lg text-zinc-900;
 }
 
 .standard-input,
