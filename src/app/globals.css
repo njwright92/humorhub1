@@ -7,11 +7,13 @@
   --zinc-900: #2e2c28;
   --zinc-200: #f4f4f5;
   --accent-color: #b35a30;
+  --accent-hover: #a0512b; /* Added for consistency */
 }
 
 body {
   background-image: linear-gradient(to bottom, var(--zinc-900), #27272a);
   color: var(--zinc-200);
+  font-family: var(--font-rubik), "Segoe UI", "Helvetica", "Arial", sans-serif;
 }
 
 h1,
@@ -24,16 +26,8 @@ h6,
   font-family: var(--font-comic-neue), "Comic Sans MS", "Arial", sans-serif;
 }
 
-p,
-span,
-body {
-  font-family: var(--font-rubik), "Segoe UI", "Helvetica", "Arial", sans-serif;
-}
-
 /* Form Defaults */
-select {
-  color: var(--zinc-200);
-}
+select,
 select:required:invalid {
   color: var(--zinc-200);
 }
@@ -47,17 +41,15 @@ option[value=""][disabled] {
 /* --- 2. Layout & Containers --- */
 
 .screen-container {
-  @apply flex flex-col min-h-screen p-4 text-zinc-200 text-center;
+  @apply flex flex-col p-4 text-zinc-200 text-center;
 }
 
-/* Consolidated card styles */
-.card-style,
-.card-style1 {
-  @apply flex-grow bg-transparent text-zinc-200 p-4 mt-10 mb-10 shadow-2xl;
+.card-style {
+  @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-xl rounded-xl;
 }
 
 .content-with-sidebar {
-  @apply md:ml-12;
+  @apply md:ml-20 min-h-screen;
 }
 
 .flex-row-wrap {
@@ -70,18 +62,11 @@ option[value=""][disabled] {
 
 /* --- 3. Typography Classes --- */
 
-.title,
-.title-style,
-.subtitle-style {
-  @apply text-amber-300 font-bold tracking-wide text-3xl sm:text-4xl md:text-5xl lg:text-5xl drop-shadow-lg;
-}
-
+/* Unified Title Class */
 .title {
-  @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl mt-10 mb-2 rounded-xl drop-shadow-lg font-bold;
-}
-
-.title-style {
-  @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl mb-2 rounded-xl drop-shadow-lg font-bold;
+  @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-xl;
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl;
+  @apply mt-10 mb-2; /* Default margins */
 }
 
 .subtitle-style {
@@ -100,25 +85,16 @@ option[value=""][disabled] {
   @apply text-red-500 my-4 font-bold;
 }
 
-/* --- 4. UI Components (Buttons, Inputs, Cards) --- */
+/* --- 4. UI Components --- */
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-white px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-medium;
-}
-
-.neu-button {
-  @apply bg-zinc-900 text-zinc-200 rounded-xl drop-shadow-lg px-2 py-1;
-}
-
-.neu-button:hover {
-  /* Updated to new accent color */
-  text-decoration: underline dashed #b35a30;
+  @apply bg-amber-300 text-zinc-100 px-2 py-1 rounded-xl shadow-lg font-medium;
+  @apply transform transition-transform hover:scale-105;
 }
 
 .btn:hover,
-.btn:focus,
-.neu-button:hover {
+.btn:focus {
   @apply animate-pulse;
 }
 
@@ -134,15 +110,11 @@ option[value=""][disabled] {
 .standard-input,
 .modern-input {
   @apply border-2 border-zinc-500 p-2 rounded-lg shadow-lg text-zinc-900;
-}
-
-.standard-input,
-.modern-input {
   @apply outline-none focus:border-zinc-300 focus:shadow-md;
 }
 
 .standard-input {
-  @apply border-zinc-400 px-4 py-2 bg-zinc-800;
+  @apply border-zinc-400 px-4 py-2 bg-zinc-800 text-zinc-200;
 }
 
 /* Modals */
@@ -168,8 +140,7 @@ option[value=""][disabled] {
 }
 
 .bg-gradient-animation {
-  /* Updated to new accent color */
-  background: linear-gradient(45deg, #b35a30);
+  background: linear-gradient(45deg, var(--accent-color));
   background-size: 400% 400%;
 }
 
@@ -206,16 +177,7 @@ option[value=""][disabled] {
 
 /* Navigation */
 .nav-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.7rem;
-  margin: 0.2rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  text-decoration: none;
-  color: inherit;
-  font-size: 1.5rem;
+  @apply flex flex-col items-center p-3 m-1 cursor-pointer text-2xl text-inherit no-underline transition-transform duration-300;
 }
 .nav-link:hover {
   transform: scale(1.05);
@@ -236,7 +198,7 @@ option[value=""][disabled] {
   @apply bg-amber-300 text-zinc-900;
 }
 .tab-button-active:hover {
-  background-color: #a0512b; /* Darkened version of new accent */
+  background-color: var(--accent-hover);
 }
 .tab-button-inactive {
   @apply bg-zinc-100 text-amber-300;
@@ -247,7 +209,7 @@ option[value=""][disabled] {
 
 /* News */
 .news-item {
-  border-bottom: 0.125rem solid #d4d4d8; /* Using standard hex for borders usually okay, or use var */
+  border-bottom: 0.125rem solid #d4d4d8;
   margin-bottom: 4rem;
   padding-bottom: 3rem;
   text-align: center;
@@ -277,12 +239,11 @@ option[value=""][disabled] {
   display: block;
   width: 50%;
   height: 0.125rem;
-  background: #b35a30; /* Updated to new accent */
+  background: var(--accent-color);
   margin: 0.5rem auto 1.5rem;
 }
 
-/* --- 6. Social Buttons (Custom CSS) --- */
-/* ... (Social buttons styles kept exactly as provided) ... */
+/* --- 6. Social Buttons --- */
 .social-signin-button {
   @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
 }
@@ -299,6 +260,8 @@ option[value=""][disabled] {
     box-shadow 0.3s ease,
     transform 0.2s ease;
 }
+
+/* Facebook */
 .facebook-signin-button {
   background-color: #4267b2;
   color: #ffffff;
@@ -313,6 +276,8 @@ option[value=""][disabled] {
 .facebook-signin-button img {
   margin-right: 10px;
 }
+
+/* Twitter */
 .twitter-signin-button {
   background-color: #1da1f2;
   color: #ffffff;
@@ -329,6 +294,8 @@ option[value=""][disabled] {
 .twitter-signin-button span {
   margin-left: 0.5rem;
 }
+
+/* Google */
 .google-signin-button {
   background-color: #fffffff3;
   color: #2a2a2a;
@@ -349,18 +316,8 @@ option[value=""][disabled] {
 }
 
 /* --- 7. Video Modal & Guide --- */
-/* ... (Video/Guide styles kept exactly as provided) ... */
 .video-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 50;
+  @apply fixed inset-0 flex justify-center items-center bg-black/50 z-50;
 }
 .video-modal video {
   width: 100%;
@@ -379,20 +336,13 @@ option[value=""][disabled] {
   }
 }
 .guide-container {
-  position: fixed;
-  right: 3rem;
-  bottom: 3rem;
-  z-index: 1000;
+  @apply fixed right-12 bottom-12 z-[1000];
 }
 .custom-backdrop {
   pointer-events: none;
 }
 .custom-dialog {
-  background-color: #d4d4d8;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  z-index: 9999;
+  @apply bg-zinc-300 rounded-xl shadow-md p-2.5 z-[9999];
 }
 .custom-dialog::before {
   content: "";
@@ -400,7 +350,6 @@ option[value=""][disabled] {
 }
 
 /* --- 8. Animations --- */
-/* ... (Animation styles kept exactly as provided) ... */
 .animate-slide-in {
   animation: slide-in 0.3s forwards;
 }

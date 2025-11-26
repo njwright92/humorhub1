@@ -49,8 +49,9 @@ const HumorHubAPISection: React.FC = () => {
   }, [router]);
 
   return (
-    <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl max-w-5xl mx-auto">
-      <h2 className="title-style mb-8 text-center sm:mb-10">Hub News!</h2>
+    <section className="card-style mx-auto">
+      {/* CHANGED: Used .title class, removed inline styling */}
+      <h2 className="title mb-8 text-center sm:mb-10">Hub News!</h2>
 
       <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
         <div className="flex-1 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
@@ -64,7 +65,7 @@ const HumorHubAPISection: React.FC = () => {
             </span>
           </p>
 
-          {/* CONDITIONAL: Link (Prefetch) if signed in, Button (Auth Check) if not */}
+          {/* Button classes cleaned up */}
           {isUserSignedIn ? (
             <Link
               href="/HHapi"
@@ -83,7 +84,6 @@ const HumorHubAPISection: React.FC = () => {
         </div>
 
         <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
-          {/* CONDITIONAL: Wrapped in Link if signed in, div/onClick if not */}
           {isUserSignedIn ? (
             <Link href="/HHapi" className="relative group cursor-pointer">
               <Image

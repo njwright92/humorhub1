@@ -610,8 +610,9 @@ const EventsPage = () => {
           </p>
         </div>
 
-        <h1 className="title font-bold text-center mb-6">MicFinder</h1>
-        <h2 className="subtitle-style font-medium text-center mb-6">
+        {/* Refactored: Used global .title, removed redundant font-bold */}
+        <h1 className="title text-center mb-6">MicFinder</h1>
+        <h2 className="subtitle-style text-center mb-6">
           Discover Mics and Festivals Near You!
         </h2>
         <p className="text-center mt-4 mb-6">
@@ -625,6 +626,7 @@ const EventsPage = () => {
         <h3 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
           Find your next show or night out. Pick a city and date!
         </h3>
+
         {/* City Selection Dropdown */}
         <div className="flex flex-col justify-center items-center mt-2 relative z-20">
           <div className="relative w-full max-w-xs min-h-[60px]">
@@ -635,7 +637,7 @@ const EventsPage = () => {
               id="city-select"
               aria-labelledby="city-select-label"
               tabIndex={0}
-              className="modern-input cursor-pointer bg-zinc-200 text-zinc-900 flex items-center justify-center text-center px-3"
+              className="modern-input cursor-pointer bg-zinc-200 flex items-center justify-center text-center px-3"
               role="button"
               aria-haspopup="listbox"
               aria-expanded={isFirstDropdownOpen}
@@ -703,7 +705,7 @@ const EventsPage = () => {
                 className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none z-10"
               >
                 <g>
-                  <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
+                  <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 13.487 0 19.561 v 3.892 H 90 z" />
                   <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
                 </g>
               </svg>
@@ -726,7 +728,7 @@ const EventsPage = () => {
             <>
               <button
                 onClick={toggleMapVisibility}
-                className="absolute top-4 right-4 z-10 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-white/90 hover:bg-white transition cursor-pointer font-semibold"
+                className="absolute top-4 right-4 z-10 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 hover:bg-zinc-400 transition cursor-pointer font-semibold"
               >
                 Hide Map
               </button>
@@ -741,8 +743,9 @@ const EventsPage = () => {
 
         {/* Top List */}
         <section className="card-style">
+          {/* Refactored: Used global .title, inline borderBottom preserved */}
           <h2
-            className="title-style text-center"
+            className="title text-center"
             style={{ borderBottom: "0.15rem solid #f97316" }}
           >
             {selectedTab === "Mics" && "Comedy Mics"}
@@ -774,8 +777,9 @@ const EventsPage = () => {
                   <span className="details-label">ℹ️ Details:</span>
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
                 </div>
+                {/* Refactored: Removed px-2 py-1 as .btn class includes them */}
                 <button
-                  className="btn mt-1 mb-1 px-2 py-1"
+                  className="btn mt-1 mb-1"
                   onClick={() => handleEventSave(event)}
                 >
                   Save Event
@@ -793,9 +797,9 @@ const EventsPage = () => {
         {/* Tab Buttons */}
         <div className="tab-container flex justify-center mt-4 gap-3">
           <button
-            className={`tab-button font-bold px-4 py-2 rounded-full transition ${
+            className={`tab-button font-bold rounded-full transition ${
               selectedTab === "Mics"
-                ? "bg-blue-600 text-white ring-2 ring-white shadow-lg"
+                ? "bg-blue-600 text-bg-zinc-200 ring-2 ring-bg-zinc-200 shadow-lg"
                 : "bg-blue-100 text-blue-700 hover:bg-blue-200"
             }`}
             onClick={() => setSelectedTab("Mics")}
@@ -803,9 +807,9 @@ const EventsPage = () => {
             Comedy Mics
           </button>
           <button
-            className={`tab-button font-bold px-4 py-2 rounded-full transition ${
+            className={`tab-button font-bold rounded-full transition ${
               selectedTab === "Festivals"
-                ? "bg-purple-700 text-white ring-2 ring-white shadow-lg"
+                ? "bg-purple-700 text-bg-zinc-200 ring-2 ring-bg-zinc-200 shadow-lg"
                 : "bg-purple-100 text-purple-800 hover:bg-purple-200"
             }`}
             onClick={() => setSelectedTab("Festivals")}
@@ -813,9 +817,9 @@ const EventsPage = () => {
             Festivals
           </button>
           <button
-            className={`tab-button font-bold px-4 py-2 rounded-full transition ${
+            className={`tab-button font-bold rounded-full transition ${
               selectedTab === "Other"
-                ? "bg-green-600 text-white ring-2 ring-white shadow-lg"
+                ? "bg-green-600 text-bg-zinc-200 ring-2 ring-bg-zinc-200 shadow-lg"
                 : "bg-green-100 text-green-700 hover:bg-green-200"
             }`}
             onClick={() => setSelectedTab("Other")}
@@ -889,7 +893,8 @@ const EventsPage = () => {
             </div>
           </div>
 
-          <h2 className="title-style text-center mt-4">
+          {/* Refactored: Used global .title */}
+          <h2 className="title text-center mt-4">
             {filterCity === "All Cities"
               ? `All ${
                   selectedTab === "Mics"

@@ -40,15 +40,18 @@ export default function Home() {
     <>
       <Header />
       <div className="screen-container content-with-sidebar">
+        {/* H1 is specific to this page, kept as utility classes */}
         <h1 className="hidden md:block text-zinc-200 text-6xl font-bold mb-6 tracking-wide">
           Humor Hub!
         </h1>
-        <section className="card-style bg-zinc-800 p-6 rounded-xl shadow-xl w-[95%] mx-auto">
-          <h2 className="title-style mb-8 text-center sm:mb-10 text-amber-300">
-            Mic Finder!
-          </h2>
+
+        {/* Added 'max-w-5xl' to match the news section for consistency */}
+        <section className="card-style mx-auto w-full">
+          {/* CHANGED: Used .title class, removed manual color/font inputs */}
+          <h2 className="title mb-8 text-center sm:mb-10">Mic Finder!</h2>
+
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
-            <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
+            <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-6">
               <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
                 Looking for your next Mic?
                 <br />
@@ -60,9 +63,11 @@ export default function Home() {
                 </span>
               </p>
               <EventForm />
+
+              {/* Cleaned up button classes - .btn handles the hover/transform now */}
               <Link
                 href="/MicFinder"
-                className="btn w-80 text-center self-center transform transition-transform duration-300 group-hover:scale-105"
+                className="btn w-80 text-center self-center"
                 onClick={() =>
                   sendDataLayerEvent("click_micfinder_button", {
                     event_category: "Navigation",
@@ -94,6 +99,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         <section data-aos="fade-up">
           <HumorHubAPISection />
         </section>
