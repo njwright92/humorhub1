@@ -7,7 +7,7 @@
   --zinc-900: #2e2c28;
   --zinc-200: #f4f4f5;
   --accent-color: #b35a30;
-  --accent-hover: #a0512b; /* Added for consistency */
+  --accent-hover: #a0512b;
 }
 
 body {
@@ -23,7 +23,8 @@ h4,
 h5,
 h6,
 .font-comic {
-  font-family: var(--font-comic-neue), "Comic Sans MS", "Arial", sans-serif;
+  font-family: var(--font-comic-neue), "Comic Neue", "Segoe UI", "Helvetica",
+    "Arial", sans-serif;
 }
 
 /* Form Defaults */
@@ -45,7 +46,7 @@ option[value=""][disabled] {
 }
 
 .card-style {
-  @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-xl rounded-lg;
+  @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-lg rounded-lg;
 }
 
 .content-with-sidebar {
@@ -66,7 +67,7 @@ option[value=""][disabled] {
 .title {
   @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-lg;
   @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl;
-  @apply mt-10 mb-2; /* Default margins */
+  @apply mt-10 mb-2;
 }
 
 .subtitle-style {
@@ -77,10 +78,6 @@ option[value=""][disabled] {
   @apply block text-zinc-200 text-sm font-semibold mb-2;
 }
 
-.micFinderTitle {
-  @apply flex justify-center items-center text-3xl font-bold text-zinc-200 md:text-4xl;
-}
-
 .error-message {
   @apply text-red-500 my-4 font-bold;
 }
@@ -89,20 +86,13 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold;
+  @apply bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold;
   @apply transform transition-transform hover:scale-105;
 }
 
 .btn:hover,
 .btn:focus {
   @apply animate-pulse;
-}
-
-.gif-button img {
-  transition: transform 0.3s ease-in-out;
-}
-.gif-button:hover img {
-  transform: scale(1.1);
 }
 
 /* Inputs */
@@ -133,15 +123,6 @@ option[value=""][disabled] {
 /* Cards & Misc */
 .card {
   @apply bg-gray-100 p-2.5 rounded-lg text-center mx-auto max-w-md text-gray-800;
-}
-
-.glass-effect {
-  @apply bg-zinc-900/40 backdrop-blur-md;
-}
-
-.bg-gradient-animation {
-  background: linear-gradient(45deg, var(--accent-color));
-  background-size: 400% 400%;
 }
 
 /* --- 5. Specific Features --- */
@@ -207,134 +188,11 @@ option[value=""][disabled] {
   background-color: #e4e4e7;
 }
 
-/* News */
-.news-item {
-  border-bottom: 0.125rem solid #d4d4d8;
-  margin-bottom: 4rem;
-  padding-bottom: 3rem;
-  text-align: center;
-}
-.news-item:last-child {
-  border-bottom: none;
-}
-.news-description,
-.news-link {
-  display: block;
-  margin-top: 5px;
-  text-align: center;
-}
-.news-description {
-  padding: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-/* Categories */
-.category-title {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-.category-title:after {
-  content: "";
-  display: block;
-  width: 50%;
-  height: 0.125rem;
-  background: var(--accent-color);
-  margin: 0.5rem auto 1.5rem;
-}
-
 /* --- 6. Social Buttons --- */
 .social-signin-button {
   @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
 }
-.facebook-signin-button,
-.twitter-signin-button,
-.google-signin-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.2s ease;
-}
 
-/* Facebook */
-.facebook-signin-button {
-  background-color: #4267b2;
-  color: #ffffff;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.facebook-signin-button:hover {
-  background-color: #365899;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.facebook-signin-button img {
-  margin-right: 10px;
-}
-
-/* Twitter */
-.twitter-signin-button {
-  background-color: #1da1f2;
-  color: #ffffff;
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-.twitter-signin-button:hover {
-  background-color: #1a91da;
-}
-.twitter-signin-button:active {
-  background-color: #1681c1;
-}
-.twitter-signin-button span {
-  margin-left: 0.5rem;
-}
-
-/* Google */
-.google-signin-button {
-  background-color: #fffffff3;
-  color: #2a2a2a;
-  border: 1px solid #dcdcdc;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: bold;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-}
-.google-signin-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-}
-.google-signin-button img {
-  width: 25px;
-  height: 25px;
-  margin-right: 10px;
-}
-
-/* --- 7. Video Modal & Guide --- */
-.video-modal {
-  @apply fixed inset-0 flex justify-center items-center bg-black/50 z-50;
-}
-.video-modal video {
-  width: 100%;
-  height: 100vh;
-}
-@media (min-width: 768px) {
-  .video-modal video {
-    width: 500px;
-    height: auto;
-  }
-}
-@media (min-width: 769px) {
-  .video-modal video {
-    width: 350px;
-    height: 600px;
-  }
-}
 .guide-container {
   @apply fixed right-12 bottom-12 z-[1000];
 }

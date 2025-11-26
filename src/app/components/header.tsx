@@ -188,7 +188,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-1 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
+      <header className="p-2 text-zinc-900 sticky top-0 z-50">
         <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
           {/* --- Logo (Mobile) --- */}
           <Link href="/">

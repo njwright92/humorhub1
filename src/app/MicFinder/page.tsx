@@ -743,7 +743,7 @@ const EventsPage = () => {
         {/* Top List */}
         <section className="card-style">
           {/* Replaced inline style with Tailwind utilities */}
-          <h2 className="title text-center border-b-4 border-[#f97316] pb-2">
+          <h2 className="title text-center border-b-4 border-[#b35a30] pb-2">
             {selectedTab === "Mics" && "Comedy Mics"}
             {selectedTab === "Festivals" && "Festivals"}
             {selectedTab === "Other" && "Music/All Arts"}
@@ -849,7 +849,7 @@ const EventsPage = () => {
                     placeholder="Search for a city..."
                     value={searchTerm}
                     onChange={handleSearchInputChange}
-                    className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
+                    className="w-full px-3 py-2 border-b-2 bg-zinc-200 text-zinc-900 outline-none"
                     autoFocus
                   />
                   <ul
@@ -887,7 +887,7 @@ const EventsPage = () => {
             </div>
           </div>
 
-          <h2 className="title text-center mt-4">
+          <h2 className="title text-center mt-4 border-b-4 border-[#b35a30] pb-2">
             {filterCity === "All Cities"
               ? `All ${
                   selectedTab === "Mics"
