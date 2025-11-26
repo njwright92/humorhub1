@@ -327,7 +327,7 @@ export default function Header() {
           </div>
 
           {/* --- Mobile Header Title --- */}
-          <h1 className=" text-zinc-900 text-5xl mr-8 font-bold sm:hidden justify-center">
+          <h1 className=" text-zinc-950 text-5xl mr-4 font-extrabold sm:hidden justify-center tracking-wide">
             Humor Hub!
           </h1>
 
