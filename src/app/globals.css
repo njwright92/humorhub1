@@ -89,7 +89,7 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-zinc-900 px-2 py-1 rounded-lg shadow-lg font-medium;
+  @apply bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold;
   @apply transform transition-transform hover:scale-105;
 }
 
