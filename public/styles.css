@@ -1677,7 +1677,7 @@ option[value=""][disabled] {
   padding-bottom: 0.25rem;
   font-weight: 500;
   --tw-text-opacity: 1;
-  color: rgb(244 244 245 / var(--tw-text-opacity, 1));
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
   --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
