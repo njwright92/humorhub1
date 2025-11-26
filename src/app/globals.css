@@ -66,12 +66,12 @@ option[value=""][disabled] {
 /* Unified Title Class */
 .title {
   @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-lg;
-  @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl;
+  @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
   @apply mt-10 mb-2;
 }
 
 .subtitle-style {
-  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl mb-2 font-bold drop-shadow-lg;
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 font-bold drop-shadow-lg;
 }
 
 .the-text {
@@ -249,4 +249,9 @@ option[value=""][disabled] {
 
 .mobile-menu-item {
   @apply nav-link bg-zinc-800 rounded-lg p-3 shadow-lg hover:bg-zinc-700 w-full;
+}
+
+.bg-gradient-animation {
+  background: var(--accent-color);
+  background-size: 400% 400%;
 }

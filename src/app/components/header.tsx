@@ -188,7 +188,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-2 text-zinc-900 sticky top-0 z-50">
+      <header className="p-2 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
           {/* --- Logo (Mobile) --- */}
           <Link href="/">
@@ -327,7 +327,7 @@ export default function Header() {
           </div>
 
           {/* --- Mobile Header Title --- */}
-          <h1 className="text-zinc-900 text-4xl mr-8 font-bold sm:hidden justify-center">
+          <h1 className=" text-zinc-900 text-5xl mr-8 font-bold sm:hidden justify-center">
             Humor Hub!
           </h1>
 

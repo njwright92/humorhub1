@@ -1183,6 +1183,10 @@ video {
   font-size: 2.25rem;
   line-height: 2.5rem;
 }
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
 .text-6xl {
   font-size: 3.75rem;
   line-height: 1;
@@ -1573,24 +1577,24 @@ option[value=""][disabled] {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
     var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate)
     var(--tw-sepia) var(--tw-drop-shadow);
-  font-size: 1.875rem;
-  line-height: 2.25rem;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 @media (min-width: 640px) {
-  .title {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-  }
-}
-@media (min-width: 768px) {
   .title {
     font-size: 3rem;
     line-height: 1;
   }
 }
+@media (min-width: 768px) {
+  .title {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+}
 @media (min-width: 1024px) {
   .title {
-    font-size: 3rem;
+    font-size: 4.5rem;
     line-height: 1;
   }
 }
@@ -1601,7 +1605,7 @@ option[value=""][disabled] {
 
 .subtitle-style {
   margin-bottom: 0.5rem;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 700;
   --tw-drop-shadow: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
@@ -1613,22 +1617,22 @@ option[value=""][disabled] {
 
 @media (min-width: 640px) {
   .subtitle-style {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .subtitle-style {
     font-size: 1.5rem;
     line-height: 2rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .subtitle-style {
     font-size: 1.875rem;
     line-height: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .subtitle-style {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 }
 
@@ -2099,6 +2103,11 @@ option[value=""][disabled] {
   transform: scale(1.05);
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity, 1));
+}
+
+.bg-gradient-animation {
+  background: var(--accent-color);
+  background-size: 400% 400%;
 }
 
 .hover\:scale-100:hover {
