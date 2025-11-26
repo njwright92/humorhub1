@@ -197,35 +197,35 @@ export default function Header() {
               alt="HUMOR HUB LOGO"
               width={50}
               height={50}
-              className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden"
+              className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden object-contain"
               priority
-              style={{ objectFit: "contain" }}
               sizes="(max-width: 640px) 40px, 50px"
             />
           </Link>
 
           {/* --- Sidebar (Desktop) --- */}
-          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300 bg-opacity-90 left-0 z-50 shadow-lg transition-all">
-            {/* Top Logo */}
+          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all">
+            {/* Top Logo - Updated to use sidebar-icon-link for consistent tooltip behavior */}
             <div className="flex flex-col items-center space-y-6 mt-4">
-              <Link href="/" aria-label="Home" className="relative group">
+              <Link
+                href="/"
+                aria-label="Home"
+                className="sidebar-icon-link mb-2"
+              >
                 <Image
                   src={hh}
                   alt="Mic"
                   width={60}
                   height={60}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mb-2 transform transition-transform hover:scale-110 shadow-md"
+                  className="rounded-full cursor-pointer bg-zinc-900 p-1 shadow-md"
                   loading="lazy"
                 />
-                {/* Home Tooltip */}
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
-                  Home
-                </span>
+                <span className="sidebar-tooltip">Home</span>
               </Link>
             </div>
 
             {/* Nav Icons */}
-            <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full text-zinc-900 ">
+            <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full text-zinc-900">
               <div className="h-8 w-8 transform transition-transform hover:scale-110">
                 <SearchBar
                   onSearch={handleOnSearch}
@@ -235,95 +235,75 @@ export default function Header() {
                 />
               </div>
 
-              {/* 1. Mic Finder */}
               <Link
                 href="/MicFinder"
-                aria-label="Mic Finder"
-                className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                aria-label="MicFinder"
+                className="sidebar-icon-link"
               >
                 <MicFinderIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  Mic Finder
-                </span>
+                <span className="sidebar-tooltip">Mic Finder</span>
               </Link>
 
-              {/* 2. News (Conditional: Link if signed in, Button if not) */}
               {isUserSignedIn ? (
                 <Link
                   href="/HHapi"
                   aria-label="News"
-                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                  className="sidebar-icon-link"
                 >
                   <NewsIcon />
-                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
-                    News
-                  </span>
+                  <span className="sidebar-tooltip">News</span>
                 </Link>
               ) : (
                 <button
                   onClick={handleNewsClick}
                   aria-label="News (Sign In Required)"
-                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                  className="sidebar-icon-link"
                 >
                   <NewsIcon />
-                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
-                    News
-                  </span>
+                  <span className="sidebar-tooltip">News</span>
                 </button>
               )}
 
-              {/* 3. Profile (Conditional Link vs Button) */}
               {isUserSignedIn ? (
                 <Link
                   href="/Profile"
                   aria-label="Profile"
-                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                  className="sidebar-icon-link"
                 >
                   <UserIconComponent />
-                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
-                    Profile
-                  </span>
+                  <span className="sidebar-tooltip">Profile</span>
                 </Link>
               ) : (
                 <button
-                  /* UPDATED: Use handleProfileClick instead of toggleAuthModal */
                   onClick={handleProfileClick}
-                  className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
                   aria-label="Sign In"
+                  className="sidebar-icon-link"
                 >
                   <UserIconComponent />
-                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                    Profile
-                  </span>
+                  <span className="sidebar-tooltip">Profile</span>
                 </button>
               )}
 
-              {/* 4. Contact Us */}
               <Link
                 href="/contact"
                 aria-label="Contact Us"
-                className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                className="sidebar-icon-link"
               >
                 <ContactIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  Contact Us
-                </span>
+                <span className="sidebar-tooltip">Contact Us</span>
               </Link>
 
-              {/* 5. About */}
               <Link
                 href="/about"
                 aria-label="About"
-                className="relative group transform transition-transform hover:scale-110 hover:text-zinc-700"
+                className="sidebar-icon-link"
               >
                 <AboutIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-900 text-amber-300 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none font-bold z-50 shadow-lg">
-                  About
-                </span>
+                <span className="sidebar-tooltip">About</span>
               </Link>
             </div>
 
-            {/* Menu Toggle (Desktop Sidebar Bottom) */}
+            {/* Menu Toggle (Desktop) */}
             <button
               onClick={toggleMenu}
               className="text-zinc-900 hover:text-zinc-700 mt-auto mb-4 transform transition-transform hover:scale-110"
@@ -375,7 +355,7 @@ export default function Header() {
 
           {/* --- Full Screen Mobile Menu --- */}
           {isMenuOpen && (
-            <div className="fixed top-0 left-0 w-full h-full bg-zinc-900 text-zinc-200 bg-opacity-95 z-50 flex flex-col items-center gap-6 p-4 backdrop-blur-sm">
+            <div className="fixed top-0 left-0 w-full h-full bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-6 p-4 backdrop-blur-sm">
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="self-end cursor-pointer mb-4 p-2"
@@ -411,19 +391,15 @@ export default function Header() {
               </Link>
 
               <div className="flex flex-col gap-4 text-center w-full max-w-xs">
-                <Link
-                  href="/MicFinder"
-                  className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition"
-                >
+                <Link href="/MicFinder" className="mobile-menu-item">
                   Mic Finder
                 </Link>
 
-                {/* NEWS: Link if Signed In, Button if Signed Out */}
                 {isUserSignedIn ? (
                   <Link
                     href="/HHapi"
                     onClick={() => setIsMenuOpen(false)}
-                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                    className="mobile-menu-item"
                   >
                     News
                   </Link>
@@ -431,20 +407,19 @@ export default function Header() {
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
-                      handleNewsClick(); /* Sets pending redirect to /HHapi */
+                      handleNewsClick();
                     }}
-                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                    className="mobile-menu-item"
                   >
                     News
                   </button>
                 )}
 
-                {/* PROFILE: Link if Signed In, Button if Signed Out */}
                 {isUserSignedIn ? (
                   <Link
                     href="/Profile"
                     onClick={() => setIsMenuOpen(false)}
-                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                    className="mobile-menu-item"
                   >
                     Profile
                   </Link>
@@ -452,24 +427,18 @@ export default function Header() {
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
-                      handleProfileClick(); /* Sets pending redirect to /Profile */
+                      handleProfileClick();
                     }}
-                    className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition w-full"
+                    className="mobile-menu-item"
                   >
                     Profile
                   </button>
                 )}
-                <Link
-                  href="/contact"
-                  className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition"
-                >
+
+                <Link href="/contact" className="mobile-menu-item">
                   Contact Us
                 </Link>
-
-                <Link
-                  href="/about"
-                  className="nav-link bg-zinc-800 rounded-xl p-3 shadow-lg cursor-pointer hover:bg-zinc-700 transition"
-                >
+                <Link href="/about" className="mobile-menu-item">
                   About
                 </Link>
 
@@ -489,7 +458,6 @@ export default function Header() {
           )}
         </nav>
       </header>
-
       <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />
     </>
   );

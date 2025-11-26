@@ -178,7 +178,6 @@ export default function UserProfile() {
     <>
       <Head>
         <title>Your Profile - Manage Your Humor Hub Account</title>
-
         <meta
           name="description"
           content="Access and manage your Humor Hub profile. Update your information, preferences, and view your favorite content."
@@ -198,20 +197,22 @@ export default function UserProfile() {
         />
         <meta property="og:url" content="https://www.thehumorhub.com/Profile" />
         <meta property="og:type" content="website" />
+        {/* Only keep if this image actually exists */}
         <meta
           property="og:image"
           content="https://www.thehumorhub.com/images/og-image-profile.jpg"
         />
       </Head>
+
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-WH6KKVYT8F"
-      ></Script>
+      />
+
       <Header />
+
       <main className="screen-container content-with-sidebar">
-        <h1 className="title text-2xl font-bold text-center mb-6">
-          Your Profile
-        </h1>
+        <h1 className="title text-center mb-6">Your Profile</h1>
 
         <section className="card-style p-6 rounded-lg shadow-lg bg-zinc-200 mb-6">
           <div className="mb-6">
@@ -228,7 +229,7 @@ export default function UserProfile() {
                   name="profilePicture"
                   type="file"
                   onChange={handleImageChange}
-                  className="standard-input mb-4"
+                  className="standard-input mb-4 "
                   onClick={() => {
                     sendDataLayerEvent("click_upload_profile_image", {
                       event_category: "Profile_Interaction",
@@ -236,7 +237,6 @@ export default function UserProfile() {
                     });
                   }}
                 />
-
                 {profileImageObjectURL && (
                   <Image
                     src={profileImageObjectURL}
@@ -275,27 +275,18 @@ export default function UserProfile() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  style={{ backgroundColor: "#1f2022", color: "#d4d4d8" }}
-                  className="standard-input"
+                  className="standard-input w-full"
                 />
               </>
             ) : (
-              <p
-                className="subtitle-style font-semibold text-xl"
-                style={{ color: "#d4d4d8" }}
-              >
-                {name}
-              </p>
+              <p className="subtitle-style font-semibold text-xl">{name}</p>
             )}
           </div>
 
           <div className="mb-6">
             {isEditing ? (
               <>
-                <label
-                  htmlFor="bio"
-                  className="block text-lg text-zinc-200 mb-2"
-                >
+                <label htmlFor="bio" className="block text-lg mb-2">
                   Bio:
                 </label>
                 <textarea
@@ -303,21 +294,11 @@ export default function UserProfile() {
                   name="bio"
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  style={{
-                    backgroundColor: "#1f2022",
-                    color: "#d4d4d8",
-                    height: "6rem",
-                  }}
                   className="standard-input"
                 />
               </>
             ) : (
-              <p
-                className="subtitle-style text-md"
-                style={{ color: "#d4d4d8" }}
-              >
-                {bio}
-              </p>
+              <p className="subtitle-style text-md">{bio}</p>
             )}
           </div>
 
@@ -328,24 +309,21 @@ export default function UserProfile() {
                   alert("You must be signed in to edit your profile.");
                   return;
                 }
-
                 if (isEditing) {
-                  // If in editing mode, this button acts as "Save Changes"
                   sendDataLayerEvent("click_save_changes", {
                     event_category: "Profile_Interaction",
                     event_label: "Save_Changes_Click",
                   });
-                  handleSubmit(); // Call handleSubmit to save the profile
+                  handleSubmit();
                 } else {
-                  // Otherwise, it acts as "Edit Profile"
                   sendDataLayerEvent("click_edit_profile", {
                     event_category: "Profile_Interaction",
                     event_label: "Edit_Profile_Click",
                   });
-                  handleEdit(); // Enable editing mode
+                  handleEdit();
                 }
               }}
-              className="btn bg-orange-500 hover:bg-orange-700 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-150 ease-in-out hover:animate-pulse"
+              className="btn bg-orange-500 hover:bg-orange-700 py-2 px-4"
             >
               {isEditing ? "Save Changes" : "Edit Profile"}
             </button>
@@ -357,9 +335,9 @@ export default function UserProfile() {
                     event_category: "Profile_Interaction",
                     event_label: "Cancel_Edit_Click",
                   });
-                  handleCancel(); // Discard changes
+                  handleCancel();
                 }}
-                className="btn bg-zinc-500 hover:bg-zinc-700 text-zinc-200 font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-150 ease-in-out hover:animate-pulse"
+                className="btn bg-zinc-500 hover:bg-zinc-700 py-2 px-4"
               >
                 Cancel
               </button>
@@ -368,32 +346,26 @@ export default function UserProfile() {
         </section>
 
         <section className="mb-6">
-          <h2
-            className="title-style text-3xl font-bold mb-4"
-            style={{ color: "#d4d4d8" }}
-          >
-            Saved Events
-          </h2>
+          <h2 className="title text-zinc-200 mb-4">Saved Events</h2>
+
           {savedEvents.length > 0 ? (
             savedEvents.map((event) => (
               <article
                 key={event.id}
-                className="event-item mb-4 p-4 rounded-lg shadow-lg"
-                style={{ backgroundColor: "#1f2022", color: "#d4d4d8" }}
+                className="event-item mb-4 p-4 rounded-lg shadow-lg bg-zinc-800 text-zinc-200"
               >
                 <h3 className="subtitle-style text-xl font-semibold">
                   {event.name}
                 </h3>
                 <p className="text-md mb-2">Location: {event.location}</p>
                 <div className="details mb-2">
-                  <span className="the-text font-medium">ℹ️ Details:</span>
-                  <div
-                    dangerouslySetInnerHTML={{ __html: event.details }}
-                    style={{ color: "#d4d4d8" }}
-                  />
+                  <span className="the-text font-medium block mb-1">
+                    ℹ️ Details:
+                  </span>
+                  <div dangerouslySetInnerHTML={{ __html: event.details }} />
                 </div>
                 <button
-                  className=" bg-red-500 hover:bg-red-700 text-zinc-900 font-bold py-1 px-3 rounded-full hover:animate-pulse transition-colors duration-150 ease-in-out"
+                  className="btn bg-red-500 hover:bg-red-700 py-1 px-3"
                   onClick={() => {
                     handleDeleteEvent(event.id);
                     sendDataLayerEvent("click_delete_saved_event", {
@@ -401,14 +373,15 @@ export default function UserProfile() {
                       event_label: "Delete_Saved_Event_Click",
                     });
                   }}
-                  style={{ color: "#d4d4d8" }}
                 >
                   Delete
                 </button>
               </article>
             ))
           ) : (
-            <p style={{ color: "#d4d4d8" }}>No saved events to show.</p>
+            <p className="text-zinc-400 text-center">
+              No saved events to show.
+            </p>
           )}
         </section>
       </main>

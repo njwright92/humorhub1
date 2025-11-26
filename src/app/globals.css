@@ -45,7 +45,7 @@ option[value=""][disabled] {
 }
 
 .card-style {
-  @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-xl rounded-xl;
+  @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-xl rounded-lg;
 }
 
 .content-with-sidebar {
@@ -64,7 +64,7 @@ option[value=""][disabled] {
 
 /* Unified Title Class */
 .title {
-  @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-xl;
+  @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-lg;
   @apply text-3xl sm:text-4xl md:text-5xl lg:text-5xl;
   @apply mt-10 mb-2; /* Default margins */
 }
@@ -89,7 +89,7 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-zinc-100 px-2 py-1 rounded-xl shadow-lg font-medium;
+  @apply bg-amber-300 text-zinc-100 px-2 py-1 rounded-lg shadow-lg font-medium;
   @apply transform transition-transform hover:scale-105;
 }
 
@@ -132,7 +132,7 @@ option[value=""][disabled] {
 
 /* Cards & Misc */
 .card {
-  @apply bg-gray-100 p-2.5 rounded-xl text-center mx-auto max-w-md text-gray-800;
+  @apply bg-gray-100 p-2.5 rounded-lg text-center mx-auto max-w-md text-gray-800;
 }
 
 .glass-effect {
@@ -166,7 +166,7 @@ option[value=""][disabled] {
   @apply rounded-full mx-auto;
 }
 .checkbox-container {
-  @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-xl;
+  @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-lg;
 }
 .checkbox-container label {
   @apply cursor-pointer transition-colors duration-200;
@@ -342,7 +342,7 @@ option[value=""][disabled] {
   pointer-events: none;
 }
 .custom-dialog {
-  @apply bg-zinc-300 rounded-xl shadow-md p-2.5 z-[9999];
+  @apply bg-zinc-300 rounded-lg shadow-md p-2.5 z-[9999];
 }
 .custom-dialog::before {
   content: "";
@@ -375,4 +375,20 @@ option[value=""][disabled] {
     transform: translateX(-100%);
     opacity: 0;
   }
+}
+
+.sidebar-icon-link {
+  @apply relative transform transition-transform hover:scale-110 hover:text-zinc-700;
+}
+
+.sidebar-tooltip {
+  @apply absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg;
+}
+
+.sidebar-icon-link:hover .sidebar-tooltip {
+  @apply opacity-100;
+}
+
+.mobile-menu-item {
+  @apply nav-link bg-zinc-800 rounded-lg p-3 shadow-lg hover:bg-zinc-700 w-full;
 }

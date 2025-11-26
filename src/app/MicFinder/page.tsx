@@ -40,7 +40,7 @@ function getDistanceFromLatLonInKm(
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => (
-    <div className="h-[25rem] w-full rounded-xl flex items-center justify-center text-zinc-500">
+    <div className="h-[25rem] w-full rounded-lg flex items-center justify-center text-zinc-500">
       Loading Map...
     </div>
   ),
@@ -570,7 +570,7 @@ const EventsPage = () => {
     return (
       <Suspense
         fallback={
-          <div className="h-[25rem] w-full bg-zinc-200 animate-pulse rounded-xl"></div>
+          <div className="h-[25rem] w-full bg-zinc-200 rounded-lg"></div>
         }
       >
         <GoogleMap
@@ -596,6 +596,7 @@ const EventsPage = () => {
     <>
       <Header />
       <div className="screen-container content-with-sidebar">
+        {/* Alert Box */}
         <div className="border border-red-400 text-red-700 px-3 py-2 rounded-lg shadow-md text-center mb-3 bg-zinc-200 text-xs sm:text-sm">
           <p className="m-0">
             <strong className="font-bold">📢 Note: </strong>
@@ -610,7 +611,6 @@ const EventsPage = () => {
           </p>
         </div>
 
-        {/* Refactored: Used global .title, removed redundant font-bold */}
         <h1 className="title text-center mb-6">MicFinder</h1>
         <h2 className="subtitle-style text-center mb-6">
           Discover Mics and Festivals Near You!
@@ -620,9 +620,12 @@ const EventsPage = () => {
           add comedy events to connect with your community and keep the laughs
           going!
         </p>
-        <div className="text-center mb-4 h-16 w-full rounded-xl">
+
+        {/* Form Container */}
+        <div className="text-center mb-4 h-16 w-full rounded-lg">
           <MemoizedEventForm />
         </div>
+
         <h3 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2">
           Find your next show or night out. Pick a city and date!
         </h3>
@@ -668,13 +671,12 @@ const EventsPage = () => {
                   >
                     <span>📍</span> Use My Current Location
                   </li>
-
                   {dropdownCities.map((city) => (
                     <li
                       key={city}
                       role="option"
                       aria-selected={selectedCity === city}
-                      className="px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center"
+                      className="px-4 py-2 cursor-pointer hover:bg-green-100 text-center"
                       onClick={() => handleCitySelect(city)}
                     >
                       {city}
@@ -704,31 +706,28 @@ const EventsPage = () => {
                 fill="currentColor"
                 className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none z-10"
               >
-                <g>
-                  <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 13.487 0 19.561 v 3.892 H 90 z" />
-                  <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
-                </g>
+                <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
+                <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
               </svg>
             </div>
           </div>
         </div>
 
-        {/* Map Section */}
-        <section className="w-full h-[25rem] rounded-xl shadow-md relative border border-zinc-200 mt-6 overflow-hidden">
+        {/* Map Section - Removed unnecessary wrapper div */}
+        <section className="w-full h-[25rem] rounded-lg shadow-md relative border border-zinc-200 mt-6 overflow-hidden">
           {!isMapVisible ? (
-            <div className="w-full h-full flex items-center justify-center">
-              <button
-                onClick={toggleMapVisibility}
-                className="text-zinc-900 rounded-lg shadow-lg px-6 py-3 bg-green-400 transition cursor-pointer hover:bg-green-500 font-bold text-lg"
-              >
-                Show Map
-              </button>
-            </div>
+            <button
+              onClick={toggleMapVisibility}
+              /* FIXED: Added absolute positioning to center it without a wrapper div */
+              className="btn absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-zinc-900 cursor-pointer p-2"
+            >
+              Show Map
+            </button>
           ) : (
             <>
               <button
                 onClick={toggleMapVisibility}
-                className="absolute top-4 right-4 z-10 text-zinc-900 rounded-lg shadow-lg px-4 py-2 bg-zinc-200 hover:bg-zinc-400 transition cursor-pointer font-semibold"
+                className="absolute top-4 right-4 z-10 text-zinc-200 rounded-lg shadow-xl px-4 py-2 bg-zinc-900 hover:bg-zinc-950 transition cursor-pointer font-semibold"
               >
                 Hide Map
               </button>
@@ -743,11 +742,8 @@ const EventsPage = () => {
 
         {/* Top List */}
         <section className="card-style">
-          {/* Refactored: Used global .title, inline borderBottom preserved */}
-          <h2
-            className="title text-center"
-            style={{ borderBottom: "0.15rem solid #f97316" }}
-          >
+          {/* Replaced inline style with Tailwind utilities */}
+          <h2 className="title text-center border-b-4 border-[#f97316] pb-2">
             {selectedTab === "Mics" && "Comedy Mics"}
             {selectedTab === "Festivals" && "Festivals"}
             {selectedTab === "Other" && "Music/All Arts"}
@@ -759,7 +755,7 @@ const EventsPage = () => {
             </p>
           ) : filteredEventsForView.length > 0 ? (
             filteredEventsForView.map((event) => (
-              <div key={event.id} className="event-item mt-2">
+              <div key={event.id} className="event-item">
                 <h3 className="text-lg font-semibold">{event.name}</h3>
                 <p className="details-label">📅 Date: {event.date}</p>
                 <p className="details-label">📍 Location: {event.location}</p>
@@ -777,7 +773,6 @@ const EventsPage = () => {
                   <span className="details-label">ℹ️ Details:</span>
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
                 </div>
-                {/* Refactored: Removed px-2 py-1 as .btn class includes them */}
                 <button
                   className="btn mt-1 mb-1"
                   onClick={() => handleEventSave(event)}
@@ -794,12 +789,12 @@ const EventsPage = () => {
           )}
         </section>
 
-        {/* Tab Buttons */}
+        {/* Tab Buttons - Fixed 'bg-zinc' typo to 'zinc-100' */}
         <div className="tab-container flex justify-center mt-4 gap-3">
           <button
             className={`tab-button font-bold rounded-full transition ${
               selectedTab === "Mics"
-                ? "bg-blue-600 text-bg-zinc-200 ring-2 ring-bg-zinc-200 shadow-lg"
+                ? "bg-blue-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
                 : "bg-blue-100 text-blue-700 hover:bg-blue-200"
             }`}
             onClick={() => setSelectedTab("Mics")}
@@ -809,7 +804,7 @@ const EventsPage = () => {
           <button
             className={`tab-button font-bold rounded-full transition ${
               selectedTab === "Festivals"
-                ? "bg-purple-700 text-bg-zinc-200 ring-2 ring-bg-zinc-200 shadow-lg"
+                ? "bg-purple-700 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
                 : "bg-purple-100 text-purple-800 hover:bg-purple-200"
             }`}
             onClick={() => setSelectedTab("Festivals")}
@@ -819,7 +814,7 @@ const EventsPage = () => {
           <button
             className={`tab-button font-bold rounded-full transition ${
               selectedTab === "Other"
-                ? "bg-green-600 text-bg-zinc-200 ring-2 ring-bg-zinc-200 shadow-lg"
+                ? "bg-green-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
                 : "bg-green-100 text-green-700 hover:bg-green-200"
             }`}
             onClick={() => setSelectedTab("Other")}
@@ -832,11 +827,9 @@ const EventsPage = () => {
         <section className="card-style">
           <div className="flex flex-col justify-center items-center mt-2 relative z-10">
             <div className="relative w-full max-w-xs">
-              <label htmlFor="city-filter-select" className="sr-only">
-                Filter by City
-              </label>
               <div
                 id="city-filter-select"
+                aria-label="Filter by City"
                 className="modern-input cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center"
                 role="button"
                 aria-haspopup="listbox"
@@ -848,6 +841,7 @@ const EventsPage = () => {
               >
                 {filterCity || "All Cities"}
               </div>
+
               {isSecondDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-md rounded-lg mt-1 overflow-hidden">
                   <input
@@ -893,7 +887,6 @@ const EventsPage = () => {
             </div>
           </div>
 
-          {/* Refactored: Used global .title */}
           <h2 className="title text-center mt-4">
             {filterCity === "All Cities"
               ? `All ${

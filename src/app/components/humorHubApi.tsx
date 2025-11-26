@@ -49,8 +49,7 @@ const HumorHubAPISection: React.FC = () => {
   }, [router]);
 
   return (
-    <section className="card-style mx-auto">
-      {/* CHANGED: Used .title class, removed inline styling */}
+    <section className="card-style mx-auto w-full">
       <h2 className="title mb-8 text-center sm:mb-10">Hub News!</h2>
 
       <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
@@ -65,7 +64,6 @@ const HumorHubAPISection: React.FC = () => {
             </span>
           </p>
 
-          {/* Button classes cleaned up */}
           {isUserSignedIn ? (
             <Link
               href="/HHapi"
@@ -91,9 +89,8 @@ const HumorHubAPISection: React.FC = () => {
                 alt="Comedy News Update"
                 width={180}
                 height={180}
-                className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+                className="rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                 loading="lazy"
-                style={{ objectFit: "contain" }}
               />
             </Link>
           ) : (
@@ -109,9 +106,8 @@ const HumorHubAPISection: React.FC = () => {
                 alt="Comedy News Update"
                 width={180}
                 height={180}
-                className="relative rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3"
+                className="rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                 loading="lazy"
-                style={{ objectFit: "contain" }}
               />
             </div>
           )}
