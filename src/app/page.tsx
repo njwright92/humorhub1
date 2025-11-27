@@ -40,7 +40,7 @@ export default function Home() {
     <>
       <Header />
       <div className="screen-container content-with-sidebar">
-        <h1 className="hidden md:block text-zinc-200 text-6xl font-bold mb-6 tracking-wide">
+        <h1 className="hidden md:block text-zinc-200 text-7xl font-bold mb-6 tracking-wide">
           Humor Hub!
         </h1>
 

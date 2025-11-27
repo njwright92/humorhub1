@@ -621,9 +621,6 @@ video {
 .mr-3 {
   margin-right: 0.75rem;
 }
-.mr-4 {
-  margin-right: 1rem;
-}
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -1187,8 +1184,8 @@ video {
   font-size: 3rem;
   line-height: 1;
 }
-.text-6xl {
-  font-size: 3.75rem;
+.text-7xl {
+  font-size: 4.5rem;
   line-height: 1;
 }
 .text-lg {
@@ -1597,7 +1594,7 @@ option[value=""][disabled] {
 }
 @media (min-width: 1024px) {
   .title {
-    font-size: 4.5rem;
+    font-size: 3.75rem;
     line-height: 1;
   }
 }
@@ -2111,6 +2108,7 @@ option[value=""][disabled] {
 .bg-gradient-animation {
   background: var(--accent-color);
   background-size: 400% 400%;
+  animation: gradientAnimation 5s ease infinite;
 }
 
 .hover\:scale-100:hover {

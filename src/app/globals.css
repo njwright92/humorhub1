@@ -66,7 +66,7 @@ option[value=""][disabled] {
 /* Unified Title Class */
 .title {
   @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-lg;
-  @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
+  @apply text-4xl sm:text-5xl md:text-6xl lg:text-6xl;
   @apply mt-10 mb-2;
 }
 
@@ -254,4 +254,5 @@ option[value=""][disabled] {
 .bg-gradient-animation {
   background: var(--accent-color);
   background-size: 400% 400%;
+  animation: gradientAnimation 5s ease infinite;
 }

@@ -205,28 +205,21 @@ export default function Header() {
 
           {/* --- Sidebar (Desktop) --- */}
           <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all">
-            {/* Top Logo - Updated to use sidebar-icon-link for consistent tooltip behavior */}
-            <div className="flex flex-col items-center space-y-6 mt-4">
-              <Link
-                href="/"
-                aria-label="Home"
-                className="sidebar-icon-link mb-2"
-              >
+            {/* Nav Icons */}
+            <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full mx-auto text-zinc-900">
+              <Link href="/" aria-label="Home" className="sidebar-icon-link ">
                 <Image
                   src={hh}
                   alt="Mic"
                   width={60}
                   height={60}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1 shadow-md"
+                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mx-auto shadow-lg"
                   loading="lazy"
                 />
                 <span className="sidebar-tooltip">Home</span>
               </Link>
-            </div>
 
-            {/* Nav Icons */}
-            <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full text-zinc-900">
-              <div className="h-8 w-8 transform transition-transform hover:scale-110">
+              <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer">
                 <SearchBar
                   onSearch={handleOnSearch}
                   isUserSignedIn={isUserSignedIn}
@@ -327,19 +320,19 @@ export default function Header() {
           </div>
 
           {/* --- Mobile Header Title --- */}
-          <h1 className=" text-zinc-950 text-5xl mr-4 font-extrabold sm:hidden justify-center tracking-wide">
+          <h1 className=" text-zinc-950 text-5xl font-extrabold sm:hidden justify-center tracking-wide">
             Humor Hub!
           </h1>
 
           {/* --- Mobile Menu Toggle --- */}
           <button
             onClick={toggleMenu}
-            className="text-zinc-900 sm:hidden cursor-pointer"
+            className="text-zinc-950 sm:hidden cursor-pointer"
             aria-label="Toggle menu"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
+              className="h-9 w-9"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
