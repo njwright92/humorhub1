@@ -29,18 +29,18 @@ export default function Footer() {
 
   return (
     <footer
-      className="bg-zinc-950 md:ml-20"
+      className="bg-[#27272a] md:ml-20"
       aria-labelledby="footer-heading"
       id="footer"
     >
       <div className="mx-auto w-full max-w-screen-2xl p-4 py-6 lg:py-8">
         <h1
           id="footer-heading"
-          className="text-2xl md:text-4xl font-bold text-zinc-200 mb-2 text-center tracking-wide"
+          className="text-2xl md:text-4xl font-extrabold text-zinc-200 mb-2 text-center tracking-wide"
         >
           Humor Hub - The Hub of Humor!
         </h1>
-        <p className="text-md md:text-xl mb-8 text-center text-zinc-400 max-w-2xl mx-auto">
+        <p className="text-md md:text-xl mb-8 text-center text-zinc-300 max-w-2xl mx-auto font-normal">
           Connecting comics and fans with events, tools, and more. Join the fun!
         </p>
 
@@ -55,7 +55,7 @@ export default function Footer() {
               alt="Humor Hub Logo"
               width={120}
               height={120}
-              className="rounded-full shadow-xl transition-transform transform group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-800 group-hover:border-amber-300 object-contain w-auto h-auto"
+              className="rounded-full shadow-xl transition-transform transform group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-900 group-hover:border-amber-300 object-contain w-auto h-auto"
               sizes="(max-width: 768px) 60px, 120px"
               loading="lazy"
             />
@@ -63,14 +63,14 @@ export default function Footer() {
 
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:w-3/4 md:pr-10">
             <div>
-              <h2 className="mb-4 md:mb-6 text-md md:text-lg font-bold text-amber-300 uppercase tracking-wider">
+              <h2 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-amber-300 uppercase tracking-wider text-nowrap">
                 Get to Know Us
               </h2>
               <ul className="text-zinc-300 space-y-3 md:space-y-4 font-medium">
                 <li>
                   <Link
                     href="/about"
-                    className="hover:text-white hover:underline transition-colors md:text-lg"
+                    className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                   >
                     About Humor Hub
                   </Link>
@@ -78,7 +78,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/contact"
-                    className="hover:text-white hover:underline transition-colors md:text-lg"
+                    className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                   >
                     Contact Our Team
                   </Link>
@@ -87,7 +87,7 @@ export default function Footer() {
             </div>
 
             <div>
-              <h2 className="mb-4 md:mb-6 text-md md:text-lg font-bold text-amber-300 uppercase tracking-wider">
+              <h2 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-amber-300 uppercase tracking-wider text-nowrap">
                 Stay Connected
               </h2>
               <ul className="text-zinc-300 space-y-3 md:space-y-4 font-medium">
@@ -96,7 +96,7 @@ export default function Footer() {
                     href="https://twitter.com/naterbug321"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-white hover:underline transition-colors md:text-lg"
+                    className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                   >
                     X (Twitter)
                   </a>
@@ -106,7 +106,7 @@ export default function Footer() {
                     href="https://www.facebook.com/nate_wrigh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-white hover:underline transition-colors md:text-lg"
+                    className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                   >
                     Facebook
                   </a>
@@ -116,7 +116,7 @@ export default function Footer() {
                     href="https://www.instagram.com/nate_wright3"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-white hover:underline transition-colors md:text-lg"
+                    className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                   >
                     Instagram
                   </a>
@@ -126,7 +126,7 @@ export default function Footer() {
                     href="https://github.com/njwright92"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-white hover:underline transition-colors md:text-lg"
+                    className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                   >
                     GitHub
                   </a>
@@ -135,19 +135,19 @@ export default function Footer() {
             </div>
 
             <div>
-              <h2 className="mb-4 md:mb-6 text-md md:text-lg font-bold text-amber-300 uppercase tracking-wider">
+              <h2 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-amber-300 uppercase tracking-wider text-nowrap">
                 Legal Info
               </h2>
               <div className="text-zinc-300 flex flex-col space-y-3 md:space-y-4 font-medium">
                 <Link
                   href="/userAgreement"
-                  className="hover:text-white hover:underline transition-colors md:text-lg"
+                  className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                 >
                   User Agreement
                 </Link>
                 <Link
                   href="/privacyPolicy"
-                  className="hover:text-white hover:underline transition-colors md:text-lg"
+                  className="hover:text-blue-600 hover:underline transition-colors md:text-lg"
                 >
                   Privacy Policy
                 </Link>
@@ -167,7 +167,7 @@ export default function Footer() {
             <button
               onClick={scrollToTop}
               aria-label="Back to top"
-              className="rounded-full bg-zinc-800 hover:bg-zinc-700 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-amber-300 shadow-lg transition-all hover:scale-110 border border-zinc-700"
+              className="rounded-full bg-zinc-900 hover:cursor-pointer w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-amber-300 shadow-lg transition-all hover:scale-110 border border-amber-300"
             >
               <svg
                 width="24"

@@ -11,9 +11,10 @@
 }
 
 body {
-  background-image: linear-gradient(to bottom, var(--zinc-900), #27272a);
+  background-image: linear-gradient(to bottom, var(--zinc-900) 0%, #27272a 80%);
   color: var(--zinc-200);
-  font-family: var(--font-rubik), "Segoe UI", "Helvetica", "Arial", sans-serif;
+
+  font-family: "Century Gothic", "Calibri", "Segoe UI", sans-serif;
 }
 
 h1,
@@ -21,13 +22,11 @@ h2,
 h3,
 h4,
 h5,
-h6,
-.font-comic {
-  font-family: var(--font-comic-neue), "Comic Neue", "Segoe UI", "Helvetica",
-    "Arial", sans-serif;
+h6 {
+  font-family: "Comic Neue", "Chalkboard SE", "Ink Free",
+    "Arial Rounded MT Bold", sans-serif;
 }
 
-/* Form Defaults */
 select,
 select:required:invalid {
   color: var(--zinc-200);

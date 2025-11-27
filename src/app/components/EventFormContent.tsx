@@ -54,7 +54,8 @@ const logManualReviewEvent = async (eventData: EventData, reason: string) => {
 };
 
 const sendConfirmationEmail = async (eventData: EventData) => {
-  if (!eventData.email) return;
+  // REMOVED: The check that stopped execution if email was missing.
+
   try {
     await emailjs.send(
       process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
@@ -68,7 +69,8 @@ const sendConfirmationEmail = async (eventData: EventData) => {
         details: eventData.details,
         isRecurring: eventData.isRecurring ? "Yes" : "No",
         isFestival: eventData.isFestival ? "Yes" : "No",
-        user_email: eventData.email,
+        // LOGIC UPDATE: If email is empty, send a text string so template doesn't break
+        user_email: eventData.email || "No email provided",
       },
       process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
     );
@@ -82,7 +84,6 @@ const sendConfirmationEmail = async (eventData: EventData) => {
 const EventFormContent: React.FC<EventFormContentProps> = ({
   initialOpen = false,
 }) => {
-  // Initialize state with the prop passed from the Facade
   const [showModal, setShowModal] = useState(initialOpen);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [event, setEvent] = useState<EventData>({
@@ -132,10 +133,17 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
       e.preventDefault();
       if (isSubmitting) return;
 
-      if (!event.name || !event.location || !event.date || !event.details) {
-        setFormErrors(
-          "Please fill in all the required fields to submit your event.",
-        );
+      // --- Validation Logic ---
+      const missingFields: string[] = [];
+      if (!event.name.trim()) missingFields.push("Event Name");
+      if (!event.location.trim()) missingFields.push("Location");
+      if (!event.details.trim()) missingFields.push("Details");
+      if (!event.date) missingFields.push("Date");
+
+      if (missingFields.length > 0) {
+        setFormErrors(`Missing required fields: ${missingFields.join(", ")}`);
+        const formContainer = document.querySelector(".form-container");
+        if (formContainer) formContainer.scrollTop = 0;
         return;
       }
 
@@ -145,57 +153,52 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
       try {
         let lat, lng;
         let finalEventData: EventData;
+        let submissionSuccess = false;
 
-        // 1. Geocoding
+        // --- Geocoding & Submission ---
         try {
           const response = await getLatLng(event.location);
+
           if (response && "lat" in response && "lng" in response) {
             lat = response.lat;
             lng = response.lng;
             finalEventData = prepareEventData(event, lat, lng);
 
             const success = await submitEvent(finalEventData);
-            if (!success)
-              throw new Error("Firestore submission failed after geocoding.");
-            alert(
-              "Your event has been added successfully! Give it a few hours to appear.",
-            );
+            if (success) submissionSuccess = true;
           } else {
-            throw new Error(
-              "Geocoding failed or returned invalid coordinates.",
-            );
+            throw new Error("Invalid coordinates");
           }
         } catch (geocodeError) {
-          console.warn("Geocoding failed, logging for manual review.");
+          console.warn("Geocoding failed, sending to manual review.");
           finalEventData = prepareEventData(event);
+
           const logSuccess = await logManualReviewEvent(
             finalEventData,
             `Geocoding failed for: ${event.location}`,
           );
 
-          if (logSuccess) {
-            alert(
-              "We couldn't verify the location. We've saved it for manual review and it should appear within 24 hours.",
-            );
-          } else {
-            setFormErrors(
-              "We couldn't verify the location OR save your event. Please try again later.",
-            );
-            setIsSubmitting(false);
-            return;
-          }
+          if (logSuccess) submissionSuccess = true;
         }
 
-        // 2. Email
-        if (event.email) {
-          await sendConfirmationEmail(finalEventData);
-        }
+        if (submissionSuccess) {
+          // LOGIC UPDATE: Removed the "if (event.email)" check.
+          // Now runs regardless of whether email exists.
+          await sendConfirmationEmail(finalEventData!);
 
-        resetForm();
-        setShowModal(false);
+          alert(
+            "Success! Your event has been submitted and is being processed.",
+          );
+          resetForm();
+          setShowModal(false);
+        } else {
+          setFormErrors(
+            "Something went wrong saving your event. Please try again.",
+          );
+        }
       } catch (submitError) {
         setFormErrors(
-          "An unexpected error occurred. Please check your network and try again.",
+          "An unexpected network error occurred. Please try again.",
         );
         console.error("Final Submission Error Path:", submitError);
       } finally {
@@ -223,14 +226,13 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
   return (
     <>
       <button
-        className="bg-green-600 hover:bg-green-700 text-black px-2 py-1 rounded-xl shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
+        className="bg-green-600 hover:bg-green-700 text-zinc-950 px-2 py-1 rounded-lg shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
         onClick={() => setShowModal(true)}
         disabled={isSubmitting}
       >
         Add Event
       </button>
 
-      {/* INLINE MODAL LOGIC */}
       {showModal && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
@@ -242,7 +244,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
           >
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 z-[110] text-zinc-500 hover:text-red-500 transition-colors"
+              className="absolute top-4 right-4 z-[110] text-zinc-500 hover:text-red-600 transition-colors"
               aria-label="Close Modal"
             >
               <svg
@@ -263,25 +265,26 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
 
             <form
               onSubmit={handleSubmit}
-              className="form-container w-full overflow-auto bg-zinc-100 p-6 rounded-xl shadow-2xl border-2 border-zinc-200"
+              noValidate
+              className="form-container w-full overflow-auto bg-zinc-200 p-6 rounded-lg shadow-2xl border-2 border-zinc-900"
             >
               {formErrors && (
-                <p className="text-red-600 font-bold mb-2 text-center">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm font-bold">
                   {formErrors}
-                </p>
+                </div>
               )}
               <h1 className="text-3xl font-bold text-center text-zinc-900 mb-2 font-comic">
                 Event Form
               </h1>
-              <p className="text-red-500 text-center mb-4 text-sm font-semibold">
-                Please fill in all fields correctly.
+              <p className="text-red-600 text-center mb-4 text-sm font-semibold">
+                * Indicates required fields
               </p>
 
               <label
                 htmlFor="eventName"
                 className="block text-zinc-900 font-bold mb-1"
               >
-                Event Name:
+                Event Name *
               </label>
               <input
                 type="text"
@@ -289,7 +292,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 name="name"
                 value={event.name}
                 onChange={handleChange}
-                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-4 focus:border-green-500 outline-none"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
                 required
                 autoComplete="off"
                 placeholder="e.g., The Comedy Store Open Mic"
@@ -299,7 +302,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 htmlFor="location"
                 className="block text-zinc-900 font-bold mb-1"
               >
-                Location (Full Address):
+                Location (Full Address) *
               </label>
               <input
                 type="text"
@@ -307,47 +310,30 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 name="location"
                 value={event.location}
                 onChange={handleChange}
-                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-4 focus:border-green-500 outline-none"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
                 required
                 placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
-              />
-
-              <label
-                htmlFor="details"
-                className="block text-zinc-900 font-bold mb-1"
-              >
-                Details:
-              </label>
-              <textarea
-                id="details"
-                name="details"
-                value={event.details}
-                onChange={handleChange}
-                required
                 autoComplete="off"
-                rows={4}
-                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-4 focus:border-green-500 outline-none resize-y"
-                placeholder="Time, Host, Entry Fee, etc."
               />
 
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-zinc-100 p-2 rounded-lg text-center">
+                <div className="bg-zinc-100 p-2 rounded-lg text-center border border-zinc-300">
                   <h6 className="text-zinc-900 font-bold text-sm">
                     Recurring?
                   </h6>
                   <div className="flex justify-center gap-4 mt-2">
-                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
                         checked={event.isRecurring === true}
                         onChange={() =>
                           handleCheckboxChange("isRecurring", true)
                         }
-                        className="accent-green-500 w-4 h-4"
+                        className="accent-green-600 w-4 h-4"
                       />
                       Yes
                     </label>
-                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
                         checked={event.isRecurring === false}
@@ -361,21 +347,21 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                   </div>
                 </div>
 
-                <div className="bg-zinc-100 p-2 rounded-lg text-center">
+                <div className="bg-zinc-100 p-2 rounded-lg text-center border border-zinc-300">
                   <h6 className="text-zinc-900 font-bold text-sm">Festival?</h6>
                   <div className="flex justify-center gap-4 mt-2">
-                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
                         checked={event.isFestival === true}
                         onChange={() =>
                           handleCheckboxChange("isFestival", true)
                         }
-                        className="accent-green-500 w-4 h-4"
+                        className="accent-green-600 w-4 h-4"
                       />
                       Yes
                     </label>
-                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm">
+                    <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
                         checked={event.isFestival === false}
@@ -391,22 +377,45 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
               </div>
 
               <label
+                htmlFor="details"
+                className="block text-zinc-900 font-bold mb-1"
+              >
+                Details *
+              </label>
+              {event.isRecurring && (
+                <p className="text-xs text-red-600 font-bold mb-1">
+                  * Please include Frequency (e.g. Weekly)
+                </p>
+              )}
+              <textarea
+                id="details"
+                name="details"
+                value={event.details}
+                onChange={handleChange}
+                required
+                autoComplete="off"
+                rows={4}
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600 resize-y"
+                placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
+              />
+
+              <label
                 htmlFor="date"
                 className="block text-zinc-900 font-bold mb-1"
               >
-                Date & Time:
+                Date *
               </label>
               <div className="mb-4">
                 <DatePicker
                   id="date"
                   selected={event.date}
                   onChange={(date: Date | null) => setEvent({ ...event, date })}
-                  placeholderText="Select Date & Time"
-                  className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full focus:border-green-500 outline-none"
-                  dateFormat="MM/dd/yyyy h:mm aa"
-                  showTimeSelect
-                  timeCaption="Time"
+                  placeholderText="Select Date"
+                  className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+                  dateFormat="MM/dd/yyyy"
                   wrapperClassName="w-full"
+                  autoComplete="off"
+                  required
                 />
               </div>
 
@@ -422,13 +431,14 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 name="email"
                 value={event.email || ""}
                 onChange={handleChange}
-                className="text-zinc-900 border-2 border-zinc-300 rounded-lg p-2 w-full mb-6 focus:border-green-500 outline-none"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-6 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
                 placeholder="yourname@example.com"
+                autoComplete="email"
               />
 
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-zinc-900 font-bold py-3 rounded-xl shadow-lg transform transition hover:scale-[1.02]"
+                className="w-full bg-green-600 hover:bg-green-700 text-zinc-950 font-bold py-3 rounded-lg shadow-lg transform transition hover:scale-[1.02]"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit Event"}
