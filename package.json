@@ -24,6 +24,7 @@
     "uuid": "11.1.0"
   },
   "devDependencies": {
+    "@types/google.maps": "3.58.1",
     "@types/react": "18",
     "@types/react-dom": "18",
     "@types/react-window": "1.8.8",
