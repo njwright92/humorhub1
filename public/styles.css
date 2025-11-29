@@ -786,6 +786,18 @@ video {
     rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.translate-y-0 {
+  --tw-translate-y: 0px;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.translate-y-8 {
+  --tw-translate-y: 2rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y))
     rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
@@ -809,6 +821,7 @@ video {
   resize: vertical;
 }
 .appearance-none {
+  -webkit-appearance: none;
   appearance: none;
 }
 .grid-cols-1 {
@@ -1313,6 +1326,10 @@ video {
   --tw-text-opacity: 1;
   color: rgb(113 113 122 / var(--tw-text-opacity, 1));
 }
+.text-zinc-600 {
+  --tw-text-opacity: 1;
+  color: rgb(82 82 91 / var(--tw-text-opacity, 1));
+}
 .text-zinc-800 {
   --tw-text-opacity: 1;
   color: rgb(39 39 42 / var(--tw-text-opacity, 1));
@@ -1337,6 +1354,12 @@ video {
 }
 .accent-red-500 {
   accent-color: #ef4444;
+}
+.opacity-0 {
+  opacity: 0;
+}
+.opacity-100 {
+  opacity: 1;
 }
 .opacity-25 {
   opacity: 0.25;
@@ -1468,6 +1491,12 @@ video {
 }
 .duration-300 {
   transition-duration: 300ms;
+}
+.duration-700 {
+  transition-duration: 700ms;
+}
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* --- 1. Custom CSS Variables --- */

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -13,6 +13,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+
+    "verbatimModuleSyntax": true,
+    "useDefineForClassFields": true,
+
     "plugins": [
       {
         "name": "next"
@@ -30,8 +34,7 @@
     "../.vscode/route.ts",
     "src/app/api/route.js",
     "src/app/utils/geocode.js",
-    "src/app/components/GoogleMap.js",
-    "src/app/api/count-events/route.ts"
+    "src/app/components/GoogleMap.js"
   ],
   "exclude": ["node_modules"]
 }

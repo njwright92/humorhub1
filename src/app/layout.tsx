@@ -1,22 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { ReactNode } from "react";
-import "./globals.css";
+import type { ReactNode } from "react";
 import Script from "next/script";
-import { Comic_Neue, Rubik } from "next/font/google";
+import { Comic_Neue } from "next/font/google";
+import "./globals.css";
 
-// 1. Configure Comic Neue
 const comicNeue = Comic_Neue({
   weight: ["300", "400", "700"],
   subsets: ["latin"],
   variable: "--font-comic-neue",
-  display: "swap",
-});
-
-// 2. Configure Rubik
-const rubik = Rubik({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["latin"],
-  variable: "--font-rubik",
   display: "swap",
 });
 
@@ -53,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Humor Hub - The Go-To Platform for Everything Comedy",
     description:
-      "Discover the ultimate destination for everything comedy. Explore jokes, puns, open mic events, and more at Humor Hub.",
+      "Discover the ultimate destination for everything comedy. Explore open mic events, and more at Humor Hub.",
     url: "https://www.thehumorhub.com/",
     siteName: "Humor Hub",
     type: "website",
@@ -63,44 +54,38 @@ export const metadata: Metadata = {
     creator: "@natebug321",
     title: "Humor Hub - The Hub of Humor, Open Mics",
     description:
-      "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
+      "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore at Humor Hub.",
+  },
+  other: {
+    preconnect: [
+      "https://apis.google.com",
+      "https://humorhub-73ff9.firebaseapp.com",
+    ],
   },
 };
 
-interface RootLayoutProps {
-  children: ReactNode;
-}
-
-const GTM_ID = "GTM-KVJSFKV8";
-
-const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head>
+      <body
+        className={`${comicNeue.variable} bg-zinc-900 text-zinc-200 antialiased`}
+      >
         <Script
           id="gtm-script"
           strategy="lazyOnload"
+          defer
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','${GTM_ID}');
+              })(window,document,'script','dataLayer','GTM-KVJSFKV8');
             `,
           }}
         />
-        <link rel="preconnect" href="https://apis.google.com" />
-        <link rel="preconnect" href="https://humorhub-73ff9.firebaseapp.com" />
-      </head>
-
-      <body
-        className={`${comicNeue.variable} ${rubik.variable} bg-zinc-900 text-zinc-200 antialiased`}
-      >
         {children}
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

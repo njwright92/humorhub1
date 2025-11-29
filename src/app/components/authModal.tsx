@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  AuthError,
+  type AuthError,
 } from "firebase/auth";
 
 // --- Types & Constants ---

@@ -13,22 +13,18 @@
   "dependencies": {
     "@emailjs/browser": "4.4.1",
     "@googlemaps/js-api-loader": "1.16.2",
-    "aos": "2.3.4",
     "date-fns": "4.1.0",
     "firebase": "11.6.1",
     "firebase-admin": "12.1.0",
     "next": "15.5.3",
     "react": "18.3.1",
-    "react-datepicker": "4.25.0",
     "react-dom": "18.3.1",
     "react-window": "1.8.10",
     "sharp": "0.33.2",
     "uuid": "11.1.0"
   },
   "devDependencies": {
-    "@types/aos": "3.0.7",
     "@types/react": "18",
-    "@types/react-datepicker": "4.19.4",
     "@types/react-dom": "18",
     "@types/react-window": "1.8.8",
     "@types/uuid": "10.0.0",
@@ -48,11 +44,8 @@
     "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
   },
   "browserslist": [
-    "chrome >= 95",
-    "safari >= 15.4",
-    "ios >= 15.4",
-    "firefox >= 95",
-    "edge >= 95",
-    "not IE 11"
+    "last 2 years",
+    "not dead",
+    "not op_mini all"
   ]
 }

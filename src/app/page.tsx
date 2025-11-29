@@ -12,17 +12,26 @@ import EventForm from "./components/EventForm";
 const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
 
 export default function Home() {
-  // Lazy-load AOS Animation Library
   useEffect(() => {
-    const initAOS = async () => {
-      const AOS = (await import("aos")).default;
-      await import("aos/dist/aos.css");
-      AOS.init({ duration: 600, once: true });
-    };
-    initAOS();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0", "translate-y-8");
+            entry.target.classList.add("opacity-100", "translate-y-0");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    const target = document.querySelector("#api-section");
+    if (target) observer.observe(target);
+
+    return () => observer.disconnect();
   }, []);
 
-  // GTM Helper
   const sendDataLayerEvent = useCallback(
     (
       event_name: string,
@@ -94,8 +103,10 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section data-aos="fade-up">
+        <section
+          id="api-section"
+          className="opacity-0 translate-y-8 transition-all duration-700 ease-out"
+        >
           <HumorHubAPISection />
         </section>
       </div>

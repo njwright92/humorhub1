@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useCallback, ChangeEvent, FormEvent } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { useState, useCallback, type ChangeEvent, type FormEvent } from "react";
 import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import { getLatLng } from "../utils/geocode";
@@ -405,20 +403,33 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
               >
                 Date *
               </label>
-              <div className="mb-4">
-                <DatePicker
+              <div className="mb-4 relative w-full">
+                <input
                   id="date"
-                  selected={event.date}
-                  onChange={(date: Date | null) => setEvent({ ...event, date })}
-                  placeholderText="Select Date"
-                  className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
-                  dateFormat="MM/dd/yyyy"
-                  wrapperClassName="w-full"
-                  autoComplete="off"
+                  type="date"
                   required
+                  value={
+                    event.date ? event.date.toISOString().split("T")[0] : ""
+                  }
+                  onChange={(e) => {
+                    const dateStr = e.target.value;
+                    setEvent({
+                      ...event,
+                      date: dateStr ? new Date(dateStr + "T12:00:00") : null,
+                    });
+                  }}
+                  className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600 cursor-pointer appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 90 90"
+                  fill="currentColor"
+                  className="h-6 w-6 text-zinc-600 absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none z-10"
+                >
+                  <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
+                  <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
+                </svg>
               </div>
-
               <label
                 htmlFor="email"
                 className="block text-zinc-900 font-bold mb-1 text-sm"

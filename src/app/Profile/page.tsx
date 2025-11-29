@@ -9,7 +9,7 @@ import {
   where,
   deleteDoc,
 } from "firebase/firestore";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
+import { type User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";

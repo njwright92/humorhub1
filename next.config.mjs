@@ -5,6 +5,13 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
 
+  transpilePackages: [
+    "date-fns", // Can carry polyfills
+    "@googlemaps/js-api-loader",
+    "firebase",
+    "react-window",
+  ],
+
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
@@ -14,11 +21,10 @@ const nextConfig = {
       "firebase/app",
       "firebase/auth",
       "firebase/firestore",
-      "react-datepicker",
       "@emailjs/browser",
       "uuid",
       "date-fns",
-      "aos",
+      "@googlemaps/js-api-loader",
     ],
     optimizeCss: true,
   },
@@ -54,6 +60,11 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "origin-when-cross-origin" },
+        ],
+      },
+      {
+        source: "/api/:path*",
+        headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           {
             key: "Access-Control-Allow-Methods",
