@@ -46,8 +46,7 @@ const GoogleMap = ({ lat, lng, events }) => {
     if (!mapInstanceRef.current) {
       initMap();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // We ignore lat/lng here because we only want to initialize ONCE. Updates happen below.
+  }, [lat, lng]);
 
   // 2. Handle Map Center Updates
   useEffect(() => {
@@ -132,9 +131,9 @@ const GoogleMap = ({ lat, lng, events }) => {
   return (
     <div
       ref={mapContainerRef}
-      className="rounded-xl shadow-lg overflow-hidden"
-      style={{ height: "25rem", width: "100%" }}
-      aria-label="Event Map"
+      role="application"
+      aria-label="Interactive map showing comedy, music, and all-arts open mic locations and festivals across the USA"
+      className="h-[25rem] w-full rounded-lg shadow-lg overflow-hidden bg-zinc-900"
     />
   );
 };

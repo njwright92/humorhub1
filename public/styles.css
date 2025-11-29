@@ -1691,6 +1691,8 @@ option[value=""][disabled] {
   padding-right: 0.5rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   font-weight: 600;
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
@@ -1713,19 +1715,9 @@ option[value=""][disabled] {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y))
     rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
     scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  outline-style: solid;
+  outline-color: #fff;
 }
-
-@keyframes pulse {
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.btn:hover,
-.btn:focus {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 /* Inputs */
 .input-field,
 .standard-input,

@@ -228,7 +228,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
         onClick={() => setShowModal(true)}
         disabled={isSubmitting}
       >
-        Add Event
+        Add Your Event
       </button>
 
       {showModal && (

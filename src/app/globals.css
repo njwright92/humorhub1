@@ -85,15 +85,13 @@ option[value=""][disabled] {
 
 /* Buttons */
 .btn {
-  @apply bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold;
+  @apply bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg;
   @apply transform transition-transform hover:scale-105;
 }
 
-.btn:hover,
-.btn:focus {
-  @apply animate-pulse;
+.btn:hover {
+  @apply outline outline-white;
 }
-
 /* Inputs */
 .input-field,
 .standard-input,

@@ -43,7 +43,7 @@ export default function EventForm() {
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
     >
-      Add Event
+      Add Your Event
     </button>
   );
 }
