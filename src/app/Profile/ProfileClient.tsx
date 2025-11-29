@@ -12,11 +12,13 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
-import { type User, getAuth, onAuthStateChanged } from "firebase/auth";
+// 1. IMPORT signOut
+import { type User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Import router for redirect
 
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
@@ -55,6 +57,7 @@ export default function ProfileClient() {
   const auth = getAuth();
   const storage = getStorage();
   const uidRef = useRef<string | null>(null);
+  const router = useRouter();
 
   // --- MEMOS ---
   const profileImageObjectURL = useMemo(() => {
@@ -66,7 +69,6 @@ export default function ProfileClient() {
   const fetchUserDataAndEvents = useCallback(async (user: User) => {
     try {
       setIsLoading(true);
-      // 1. Fetch User Profile
       const userRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userRef);
 
@@ -79,13 +81,10 @@ export default function ProfileClient() {
         setName(dbName);
         setBio(dbBio);
         setProfileImageUrl(dbImage);
-
-        // Store original values for Cancel functionality
         setOriginalName(dbName);
         setOriginalBio(dbBio);
       }
 
-      // 2. Fetch Saved Events
       const q = query(
         collection(db, "savedEvents"),
         where("userId", "==", user.uid),
@@ -111,7 +110,6 @@ export default function ProfileClient() {
       if (user) {
         fetchUserDataAndEvents(user);
       } else {
-        // Reset state if logged out
         setSavedEvents([]);
         setName("");
         setBio("");
@@ -122,6 +120,15 @@ export default function ProfileClient() {
   }, [auth, fetchUserDataAndEvents]);
 
   // --- HANDLERS ---
+
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut(auth);
+      router.push("/"); // Redirect to home after sign out
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  }, [auth, router]);
 
   const handleImageChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -148,17 +155,7 @@ export default function ProfileClient() {
 
     try {
       const userRef = doc(db, "users", user.uid);
-      // Merge ensures we don't overwrite other fields in the DB
-      await setDoc(
-        userRef,
-        {
-          name,
-          bio,
-          profileImageUrl,
-        },
-        { merge: true },
-      );
-
+      await setDoc(userRef, { name, bio, profileImageUrl }, { merge: true });
       setOriginalName(name);
       setOriginalBio(bio);
       setIsEditing(false);
@@ -168,7 +165,6 @@ export default function ProfileClient() {
   }, [auth, name, bio, profileImageUrl]);
 
   const handleCancel = useCallback(() => {
-    // Revert to original values
     setName(originalName);
     setBio(originalBio);
     setIsEditing(false);
@@ -190,10 +186,7 @@ export default function ProfileClient() {
   ) {
     if (typeof window !== "undefined") {
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: event_name,
-        ...params,
-      });
+      window.dataLayer.push({ event: event_name, ...params });
     }
   }
 
@@ -217,26 +210,22 @@ export default function ProfileClient() {
     <>
       <Header />
       <main className="screen-container content-with-sidebar">
-        {/* PAGE TITLE */}
         <div className="flex flex-col items-center mb-8">
           <h1 className="title text-center">My Dashboard</h1>
           <p className="text-zinc-300 text-sm">Manage your personal schedule</p>
         </div>
 
-        {/* GRID LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
           {/* --- LEFT COLUMN: PROFILE CARD --- */}
           <div className="lg:col-span-1">
             <section className="bg-zinc-200 border border-zinc-300 p-6 rounded-lg shadow-lg sticky top-24">
               <div className="flex flex-col items-center">
-                {/* View Mode: Name is Top */}
                 {!isEditing && (
                   <h2 className="text-2xl font-bold text-zinc-900 mb-4 text-center">
                     {name || "Anonymous Comic"}
                   </h2>
                 )}
 
-                {/* IMAGE */}
                 <div className="relative w-36 h-36 mb-4 mx-auto group rounded-full overflow-hidden border-4 border-zinc-900 shadow-lg bg-zinc-300">
                   {profileImageObjectURL || profileImageUrl ? (
                     <Image
@@ -265,18 +254,11 @@ export default function ProfileClient() {
                         type="file"
                         onChange={handleImageChange}
                         className="hidden"
-                        onClick={() => {
-                          sendDataLayerEvent("click_upload_profile_image", {
-                            event_category: "Profile_Interaction",
-                            event_label: "Profile_Image_Upload",
-                          });
-                        }}
                       />
                     </label>
                   )}
                 </div>
 
-                {/* EDIT FORM */}
                 {isEditing ? (
                   <div className="w-full space-y-4">
                     <div>
@@ -300,31 +282,17 @@ export default function ProfileClient() {
                         onChange={(e) => setBio(e.target.value)}
                         className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-blue-500 outline-none text-sm"
                         rows={4}
-                        placeholder="Add a note about your style or goals..."
                       />
                     </div>
-
                     <div className="flex gap-2 pt-2">
                       <button
-                        onClick={() => {
-                          sendDataLayerEvent("click_save_changes", {
-                            event_category: "Profile_Interaction",
-                            event_label: "Save_Changes_Click",
-                          });
-                          handleSubmit();
-                        }}
+                        onClick={handleSubmit}
                         className="flex-1 bg-blue-900 hover:bg-blue-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition"
                       >
                         Save
                       </button>
                       <button
-                        onClick={() => {
-                          sendDataLayerEvent("click_cancel_edit", {
-                            event_category: "Profile_Interaction",
-                            event_label: "Cancel_Edit_Click",
-                          });
-                          handleCancel();
-                        }}
+                        onClick={handleCancel}
                         className="flex-1 bg-zinc-900 hover:bg-zinc-600 text-zinc-100 py-2 rounded-lg font-bold text-sm transition"
                       >
                         Cancel
@@ -333,35 +301,37 @@ export default function ProfileClient() {
                   </div>
                 ) : (
                   <div className="text-center w-full">
-                    {/* Name is already shown above image in View Mode */}
-
                     {bio ? (
                       <p className="text-zinc-700 text-sm mb-6 italic border-t border-zinc-300 pt-4">
                         &rdquo;{bio}&rdquo;
                       </p>
                     ) : (
-                      <p className="text-zinc-200 text-xs mb-6 mt-2">
+                      <p className="text-zinc-500 text-xs mb-6 mt-2">
                         No bio set.
                       </p>
                     )}
 
-                    <button
-                      onClick={() =>
-                        isUserSignedIn
-                          ? setIsEditing(true)
-                          : alert("Sign in to edit")
-                      }
-                      className="w-full bg-zinc-800 hover:bg-zinc-900 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
-                    >
-                      Edit Profile
-                    </button>
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="w-full bg-zinc-800 hover:bg-zinc-900 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                      >
+                        Edit Profile
+                      </button>
+                      {/* 2. NEW SIGN OUT BUTTON */}
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
             </section>
           </div>
 
-          {/* --- RIGHT COLUMN: SAVED EVENTS --- */}
           <div className="lg:col-span-2">
             <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px]">
               <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
@@ -389,7 +359,6 @@ export default function ProfileClient() {
                             </span>
                           )}
                         </div>
-
                         <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
                           <span>📍</span> {event.location}
                         </p>
@@ -397,32 +366,24 @@ export default function ProfileClient() {
                           <span>📅</span> {event.date}{" "}
                           {event.isRecurring ? "(Recurring)" : ""}
                         </p>
-
-                        <div className="text-zinc-200 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                        <div className="text-zinc-500 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
                           <div
                             dangerouslySetInnerHTML={{ __html: event.details }}
                           />
                         </div>
                       </div>
-
                       <div className="flex sm:flex-col justify-between items-end gap-2 min-w-[100px]">
                         <Link
                           href={`/MicFinder?city=${
                             event.location.split(",")[1]?.trim() || ""
                           }`}
-                          className="text-sm text-zinc-200 hover:text-blue-500 underline text-nowrap"
+                          className="text-xs text-zinc-400 hover:text-zinc-100 underline"
                         >
                           Find on Map
                         </Link>
                         <button
-                          onClick={() => {
-                            handleDeleteEvent(event.id);
-                            sendDataLayerEvent("click_delete_saved_event", {
-                              event_category: "Event_Management",
-                              event_label: "Delete_Saved_Event_Click",
-                            });
-                          }}
-                          className="text-red-500 hover:text-red-400 hover:bg-red-900/20 px-3 py-1.5 rounded-lg text-xs font-bold transition w-full sm:w-auto border border-red-500 hover:border-red-400"
+                          onClick={() => handleDeleteEvent(event.id)}
+                          className="text-red-500 hover:text-red-400 hover:bg-red-900/20 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400"
                         >
                           Remove
                         </button>
@@ -431,7 +392,7 @@ export default function ProfileClient() {
                   ))}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-64 text-zinc-200 border-2 border-dashed border-zinc-700 rounded-lg">
+                <div className="flex flex-col items-center justify-center h-64 text-zinc-500 border-2 border-dashed border-zinc-700 rounded-lg">
                   <span className="text-4xl mb-2">📭</span>
                   <p className="text-lg font-semibold">No events saved yet</p>
                   <p className="text-sm mb-4">Go find some mics to hit!</p>

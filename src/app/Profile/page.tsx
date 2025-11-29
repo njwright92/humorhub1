@@ -20,14 +20,6 @@ export const metadata: Metadata = {
       "Access and manage your Humor Hub profile. Update your information, preferences, and view your favorite content.",
     url: "https://www.thehumorhub.com/Profile",
     type: "website",
-    images: [
-      {
-        url: "https://www.thehumorhub.com/images/og-image-profile.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Humor Hub Profile",
-      },
-    ],
   },
 };
 

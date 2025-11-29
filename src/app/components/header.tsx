@@ -9,17 +9,18 @@ import Image from "next/image";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from "../../../firebase.config";
 import hh from "../../app/hh.webp";
+
+// Icons
 import MicFinderIcon from "../icons/MicFinderIcon";
 import NewsIcon from "../icons/NewsIcon";
 import ContactIcon from "../icons/ContactIcon";
 import AboutIcon from "../icons/AboutIcon";
 import UserIconComponent from "../icons/UserIconComponent";
 
-const SearchBar = dynamic(() => import("./searchBar"), {
-  ssr: false,
-  loading: () => null,
-});
+// 1. OPTIMIZATION: Standard import for SearchBar (Removes the loading lag)
+import SearchBar from "./searchBar";
 
+// Keep AuthModal dynamic (It's heavy and hidden by default)
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
   loading: () => null,
@@ -52,10 +53,10 @@ export default function Header() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [cityList, setCityList] = useState<string[]>([]);
   const router = useRouter();
-  // 1. Add this state to remember where to go
+
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  // 2. Add this effect to redirect automatically after sign in
+  // Auth Redirect Logic
   useEffect(() => {
     if (isUserSignedIn && pendingRedirect) {
       router.push(pendingRedirect);
@@ -72,7 +73,7 @@ export default function Header() {
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
-  /* Fetch list of cities once on mount */
+  /* Fetch Cities Logic */
   useEffect(() => {
     let mounted = true;
 
@@ -80,7 +81,7 @@ export default function Header() {
       try {
         const cached = sessionStorage.getItem("hh_cities");
         if (cached) {
-          setCityList(JSON.parse(cached));
+          if (mounted) setCityList(JSON.parse(cached));
           return;
         }
 
@@ -100,14 +101,11 @@ export default function Header() {
       }
     };
 
-    // THE UPGRADE: Check if browser supports idle callback
     if ("requestIdleCallback" in window) {
-      // Wait until browser is idle, but force run after 2 seconds if it never idles
       (window as any).requestIdleCallback(() => fetchCities(), {
         timeout: 2000,
       });
     } else {
-      // Fallback for Safari/Older browsers
       setTimeout(() => fetchCities(), 1000);
     }
 
@@ -116,19 +114,12 @@ export default function Header() {
     };
   }, []);
 
+  // 2. OPTIMIZATION: Run Auth check immediately after paint.
   useEffect(() => {
-    let unsub: any;
-
-    const timer = setTimeout(() => {
-      unsub = onAuthStateChanged(auth, (user) => {
-        setIsUserSignedIn(!!user);
-      });
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-      if (unsub) unsub();
-    };
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsUserSignedIn(!!user);
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleNewsClick = useCallback(() => {
@@ -153,7 +144,6 @@ export default function Header() {
   const performSearch = useCallback(
     async (searchTerm: string) => {
       const normalized = searchTerm.toLowerCase().trim();
-      // Find exact or partial match
       const matchingCity = cityList.find((city) =>
         city.toLowerCase().includes(normalized),
       );
@@ -167,7 +157,7 @@ export default function Header() {
             timestamp: new Date(),
           });
         } catch (error) {
-          console.error("Error logging search:", error);
+          // Silently fail on logs
         }
       }
     },
@@ -219,6 +209,7 @@ export default function Header() {
                 <span className="sidebar-tooltip">Home</span>
               </Link>
 
+              {/* Search Bar */}
               <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer">
                 <SearchBar
                   onSearch={handleOnSearch}
@@ -384,7 +375,11 @@ export default function Header() {
               </Link>
 
               <div className="flex flex-col gap-4 text-center w-full max-w-xs">
-                <Link href="/MicFinder" className="mobile-menu-item">
+                <Link
+                  href="/MicFinder"
+                  className="mobile-menu-item"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Mic Finder
                 </Link>
 
@@ -428,10 +423,18 @@ export default function Header() {
                   </button>
                 )}
 
-                <Link href="/contact" className="mobile-menu-item">
+                <Link
+                  href="/contact"
+                  className="mobile-menu-item"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   Contact Us
                 </Link>
-                <Link href="/about" className="mobile-menu-item">
+                <Link
+                  href="/about"
+                  className="mobile-menu-item"
+                  onClick={() => setIsMenuOpen(false)}
+                >
                   About
                 </Link>
 

@@ -1,79 +1,129 @@
-import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 
-const Header = dynamic(() => import("../components/header"), {});
-const Footer = dynamic(() => import("../components/footer"), {});
+const Header = dynamic(() => import("../components/header"));
+const Footer = dynamic(() => import("../components/footer"));
 
-const About: React.FC = () => (
-  <>
-    <Head>
-      <title>About Humor Hub Mission &amp; Tools</title>
-      <meta
-        name="description"
-        content="Humor Hub empowers comedians with real-time event listings, AI brainstorming, a digital notebook, and curated news to supercharge your career."
-      />
-      <link rel="canonical" href="https://www.thehumorhub.com/about" />
-      <meta property="og:title" content="About Humor Hub Mission &amp; Tools" />
-      <meta
-        property="og:description"
-        content="Discover how Humor Hub helps you find gigs, capture ideas, refine routines, and stay inspired."
-      />
-      <meta property="og:url" content="https://www.thehumorhub.com/about" />
-      <meta property="og:type" content="website" />
-      <meta
-        property="og:image"
-        content="https://www.thehumorhub.com/images/og-image-about.jpg"
-      />
-    </Head>
+export const metadata: Metadata = {
+  title: "About Humor Hub | Mission & Tools",
+  description:
+    "Humor Hub empowers comedians with real-time event listings, and curated news to supercharge your career.",
+  alternates: {
+    canonical: "https://www.thehumorhub.com/about",
+  },
+  openGraph: {
+    title: "About Humor Hub | Mission & Tools",
+    description:
+      "Discover how Humor Hub helps you find gigs, capture ideas, and stay inspired.",
+    url: "https://www.thehumorhub.com/about",
+    type: "website",
+    images: [
+      {
+        url: "https://www.thehumorhub.com/images/og-image-about.jpg",
+        width: 1200,
+        height: 630,
+        alt: "About Humor Hub",
+      },
+    ],
+  },
+};
 
-    <Header />
+export default function AboutPage() {
+  return (
+    <>
+      <Header />
 
-    <div className="screen-container p-4 m-4 text-center max-w-2xl mx-auto">
-      <h1 className="text-4xl font-bold text-orange-500 mb-4">About Us</h1>
+      <main className="screen-container content-with-sidebar bg-zinc-900 text-zinc-200">
+        {/* HERO SECTION */}
+        <section className="text-center max-w-3xl mx-auto mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+            Built for Comics, <br />
+            <span className="text-orange-500">By Comics.</span>
+          </h1>
+          <p className="text-xl text-zinc-400 leading-relaxed">
+            Humor Hub was created to solve the two biggest problems every
+            working comedian faces: finding the next gig and finding the next
+            joke.
+          </p>
+        </section>
 
-      <p className="mb-8">
-        Humor Hub was built by working comics who needed a better workflow: find
-        the next gig, and get inspiration from real-time headlines.
-      </p>
+        {/* FEATURES GRID */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
+          {/* Feature 1: Mic Finder */}
+          <div className="card-style bg-zinc-800/50 border border-zinc-700 p-8 rounded-xl hover:border-blue-500/50 transition-all hover:-translate-y-1 group">
+            <div className="mb-4 text-4xl">🎤</div>
+            <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+              Mic Finder
+            </h2>
+            <p className="text-zinc-400 mb-4 leading-relaxed">
+              The ultimate directory. Search 500+ cities for Comedy Mics, Music
+              Jams, and Festivals. Filter by date, genre, or location.
+            </p>
+            <p className="text-zinc-500 text-sm">
+              Venue managers can list events in seconds. The wider our database,
+              the more stage time for everyone—whether you&lsquo;re testing 5
+              minutes or headlining.
+            </p>
+            <div className="mt-6">
+              <Link
+                href="/MicFinder"
+                className="text-blue-400 font-bold text-sm hover:text-white transition-colors"
+              >
+                Find a Mic →
+              </Link>
+            </div>
+          </div>
 
-      <section className="mb-8 text-left">
-        <h2 className="text-2xl font-semibold text-orange-500 mb-2">
-          Mic Finder
-        </h2>
-        <p className="mb-2">
-          Search 500+ cities for Comedy Mics, Music/All arts and
-          festivals/Competitions. Filter by date, genre or venue size.
-        </p>
-        <p>
-          Venue managers can list events in seconds. The wider our database, the
-          more chances you get stage time whether you are testing new material
-          or headlining.
-        </p>
-      </section>
+          {/* Feature 2: Hub News */}
+          <div className="card-style bg-zinc-800/50 border border-zinc-700 p-8 rounded-xl hover:border-orange-500/50 transition-all hover:-translate-y-1 group">
+            <div className="mb-4 text-4xl">📰</div>
+            <h2 className="text-2xl font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">
+              Hub News
+            </h2>
+            <p className="text-zinc-400 mb-4 leading-relaxed">
+              Your daily inspiration feed. Curated headlines across Business,
+              Entertainment, Tech, and Politics—updated every hour.
+            </p>
+            <p className="text-zinc-500 text-sm">
+              Perfect for writing topical jokes, finding current-event
+              callbacks, or discovering that unexpected angle for your next
+              routine.
+            </p>
+            <div className="mt-6">
+              <Link
+                href="/HHapi"
+                className="text-orange-400 font-bold text-sm hover:text-white transition-colors"
+              >
+                Read News →
+              </Link>
+            </div>
+          </div>
+        </section>
 
-      <section className="mb-8 text-left">
-        <h2 className="text-2xl font-semibold text-orange-500 mb-2">
-          Hub News
-        </h2>
-        <p>
-          Curated headlines across Business, Entertainment, Tech, Sports,
-          Science and more—updated every hour. Perfect for topical jokes,
-          current-event callbacks, or finding that unexpected angle for your
-          next routine.
-        </p>
-      </section>
+        {/* CALL TO ACTION */}
+        <section className="text-center max-w-2xl mx-auto border-t border-zinc-800 pt-12">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Ready to hit the stage?
+          </h3>
+          <div className="flex justify-center gap-4">
+            <Link
+              href="/MicFinder"
+              className="btn bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105"
+            >
+              Find Events
+            </Link>
+            <Link
+              href="/"
+              className="btn bg-zinc-700 hover:bg-zinc-600 text-white px-8 py-3 rounded-lg font-bold shadow-lg transition"
+            >
+              Back Home
+            </Link>
+          </div>
+        </section>
+      </main>
 
-      <Link href="/">
-        <span className="text-blue-500 hover:underline mt-2">
-          ← Back to Home
-        </span>
-      </Link>
-    </div>
-
-    <Footer />
-  </>
-);
-
-export default About;
+      <Footer />
+    </>
+  );
+}
