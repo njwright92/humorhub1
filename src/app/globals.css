@@ -64,13 +64,13 @@ option[value=""][disabled] {
 
 /* Unified Title Class */
 .title {
-  @apply text-amber-300 font-bold tracking-wide drop-shadow-lg rounded-lg;
+  @apply text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg;
   @apply text-4xl sm:text-5xl md:text-6xl lg:text-6xl;
   @apply mt-10 mb-2;
 }
 
 .subtitle-style {
-  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 font-bold drop-shadow-lg;
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 font-bold drop-shadow-xl;
 }
 
 .the-text {

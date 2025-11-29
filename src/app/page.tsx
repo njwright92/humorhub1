@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useCallback } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -11,40 +9,13 @@ import EventForm from "./components/EventForm";
 
 const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
 
+export const metadata: Metadata = {
+  title: "Humor Hub | The Best Comedy Open Mics & Tools",
+  description:
+    "Find comedy music and all-arts open mics, festivals, and connect with comedians and shows in the USA and worldwide.",
+};
+
 export default function Home() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove("opacity-0", "translate-y-8");
-            entry.target.classList.add("opacity-100", "translate-y-0");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    const target = document.querySelector("#api-section");
-    if (target) observer.observe(target);
-
-    return () => observer.disconnect();
-  }, []);
-
-  const sendDataLayerEvent = useCallback(
-    (
-      event_name: string,
-      params: { event_category: string; event_label: string },
-    ) => {
-      if (typeof window !== "undefined") {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: event_name, ...params });
-      }
-    },
-    [],
-  );
-
   return (
     <>
       <Header />
@@ -68,17 +39,12 @@ export default function Home() {
                   With 1000s of open mic listings, find your next Mic now!
                 </span>
               </p>
+
               <EventForm />
 
               <Link
                 href="/MicFinder"
                 className="btn w-80 text-center self-center"
-                onClick={() =>
-                  sendDataLayerEvent("click_micfinder_button", {
-                    event_category: "Navigation",
-                    event_label: "MicFinder Button",
-                  })
-                }
               >
                 Find Your Mic!
               </Link>
@@ -90,23 +56,15 @@ export default function Home() {
                   alt="Mic Finder Logo"
                   width={180}
                   height={180}
-                  className="rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
-                  loading="lazy"
-                  onClick={() =>
-                    sendDataLayerEvent("click_micfinder_image", {
-                      event_category: "Navigation",
-                      event_label: "MicFinder Image",
-                    })
-                  }
+                  className="rounded-full shadow-lg border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
+                  priority
                 />
               </Link>
             </div>
           </div>
         </section>
-        <section
-          id="api-section"
-          className="opacity-0 translate-y-8 transition-all duration-700 ease-out"
-        >
+
+        <section className="animate-pulse-once">
           <HumorHubAPISection />
         </section>
       </div>

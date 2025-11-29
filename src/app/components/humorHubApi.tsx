@@ -89,7 +89,7 @@ const HumorHubAPISection: React.FC = () => {
                 alt="Comedy News Update"
                 width={180}
                 height={180}
-                className="rounded-full shadow-2xl border-4 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
+                className="rounded-full shadow-2xl border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                 loading="lazy"
               />
             </Link>

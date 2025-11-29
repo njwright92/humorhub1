@@ -3,14 +3,14 @@ import MicFinderClient from "./MicFinderClient";
 
 export const metadata: Metadata = {
   title:
-    "MicFinder: 1,000's of Comedy, music, and all-arts Open Mics & Festivals | The Humor Hub",
+    "MicFinder: 1,000's of Comedy, music, and all-arts Open Mics | The Humor Hub",
   description:
     "Discover the best comedy open mics near you. Search by city, view our interactive map, and join the community. The ultimate directory for stand-up comedians.",
   alternates: {
     canonical: "https://www.thehumorhub.com/MicFinder",
   },
   openGraph: {
-    title: "MicFinder - Find Comedy Open Mics Worldwide",
+    title: "MicFinder - Find Comedy Open Mics in the USA and Worldwide",
     description:
       "Search 1,000's of stand-up comedy, music, and all-arts open mics by city or date on our interactive map. Add your event and connect with the comedy community.",
     url: "https://www.thehumorhub.com/MicFinder",
