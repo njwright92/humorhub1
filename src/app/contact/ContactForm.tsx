@@ -63,10 +63,10 @@ export default function ContactForm() {
     <>
       <Header />
 
-      <main className="screen-container content-with-sidebar bg-zinc-900 flex flex-col items-center justify-center min-h-[80vh]">
-        <div className="w-full max-w-2xl">
-          <h1 className="title text-center mb-2">Contact Us</h1>
-          <p className="text-zinc-400 text-center mb-8">
+      <main className="screen-container content-with-sidebar flex flex-col items-center justify-center">
+        <div className="w-full">
+          <h1 className="title text-center mb-2 tracking-wide">Contact Us</h1>
+          <p className="text-zinc-300 text-center mb-8">
             Questions, feedback, or support? We&#39;re here to help.
           </p>
 
@@ -89,7 +89,7 @@ export default function ContactForm() {
                 <div className="flex flex-col">
                   <label
                     htmlFor="name"
-                    className="mb-2 text-xs font-bold text-zinc-400 uppercase tracking-wider"
+                    className="mb-2 text-xs font-bold text-zinc-300 uppercase tracking-wider"
                   >
                     Name
                   </label>
@@ -108,7 +108,7 @@ export default function ContactForm() {
                 <div className="flex flex-col">
                   <label
                     htmlFor="email"
-                    className="mb-2 text-xs font-bold text-zinc-400 uppercase tracking-wider"
+                    className="mb-2 text-xs font-bold text-zinc-300 uppercase tracking-wider"
                   >
                     Email
                   </label>
@@ -129,7 +129,7 @@ export default function ContactForm() {
               <div className="flex flex-col">
                 <label
                   htmlFor="message"
-                  className="mb-2 text-xs font-bold text-zinc-400 uppercase tracking-wider"
+                  className="mb-2 text-xs font-bold text-zinc-300 uppercase tracking-wider"
                 >
                   Message
                 </label>

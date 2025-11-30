@@ -10,9 +10,9 @@ import EventForm from "./components/EventForm";
 const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
 
 export const metadata: Metadata = {
-  title: "Humor Hub | The Best Comedy Open Mics & Tools",
+  title: "Humor Hub | The #1 Open Mic Map & Comedian Toolkit",
   description:
-    "Find comedy music and all-arts open mics, festivals, and connect with comedians and shows in the USA and worldwide.",
+    "Instantly locate comedy, music, and all-arts open mics near you. The ultimate app for comedians to find gigs, track festivals, and connect with the scene.",
 };
 
 export default function Home() {
