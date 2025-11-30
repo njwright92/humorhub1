@@ -223,6 +223,7 @@ export default function NewsClient() {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                             unoptimized
+                            loading="lazy"
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full text-zinc-600">
