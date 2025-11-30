@@ -238,9 +238,9 @@ export default function NewsClient() {
 
                       {/* Content Section */}
                       <div className="flex flex-col flex-grow p-5">
-                        <h3 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-300 transition-colors">
+                        <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-300 transition-colors">
                           {article.title}
-                        </h3>
+                        </h2>
 
                         <p className="text-zinc-400 text-sm line-clamp-3 mb-6 flex-grow">
                           {article.description}
