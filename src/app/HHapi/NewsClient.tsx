@@ -51,7 +51,7 @@ export default function NewsClient() {
 
     try {
       const response = await fetch(
-        `/api/news?category=${cat}&subcategory=${sub}`,
+        `/api/news?category=${cat}&subcategory=${sub}`
       );
 
       if (!response.ok) throw new Error("Failed to fetch");
@@ -75,13 +75,13 @@ export default function NewsClient() {
 
   // --- Handlers ---
   const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setSelectedCategory(event.target.value as Category);
   };
 
   const handleSubcategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setSelectedSubcategory(event.target.value);
   };
@@ -224,7 +224,6 @@ export default function NewsClient() {
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                             unoptimized
                             priority={index < 2}
-                            loading={index < 2 ? "eager" : "lazy"}
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full text-zinc-600">
