@@ -724,9 +724,6 @@ video {
 .h-\[46px\] {
   height: 46px;
 }
-.h-\[60vh\] {
-  height: 60vh;
-}
 .h-\[96\%\] {
   height: 96%;
 }
@@ -759,6 +756,9 @@ video {
 }
 .min-h-\[80vh\] {
   min-height: 80vh;
+}
+.min-h-screen {
+  min-height: 100vh;
 }
 .w-10 {
   width: 2.5rem;
@@ -1119,6 +1119,10 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1));
 }
+.bg-green-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(20 83 45 / var(--tw-bg-opacity, 1));
+}
 .bg-green-900\/30 {
   background-color: rgb(20 83 45 / 0.3);
 }
@@ -1142,13 +1146,13 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
 }
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
-}
 .bg-red-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+}
+.bg-red-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity, 1));
 }
 .bg-red-900\/20 {
   background-color: rgb(127 29 29 / 0.2);
@@ -1446,9 +1450,9 @@ video {
   --tw-text-opacity: 1;
   color: rgb(252 165 165 / var(--tw-text-opacity, 1));
 }
-.text-red-500 {
+.text-red-400 {
   --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+  color: rgb(248 113 113 / var(--tw-text-opacity, 1));
 }
 .text-red-600 {
   --tw-text-opacity: 1;
@@ -2428,11 +2432,6 @@ option[value=""][disabled] {
   background-color: rgb(39 39 42 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-zinc-900:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(46 44 40 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:bg-zinc-950:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(9 9 11 / var(--tw-bg-opacity, 1));
@@ -2458,9 +2457,9 @@ option[value=""][disabled] {
   color: rgb(30 58 138 / var(--tw-text-opacity, 1));
 }
 
-.hover\:text-red-400:hover {
+.hover\:text-red-300:hover {
   --tw-text-opacity: 1;
-  color: rgb(248 113 113 / var(--tw-text-opacity, 1));
+  color: rgb(252 165 165 / var(--tw-text-opacity, 1));
 }
 
 .hover\:text-red-600:hover {

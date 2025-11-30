@@ -12,13 +12,12 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
-// 1. IMPORT signOut
 import { type User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Import router for redirect
+import { useRouter } from "next/navigation";
 
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
@@ -53,7 +52,7 @@ export default function ProfileClient() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // --- FIREBASE HOOKS ---
+  // --- HOOKS ---
   const auth = getAuth();
   const storage = getStorage();
   const uidRef = useRef<string | null>(null);
@@ -124,7 +123,7 @@ export default function ProfileClient() {
   const handleSignOut = useCallback(async () => {
     try {
       await signOut(auth);
-      router.push("/"); // Redirect to home after sign out
+      router.push("/");
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -196,7 +195,8 @@ export default function ProfileClient() {
     return (
       <>
         <Header />
-        <div className="screen-container flex items-center justify-center h-[60vh]">
+        {/* CLS FIX: Use min-h-screen so the footer doesn't jump around */}
+        <div className="screen-container flex items-center justify-center min-h-screen">
           <div className="text-zinc-200 animate-pulse font-bold text-xl">
             Loading Profile...
           </div>
@@ -211,7 +211,7 @@ export default function ProfileClient() {
       <Header />
       <main className="screen-container content-with-sidebar">
         <div className="flex flex-col items-center mb-8">
-          <h1 className="title text-center">My Dashboard</h1>
+          <h1 className="title text-center">Profile</h1>
           <p className="text-zinc-300 text-sm">Manage your personal schedule</p>
         </div>
 
@@ -254,6 +254,12 @@ export default function ProfileClient() {
                         type="file"
                         onChange={handleImageChange}
                         className="hidden"
+                        onClick={() => {
+                          sendDataLayerEvent("click_upload_profile_image", {
+                            event_category: "Profile_Interaction",
+                            event_label: "Profile_Image_Upload",
+                          });
+                        }}
                       />
                     </label>
                   )}
@@ -293,7 +299,7 @@ export default function ProfileClient() {
                       </button>
                       <button
                         onClick={handleCancel}
-                        className="flex-1 bg-zinc-900 hover:bg-zinc-600 text-zinc-100 py-2 rounded-lg font-bold text-sm transition"
+                        className="flex-1 bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition"
                       >
                         Cancel
                       </button>
@@ -314,14 +320,13 @@ export default function ProfileClient() {
                     <div className="space-y-3">
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="w-full bg-zinc-800 hover:bg-zinc-900 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                        className="w-full bg-green-900 hover:bg-green-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
                       >
                         Edit Profile
                       </button>
-                      {/* 2. NEW SIGN OUT BUTTON */}
                       <button
                         onClick={handleSignOut}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                        className="w-full bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
                       >
                         Sign Out
                       </button>
@@ -332,6 +337,7 @@ export default function ProfileClient() {
             </section>
           </div>
 
+          {/* --- RIGHT COLUMN: SAVED EVENTS --- */}
           <div className="lg:col-span-2">
             <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px]">
               <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
@@ -359,19 +365,24 @@ export default function ProfileClient() {
                             </span>
                           )}
                         </div>
+
+                        {/* ACCESSIBILITY FIX: zinc-300/300 for better contrast */}
                         <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
                           <span>📍</span> {event.location}
                         </p>
-                        <p className="text-zinc-400 text-xs mb-3 flex items-center gap-1">
+                        <p className="text-zinc-300 text-xs mb-3 flex items-center gap-1">
                           <span>📅</span> {event.date}{" "}
                           {event.isRecurring ? "(Recurring)" : ""}
                         </p>
-                        <div className="text-zinc-500 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+
+                        {/* ACCESSIBILITY FIX: zinc-300 for details text */}
+                        <div className="text-zinc-300 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
                           <div
                             dangerouslySetInnerHTML={{ __html: event.details }}
                           />
                         </div>
                       </div>
+
                       <div className="flex sm:flex-col justify-between items-end gap-2 min-w-[100px]">
                         <Link
                           href={`/MicFinder?city=${
@@ -381,9 +392,11 @@ export default function ProfileClient() {
                         >
                           Find on Map
                         </Link>
+
+                        {/* ACCESSIBILITY FIX: text-red-400 for better contrast on dark */}
                         <button
                           onClick={() => handleDeleteEvent(event.id)}
-                          className="text-red-500 hover:text-red-400 hover:bg-red-900/20 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-900/20 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400"
                         >
                           Remove
                         </button>

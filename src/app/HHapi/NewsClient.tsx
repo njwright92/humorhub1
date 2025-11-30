@@ -51,7 +51,7 @@ export default function NewsClient() {
 
     try {
       const response = await fetch(
-        `/api/news?category=${cat}&subcategory=${sub}`
+        `/api/news?category=${cat}&subcategory=${sub}`,
       );
 
       if (!response.ok) throw new Error("Failed to fetch");
@@ -75,13 +75,13 @@ export default function NewsClient() {
 
   // --- Handlers ---
   const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSelectedCategory(event.target.value as Category);
   };
 
   const handleSubcategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSelectedSubcategory(event.target.value);
   };
