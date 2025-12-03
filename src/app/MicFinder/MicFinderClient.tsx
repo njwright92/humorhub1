@@ -871,7 +871,7 @@ const MicFinderClient = () => {
                       transform: `translateY(${virtualItem.start}px)`,
                     }}
                   >
-                    <div className="event-item mx-2 my-2 h-auto flex flex-col p-4">
+                    <div className="event-item my-2 h-auto flex flex-col p-4">
                       <h3 className="text-xl font-bold">{event.name}</h3>
                       <p className="details-label">📅 Date: {event.date}</p>
                       <p className="details-label">
