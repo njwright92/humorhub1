@@ -721,6 +721,9 @@ video {
 .h-\[46px\] {
   height: 46px;
 }
+.h-\[600px\] {
+  height: 600px;
+}
 .h-\[96\%\] {
   height: 96%;
 }
@@ -1646,6 +1649,9 @@ video {
 }
 .duration-500 {
   transition-duration: 500ms;
+}
+.contain-strict {
+  contain: strict;
 }
 
 /* --- 1. Custom CSS Variables --- */

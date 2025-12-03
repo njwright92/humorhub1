@@ -22,7 +22,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ): number {
   const R = 6371;
   const toRad = (value: number) => (value * Math.PI) / 180;
@@ -98,14 +98,14 @@ const MicFinderClient = () => {
   const sendDataLayerEvent = useCallback(
     (
       event_name: string,
-      params: { event_category: string; event_label: string }
+      params: { event_category: string; event_label: string },
     ) => {
       if (typeof window !== "undefined") {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: event_name, ...params });
       }
     },
-    []
+    [],
   );
 
   // Tab Filter Logic
@@ -115,7 +115,7 @@ const MicFinderClient = () => {
       if (selectedTab === "Other") return event.isMusic;
       return !event.festival && !event.isMusic;
     },
-    [selectedTab]
+    [selectedTab],
   );
 
   // Geo Logic
@@ -130,7 +130,7 @@ const MicFinderClient = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng
+          coords.lng,
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -139,7 +139,7 @@ const MicFinderClient = () => {
       }
       return closestCity;
     },
-    [cityCoordinates]
+    [cityCoordinates],
   );
 
   // --- Effects ---
@@ -294,7 +294,7 @@ const MicFinderClient = () => {
       },
       (err) => {
         console.log("Geolocation denied or failed", err);
-      }
+      },
     );
   }, [findClosestCity, normalizeCityName, sendDataLayerEvent]);
 
@@ -347,7 +347,7 @@ const MicFinderClient = () => {
   const dropdownCities = useMemo(() => {
     if (!debouncedSearchTerm) return allAvailableCities;
     return allAvailableCities.filter((city) =>
-      city.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+      city.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
     );
   }, [allAvailableCities, debouncedSearchTerm]);
 
@@ -402,7 +402,7 @@ const MicFinderClient = () => {
         (e) =>
           e.location &&
           normalizeCityName(e.location.split(",")[1] || "").trim() ===
-            filterCity
+            filterCity,
       );
     }
 
@@ -486,7 +486,7 @@ const MicFinderClient = () => {
         alert("Oops! Something went wrong. Please try again.");
       }
     },
-    [isUserSignedIn, sendDataLayerEvent]
+    [isUserSignedIn, sendDataLayerEvent],
   );
 
   const toggleMapVisibility = () => {
