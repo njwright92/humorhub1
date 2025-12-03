@@ -519,10 +519,9 @@ const MicFinderClient = () => {
   const rowVirtualizer = useVirtualizer({
     count: sortedEventsByCity.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 385, // Matches your previous itemSize
-    overscan: 2, // Pre-renders 2 items off-screen for smoother scrolling
+    estimateSize: () => 150, // Lower default guess, will grow dynamically
+    overscan: 5, // Calculate a few more extra items to prevent white flashes
   });
-
   return (
     <>
       <Header />
@@ -828,7 +827,6 @@ const MicFinderClient = () => {
               )}
             </div>
           </div>
-
           <h2 className="title text-center mt-4 border-b-4 border-[#b35a30] pb-2">
             {filterCity === "All Cities"
               ? `All ${
@@ -846,13 +844,11 @@ const MicFinderClient = () => {
                     : "Arts"
                 } in ${filterCity}`}
           </h2>
-
           {sortedEventsByCity.length === 0 && (
             <p className="text-center py-4">
               No events found for {filterCity}.
             </p>
           )}
-
           <div
             ref={parentRef}
             className="w-full h-[600px] overflow-y-auto contain-strict bg-transparent"
@@ -868,36 +864,29 @@ const MicFinderClient = () => {
                 return (
                   <div
                     key={virtualItem.key}
-                    className="absolute top-0 left-0 w-full"
+                    data-index={virtualItem.index}
+                    ref={rowVirtualizer.measureElement}
+                    className="absolute top-0 left-0 w-full p-2"
                     style={{
-                      height: `${virtualItem.size}px`,
                       transform: `translateY(${virtualItem.start}px)`,
                     }}
                   >
-                    <div className="event-item mt-2 mx-2 h-[96%] flex flex-col justify-center">
-                      <h3 className="text-lg font-semibold">{event.name}</h3>
+                    <div className="event-item mx-2 my-2 h-auto flex flex-col p-4">
+                      <h3 className="text-xl font-bold">{event.name}</h3>
                       <p className="details-label">📅 Date: {event.date}</p>
                       <p className="details-label">
                         📍 Location: {event.location}
                       </p>
-                      {event.festival && (
-                        <p className="details-label text-purple-600 font-bold">
-                          🏆 This is a festival!
-                        </p>
-                      )}
-                      {event.isMusic && !event.festival && (
-                        <p className="details-label text-green-600 font-bold">
-                          🎶 This is a Music/Other event!
-                        </p>
-                      )}
-                      <div className="details-label">
+
+                      <div className="details-label mt-2">
                         <span className="details-label">ℹ️ Details:</span>
                         <div
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
                       </div>
+
                       <button
-                        className="btn mt-1 mb-1 px-2 py-1 self-center"
+                        className="btn mt-4 mb-4 px-2 py-1 self-center"
                         onClick={() => handleEventSave(event)}
                       >
                         Save Event
