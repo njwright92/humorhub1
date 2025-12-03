@@ -13,22 +13,18 @@
   "dependencies": {
     "@emailjs/browser": "4.4.1",
     "@googlemaps/js-api-loader": "1.16.2",
-    "date-fns": "4.1.0",
+    "@tanstack/react-virtual": "^3.13.12",
     "firebase": "11.6.1",
     "firebase-admin": "12.1.0",
     "next": "15.5.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-window": "1.8.10",
-    "sharp": "0.33.2",
-    "uuid": "11.1.0"
+    "sharp": "0.33.2"
   },
   "devDependencies": {
     "@types/google.maps": "3.58.1",
     "@types/react": "18",
     "@types/react-dom": "18",
-    "@types/react-window": "1.8.8",
-    "@types/uuid": "10.0.0",
     "autoprefixer": "10.4.15",
     "critters": "0.0.23",
     "eslint": "9",

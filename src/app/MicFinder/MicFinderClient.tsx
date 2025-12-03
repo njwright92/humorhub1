@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
 import { db, auth } from "../../../firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
-import { FixedSizeList as List, areEqual } from "react-window";
-import { parse, isValid } from "date-fns";
 import Link from "next/link";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -17,7 +22,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number,
+  lon2: number
 ): number {
   const R = 6371;
   const toRad = (value: number) => (value * Math.PI) / 180;
@@ -63,57 +68,6 @@ type CityCoordinates = {
   [key: string]: { lat: number; lng: number };
 };
 
-// Virtualized Row Component
-const Row = React.memo(
-  ({
-    index,
-    style,
-    data,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-    data: { events: Event[]; onSave: (e: Event) => void };
-  }) => {
-    const event = data.events[index];
-    if (!event) return null;
-
-    return (
-      <div style={style}>
-        <div className="event-item mt-2 mx-2 h-[96%] flex flex-col justify-center">
-          <h3 className="text-lg font-semibold">{event.name}</h3>
-          <p className="details-label">📅 Date: {event.date}</p>
-          <p className="details-label">📍 Location: {event.location}</p>
-          {event.festival && (
-            <p className="details-label text-purple-600 font-bold">
-              🏆 This is a festival!
-            </p>
-          )}
-          {event.isMusic && !event.festival && (
-            <p className="details-label text-green-600 font-bold">
-              🎶 This is a Music/Other event!
-            </p>
-          )}
-          <div className="details-label">
-            <span className="details-label">ℹ️ Details:</span>
-            <div dangerouslySetInnerHTML={{ __html: event.details }} />
-          </div>
-          <button
-            className="btn mt-1 mb-1 px-2 py-1 self-center"
-            onClick={() => data.onSave(event)}
-          >
-            Save Event
-          </button>
-        </div>
-      </div>
-    );
-  },
-  areEqual,
-);
-
-Row.displayName = "EventRow";
-
-// --- Main Component ---
-
 const MicFinderClient = () => {
   // State
   const [selectedCity, setSelectedCity] = useState("");
@@ -144,14 +98,14 @@ const MicFinderClient = () => {
   const sendDataLayerEvent = useCallback(
     (
       event_name: string,
-      params: { event_category: string; event_label: string },
+      params: { event_category: string; event_label: string }
     ) => {
       if (typeof window !== "undefined") {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: event_name, ...params });
       }
     },
-    [],
+    []
   );
 
   // Tab Filter Logic
@@ -161,7 +115,7 @@ const MicFinderClient = () => {
       if (selectedTab === "Other") return event.isMusic;
       return !event.festival && !event.isMusic;
     },
-    [selectedTab],
+    [selectedTab]
   );
 
   // Geo Logic
@@ -176,7 +130,7 @@ const MicFinderClient = () => {
           latitude,
           longitude,
           coords.lat,
-          coords.lng,
+          coords.lng
         );
         if (distance < minDistance) {
           minDistance = distance;
@@ -185,7 +139,7 @@ const MicFinderClient = () => {
       }
       return closestCity;
     },
-    [cityCoordinates],
+    [cityCoordinates]
   );
 
   // --- Effects ---
@@ -246,14 +200,13 @@ const MicFinderClient = () => {
           const data = doc.data();
           let parsedDateObj: Date | undefined = undefined;
           if (data.date && typeof data.date === "string") {
-            const formats = ["MM/dd/yyyy", "yyyy-MM-dd", "MMMM d, yyyy"];
-            for (const fmt of formats) {
-              const parsed = parse(data.date, fmt, new Date());
-              if (isValid(parsed)) {
-                parsed.setHours(0, 0, 0, 0);
-                parsedDateObj = parsed;
-                break;
-              }
+            // Native JS handles standard formats automatically
+            const parsed = new Date(data.date);
+
+            // Check if valid date (isNaN check)
+            if (!isNaN(parsed.getTime())) {
+              parsed.setHours(0, 0, 0, 0);
+              parsedDateObj = parsed;
             }
           }
           return {
@@ -341,7 +294,7 @@ const MicFinderClient = () => {
       },
       (err) => {
         console.log("Geolocation denied or failed", err);
-      },
+      }
     );
   }, [findClosestCity, normalizeCityName, sendDataLayerEvent]);
 
@@ -394,7 +347,7 @@ const MicFinderClient = () => {
   const dropdownCities = useMemo(() => {
     if (!debouncedSearchTerm) return allAvailableCities;
     return allAvailableCities.filter((city) =>
-      city.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+      city.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
     );
   }, [allAvailableCities, debouncedSearchTerm]);
 
@@ -449,7 +402,7 @@ const MicFinderClient = () => {
         (e) =>
           e.location &&
           normalizeCityName(e.location.split(",")[1] || "").trim() ===
-            filterCity,
+            filterCity
       );
     }
 
@@ -533,7 +486,7 @@ const MicFinderClient = () => {
         alert("Oops! Something went wrong. Please try again.");
       }
     },
-    [isUserSignedIn, sendDataLayerEvent],
+    [isUserSignedIn, sendDataLayerEvent]
   );
 
   const toggleMapVisibility = () => {
@@ -561,13 +514,14 @@ const MicFinderClient = () => {
 
   const MemoizedEventForm = React.memo(EventForm);
 
-  const itemData = useMemo(
-    () => ({
-      events: sortedEventsByCity,
-      onSave: handleEventSave,
-    }),
-    [sortedEventsByCity, handleEventSave],
-  );
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: sortedEventsByCity.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 385, // Matches your previous itemSize
+    overscan: 2, // Pre-renders 2 items off-screen for smoother scrolling
+  });
 
   return (
     <>
@@ -899,15 +853,61 @@ const MicFinderClient = () => {
             </p>
           )}
 
-          <List
-            height={600}
-            itemCount={sortedEventsByCity.length}
-            itemSize={385}
-            width="100%"
-            itemData={itemData}
+          <div
+            ref={parentRef}
+            className="w-full h-[600px] overflow-y-auto contain-strict bg-transparent"
           >
-            {Row}
-          </List>
+            <div
+              className="relative w-full"
+              style={{
+                height: `${rowVirtualizer.getTotalSize()}px`,
+              }}
+            >
+              {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                const event = sortedEventsByCity[virtualItem.index];
+                return (
+                  <div
+                    key={virtualItem.key}
+                    className="absolute top-0 left-0 w-full"
+                    style={{
+                      height: `${virtualItem.size}px`,
+                      transform: `translateY(${virtualItem.start}px)`,
+                    }}
+                  >
+                    <div className="event-item mt-2 mx-2 h-[96%] flex flex-col justify-center">
+                      <h3 className="text-lg font-semibold">{event.name}</h3>
+                      <p className="details-label">📅 Date: {event.date}</p>
+                      <p className="details-label">
+                        📍 Location: {event.location}
+                      </p>
+                      {event.festival && (
+                        <p className="details-label text-purple-600 font-bold">
+                          🏆 This is a festival!
+                        </p>
+                      )}
+                      {event.isMusic && !event.festival && (
+                        <p className="details-label text-green-600 font-bold">
+                          🎶 This is a Music/Other event!
+                        </p>
+                      )}
+                      <div className="details-label">
+                        <span className="details-label">ℹ️ Details:</span>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: event.details }}
+                        />
+                      </div>
+                      <button
+                        className="btn mt-1 mb-1 px-2 py-1 self-center"
+                        onClick={() => handleEventSave(event)}
+                      >
+                        Save Event
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </section>
       </div>
       <Footer />

@@ -5,12 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
 
-  transpilePackages: [
-    "date-fns", // Can carry polyfills
-    "@googlemaps/js-api-loader",
-    "firebase",
-    "react-window",
-  ],
+  transpilePackages: ["@googlemaps/js-api-loader", "firebase"],
 
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
@@ -22,8 +17,6 @@ const nextConfig = {
       "firebase/auth",
       "firebase/firestore",
       "@emailjs/browser",
-      "uuid",
-      "date-fns",
       "@googlemaps/js-api-loader",
     ],
     optimizeCss: true,

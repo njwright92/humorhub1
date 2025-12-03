@@ -4,7 +4,6 @@ import { useState, useCallback, type ChangeEvent, type FormEvent } from "react";
 import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import { getLatLng } from "../utils/geocode";
-import { v4 as uuidv4 } from "uuid";
 import emailjs from "@emailjs/browser";
 
 interface EventData {
@@ -70,7 +69,7 @@ const sendConfirmationEmail = async (eventData: EventData) => {
         // LOGIC UPDATE: If email is empty, send a text string so template doesn't break
         user_email: eventData.email || "No email provided",
       },
-      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
+      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string
     );
   } catch (error) {
     console.warn("EmailJS failed to send confirmation email.", error);
@@ -111,7 +110,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
 
   const prepareEventData = useCallback(
     (currentEvent: EventData, lat?: number, lng?: number): EventData => {
-      const id = uuidv4();
+      const id = crypto.randomUUID();
       const timestamp = currentEvent.date
         ? new Date(currentEvent.date).toISOString()
         : "";
@@ -123,7 +122,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
         lng,
       };
     },
-    [],
+    []
   );
 
   const handleSubmit = useCallback(
@@ -173,7 +172,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
 
           const logSuccess = await logManualReviewEvent(
             finalEventData,
-            `Geocoding failed for: ${event.location}`,
+            `Geocoding failed for: ${event.location}`
           );
 
           if (logSuccess) submissionSuccess = true;
@@ -185,25 +184,25 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
           await sendConfirmationEmail(finalEventData!);
 
           alert(
-            "Success! Your event has been submitted and is being processed.",
+            "Success! Your event has been submitted and is being processed."
           );
           resetForm();
           setShowModal(false);
         } else {
           setFormErrors(
-            "Something went wrong saving your event. Please try again.",
+            "Something went wrong saving your event. Please try again."
           );
         }
       } catch (submitError) {
         setFormErrors(
-          "An unexpected network error occurred. Please try again.",
+          "An unexpected network error occurred. Please try again."
         );
         console.error("Final Submission Error Path:", submitError);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [event, prepareEventData, isSubmitting, resetForm],
+    [event, prepareEventData, isSubmitting, resetForm]
   );
 
   const handleChange = useCallback(
@@ -211,14 +210,14 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
       const { name, value } = e.target;
       setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
     },
-    [],
+    []
   );
 
   const handleCheckboxChange = useCallback(
     (name: "isRecurring" | "isFestival", checked: boolean) => {
       setEvent((prevEvent) => ({ ...prevEvent, [name]: checked }));
     },
-    [],
+    []
   );
 
   return (

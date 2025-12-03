@@ -49,7 +49,6 @@ This project utilizes a modern **Next.js 15** framework, leveraging server-side 
 | **Backend & Auth**     | **Firebase Authentication**, Firebase Admin SDK              |
 | **Database**           | **Cloud Firestore** (NoSQL)                                  |
 | **Geospatial**         | **Google Maps JavaScript API** (`@googlemaps/js-api-loader`) |
-| **Utilities**          | `date-fns` (Time manipulation), `axios` (HTTP requests)      |
 | **Image Optimization** | `sharp`                                                      |
 | **Deployment**         | **Vercel** (CI/CD Integration)                               |
 
