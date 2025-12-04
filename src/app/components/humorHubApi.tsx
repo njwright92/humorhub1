@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import news from "../../app/news.webp";
-import { auth } from "../../../firebase.config";
-import { onAuthStateChanged } from "firebase/auth";
+import type { Auth } from "firebase/auth";
 
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
@@ -19,16 +18,31 @@ const HumorHubAPISection: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState(false);
   const router = useRouter();
+  const authRef = useRef<Auth | null>(null);
 
-  // 1. Auth Listener
+  // Dynamic auth import + listener
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-    });
-    return () => unsubscribe();
+    let unsubscribe: (() => void) | undefined;
+
+    const initAuth = async () => {
+      const { auth } = await import("../../../firebase.config");
+      const { onAuthStateChanged } = await import("firebase/auth");
+
+      authRef.current = auth as Auth;
+
+      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
+        setIsUserSignedIn(!!user);
+      });
+    };
+
+    initAuth();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
-  // 2. Auto-Redirect after successful sign-in
+  // Auto-Redirect after successful sign-in
   useEffect(() => {
     if (isUserSignedIn && pendingRedirect) {
       router.push("/HHapi");
@@ -37,10 +51,9 @@ const HumorHubAPISection: React.FC = () => {
     }
   }, [isUserSignedIn, pendingRedirect, router]);
 
-  // 3. Handler for Guest Users (Optimistic Check)
+  // Handler for Guest Users
   const handleAuthClick = useCallback(() => {
-    // If React state is slow but Firebase is ready, go immediately
-    if (auth.currentUser) {
+    if (authRef.current?.currentUser) {
       router.push("/HHapi");
     } else {
       setPendingRedirect(true);

@@ -3,46 +3,39 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "NODE_ENV=production next build",
+    "dev": "next dev --turbopack",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "build:css": "postcss src/app/globals.css -o public/styles.css",
+    "lint": "next lint --fix",
     "format": "prettier --write ."
   },
   "dependencies": {
     "@emailjs/browser": "4.4.1",
-    "@googlemaps/js-api-loader": "1.16.2",
+    "@googlemaps/js-api-loader": "1.16.8",
     "@tanstack/react-virtual": "3.13.12",
     "firebase": "11.6.1",
-    "firebase-admin": "12.1.0",
-    "next": "15.5.3",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "sharp": "0.33.2"
+    "firebase-admin": "13.0.2",
+    "next": "15.5.7",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sharp": "0.34.1"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "4.1.8",
     "@types/google.maps": "3.58.1",
-    "@types/react": "18",
-    "@types/react-dom": "18",
-    "autoprefixer": "10.4.15",
-    "critters": "0.0.23",
-    "eslint": "9",
-    "eslint-config-next": "15.5.3",
-    "lint-staged": "15.5.2",
+    "@types/node": "22.15.21",
+    "@types/react": "19.1.5",
+    "@types/react-dom": "19.1.5",
+    "eslint": "9.27.0",
+    "eslint-config-next": "15.5.7",
     "postcss": "8.5.3",
-    "postcss-cli": "11.0.0",
-    "prettier": "3.0.0",
-    "tailwindcss": "3.4.15",
-    "typescript": "5.7.2"
+    "prettier": "3.5.3",
+    "tailwindcss": "4.1.8",
+    "typescript": "5.8.3",
+    "lint-staged": "15.5.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "next lint",
+    "*.{js,jsx,ts,tsx}": "next lint --fix",
     "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
-  },
-  "browserslist": [
-    "last 2 years",
-    "not dead",
-    "not op_mini all"
-  ]
+  }
 }

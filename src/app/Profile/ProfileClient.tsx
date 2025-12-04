@@ -2,22 +2,12 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Image from "next/image";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  deleteDoc,
-  doc,
-  getDoc,
-  setDoc,
-} from "firebase/firestore";
-import { type User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../../../firebase.config";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { Auth, User } from "firebase/auth";
+import type { FirebaseStorage } from "firebase/storage";
 
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
@@ -52,9 +42,9 @@ export default function ProfileClient() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // --- HOOKS ---
-  const auth = getAuth();
-  const storage = getStorage();
+  // --- REFS for lazy-loaded Firebase modules ---
+  const authRef = useRef<Auth | null>(null);
+  const storageRef = useRef<FirebaseStorage | null>(null);
   const uidRef = useRef<string | null>(null);
   const router = useRouter();
 
@@ -68,6 +58,10 @@ export default function ProfileClient() {
   const fetchUserDataAndEvents = useCallback(async (user: User) => {
     try {
       setIsLoading(true);
+      const { doc, getDoc, collection, getDocs, query, where } = await import(
+        "firebase/firestore"
+      );
+
       const userRef = doc(db, "users", user.uid);
       const userDocSnap = await getDoc(userRef);
 
@@ -100,59 +94,87 @@ export default function ProfileClient() {
     }
   }, []);
 
-  // --- AUTH LISTENER ---
+  // --- AUTH LISTENER (Dynamic Import) ---
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-      uidRef.current = user?.uid || null;
+    let unsubscribe: (() => void) | undefined;
 
-      if (user) {
-        fetchUserDataAndEvents(user);
-      } else {
-        setSavedEvents([]);
-        setName("");
-        setBio("");
-        setIsLoading(false);
-      }
-    });
-    return unsubscribe;
-  }, [auth, fetchUserDataAndEvents]);
+    const initAuth = async () => {
+      const { getAuth, onAuthStateChanged } = await import("firebase/auth");
+      const { getStorage } = await import("firebase/storage");
+
+      const auth = getAuth();
+      const storage = getStorage();
+
+      authRef.current = auth;
+      storageRef.current = storage;
+
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        setIsUserSignedIn(!!user);
+        uidRef.current = user?.uid || null;
+
+        if (user) {
+          fetchUserDataAndEvents(user);
+        } else {
+          setSavedEvents([]);
+          setName("");
+          setBio("");
+          setIsLoading(false);
+        }
+      });
+    };
+
+    initAuth();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [fetchUserDataAndEvents]);
 
   // --- HANDLERS ---
 
   const handleSignOut = useCallback(async () => {
     try {
-      await signOut(auth);
-      router.push("/");
+      const { signOut } = await import("firebase/auth");
+      if (authRef.current) {
+        await signOut(authRef.current);
+        router.push("/");
+      }
     } catch (error) {
       console.error("Error signing out:", error);
     }
-  }, [auth, router]);
+  }, [router]);
 
   const handleImageChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (!file) return;
       setProfileImage(file);
-      if (!uidRef.current) return;
+      if (!uidRef.current || !storageRef.current) return;
 
       try {
-        const storageRef = ref(storage, `profileImages/${uidRef.current}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
+        const { ref, uploadBytes, getDownloadURL } = await import(
+          "firebase/storage"
+        );
+        const imageRef = ref(
+          storageRef.current,
+          `profileImages/${uidRef.current}`,
+        );
+        await uploadBytes(imageRef, file);
+        const url = await getDownloadURL(imageRef);
         setProfileImageUrl(url);
       } catch (error) {
         alert("Error uploading image.");
       }
     },
-    [storage],
+    [],
   );
 
   const handleSubmit = useCallback(async () => {
-    const user = auth.currentUser;
+    const user = authRef.current?.currentUser;
     if (!user) return;
 
     try {
+      const { doc, setDoc } = await import("firebase/firestore");
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, { name, bio, profileImageUrl }, { merge: true });
       setOriginalName(name);
@@ -161,7 +183,7 @@ export default function ProfileClient() {
     } catch (error) {
       alert("Error saving profile.");
     }
-  }, [auth, name, bio, profileImageUrl]);
+  }, [name, bio, profileImageUrl]);
 
   const handleCancel = useCallback(() => {
     setName(originalName);
@@ -172,6 +194,7 @@ export default function ProfileClient() {
   const handleDeleteEvent = useCallback(async (eventId: string) => {
     if (!confirm("Are you sure you want to remove this event?")) return;
     try {
+      const { doc, deleteDoc } = await import("firebase/firestore");
       await deleteDoc(doc(db, "savedEvents", eventId));
       setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (error) {
@@ -195,7 +218,6 @@ export default function ProfileClient() {
     return (
       <>
         <Header />
-        {/* CLS FIX: Use min-h-screen so the footer doesn't jump around */}
         <div className="screen-container flex items-center justify-center min-h-screen">
           <div className="text-zinc-200 animate-pulse font-bold text-xl">
             Loading Profile...
@@ -366,7 +388,6 @@ export default function ProfileClient() {
                           )}
                         </div>
 
-                        {/* ACCESSIBILITY FIX: zinc-300/300 for better contrast */}
                         <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
                           <span>📍</span> {event.location}
                         </p>
@@ -375,7 +396,6 @@ export default function ProfileClient() {
                           {event.isRecurring ? "(Recurring)" : ""}
                         </p>
 
-                        {/* ACCESSIBILITY FIX: zinc-300 for details text */}
                         <div className="text-zinc-300 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
                           <div
                             dangerouslySetInnerHTML={{ __html: event.details }}
@@ -393,7 +413,6 @@ export default function ProfileClient() {
                           Find on Map
                         </Link>
 
-                        {/* ACCESSIBILITY FIX: text-red-400 for better contrast on dark */}
                         <button
                           onClick={() => handleDeleteEvent(event.id)}
                           className="text-red-400 hover:text-red-300 hover:bg-red-900/20 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400"

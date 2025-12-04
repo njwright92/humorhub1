@@ -9,16 +9,22 @@ const comicNeue = Comic_Neue({
   subsets: ["latin"],
   variable: "--font-comic-neue",
   display: "swap",
+  preload: true,
 });
 
 export const viewport: Viewport = {
   themeColor: "#18181b",
   width: "device-width",
   initialScale: 1,
+  maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  title: "Humor Hub - The Hub of Humor, Open Mics",
+  metadataBase: new URL("https://www.thehumorhub.com"),
+  title: {
+    default: "Humor Hub - The Hub of Humor, Open Mics",
+    template: "%s | Humor Hub",
+  },
   description:
     "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
   keywords: [
@@ -48,6 +54,7 @@ export const metadata: Metadata = {
     url: "https://www.thehumorhub.com/",
     siteName: "Humor Hub",
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
@@ -56,24 +63,34 @@ export const metadata: Metadata = {
     description:
       "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore at Humor Hub.",
   },
-  other: {
-    preconnect: [
-      "https://apis.google.com",
-      "https://humorhub-73ff9.firebaseapp.com",
-    ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://apis.google.com" />
+        <link rel="dns-prefetch" href="https://www.googleapis.com" />
+        <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+      </head>
       <body
         className={`${comicNeue.variable} bg-zinc-900 text-zinc-200 antialiased`}
       >
         <Script
           id="gtm-script"
-          strategy="lazyOnload"
-          defer
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

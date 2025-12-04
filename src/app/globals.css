@@ -1,216 +1,298 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* --- 1. Custom CSS Variables --- */
+/* ===== Tailwind v4 Theme Configuration ===== */
+@theme {
+  /* Override default zinc colors */
+  --color-zinc-900: #2e2c28;
+  --color-zinc-200: #f4f4f5;
+
+  /* Override amber-300 to your accent color */
+  --color-amber-300: #b35a30;
+  --color-amber-400: #a0512b; /* hover state */
+
+  /* Override orange-500 */
+  --color-orange-500: #b35a30;
+
+  /* Custom colors */
+  --color-dark-bg: #121212;
+  --color-dark-accent: #1f1f1f;
+  --color-dark-text: #f5f5f5;
+
+  /* Custom spacing */
+  --spacing-4_5: 1.125rem;
+
+  /* Custom border radius */
+  --radius-soft: 0.635rem;
+
+  /* Custom shadows (extend existing) */
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Custom drop shadows */
+  --drop-shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+
+  /* Custom animations */
+  --animate-slide-in: slide-in 0.3s forwards;
+  --animate-slide-out: slide-out 0.3s forwards;
+}
+
+/* Background gradients (custom utilities) */
+@utility bg-gradient-radial {
+  background-image: radial-gradient(var(--tw-gradient-stops));
+}
+
+@utility bg-gradient-conic {
+  background-image: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+}
+
+/* --- CSS Variables (non-Tailwind) --- */
 :root {
-  --zinc-900: #2e2c28;
-  --zinc-200: #f4f4f5;
   --accent-color: #b35a30;
   --accent-hover: #a0512b;
 }
 
-body {
-  background-image: linear-gradient(to bottom, var(--zinc-900) 0%, #27272a 80%);
-  color: var(--zinc-200);
+/* --- Base Styles --- */
+@layer base {
+  body {
+    background-image: linear-gradient(
+      to bottom,
+      var(--color-zinc-900) 0%,
+      #27272a 80%
+    );
+    color: var(--color-zinc-200);
+    font-family: "Century Gothic", "Calibri", "Segoe UI", sans-serif;
+  }
 
-  font-family: "Century Gothic", "Calibri", "Segoe UI", sans-serif;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family:
+      "Comic Neue", "Chalkboard SE", "Ink Free", "Arial Rounded MT Bold",
+      sans-serif;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Comic Neue", "Chalkboard SE", "Ink Free",
-    "Arial Rounded MT Bold", sans-serif;
-}
+  select,
+  select:required:invalid {
+    color: var(--color-zinc-200);
+  }
 
-select,
-select:required:invalid {
-  color: var(--zinc-200);
-}
-option {
-  color: rgb(22, 22, 22);
-}
-option[value=""][disabled] {
-  display: none;
-}
+  option {
+    color: rgb(22, 22, 22);
+  }
 
-/* --- 2. Layout & Containers --- */
-
-.screen-container {
-  @apply flex flex-col p-4 text-zinc-200 text-center;
-}
-
-.card-style {
-  @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-lg rounded-lg;
-}
-
-.content-with-sidebar {
-  @apply md:ml-20 min-h-screen;
+  option[value=""][disabled] {
+    display: none;
+  }
 }
 
-.flex-row-wrap {
-  @apply flex flex-row flex-wrap sm:flex-nowrap;
+/* --- Component Classes --- */
+@layer components {
+  /* Layout & Containers */
+  .screen-container {
+    @apply flex flex-col p-4 text-zinc-200 text-center;
+  }
+
+  .card-style {
+    @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-lg rounded-lg;
+  }
+
+  .content-with-sidebar {
+    @apply md:ml-20 min-h-screen;
+  }
+
+  .flex-row-wrap {
+    @apply flex flex-row flex-wrap sm:flex-nowrap;
+  }
+
+  .section-style {
+    @apply mb-6;
+  }
+
+  /* Typography */
+  .title {
+    @apply text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg;
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-6xl;
+    @apply mt-10 mb-2;
+  }
+
+  .subtitle-style {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 font-bold drop-shadow-xl;
+  }
+
+  .the-text {
+    @apply block text-zinc-200 text-sm font-semibold mb-2;
+  }
+
+  .error-message {
+    @apply text-red-500 my-4 font-bold;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg;
+    @apply transform transition-transform hover:scale-105;
+  }
+
+  .btn:hover {
+    @apply outline outline-white;
+  }
+
+  /* Inputs - NOTE: outline-none → outline-hidden in v4 */
+  .input-field,
+  .standard-input,
+  .modern-input {
+    @apply border-2 border-zinc-500 p-2 rounded-lg shadow-lg text-zinc-900;
+    @apply outline-hidden focus:border-zinc-300 focus:shadow-md;
+  }
+
+  .standard-input {
+    @apply border-zinc-400 px-4 py-2 bg-zinc-800 text-zinc-200;
+  }
+
+  /* Modals */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black/50 flex justify-center items-center z-50;
+  }
+
+  .modal-container {
+    @apply bg-zinc-300 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
+  }
+
+  .close-button {
+    @apply absolute top-2 right-2 text-zinc-200 cursor-pointer bg-transparent border-none text-xl hover:text-zinc-300;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-gray-100 p-2.5 rounded-lg text-center mx-auto max-w-md text-gray-800;
+  }
+
+  /* Event List */
+  .event-item {
+    @apply p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200;
+  }
+
+  .event-item h3 {
+    @apply text-lg font-semibold mb-1;
+  }
+
+  .event-item p {
+    @apply text-sm mb-2;
+  }
+
+  .event-item h3::before,
+  .event-item p::before {
+    @apply text-xl align-middle;
+  }
+
+  /* Profile & Checkboxes */
+  .profile-image {
+    @apply rounded-full mx-auto;
+  }
+
+  .checkbox-container {
+    @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-lg;
+  }
+
+  .checkbox-container label {
+    @apply cursor-pointer transition-colors duration-200;
+  }
+
+  .checkbox-wrapper {
+    @apply flex items-center;
+  }
+
+  /* Navigation */
+  .nav-link {
+    @apply flex flex-col items-center p-3 m-1 cursor-pointer text-2xl text-inherit no-underline transition-transform duration-300;
+  }
+
+  .nav-link:hover {
+    transform: scale(1.05);
+  }
+
+  /* Tabs */
+  .tab-button {
+    padding: 0.625rem 1.25rem;
+    margin: 0 0.325rem;
+    cursor: pointer;
+    border-radius: 0.325rem;
+    transition:
+      background-color 0.1s,
+      color 0.1s;
+    border: none;
+  }
+
+  .tab-button-active {
+    @apply bg-amber-300 text-zinc-900;
+  }
+
+  .tab-button-active:hover {
+    background-color: var(--accent-hover);
+  }
+
+  .tab-button-inactive {
+    @apply bg-zinc-100 text-amber-300;
+  }
+
+  .tab-button-inactive:hover {
+    background-color: #e4e4e7;
+  }
+
+  /* Social Buttons */
+  .social-signin-button {
+    @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
+  }
+
+  /* Guide & Dialog */
+  .guide-container {
+    @apply fixed right-12 bottom-12 z-[1000];
+  }
+
+  .custom-backdrop {
+    pointer-events: none;
+  }
+
+  .custom-dialog {
+    @apply bg-zinc-300 rounded-lg shadow-md p-2.5 z-[9999];
+  }
+
+  .custom-dialog::before {
+    content: "";
+    transform: translateY(-50%);
+  }
+
+  /* Sidebar */
+  .sidebar-icon-link {
+    @apply relative transform transition-transform hover:scale-110 hover:text-zinc-700;
+  }
+
+  .sidebar-tooltip {
+    @apply absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg;
+  }
+
+  .sidebar-icon-link:hover .sidebar-tooltip {
+    @apply opacity-100;
+  }
+
+  .mobile-menu-item {
+    @apply flex flex-col items-center p-3 m-1 cursor-pointer text-2xl text-inherit no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 w-full;
+  }
+
+  .bg-gradient-animation {
+    background: var(--accent-color);
+    background-size: 400% 400%;
+    animation: gradientAnimation 5s ease infinite;
+  }
 }
 
-.section-style {
-  @apply mb-6;
-}
-
-/* --- 3. Typography Classes --- */
-
-/* Unified Title Class */
-.title {
-  @apply text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg;
-  @apply text-4xl sm:text-5xl md:text-6xl lg:text-6xl;
-  @apply mt-10 mb-2;
-}
-
-.subtitle-style {
-  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 font-bold drop-shadow-xl;
-}
-
-.the-text {
-  @apply block text-zinc-200 text-sm font-semibold mb-2;
-}
-
-.error-message {
-  @apply text-red-500 my-4 font-bold;
-}
-
-/* --- 4. UI Components --- */
-
-/* Buttons */
-.btn {
-  @apply bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg;
-  @apply transform transition-transform hover:scale-105;
-}
-
-.btn:hover {
-  @apply outline outline-white;
-}
-/* Inputs */
-.input-field,
-.standard-input,
-.modern-input {
-  @apply border-2 border-zinc-500 p-2 rounded-lg shadow-lg text-zinc-900;
-  @apply outline-none focus:border-zinc-300 focus:shadow-md;
-}
-
-.standard-input {
-  @apply border-zinc-400 px-4 py-2 bg-zinc-800 text-zinc-200;
-}
-
-/* Modals */
-.modal-backdrop {
-  @apply fixed inset-0 bg-black/50 flex justify-center items-center z-50;
-}
-
-.modal-container {
-  @apply bg-zinc-300 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
-}
-
-.close-button {
-  @apply absolute top-2 right-2 text-zinc-200 cursor-pointer bg-transparent border-none text-xl hover:text-zinc-300;
-}
-
-/* Cards & Misc */
-.card {
-  @apply bg-gray-100 p-2.5 rounded-lg text-center mx-auto max-w-md text-gray-800;
-}
-
-/* --- 5. Specific Features --- */
-
-/* Event List */
-.event-item {
-  @apply p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200;
-}
-.event-item h3 {
-  @apply text-lg font-semibold mb-1;
-}
-.event-item p {
-  @apply text-sm mb-2;
-}
-.event-item h3::before,
-.event-item p::before {
-  @apply text-xl align-middle;
-}
-
-/* Profile & Checkboxes */
-.profile-image {
-  @apply rounded-full mx-auto;
-}
-.checkbox-container {
-  @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-lg;
-}
-.checkbox-container label {
-  @apply cursor-pointer transition-colors duration-200;
-}
-.checkbox-wrapper {
-  @apply flex items-center;
-}
-
-/* Navigation */
-.nav-link {
-  @apply flex flex-col items-center p-3 m-1 cursor-pointer text-2xl text-inherit no-underline transition-transform duration-300;
-}
-.nav-link:hover {
-  transform: scale(1.05);
-}
-
-/* Tabs */
-.tab-button {
-  padding: 0.625rem 1.25rem;
-  margin: 0 0.325rem;
-  cursor: pointer;
-  border-radius: 0.325rem;
-  transition:
-    background-color 0.1s,
-    color 0.1s;
-  border: none;
-}
-.tab-button-active {
-  @apply bg-amber-300 text-zinc-900;
-}
-.tab-button-active:hover {
-  background-color: var(--accent-hover);
-}
-.tab-button-inactive {
-  @apply bg-zinc-100 text-amber-300;
-}
-.tab-button-inactive:hover {
-  background-color: #e4e4e7;
-}
-
-/* --- 6. Social Buttons --- */
-.social-signin-button {
-  @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
-}
-
-.guide-container {
-  @apply fixed right-12 bottom-12 z-[1000];
-}
-.custom-backdrop {
-  pointer-events: none;
-}
-.custom-dialog {
-  @apply bg-zinc-300 rounded-lg shadow-md p-2.5 z-[9999];
-}
-.custom-dialog::before {
-  content: "";
-  transform: translateY(-50%);
-}
-
-/* --- 8. Animations --- */
-.animate-slide-in {
-  animation: slide-in 0.3s forwards;
-}
-.animate-slide-out {
-  animation: slide-out 0.3s forwards;
-}
+/* --- Keyframe Animations --- */
 @keyframes slide-in {
   0% {
     transform: translateX(-100%);
@@ -221,6 +303,7 @@ option[value=""][disabled] {
     opacity: 1;
   }
 }
+
 @keyframes slide-out {
   0% {
     transform: translateX(0);
@@ -230,26 +313,4 @@ option[value=""][disabled] {
     transform: translateX(-100%);
     opacity: 0;
   }
-}
-
-.sidebar-icon-link {
-  @apply relative transform transition-transform hover:scale-110 hover:text-zinc-700;
-}
-
-.sidebar-tooltip {
-  @apply absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg;
-}
-
-.sidebar-icon-link:hover .sidebar-tooltip {
-  @apply opacity-100;
-}
-
-.mobile-menu-item {
-  @apply nav-link bg-zinc-800 rounded-lg p-3 shadow-lg hover:bg-zinc-700 w-full;
-}
-
-.bg-gradient-animation {
-  background: var(--accent-color);
-  background-size: 400% 400%;
-  animation: gradientAnimation 5s ease infinite;
 }

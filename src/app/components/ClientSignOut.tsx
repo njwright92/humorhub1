@@ -1,39 +1,54 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { signOut } from "firebase/auth";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-// OPTIMIZATION: Use the initialized instance instead of calling getAuth() repeatedly
-import { auth } from "../../../firebase.config";
+import type { Auth } from "firebase/auth";
 
 const ClientSignOutButton: React.FC = React.memo(() => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const authRef = useRef<Auth | null>(null);
 
-  // OPTIMIZATION: Prefetch the home route for instant navigation
+  // Prefetch the home route for instant navigation
   useEffect(() => {
     router.prefetch("/");
   }, [router]);
 
-  // OPTIMIZATION: Handle side effects (redirection) in one place
+  // Dynamic auth import + listener
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (!user) {
-        // Use 'replace' to prevent back-button navigation to protected pages
-        router.replace("/");
-      }
-    });
-    return () => unsubscribe();
+    let unsubscribe: (() => void) | undefined;
+
+    const initAuth = async () => {
+      const { auth } = await import("../../../firebase.config");
+      const { onAuthStateChanged } = await import("firebase/auth");
+
+      authRef.current = auth as Auth;
+
+      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
+        if (!user) {
+          router.replace("/");
+        }
+      });
+    };
+
+    initAuth();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [router]);
 
   const handleSignOut = useCallback(async () => {
     setLoading(true);
     try {
-      await signOut(auth);
-      alert("Signed out successfully");
-      // We do not need router.push here; the useEffect above handles it automatically
+      const { signOut } = await import("firebase/auth");
+
+      if (authRef.current) {
+        await signOut(authRef.current);
+        alert("Signed out successfully");
+      }
     } catch (error) {
       console.error("Error signing out:", error);
       alert("Error signing out, please try again.");
-      setLoading(false); // Only stop loading on error
+      setLoading(false);
     }
   }, []);
 

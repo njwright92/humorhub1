@@ -15,13 +15,15 @@ import {
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  // ✅ NEW PROP: Callback to force parent update
+  onLoginSuccess?: () => void;
 };
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-// --- Icons ---
+// --- Icons (Unchanged) ---
 
 const GoogleIcon = memo(() => (
   <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
@@ -66,12 +68,14 @@ SocialSignInButton.displayName = "SocialSignInButton";
 
 // --- Main Component ---
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+const AuthModal: React.FC<AuthModalProps> = ({
+  isOpen,
+  onClose,
+  onLoginSuccess,
+}) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-
-  // CHANGED: Variable is now 'isSignIn' and defaults to TRUE
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
 
   const handleAuth = useCallback(
@@ -89,22 +93,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         return;
       }
 
-      // Logic flipped: If NOT signing in, we are signing up
       if (!isSignIn && password !== confirmPassword) {
         alert("Passwords do not match.");
         return;
       }
 
       try {
+        // Cast for TS because of the Lazy Proxy in firebase.config.js
+        const authInstance = auth as unknown as import("firebase/auth").Auth;
+
         if (!isSignIn) {
           // SIGN UP LOGIC
-          await createUserWithEmailAndPassword(auth, email, password);
+          await createUserWithEmailAndPassword(authInstance, email, password);
           alert("Sign-up successful! Please update your profile.");
         } else {
           // SIGN IN LOGIC
-          await signInWithEmailAndPassword(auth, email, password);
+          await signInWithEmailAndPassword(authInstance, email, password);
           alert("Sign-in successful! Welcome back.");
         }
+
+        // ✅ FORCE PARENT UPDATE IMMEDIATELY
+        if (onLoginSuccess) onLoginSuccess();
+
         onClose();
       } catch (error) {
         const authError = error as AuthError;
@@ -127,17 +137,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
       }
     },
-    [email, password, confirmPassword, isSignIn, onClose],
+    [email, password, confirmPassword, isSignIn, onClose, onLoginSuccess],
   );
 
   const handleSocialSignIn = useCallback(
     (provider: GoogleAuthProvider) => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          console.log(
-            `${provider.providerId} sign-in successful:`,
-            result.user,
-          );
+      // Cast for TS
+      const authInstance = auth as unknown as import("firebase/auth").Auth;
+
+      signInWithPopup(authInstance, provider)
+        .then(() => {
+          console.log(`${provider.providerId} sign-in successful`);
+
+          // ✅ FORCE PARENT UPDATE IMMEDIATELY
+          if (onLoginSuccess) onLoginSuccess();
+
           onClose();
         })
         .catch((error) => {
@@ -145,14 +159,14 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           alert(`${provider.providerId} sign-in failed. Please try again.`);
         });
     },
-    [onClose],
+    [onClose, onLoginSuccess],
   );
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop fixed inset-0 bg-zinc-600 bg-opacity-75 z-50 flex items-center justify-center backdrop-blur-sm">
-      <div className="modal-container bg-zinc-100 p-6 rounded-lg shadow-lg max-w-sm w-full relative">
+    <div className="modal-backdrop fixed inset-0 bg-opacity-75 z-50 flex items-center justify-center backdrop-blur">
+      <div className="modal-container bg-zinc-300 p-6 rounded-lg shadow-lg max-w-sm w-full relative">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-zinc-900 hover:text-zinc-950 transition-colors p-2"
@@ -188,7 +202,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="input-field w-full p-2 rounded-lg"
+            className="input-field bg-zinc-100 w-full p-2 rounded-lg"
             autoComplete="email"
           />
 
@@ -202,7 +216,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="input-field w-full p-2 rounded-lg"
+            className="input-field bg-zinc-100 w-full p-2 rounded-lg"
             autoComplete={isSignIn ? "current-password" : "new-password"}
           />
 
@@ -221,7 +235,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
-                className="input-field w-full p-2 rounded-lg"
+                className="input-field w-full bg-zinc-100 p-2 rounded-lg"
                 autoComplete="new-password"
               />
             </>

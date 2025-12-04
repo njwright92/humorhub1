@@ -13,17 +13,19 @@ const nextConfig = {
 
   experimental: {
     optimizePackageImports: [
+      "firebase",
       "firebase/app",
       "firebase/auth",
       "firebase/firestore",
       "@emailjs/browser",
       "@googlemaps/js-api-loader",
+      "@tanstack/react-virtual",
     ],
-    optimizeCss: true,
   },
 
   images: {
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     remotePatterns: [
       {
         protocol: "https",
@@ -37,7 +39,7 @@ const nextConfig = {
     return [
       {
         source:
-          "/:all*(svg|jpg|jpeg|png|gif|webp|ico|woff|woff2|ttf|otf|js|css)",
+          "/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf|js|css)",
         headers: [
           {
             key: "Cache-Control",
@@ -52,7 +54,7 @@ const nextConfig = {
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "origin-when-cross-origin" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
       {

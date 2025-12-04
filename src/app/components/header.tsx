@@ -2,13 +2,13 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { onAuthStateChanged } from "firebase/auth";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import { db, auth } from "../../../firebase.config";
+import { db } from "../../../firebase.config"; // ✅ Only import db (no auth)
 import hh from "../../app/hh.webp";
+import type { Auth } from "firebase/auth";
 
 // Icons
 import MicFinderIcon from "../icons/MicFinderIcon";
@@ -17,10 +17,8 @@ import ContactIcon from "../icons/ContactIcon";
 import AboutIcon from "../icons/AboutIcon";
 import UserIconComponent from "../icons/UserIconComponent";
 
-// 1. OPTIMIZATION: Standard import for SearchBar (Removes the loading lag)
 import SearchBar from "./searchBar";
 
-// Keep AuthModal dynamic (It's heavy and hidden by default)
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
   loading: () => null,
@@ -56,6 +54,9 @@ export default function Header() {
 
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
+  // ✅ Store auth reference for use in callbacks
+  const authRef = useRef<Auth | null>(null);
+
   // Auth Redirect Logic
   useEffect(() => {
     if (isUserSignedIn && pendingRedirect) {
@@ -72,6 +73,11 @@ export default function Header() {
     [],
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+
+  // ✅ NEW: Instant feedback handler to fix the routing delay
+  const handleLoginSuccess = useCallback(() => {
+    setIsUserSignedIn(true);
+  }, []);
 
   /* Fetch Cities Logic */
   useEffect(() => {
@@ -114,16 +120,31 @@ export default function Header() {
     };
   }, []);
 
-  // 2. OPTIMIZATION: Run Auth check immediately after paint.
+  // ✅ FIXED: Dynamic import for auth - loads AFTER render
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsUserSignedIn(!!user);
-    });
-    return () => unsubscribe();
+    let unsubscribe: (() => void) | undefined;
+
+    const initAuth = async () => {
+      const { auth } = await import("../../../firebase.config");
+      const { onAuthStateChanged } = await import("firebase/auth");
+
+      authRef.current = auth as Auth;
+
+      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
+        setIsUserSignedIn(!!user);
+      });
+    };
+
+    initAuth();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
+  // ✅ Updated to use authRef
   const handleNewsClick = useCallback(() => {
-    if (isUserSignedIn || auth.currentUser) {
+    if (isUserSignedIn || authRef.current?.currentUser) {
       router.push("/HHapi");
     } else {
       setPendingRedirect("/HHapi");
@@ -131,8 +152,9 @@ export default function Header() {
     }
   }, [isUserSignedIn, router]);
 
+  // ✅ Updated to use authRef
   const handleProfileClick = useCallback(() => {
-    if (isUserSignedIn || auth.currentUser) {
+    if (isUserSignedIn || authRef.current?.currentUser) {
       router.push("/Profile");
     } else {
       setPendingRedirect("/Profile");
@@ -454,7 +476,11 @@ export default function Header() {
           )}
         </nav>
       </header>
-      <AuthModal isOpen={isAuthModalOpen} onClose={toggleAuthModal} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={toggleAuthModal}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </>
   );
 }

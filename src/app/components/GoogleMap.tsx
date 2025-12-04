@@ -111,8 +111,8 @@ const GoogleMap = ({ lat, lng, events }: GoogleMapProps) => {
         const markerColor = event.festival
           ? "#a21caf" // Purple
           : event.isMusic
-          ? "#2563eb" // Blue
-          : "#22c55e"; // Green
+            ? "#2563eb" // Blue
+            : "#22c55e"; // Green
 
         // Create DOM element
         const markerContent = document.createElement("div");

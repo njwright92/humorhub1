@@ -9,12 +9,12 @@ import React, {
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
-import { db, auth } from "../../../firebase.config";
-import { onAuthStateChanged } from "firebase/auth";
+import { db } from "../../../firebase.config"; // ✅ Only import db
 import Link from "next/link";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import EventForm from "../components/EventForm";
+import type { Auth } from "firebase/auth";
 
 // --- Utility Functions ---
 
@@ -91,6 +91,9 @@ const MicFinderClient = () => {
 
   // Debounce for search
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  // ✅ Auth ref for dynamic import
+  const authRef = useRef<Auth | null>(null);
 
   // Constants / Helpers
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
@@ -200,10 +203,7 @@ const MicFinderClient = () => {
           const data = doc.data();
           let parsedDateObj: Date | undefined = undefined;
           if (data.date && typeof data.date === "string") {
-            // Native JS handles standard formats automatically
             const parsed = new Date(data.date);
-
-            // Check if valid date (isNaN check)
             if (!isNaN(parsed.getTime())) {
               parsed.setHours(0, 0, 0, 0);
               parsedDateObj = parsed;
@@ -253,17 +253,29 @@ const MicFinderClient = () => {
     };
   }, []);
 
-  // Auth State
+  // ✅ FIXED: Dynamic auth import
   useEffect(() => {
-    let unsub: any;
-    const timer = setTimeout(() => {
-      unsub = onAuthStateChanged(auth, (user) => {
+    let unsubscribe: (() => void) | undefined;
+
+    const initAuth = async () => {
+      const { auth } = await import("../../../firebase.config");
+      const { onAuthStateChanged } = await import("firebase/auth");
+
+      authRef.current = auth as Auth;
+
+      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
         setIsUserSignedIn(!!user);
       });
-    }, 800);
+    };
+
+    // Small delay to not block initial render
+    const timer = setTimeout(() => {
+      initAuth();
+    }, 100);
+
     return () => {
       clearTimeout(timer);
-      if (unsub) unsub();
+      if (unsubscribe) unsubscribe();
     };
   }, []);
 
@@ -458,13 +470,14 @@ const MicFinderClient = () => {
     });
   };
 
+  // ✅ FIXED: Use authRef
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn)
         return alert("Please sign in to save events to your profile.");
 
       try {
-        const user = auth.currentUser;
+        const user = authRef.current?.currentUser;
         if (!user) throw new Error("User not found.");
 
         if (!event.id) throw new Error("Event ID missing.");
@@ -490,7 +503,7 @@ const MicFinderClient = () => {
   );
 
   const toggleMapVisibility = () => {
-    if (!hasMapInit) setHasMapInit(true); // Trigger the load on first click
+    if (!hasMapInit) setHasMapInit(true);
     setIsMapVisible((prev) => {
       const newVal = !prev;
       sendDataLayerEvent("toggle_map", {
@@ -519,9 +532,10 @@ const MicFinderClient = () => {
   const rowVirtualizer = useVirtualizer({
     count: sortedEventsByCity.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 150, // Lower default guess, will grow dynamically
-    overscan: 5, // Calculate a few more extra items to prevent white flashes
+    estimateSize: () => 150,
+    overscan: 5,
   });
+
   return (
     <>
       <Header />
@@ -570,7 +584,7 @@ const MicFinderClient = () => {
               id="city-select"
               aria-labelledby="city-select-label"
               tabIndex={0}
-              className="modern-input cursor-pointer bg-zinc-200 flex items-center justify-center text-center px-3"
+              className="modern-input cursor-pointer bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3"
               role="button"
               aria-haspopup="listbox"
               aria-expanded={isFirstDropdownOpen}
@@ -619,32 +633,20 @@ const MicFinderClient = () => {
 
           {/* Date Picker */}
           <div className="flex flex-col justify-center items-center mt-2 w-full max-w-xs relative">
-            <div className="relative w-full">
-              <label htmlFor="event-date-picker" className="sr-only">
-                Select Event Date
-              </label>
-              <input
-                id="event-date-picker"
-                type="date"
-                value={getFormattedDateForInput(selectedDate)}
-                onChange={handleDateChange}
-                className="modern-input w-full cursor-pointer text-center appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 90 90"
-                fill="currentColor"
-                className="h-5 w-5 text-zinc-900 absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none z-10"
-              >
-                <path d="M 90 23.452 v -3.892 c 0 -6.074 -4.942 -11.016 -11.017 -11.016 H 68.522 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 27.477 V 4.284 c 0 -1.657 -1.343 -3 -3 -3 s -3 1.343 -3 3 v 4.261 H 11.016 C 4.942 8.545 0 13.487 0 19.561 v 3.892 H 90 z" />
-                <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
-              </svg>
-            </div>
+            <label htmlFor="event-date-picker" className="sr-only">
+              Select Event Date
+            </label>
+            <input
+              id="event-date-picker"
+              type="date"
+              value={getFormattedDateForInput(selectedDate)}
+              onChange={handleDateChange}
+              className="modern-input w-full cursor-pointer bg-zinc-200 text-zinc-900 font-semibold px-2"
+            />
           </div>
         </div>
 
         <section className="w-full h-[25rem] rounded-lg shadow-md relative border border-zinc-200 mt-6 overflow-hidden bg-zinc-800">
-          {/* 1. THE TOGGLE BUTTON */}
           <button
             onClick={toggleMapVisibility}
             className={`absolute z-10 rounded-lg shadow-xl px-4 py-2 transition cursor-pointer font-semibold
@@ -657,8 +659,6 @@ const MicFinderClient = () => {
             {!isMapVisible ? "Show Map" : "Hide Map"}
           </button>
 
-          {/* 2. THE MAP (Kept alive in background) */}
-          {/* We only render if hasMapInit is true. Then we use CSS to hide/show. */}
           {hasMapInit && (
             <div
               className={`h-full w-full transition-opacity duration-300 ${
@@ -673,7 +673,6 @@ const MicFinderClient = () => {
             </div>
           )}
 
-          {/* 3. THE PLACEHOLDER BACKGROUND (Visible when hidden) */}
           {!isMapVisible && <div className="absolute inset-0 bg-zinc-800" />}
         </section>
 
@@ -683,7 +682,6 @@ const MicFinderClient = () => {
 
         {/* Top List */}
         <section className="card-style">
-          {/* Replaced inline style with Tailwind utilities */}
           <h2 className="title text-center border-b-4 border-[#b35a30] pb-2">
             {selectedTab === "Mics" && "Comedy Mics"}
             {selectedTab === "Festivals" && "Festivals"}
@@ -730,7 +728,7 @@ const MicFinderClient = () => {
           )}
         </section>
 
-        {/* Tab Buttons - Fixed 'bg-zinc' typo to 'zinc-100' */}
+        {/* Tab Buttons */}
         <div className="tab-container flex justify-center mt-4 gap-3">
           <button
             className={`tab-button font-bold rounded-full transition ${
@@ -833,15 +831,15 @@ const MicFinderClient = () => {
                   selectedTab === "Mics"
                     ? "Mics"
                     : selectedTab === "Festivals"
-                    ? "Festivals"
-                    : "Arts"
+                      ? "Festivals"
+                      : "Arts"
                 }`
               : `All ${
                   selectedTab === "Mics"
                     ? "Mics"
                     : selectedTab === "Festivals"
-                    ? "Festivals"
-                    : "Arts"
+                      ? "Festivals"
+                      : "Arts"
                 } in ${filterCity}`}
           </h2>
           {sortedEventsByCity.length === 0 && (
