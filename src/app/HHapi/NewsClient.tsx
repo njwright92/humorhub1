@@ -223,14 +223,18 @@ export default function NewsClient() {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                             unoptimized
-                            priority={index < 2}
+                            priority={index < 3}
+                            fetchPriority={
+                              index === 0 ? "high" : index < 3 ? "auto" : "low"
+                            }
+                            loading={index < 3 ? "eager" : "lazy"}
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full text-zinc-600">
                             <span className="text-4xl">📰</span>
                           </div>
                         )}
-                        <div className="absolute top-0 right-0 bg-amber-400 text-zinc-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                        <div className="absolute top-0 right-0 bg-orange-300 text-zinc-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
                           {article.source || "News"}
                         </div>
                       </div>

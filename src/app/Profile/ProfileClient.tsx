@@ -335,11 +335,11 @@ export default function ProfileClient() {
                 ) : (
                   <div className="text-center w-full">
                     {bio ? (
-                      <p className="text-zinc-700 text-sm mb-6 italic border-t border-zinc-300 pt-4">
+                      <p className="text-zinc-800 text-md mb-6 italic border-t border-zinc-400 pt-4">
                         &rdquo;{bio}&rdquo;
                       </p>
                     ) : (
-                      <p className="text-zinc-500 text-xs mb-6 mt-2">
+                      <p className="text-zinc-800 text-sm mb-6 mt-2">
                         No bio set.
                       </p>
                     )}

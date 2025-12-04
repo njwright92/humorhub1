@@ -647,8 +647,8 @@ const MicFinderClient = () => {
             className={`absolute z-10 rounded-lg shadow-xl px-4 py-2 transition cursor-pointer font-semibold
               ${
                 !isMapVisible
-                  ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-zinc-900 p-2"
-                  : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950"
+                  ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-white p-2"
+                  : "top-4 right-4 bg-zinc-900 text-zinc-100 hover:bg-black"
               }`}
           >
             {!isMapVisible ? "Show Map" : "Hide Map"}
