@@ -81,9 +81,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://apis.google.com" />
-        <link rel="dns-prefetch" href="https://www.googleapis.com" />
-        <link rel="dns-prefetch" href="https://maps.googleapis.com" />
       </head>
       <body
         className={`${comicNeue.variable} bg-zinc-900 text-zinc-200 antialiased`}

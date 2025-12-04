@@ -11,12 +11,10 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
-
     "verbatimModuleSyntax": true,
     "useDefineForClassFields": true,
-
     "plugins": [
       {
         "name": "next"
@@ -34,7 +32,8 @@
     "../.vscode/route.ts",
     "src/app/api/route.js",
     "src/app/utils/geocode.js",
-    "src/app/components/GoogleMap.tsx"
+    "src/app/components/GoogleMap.tsx",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

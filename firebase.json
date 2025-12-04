@@ -8,7 +8,7 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "headers": [
       {
-        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|ico)",
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|avif|ico)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -17,7 +17,7 @@
         ]
       },
       {
-        "source": "**/*.@(css|js|woff2|woff|ttf|eot)",
+        "source": "**/*.@(css|js|mjs|woff2|woff|ttf|eot)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -35,7 +35,7 @@
         ]
       },
       {
-        "source": "**/*.@(mp4|webm|ogv|pdf|json|xml|txt)",
+        "source": "**/*.@(mp4|webm|ogv|pdf|xml|txt)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -44,11 +44,20 @@
         ]
       },
       {
-        "source": "/auth/iframe.js",
+        "source": "**/*.json",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=31536000, immutable"
+            "value": "public, max-age=3600, stale-while-revalidate=86400"
+          }
+        ]
+      },
+      {
+        "source": "/__/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800, stale-while-revalidate=86400"
           }
         ]
       }
