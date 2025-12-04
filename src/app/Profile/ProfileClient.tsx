@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Auth, User } from "firebase/auth";
 import type { FirebaseStorage } from "firebase/storage";
+import { useToast } from "../components/ToastContext";
 
 const Header = dynamic(() => import("../components/header"), {});
 const Footer = dynamic(() => import("../components/footer"), {});
@@ -39,7 +40,7 @@ export default function ProfileClient() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
 
   // --- REFS for lazy-loaded Firebase modules ---
@@ -94,7 +95,6 @@ export default function ProfileClient() {
     }
   }, []);
 
-  // --- AUTH LISTENER (Dynamic Import) ---
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
@@ -109,7 +109,6 @@ export default function ProfileClient() {
       storageRef.current = storage;
 
       unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsUserSignedIn(!!user);
         uidRef.current = user?.uid || null;
 
         if (user) {
@@ -130,9 +129,8 @@ export default function ProfileClient() {
     };
   }, [fetchUserDataAndEvents]);
 
-  // --- HANDLERS ---
-
   const handleSignOut = useCallback(async () => {
+    showToast("Signed out successfully", "success");
     try {
       const { signOut } = await import("firebase/auth");
       if (authRef.current) {
@@ -141,8 +139,9 @@ export default function ProfileClient() {
       }
     } catch (error) {
       console.error("Error signing out:", error);
+      showToast("Error signing out", "error");
     }
-  }, [router]);
+  }, [router, showToast]);
 
   const handleImageChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,11 +161,12 @@ export default function ProfileClient() {
         await uploadBytes(imageRef, file);
         const url = await getDownloadURL(imageRef);
         setProfileImageUrl(url);
+        showToast("Image uploaded!", "success");
       } catch (error) {
-        alert("Error uploading image.");
+        showToast("Error uploading image.", "error");
       }
     },
-    [],
+    [showToast],
   );
 
   const handleSubmit = useCallback(async () => {
@@ -180,10 +180,11 @@ export default function ProfileClient() {
       setOriginalName(name);
       setOriginalBio(bio);
       setIsEditing(false);
+      showToast("Profile saved!", "success");
     } catch (error) {
-      alert("Error saving profile.");
+      showToast("Error saving profile.", "error");
     }
-  }, [name, bio, profileImageUrl]);
+  }, [name, bio, profileImageUrl, showToast]);
 
   const handleCancel = useCallback(() => {
     setName(originalName);
@@ -191,16 +192,20 @@ export default function ProfileClient() {
     setIsEditing(false);
   }, [originalName, originalBio]);
 
-  const handleDeleteEvent = useCallback(async (eventId: string) => {
-    if (!confirm("Are you sure you want to remove this event?")) return;
-    try {
-      const { doc, deleteDoc } = await import("firebase/firestore");
-      await deleteDoc(doc(db, "savedEvents", eventId));
-      setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
-    } catch (error) {
-      alert("Error deleting event.");
-    }
-  }, []);
+  const handleDeleteEvent = useCallback(
+    async (eventId: string) => {
+      if (!confirm("Are you sure you want to remove this event?")) return;
+      try {
+        const { doc, deleteDoc } = await import("firebase/firestore");
+        await deleteDoc(doc(db, "savedEvents", eventId));
+        setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
+        showToast("Event removed!", "success");
+      } catch (error) {
+        showToast("Error deleting event.", "error");
+      }
+    },
+    [showToast],
+  );
 
   function sendDataLayerEvent(
     event_name: string,

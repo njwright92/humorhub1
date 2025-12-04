@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import news from "../../app/news.webp";
 import type { Auth } from "firebase/auth";
+import { useToast } from "./ToastContext"; // ✅ 1. Import Toast
 
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
@@ -14,6 +15,7 @@ const AuthModal = dynamic(() => import("./authModal"), {
 });
 
 const HumorHubAPISection: React.FC = () => {
+  const { showToast } = useToast(); // ✅ 2. Use Hook
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState(false);
@@ -56,10 +58,12 @@ const HumorHubAPISection: React.FC = () => {
     if (authRef.current?.currentUser) {
       router.push("/HHapi");
     } else {
+      // ✅ 3. Show Toast Alert Here
+      showToast("Please sign in to view News.", "info");
       setPendingRedirect(true);
       setIsAuthModalOpen(true);
     }
-  }, [router]);
+  }, [router, showToast]);
 
   return (
     <section className="card-style mx-auto w-full">

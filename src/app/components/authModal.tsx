@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, memo } from "react";
 import { auth } from "../../../firebase.config";
+import { useToast } from "./ToastContext";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -15,7 +16,6 @@ import {
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  // ✅ NEW PROP: Callback to force parent update
   onLoginSuccess?: () => void;
 };
 
@@ -24,7 +24,6 @@ const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 // --- Icons (Unchanged) ---
-
 const GoogleIcon = memo(() => (
   <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
     <path
@@ -47,6 +46,7 @@ const GoogleIcon = memo(() => (
 ));
 GoogleIcon.displayName = "GoogleIcon";
 
+// ✅ FIXED TYPO HERE
 interface SocialButtonProps {
   onClick: () => void;
   icon: React.ReactNode;
@@ -57,7 +57,7 @@ const SocialSignInButton = memo<SocialButtonProps>(
   ({ onClick, icon, label }) => (
     <button
       onClick={onClick}
-      className="social-signin-button w-full flex items-center justify-center p-2 rounded-lg shadow-lg transition-colors bg-zinc-100 text-zinc-900"
+      className="social-signin-button w-full flex items-center justify-center p-2 rounded-lg shadow-lg transition-colors bg-zinc-100 text-zinc-900 hover:bg-zinc-200"
     >
       <span className="mr-3">{icon}</span>
       <span className="whitespace-nowrap">{label}</span>
@@ -73,6 +73,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   onLoginSuccess,
 }) => {
+  const { showToast } = useToast(); // ✅ USE TOAST HOOK
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -83,83 +84,83 @@ const AuthModal: React.FC<AuthModalProps> = ({
       e.preventDefault();
 
       if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address.");
+        showToast("Please enter a valid email address.", "error");
         return;
       }
       if (!passwordRegex.test(password)) {
-        alert(
-          "Your password must be at least 8 characters long, contain a letter, a number, and a special character.",
+        showToast(
+          "Password too weak (needs 8 chars, letter, number, symbol).",
+          "error",
         );
         return;
       }
 
       if (!isSignIn && password !== confirmPassword) {
-        alert("Passwords do not match.");
+        showToast("Passwords do not match.", "error");
         return;
       }
 
       try {
-        // Cast for TS because of the Lazy Proxy in firebase.config.js
         const authInstance = auth as unknown as import("firebase/auth").Auth;
 
         if (!isSignIn) {
-          // SIGN UP LOGIC
           await createUserWithEmailAndPassword(authInstance, email, password);
-          alert("Sign-up successful! Please update your profile.");
+          showToast("Sign-up successful! Welcome.", "success");
         } else {
-          // SIGN IN LOGIC
           await signInWithEmailAndPassword(authInstance, email, password);
-          alert("Sign-in successful! Welcome back.");
+          showToast("Sign-in successful! Welcome back.", "success");
         }
 
-        // ✅ FORCE PARENT UPDATE IMMEDIATELY
         if (onLoginSuccess) onLoginSuccess();
-
         onClose();
       } catch (error) {
         const authError = error as AuthError;
-        if (authError.code) {
-          switch (authError.code) {
-            case "auth/email-already-in-use":
-              alert("This email is already in use. Try signing in.");
-              break;
-            case "auth/wrong-password":
-              alert("Incorrect password. Please try again.");
-              break;
-            case "auth/user-not-found":
-              alert("No user found with this email. Please sign up.");
-              break;
-            default:
-              alert(`Error: ${authError.message}. Please try again.`);
-          }
+        if (authError.code === "auth/email-already-in-use") {
+          showToast("Email already in use. Try signing in.", "error");
+        } else if (
+          authError.code === "auth/wrong-password" ||
+          authError.code === "auth/user-not-found" ||
+          authError.code === "auth/invalid-credential"
+        ) {
+          showToast("Invalid email or password.", "error");
         } else {
-          alert(`An unexpected error occurred. Please try again.`);
+          showToast(authError.message, "error");
         }
       }
     },
-    [email, password, confirmPassword, isSignIn, onClose, onLoginSuccess],
+    [
+      email,
+      password,
+      confirmPassword,
+      isSignIn,
+      onClose,
+      onLoginSuccess,
+      showToast,
+    ],
   );
 
   const handleSocialSignIn = useCallback(
     (provider: GoogleAuthProvider) => {
-      // Cast for TS
       const authInstance = auth as unknown as import("firebase/auth").Auth;
 
       signInWithPopup(authInstance, provider)
         .then(() => {
           console.log(`${provider.providerId} sign-in successful`);
+          showToast("Google sign-in successful!", "success");
 
-          // ✅ FORCE PARENT UPDATE IMMEDIATELY
           if (onLoginSuccess) onLoginSuccess();
-
           onClose();
         })
         .catch((error) => {
           console.error(`Error during ${provider.providerId} sign-in:`, error);
-          alert(`${provider.providerId} sign-in failed. Please try again.`);
+          if (error.code === "auth/popup-blocked") {
+            showToast("Popup blocked. Please allow popups.", "error");
+          } else if (error.code !== "auth/popup-closed-by-user") {
+            showToast("Google sign-in failed.", "error");
+          }
         });
     },
-    [onClose, onLoginSuccess],
+    [onClose, onLoginSuccess, showToast],
   );
 
   if (!isOpen) return null;

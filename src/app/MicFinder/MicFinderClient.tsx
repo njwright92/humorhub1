@@ -9,12 +9,13 @@ import React, {
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
-import { db } from "../../../firebase.config"; // ✅ Only import db
+import { db } from "../../../firebase.config";
 import Link from "next/link";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import EventForm from "../components/EventForm";
 import type { Auth } from "firebase/auth";
+import { useToast } from "../components/ToastContext";
 
 // --- Utility Functions ---
 
@@ -81,6 +82,7 @@ const MicFinderClient = () => {
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
   const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
+  const { showToast } = useToast();
   const [mapLocation, setMapLocation] = useState<{
     lat: number;
     lng: number;
@@ -89,13 +91,10 @@ const MicFinderClient = () => {
     "Mics" | "Festivals" | "Other"
   >("Mics");
 
-  // Debounce for search
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  // ✅ Auth ref for dynamic import
   const authRef = useRef<Auth | null>(null);
 
-  // Constants / Helpers
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
 
   const sendDataLayerEvent = useCallback(
@@ -111,7 +110,6 @@ const MicFinderClient = () => {
     [],
   );
 
-  // Tab Filter Logic
   const isTabMatch = useCallback(
     (event: Event) => {
       if (selectedTab === "Festivals") return event.festival;
@@ -121,7 +119,6 @@ const MicFinderClient = () => {
     [selectedTab],
   );
 
-  // Geo Logic
   const findClosestCity = useCallback(
     (latitude: number, longitude: number): string | null => {
       if (Object.keys(cityCoordinates).length === 0) return null;
@@ -145,9 +142,6 @@ const MicFinderClient = () => {
     [cityCoordinates],
   );
 
-  // --- Effects ---
-
-  // Debounce Search Term
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -165,7 +159,6 @@ const MicFinderClient = () => {
     setSearchTerm(e.target.value);
   };
 
-  // --- Optimized Data Fetching ---
   useEffect(() => {
     let mounted = true;
 
@@ -470,11 +463,12 @@ const MicFinderClient = () => {
     });
   };
 
-  // ✅ FIXED: Use authRef
   const handleEventSave = useCallback(
     async (event: Event) => {
-      if (!isUserSignedIn)
-        return alert("Please sign in to save events to your profile.");
+      if (!isUserSignedIn) {
+        showToast("Please sign in to save events. *profile page*", "info");
+        return;
+      }
 
       try {
         const user = authRef.current?.currentUser;
@@ -489,17 +483,18 @@ const MicFinderClient = () => {
         const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
         await setDoc(userSavedEventRef, { ...dataToSave, userId: user.uid });
 
-        alert("Event saved to your profile successfully!");
+        showToast("Event saved successfully!", "success");
+
         sendDataLayerEvent("save_event", {
           event_category: "Event Interaction",
           event_label: event.name,
         });
       } catch (error) {
         console.error("Save failed:", error);
-        alert("Oops! Something went wrong. Please try again.");
+        showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [isUserSignedIn, sendDataLayerEvent],
+    [isUserSignedIn, sendDataLayerEvent, showToast],
   );
 
   const toggleMapVisibility = () => {

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "./ToastContext";
 
 // --- Types ---
 
@@ -9,8 +10,7 @@ export interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
-  setIsComicBotModalOpen?: (open: boolean) => void;
-  cities: string[]; // Received from parent (Header)
+  cities: string[];
 }
 
 interface City {
@@ -20,7 +20,7 @@ interface City {
 
 interface PageSuggestion {
   label: string;
-  route?: string;
+  route: string;
   requiresAuth?: boolean;
 }
 
@@ -35,9 +35,7 @@ type Suggestion = {
 
 const PAGES: PageSuggestion[] = [
   { label: "Mic Finder", route: "/MicFinder" },
-  { label: "News", route: "/HHapi" },
-  { label: "Comic Bot", requiresAuth: true },
-  { label: "Joke Pad", route: "/JokePad", requiresAuth: true },
+  { label: "News", route: "/HHapi", requiresAuth: true },
   { label: "Contact", route: "/contact" },
   { label: "About", route: "/about" },
   { label: "Profile", route: "/Profile", requiresAuth: true },
@@ -56,16 +54,15 @@ export default function SearchBar({
   onSearch,
   isUserSignedIn,
   setIsAuthModalOpen,
-  setIsComicBotModalOpen,
-  cities, // Data passed down from Header
+  cities,
 }: SearchBarProps) {
+  const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
 
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 1. Memoized Suggestions (Uses the passed 'cities' prop directly)
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
     if (!normalized) return [];
@@ -99,7 +96,6 @@ export default function SearchBar({
         results.push({
           type: "city",
           label: cityName,
-          // Construct object to match expected type structure
           cityData: { id: cityName, city: cityName },
         });
         count++;
@@ -109,33 +105,45 @@ export default function SearchBar({
     return results;
   }, [searchTerm, cities]);
 
-  // 2. Actions
   const closeSearchBar = () => {
     setSearchTerm("");
     setInputVisible(false);
   };
 
   const handleSelectSuggestion = (suggestion: Suggestion) => {
+    // Handle city selection
     if (suggestion.type === "city" && suggestion.cityData) {
       router.push(
         `/MicFinder?city=${encodeURIComponent(suggestion.cityData.city)}`,
       );
       onSearch(suggestion.cityData.city);
-    } else if (suggestion.label === "Login / Sign Up") {
+      closeSearchBar();
+      return;
+    }
+
+    // Handle Login / Sign Up
+    if (suggestion.label === "Login / Sign Up") {
       setIsAuthModalOpen(true);
-    } else if (suggestion.type === "page" && suggestion.page) {
+      closeSearchBar();
+      return;
+    }
+
+    // Handle page selection
+    if (suggestion.type === "page" && suggestion.page) {
       const { route, requiresAuth, label } = suggestion.page;
 
-      if (label === "Comic Bot") {
-        setIsComicBotModalOpen?.(true);
-      } else if (requiresAuth && !isUserSignedIn) {
+      if (requiresAuth && !isUserSignedIn) {
+        // ✅ Fixed: Show toast and open auth modal
+        showToast(`Please sign in to access ${label}`, "info");
         setIsAuthModalOpen(true);
-      } else if (route) {
-        router.push(route);
+        closeSearchBar();
+        return;
       }
+
+      router.push(route);
       onSearch(label);
+      closeSearchBar();
     }
-    closeSearchBar();
   };
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
@@ -143,12 +151,18 @@ export default function SearchBar({
     const normalized = searchTerm.trim().toLowerCase();
     if (!normalized) return;
 
+    // Check for exact match
     const exactMatch = suggestions.find(
       (s) => s.label.toLowerCase() === normalized,
     );
     if (exactMatch) {
       handleSelectSuggestion(exactMatch);
       return;
+    }
+
+    // ✅ Fixed: Show toast BEFORE closing (so it has time to mount)
+    if (suggestions.length === 0) {
+      showToast("No results found. We've noted your search!", "info");
     }
 
     onSearch(searchTerm);
@@ -218,7 +232,6 @@ export default function SearchBar({
               </button>
             </div>
 
-            {/* Suggestions List */}
             {suggestions.length > 0 && (
               <ul className="w-full mt-2 max-h-60 overflow-y-auto divide-y divide-zinc-100">
                 {suggestions.map((sug, idx) => (

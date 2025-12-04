@@ -33,4 +33,4 @@ setPersistence(auth, browserLocalPersistence)
 
 const provider = new GoogleAuthProvider();
 
-export { app, db, auth, provider, firebaseConfig, storage };
+export { app, db, auth, provider, storage };

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Script from "next/script";
 import { Comic_Neue } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "./components/ToastContext";
 
 const comicNeue = Comic_Neue({
   weight: ["300", "400", "700"],
@@ -98,7 +99,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             `,
           }}
         />
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

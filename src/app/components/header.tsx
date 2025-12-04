@@ -6,7 +6,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import { db } from "../../../firebase.config"; // ✅ Only import db (no auth)
+import { db } from "../../../firebase.config";
+import { useToast } from "./ToastContext";
 import hh from "../../app/hh.webp";
 import type { Auth } from "firebase/auth";
 
@@ -46,6 +47,7 @@ function debounce<T extends (...args: any[]) => void>(
 }
 
 export default function Header() {
+  const { showToast } = useToast(); // ✅ Init Toast Hook
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
@@ -54,10 +56,10 @@ export default function Header() {
 
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  // ✅ Store auth reference for use in callbacks
+  // Store auth reference
   const authRef = useRef<Auth | null>(null);
 
-  // Auth Redirect Logic
+  // Auth Redirect Logic - Runs when user signs in
   useEffect(() => {
     if (isUserSignedIn && pendingRedirect) {
       router.push(pendingRedirect);
@@ -74,7 +76,6 @@ export default function Header() {
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
 
-  // ✅ NEW: Instant feedback handler to fix the routing delay
   const handleLoginSuccess = useCallback(() => {
     setIsUserSignedIn(true);
   }, []);
@@ -120,7 +121,7 @@ export default function Header() {
     };
   }, []);
 
-  // ✅ FIXED: Dynamic import for auth - loads AFTER render
+  // Auth Listener
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
@@ -142,25 +143,20 @@ export default function Header() {
     };
   }, []);
 
-  // ✅ Updated to use authRef
-  const handleNewsClick = useCallback(() => {
-    if (isUserSignedIn || authRef.current?.currentUser) {
-      router.push("/HHapi");
-    } else {
-      setPendingRedirect("/HHapi");
-      setIsAuthModalOpen(true);
-    }
-  }, [isUserSignedIn, router]);
-
-  // ✅ Updated to use authRef
-  const handleProfileClick = useCallback(() => {
-    if (isUserSignedIn || authRef.current?.currentUser) {
-      router.push("/Profile");
-    } else {
-      setPendingRedirect("/Profile");
-      setIsAuthModalOpen(true);
-    }
-  }, [isUserSignedIn, router]);
+  // ✅ REFACTORED: Single handler for all protected routes
+  const handleProtectedRoute = useCallback(
+    (path: string, label: string) => {
+      if (isUserSignedIn || authRef.current?.currentUser) {
+        router.push(path);
+      } else {
+        // ✅ Show toast notification
+        showToast(`Please sign in to view ${label}`, "info");
+        setPendingRedirect(path);
+        setIsAuthModalOpen(true);
+      }
+    },
+    [isUserSignedIn, router, showToast],
+  );
 
   /* Search Logic */
   const performSearch = useCallback(
@@ -178,15 +174,12 @@ export default function Header() {
             city: searchTerm,
             timestamp: new Date(),
           });
-        } catch (error) {
-          // Silently fail on logs
-        }
+        } catch (error) {}
       }
     },
     [cityList, router],
   );
 
-  /* Initialize Debounce */
   useEffect(() => {
     debouncedSearchRef.current = debounce((term: string) => {
       if (!term || typeof term !== "string") return;
@@ -217,7 +210,6 @@ export default function Header() {
 
           {/* --- Sidebar (Desktop) --- */}
           <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all">
-            {/* Nav Icons */}
             <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full mx-auto text-zinc-900">
               <Link href="/" aria-label="Home" className="sidebar-icon-link ">
                 <Image
@@ -231,7 +223,6 @@ export default function Header() {
                 <span className="sidebar-tooltip">Home</span>
               </Link>
 
-              {/* Search Bar */}
               <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer">
                 <SearchBar
                   onSearch={handleOnSearch}
@@ -250,45 +241,25 @@ export default function Header() {
                 <span className="sidebar-tooltip">Mic Finder</span>
               </Link>
 
-              {isUserSignedIn ? (
-                <Link
-                  href="/HHapi"
-                  aria-label="News"
-                  className="sidebar-icon-link"
-                >
-                  <NewsIcon />
-                  <span className="sidebar-tooltip">News</span>
-                </Link>
-              ) : (
-                <button
-                  onClick={handleNewsClick}
-                  aria-label="News (Sign In Required)"
-                  className="sidebar-icon-link"
-                >
-                  <NewsIcon />
-                  <span className="sidebar-tooltip">News</span>
-                </button>
-              )}
+              {/* News Link */}
+              <button
+                onClick={() => handleProtectedRoute("/HHapi", "News")}
+                aria-label="News"
+                className="sidebar-icon-link"
+              >
+                <NewsIcon />
+                <span className="sidebar-tooltip">News</span>
+              </button>
 
-              {isUserSignedIn ? (
-                <Link
-                  href="/Profile"
-                  aria-label="Profile"
-                  className="sidebar-icon-link"
-                >
-                  <UserIconComponent />
-                  <span className="sidebar-tooltip">Profile</span>
-                </Link>
-              ) : (
-                <button
-                  onClick={handleProfileClick}
-                  aria-label="Sign In"
-                  className="sidebar-icon-link"
-                >
-                  <UserIconComponent />
-                  <span className="sidebar-tooltip">Profile</span>
-                </button>
-              )}
+              {/* Profile Link */}
+              <button
+                onClick={() => handleProtectedRoute("/Profile", "Profile")}
+                aria-label="Profile"
+                className="sidebar-icon-link"
+              >
+                <UserIconComponent />
+                <span className="sidebar-tooltip">Profile</span>
+              </button>
 
               <Link
                 href="/contact"
@@ -309,7 +280,6 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* Menu Toggle (Desktop) */}
             <button
               onClick={toggleMenu}
               className="text-zinc-900 hover:text-zinc-700 mt-auto mb-4 transform transition-transform hover:scale-110"
@@ -405,45 +375,27 @@ export default function Header() {
                   Mic Finder
                 </Link>
 
-                {isUserSignedIn ? (
-                  <Link
-                    href="/HHapi"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="mobile-menu-item"
-                  >
-                    News
-                  </Link>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      handleNewsClick();
-                    }}
-                    className="mobile-menu-item"
-                  >
-                    News
-                  </button>
-                )}
+                {/* Mobile News */}
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleProtectedRoute("/HHapi", "News");
+                  }}
+                  className="mobile-menu-item"
+                >
+                  News
+                </button>
 
-                {isUserSignedIn ? (
-                  <Link
-                    href="/Profile"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="mobile-menu-item"
-                  >
-                    Profile
-                  </Link>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      handleProfileClick();
-                    }}
-                    className="mobile-menu-item"
-                  >
-                    Profile
-                  </button>
-                )}
+                {/* Mobile Profile */}
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleProtectedRoute("/Profile", "Profile");
+                  }}
+                  className="mobile-menu-item"
+                >
+                  Profile
+                </button>
 
                 <Link
                   href="/contact"
