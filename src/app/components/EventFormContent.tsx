@@ -5,6 +5,7 @@ import { db } from "../../../firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import { getLatLng } from "../utils/geocode";
 import emailjs from "@emailjs/browser";
+import { useToast } from "./ToastContext"; // ✅ Add this
 
 interface EventData {
   id?: string;
@@ -51,8 +52,6 @@ const logManualReviewEvent = async (eventData: EventData, reason: string) => {
 };
 
 const sendConfirmationEmail = async (eventData: EventData) => {
-  // REMOVED: The check that stopped execution if email was missing.
-
   try {
     await emailjs.send(
       process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
@@ -66,7 +65,6 @@ const sendConfirmationEmail = async (eventData: EventData) => {
         details: eventData.details,
         isRecurring: eventData.isRecurring ? "Yes" : "No",
         isFestival: eventData.isFestival ? "Yes" : "No",
-        // LOGIC UPDATE: If email is empty, send a text string so template doesn't break
         user_email: eventData.email || "No email provided",
       },
       process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
@@ -81,6 +79,7 @@ const sendConfirmationEmail = async (eventData: EventData) => {
 const EventFormContent: React.FC<EventFormContentProps> = ({
   initialOpen = false,
 }) => {
+  const { showToast } = useToast(); // ✅ Add this
   const [showModal, setShowModal] = useState(initialOpen);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [event, setEvent] = useState<EventData>({
@@ -179,30 +178,24 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
         }
 
         if (submissionSuccess) {
-          // LOGIC UPDATE: Removed the "if (event.email)" check.
-          // Now runs regardless of whether email exists.
           await sendConfirmationEmail(finalEventData!);
 
-          alert(
-            "Success! Your event has been submitted and is being processed.",
-          );
+          // ✅ Replace alert with toast
+          showToast("Event submitted successfully!", "success");
           resetForm();
           setShowModal(false);
         } else {
-          setFormErrors(
-            "Something went wrong saving your event. Please try again.",
-          );
+          // ✅ Replace setFormErrors with toast for critical errors
+          showToast("Failed to save event. Please try again.", "error");
         }
       } catch (submitError) {
-        setFormErrors(
-          "An unexpected network error occurred. Please try again.",
-        );
+        showToast("Network error. Please try again.", "error");
         console.error("Final Submission Error Path:", submitError);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [event, prepareEventData, isSubmitting, resetForm],
+    [event, prepareEventData, isSubmitting, resetForm, showToast],
   );
 
   const handleChange = useCallback(
@@ -429,6 +422,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                   <path d="M 0 29.452 V 75.7 c 0 6.074 4.942 11.016 11.016 11.016 h 67.967 C 85.058 86.716 90 81.775 90 75.7 V 29.452 H 0 z M 25.779 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 72.18 25.779 72.18 z M 25.779 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 58.816 25.779 58.816 z M 25.779 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 27.436 45.452 25.779 45.452 z M 48.688 72.18 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 72.18 48.688 72.18 z M 48.688 58.816 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 58.816 48.688 58.816 z M 48.688 45.452 h -7.375 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.375 c 1.657 0 3 1.343 3 3 S 50.345 45.452 48.688 45.452 z M 71.597 72.18 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 72.18 71.597 72.18 z M 71.597 58.816 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 58.816 71.597 58.816 z M 71.597 45.452 h -7.376 c -1.657 0 -3 -1.343 -3 -3 s 1.343 -3 3 -3 h 7.376 c 1.657 0 3 1.343 3 3 S 73.254 45.452 71.597 45.452 z" />
                 </svg>
               </div>
+
               <label
                 htmlFor="email"
                 className="block text-zinc-900 font-bold mb-1 text-sm"
