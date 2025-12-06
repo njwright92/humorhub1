@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useTransition } from "react";
 import Image from "next/image";
 import Loading from "../components/loading";
 import Header from "../components/header";
@@ -48,7 +48,8 @@ export default function NewsClient() {
   const [selectedSubcategory, setSelectedSubcategory] = useState("general");
   const [articles, setArticles] = useState<Article[]>([]);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // ← This was missing!
+  const [isPending, startTransition] = useTransition();
 
   const fetchNews = useCallback(async (cat: Category, sub: string) => {
     setIsLoading(true);
@@ -64,20 +65,34 @@ export default function NewsClient() {
       if (json.error) throw new Error(json.error);
 
       setArticles(json.data || []);
-    } catch {
+    } catch (err) {
       setError("Unable to load the latest headlines. Please try again.");
+      setArticles([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchNews(selectedCategory, selectedSubcategory);
+    startTransition(() => {
+      fetchNews(selectedCategory, selectedSubcategory);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [selectedCategory, selectedSubcategory, fetchNews]);
 
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    startTransition(() => setSelectedCategory(e.target.value as Category));
+  };
+
+  const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    startTransition(() => setSelectedSubcategory(e.target.value));
+  };
+
   const resetNews = () => {
-    setSelectedCategory("all_news");
-    setSelectedSubcategory("general");
+    startTransition(() => {
+      setSelectedCategory("all_news");
+      setSelectedSubcategory("general");
+    });
   };
 
   return (
@@ -88,12 +103,20 @@ export default function NewsClient() {
           <h1 className="title mb-4">Hub News</h1>
           <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
             Curated stories from around the world. Stay informed with the latest
-            updates in {selectedSubcategory}.
+            updates in{" "}
+            <span className="text-amber-300 font-medium">
+              {formatText(selectedSubcategory)}
+            </span>
+            .
           </p>
         </div>
 
         {error && (
-          <div className="max-w-2xl mx-auto bg-red-900/20 border border-red-500/50 p-4 rounded-lg mb-8 text-center">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="max-w-2xl mx-auto bg-red-900/20 border border-red-500/50 p-4 rounded-lg mb-8 text-center"
+          >
             <p className="text-red-200 font-medium">{error}</p>
             <button
               onClick={() => fetchNews(selectedCategory, selectedSubcategory)}
@@ -117,10 +140,9 @@ export default function NewsClient() {
                 <select
                   id="category-select"
                   value={selectedCategory}
-                  onChange={(e) =>
-                    setSelectedCategory(e.target.value as Category)
-                  }
-                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500"
+                  onChange={handleCategoryChange}
+                  disabled={isPending}
+                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
                 >
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
@@ -143,8 +165,9 @@ export default function NewsClient() {
                 <select
                   id="subcategory-select"
                   value={selectedSubcategory}
-                  onChange={(e) => setSelectedSubcategory(e.target.value)}
-                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500"
+                  onChange={handleSubcategoryChange}
+                  disabled={isPending}
+                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
                 >
                   {SUBCATEGORIES.map((sub) => (
                     <option key={sub} value={sub}>
@@ -158,7 +181,8 @@ export default function NewsClient() {
 
             <button
               onClick={resetNews}
-              className="w-full md:w-auto h-[46px] bg-zinc-700 hover:bg-zinc-600 text-zinc-200 font-bold rounded-lg transition-all border border-zinc-600 hover:border-zinc-500 shadow-md"
+              disabled={isPending}
+              className="w-full md:w-auto h-[46px] bg-zinc-700 hover:bg-zinc-600 disabled:opacity-70 text-zinc-200 font-bold rounded-lg transition-all border border-zinc-600 hover:border-zinc-500 shadow-md"
             >
               Reset Filters
             </button>
@@ -171,11 +195,14 @@ export default function NewsClient() {
               <Loading />
             </div>
           ) : articles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            <div
+              key={`${selectedCategory}-${selectedSubcategory}`}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in"
+            >
               {articles.map((article, index) => (
                 <article
                   key={article.uuid}
-                  className="flex flex-col bg-zinc-800/50 border border-zinc-700 rounded-xl overflow-hidden hover:border-amber-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group h-full"
+                  className="group flex flex-col bg-zinc-800/50 border border-zinc-700 rounded-xl overflow-hidden hover:border-amber-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer h-full"
                 >
                   <div className="relative h-48 w-full bg-zinc-900 overflow-hidden">
                     {article.image_url ? (
@@ -183,8 +210,8 @@ export default function NewsClient() {
                         src={article.image_url}
                         alt={article.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        unoptimized
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                         priority={index < 3}
                         fetchPriority={
                           index === 0 ? "high" : index < 3 ? "auto" : "low"
@@ -193,7 +220,7 @@ export default function NewsClient() {
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full text-zinc-600">
-                        <span className="text-4xl">📰</span>
+                        <span className="text-4xl">Newspaper</span>
                       </div>
                     )}
                     <div className="absolute top-0 right-0 bg-orange-300 text-zinc-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
@@ -202,7 +229,7 @@ export default function NewsClient() {
                   </div>
 
                   <div className="flex flex-col flex-grow p-5">
-                    <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-300 transition-colors">
+                    <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-400 transition-colors duration-300">
                       {article.title}
                     </h2>
                     <p className="text-zinc-400 text-sm line-clamp-3 mb-6 flex-grow">
@@ -212,9 +239,9 @@ export default function NewsClient() {
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center w-full py-2.5 bg-zinc-900 hover:bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-700 rounded-lg transition-all font-medium text-sm group-hover:border-amber-300/10"
+                      className="inline-flex items-center justify-center w-full py-2.5 bg-zinc-900 hover:bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-700 rounded-lg transition-all font-medium text-sm group-hover:border-amber-300/50"
                     >
-                      Read Full Story <span className="ml-2">→</span>
+                      Read Full Story <span className="ml-2">Right Arrow</span>
                     </a>
                   </div>
                 </article>
