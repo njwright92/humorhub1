@@ -46,9 +46,8 @@ export default function ProfileClient() {
   const fetchUserDataAndEvents = useCallback(async (user: User) => {
     try {
       setIsLoading(true);
-      const { doc, getDoc, collection, getDocs, query, where } = await import(
-        "firebase/firestore"
-      );
+      const { doc, getDoc, collection, getDocs, query, where } =
+        await import("firebase/firestore");
 
       const userDocSnap = await getDoc(doc(db, "users", user.uid));
 
@@ -129,9 +128,8 @@ export default function ProfileClient() {
 
       setProfileImage(file);
       try {
-        const { ref, uploadBytes, getDownloadURL } = await import(
-          "firebase/storage"
-        );
+        const { ref, uploadBytes, getDownloadURL } =
+          await import("firebase/storage");
         const imageRef = ref(
           storageRef.current,
           `profileImages/${uidRef.current}`,

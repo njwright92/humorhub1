@@ -7,31 +7,32 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "preview": "next build && npm run format && next start"
   },
   "dependencies": {
-    "@emailjs/browser": "4.4.1",
-    "@googlemaps/js-api-loader": "1.16.8",
-    "@tanstack/react-virtual": "3.13.12",
-    "firebase": "11.6.1",
+    "@emailjs/browser": "^4.4.1",
+    "@googlemaps/js-api-loader": "^1.16.8",
+    "@tanstack/react-virtual": "^3.13.12",
+    "firebase": "^11.6.1",
     "next": "16.0.7",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "sharp": "0.34.1"
+    "sharp": "^0.34.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "4.1.8",
-    "@types/google.maps": "3.58.1",
-    "@types/node": "22.15.21",
+    "@tailwindcss/postcss": "^4.1.8",
+    "@types/google.maps": "^3.58.1",
+    "@types/node": "^22.15.21",
     "@types/react": "19.2.1",
     "@types/react-dom": "19.2.1",
-    "eslint": "9.27.0",
+    "eslint": "^9.27.0",
     "eslint-config-next": "16.0.7",
-    "lint-staged": "16.2.7",
-    "postcss": "8.5.3",
-    "prettier": "3.5.3",
-    "tailwindcss": "4.1.8",
-    "typescript": "5.8.3"
+    "lint-staged": "^16.2.7",
+    "postcss": "^8.5.3",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^4.1.8",
+    "typescript": "^5.8.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "next lint --fix",

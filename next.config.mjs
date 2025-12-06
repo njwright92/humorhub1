@@ -48,9 +48,14 @@ const nextConfig = {
           },
         ],
       },
+
       {
         source: "/:path*",
         headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
           { key: "X-DNS-Prefetch-Control", value: "on" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
@@ -58,19 +63,30 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
+
       {
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET,POST,PUT,DELETE,OPTIONS",
-          },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,OPTIONS" },
           {
             key: "Access-Control-Allow-Headers",
-            value: "X-Requested-With, Content-Type, Authorization",
+            value: "Content-Type, Authorization",
           },
         ],
+      },
+    ];
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: "/__firebase/:path*",
+        destination: "https://humorhub-73ff9.firebaseapp.com/:path*",
+      },
+      {
+        source: "/firebase/:path*",
+        destination: "https://www.gstatic.com/firebasejs/:path*",
       },
     ];
   },
