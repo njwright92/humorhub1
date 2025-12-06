@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
+import news from "../app/news.webp";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import EventForm from "./components/EventForm";
-
-const HumorHubAPISection = dynamic(() => import("./components/humorHubApi"));
+import NewsButton from "./components/newsButton";
 
 export const metadata: Metadata = {
   title: "Humor Hub | The #1 Open Mic Map & Comedian Toolkit",
@@ -24,6 +23,7 @@ export default function Home() {
           Humor Hub!
         </h1>
 
+        {/* Mic Finder Section */}
         <section className="card-style mx-auto w-full">
           <h2 className="title mb-8 text-center sm:mb-10">Mic Finder!</h2>
 
@@ -64,8 +64,39 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="animate-pulse-once">
-          <HumorHubAPISection />
+        {/* Hub News Section */}
+        <section className="card-style mx-auto w-full animate-pulse-once">
+          <h2 className="title mb-8 text-center sm:mb-10">Hub News!</h2>
+
+          <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
+            <div className="flex-1 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
+              <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
+                Your Source for{" "}
+                <span className="font-bold">Fresh Headlines!</span>
+                <br />
+                Looking for something topical?
+                <br />
+                <span className="mt-2 block">
+                  Check out the Hub News for the latest updates!
+                </span>
+              </p>
+
+              <NewsButton />
+            </div>
+
+            <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
+              <NewsButton className="relative group cursor-pointer bg-transparent p-0 border-0">
+                <Image
+                  src={news}
+                  alt="Comedy News Update"
+                  width={180}
+                  height={180}
+                  className="rounded-full shadow-2xl border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
+                  loading="lazy"
+                />
+              </NewsButton>
+            </div>
+          </div>
         </section>
       </div>
       <Footer />
