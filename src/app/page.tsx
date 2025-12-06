@@ -54,10 +54,11 @@ export default function Home() {
                 <Image
                   src={micFinder}
                   alt="Mic Finder Logo"
-                  width={180}
-                  height={180}
+                  width={160}
+                  height={160}
                   className="rounded-full shadow-lg border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                   priority
+                  fetchPriority="high"
                 />
               </Link>
             </div>
@@ -89,10 +90,11 @@ export default function Home() {
                 <Image
                   src={news}
                   alt="Comedy News Update"
-                  width={180}
-                  height={180}
+                  width={160}
+                  height={160}
                   className="rounded-full shadow-2xl border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                   loading="lazy"
+                  quality={70}
                 />
               </NewsButton>
             </div>

@@ -23,7 +23,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-// --- Icons (Unchanged) ---
 const GoogleIcon = memo(() => (
   <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
     <path
@@ -46,7 +45,6 @@ const GoogleIcon = memo(() => (
 ));
 GoogleIcon.displayName = "GoogleIcon";
 
-// ✅ FIXED TYPO HERE
 interface SocialButtonProps {
   onClick: () => void;
   icon: React.ReactNode;
@@ -66,14 +64,12 @@ const SocialSignInButton = memo<SocialButtonProps>(
 );
 SocialSignInButton.displayName = "SocialSignInButton";
 
-// --- Main Component ---
-
 const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
 }) => {
-  const { showToast } = useToast(); // ✅ USE TOAST HOOK
+  const { showToast } = useToast();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");

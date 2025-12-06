@@ -153,7 +153,7 @@ export default function Header() {
     <>
       <header className="p-2 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
-          <Link href="/">
+          <Link href="/" aria-label="Home">
             <Image
               src={hh}
               alt="HUMOR HUB LOGO"
@@ -161,6 +161,7 @@ export default function Header() {
               height={50}
               className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden object-contain"
               priority
+              fetchPriority="high"
             />
           </Link>
 
@@ -173,7 +174,8 @@ export default function Header() {
                   width={60}
                   height={60}
                   className="rounded-full cursor-pointer bg-zinc-900 p-1 mx-auto shadow-lg"
-                  loading="lazy"
+                  priority
+                  fetchPriority="high"
                 />
                 <span className="sidebar-tooltip">Home</span>
               </Link>
@@ -314,7 +316,8 @@ export default function Header() {
                   width={70}
                   height={70}
                   className="rounded-full mt-2 cursor-pointer"
-                  loading="lazy"
+                  priority
+                  fetchPriority="high"
                 />
               </Link>
 
