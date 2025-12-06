@@ -17,26 +17,37 @@ import EventForm from "../components/EventForm";
 import type { Auth } from "firebase/auth";
 import { useToast } from "../components/ToastContext";
 
-// --- Utility Functions ---
+// --- Utils & Constants ---
 
 function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
   lon2: number,
-): number {
+) {
   const R = 6371;
-  const toRad = (value: number) => (value * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
     Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// --- Dynamic Imports ---
+const DAY_MAP: { [key: string]: number } = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+
+// ✅ OPTIMIZATION: Define outside component to prevent re-renders
+const MemoizedEventForm = React.memo(EventForm);
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => (
@@ -47,10 +58,7 @@ const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   ssr: false,
 });
 
-// --- Types ---
-
 type Event = {
-  googleTimestamp: any;
   id: string;
   name: string;
   location: string;
@@ -63,13 +71,14 @@ type Event = {
   isMusic?: boolean;
   parsedDateObj?: Date;
   numericTimestamp?: number;
+  googleTimestamp?: any;
 };
 
-type CityCoordinates = {
-  [key: string]: { lat: number; lng: number };
-};
+type CityCoordinates = { [key: string]: { lat: number; lng: number } };
 
-const MicFinderClient = () => {
+export default function MicFinderClient() {
+  const { showToast } = useToast();
+
   // State
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -82,7 +91,6 @@ const MicFinderClient = () => {
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
   const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
-  const { showToast } = useToast();
   const [mapLocation, setMapLocation] = useState<{
     lat: number;
     lng: number;
@@ -90,57 +98,20 @@ const MicFinderClient = () => {
   const [selectedTab, setSelectedTab] = useState<
     "Mics" | "Festivals" | "Other"
   >("Mics");
-
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   const authRef = useRef<Auth | null>(null);
+  const parentRef = useRef<HTMLDivElement>(null);
 
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
 
-  const sendDataLayerEvent = useCallback(
-    (
-      event_name: string,
-      params: { event_category: string; event_label: string },
-    ) => {
-      if (typeof window !== "undefined") {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: event_name, ...params });
-      }
-    },
-    [],
-  );
+  const sendDataLayerEvent = useCallback((event_name: string, params: any) => {
+    if (typeof window !== "undefined") {
+      (window as any).dataLayer?.push({ event: event_name, ...params });
+    }
+  }, []);
 
-  const isTabMatch = useCallback(
-    (event: Event) => {
-      if (selectedTab === "Festivals") return event.festival;
-      if (selectedTab === "Other") return event.isMusic;
-      return !event.festival && !event.isMusic;
-    },
-    [selectedTab],
-  );
-
-  const findClosestCity = useCallback(
-    (latitude: number, longitude: number): string | null => {
-      if (Object.keys(cityCoordinates).length === 0) return null;
-      let closestCity: string | null = null;
-      let minDistance = Infinity;
-
-      for (const [city, coords] of Object.entries(cityCoordinates)) {
-        const distance = getDistanceFromLatLonInKm(
-          latitude,
-          longitude,
-          coords.lat,
-          coords.lng,
-        );
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestCity = city;
-        }
-      }
-      return closestCity;
-    },
-    [cityCoordinates],
-  );
+  // --- Effects ---
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -155,53 +126,41 @@ const MicFinderClient = () => {
     return () => clearTimeout(handler);
   }, [searchTerm, sendDataLayerEvent]);
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
   useEffect(() => {
     let mounted = true;
-
     const loadData = async () => {
-      // 1. Check Cache First (Instant Render)
+      // Check Cache
       const cachedEvents = sessionStorage.getItem("hh_events");
       const cachedCities = sessionStorage.getItem("hh_city_coords");
 
       if (cachedEvents && cachedCities) {
         if (mounted) {
-          const parsedEvents = JSON.parse(cachedEvents).map((e: any) => ({
-            ...e,
-            parsedDateObj: e.parsedDateObj
-              ? new Date(e.parsedDateObj)
-              : undefined,
-          }));
-          setEvents(parsedEvents);
+          setEvents(
+            JSON.parse(cachedEvents).map((e: any) => ({
+              ...e,
+              parsedDateObj: e.parsedDateObj
+                ? new Date(e.parsedDateObj)
+                : undefined,
+            })),
+          );
           setCityCoordinates(JSON.parse(cachedCities));
         }
         return;
       }
 
       try {
-        // 2. Dynamic Import of Firestore SDK
         const { collection, getDocs } = await import("firebase/firestore");
-
-        // 3. Parallel Fetching
-        const [eventsSnapshot, citiesSnapshot] = await Promise.all([
+        const [eventsSnap, citiesSnap] = await Promise.all([
           getDocs(collection(db, "userEvents")),
           getDocs(collection(db, "cities")),
         ]);
 
-        // Process Events
-        const fetchedEvents: Event[] = eventsSnapshot.docs.map((doc) => {
+        const fetchedEvents = eventsSnap.docs.map((doc) => {
           const data = doc.data();
-          let parsedDateObj: Date | undefined = undefined;
-          if (data.date && typeof data.date === "string") {
-            const parsed = new Date(data.date);
-            if (!isNaN(parsed.getTime())) {
-              parsed.setHours(0, 0, 0, 0);
-              parsedDateObj = parsed;
-            }
-          }
+          const parsedDateObj = data.date ? new Date(data.date) : undefined;
+          if (parsedDateObj && !isNaN(parsedDateObj.getTime()))
+            parsedDateObj.setHours(0, 0, 0, 0);
+
           return {
             id: doc.id,
             ...data,
@@ -214,13 +173,12 @@ const MicFinderClient = () => {
           } as Event;
         });
 
-        // Process Cities
         const citiesData: CityCoordinates = {};
-        citiesSnapshot.docs.forEach((doc) => {
-          const cityData = doc.data();
-          citiesData[cityData.city] = {
-            lat: cityData.coordinates.lat,
-            lng: cityData.coordinates.lng,
+        citiesSnap.docs.forEach((doc) => {
+          const d = doc.data();
+          citiesData[d.city] = {
+            lat: d.coordinates.lat,
+            lng: d.coordinates.lng,
           };
         });
 
@@ -236,88 +194,40 @@ const MicFinderClient = () => {
     };
 
     if ("requestIdleCallback" in window) {
-      (window as any).requestIdleCallback(() => loadData());
+      (window as any).requestIdleCallback(loadData);
     } else {
       setTimeout(loadData, 100);
     }
-
     return () => {
       mounted = false;
     };
   }, []);
 
-  // ✅ FIXED: Dynamic auth import
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
-
     const initAuth = async () => {
       const { auth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
-
       authRef.current = auth as Auth;
-
-      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
-        setIsUserSignedIn(!!user);
-      });
+      unsubscribe = onAuthStateChanged(auth, (user) =>
+        setIsUserSignedIn(!!user),
+      );
     };
-
-    // Small delay to not block initial render
-    const timer = setTimeout(() => {
-      initAuth();
-    }, 100);
-
-    return () => {
-      clearTimeout(timer);
-      if (unsubscribe) unsubscribe();
-    };
+    setTimeout(initAuth, 100);
+    return () => unsubscribe?.();
   }, []);
 
-  // Geolocation Handler
-  const fetchUserLocation = useCallback(() => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords: { latitude, longitude } }) => {
-        const closestCity = findClosestCity(latitude, longitude);
-        if (closestCity) {
-          const normalized = normalizeCityName(closestCity);
-          setSelectedCity(normalized);
-          setFilterCity(normalized);
-          setSearchTerm(normalized);
-          setDebouncedSearchTerm(normalized);
-
-          sendDataLayerEvent("auto_locate", {
-            event_category: "Geolocation",
-            event_label: normalized,
-          });
-        } else {
-          console.log("No supported cities found nearby.");
-        }
-      },
-      (err) => {
-        console.log("Geolocation denied or failed", err);
-      },
-    );
-  }, [findClosestCity, normalizeCityName, sendDataLayerEvent]);
-
-  // URL Params
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryTerm = urlParams.get("searchTerm") || "";
-    const city = urlParams.get("city");
-
+    const params = new URLSearchParams(window.location.search);
+    const city = params.get("city");
     if (city) {
       setSelectedCity(city);
       setFilterCity(city);
     }
+    const term = params.get("searchTerm");
+    if (term) setSearchTerm(term);
+  }, []);
 
-    if (queryTerm) setSearchTerm(queryTerm);
-  }, [cityCoordinates]);
-
-  // Update map location
   useEffect(() => {
     if (selectedCity && cityCoordinates[selectedCity]) {
       setMapLocation(cityCoordinates[selectedCity]);
@@ -326,116 +236,59 @@ const MicFinderClient = () => {
     }
   }, [selectedCity, cityCoordinates]);
 
-  // --- Computations ---
-
-  const sortCitiesWithSpokaneFirst = useCallback((cities: string[]) => {
-    return cities.sort((a, b) => {
-      if (a === "Spokane WA") return -1;
-      if (b === "Spokane WA") return 1;
-      return a.localeCompare(b);
-    });
-  }, []);
-
-  const allAvailableCities = useMemo(() => {
-    const set = new Set<string>();
-    events.forEach((event) => {
-      if (event.location) {
-        const parts = event.location.split(",");
-        if (parts.length > 1) {
-          set.add(normalizeCityName(parts[1].trim()));
-        }
-      }
-    });
-    return sortCitiesWithSpokaneFirst(Array.from(set));
-  }, [events, normalizeCityName, sortCitiesWithSpokaneFirst]);
-
-  const dropdownCities = useMemo(() => {
-    if (!debouncedSearchTerm) return allAvailableCities;
-    return allAvailableCities.filter((city) =>
-      city.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-    );
-  }, [allAvailableCities, debouncedSearchTerm]);
-
-  const eventsForMap = useMemo(() => {
-    return events.filter((event) => isTabMatch(event));
-  }, [events, isTabMatch]);
-
-  // List filter logic
-  const filteredEventsForView = useMemo(() => {
-    const normalizedSelectedDate = new Date(selectedDate);
-    normalizedSelectedDate.setHours(0, 0, 0, 0);
-    const lowerSearch = debouncedSearchTerm.toLowerCase();
-    const lowerSelectedCity = selectedCity.toLowerCase();
-
-    return events.filter((event) => {
-      const cityMatch =
-        !selectedCity ||
-        (event.location &&
-          event.location.toLowerCase().includes(lowerSelectedCity));
-
-      let dateMatch = false;
-      if (event.isRecurring) {
-        const dayMap: { [key: string]: number } = {
-          Sunday: 0,
-          Monday: 1,
-          Tuesday: 2,
-          Wednesday: 3,
-          Thursday: 4,
-          Friday: 5,
-          Saturday: 6,
-        };
-        dateMatch = dayMap[event.date] === selectedDate.getDay();
-      } else if (event.parsedDateObj) {
-        dateMatch =
-          event.parsedDateObj.getTime() === normalizedSelectedDate.getTime();
-      }
-
-      const searchMatch =
-        !debouncedSearchTerm ||
-        (event.name && event.name.toLowerCase().includes(lowerSearch)) ||
-        (event.location && event.location.toLowerCase().includes(lowerSearch));
-
-      return cityMatch && dateMatch && searchMatch && isTabMatch(event);
-    });
-  }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
-
-  const sortedEventsByCity = useMemo(() => {
-    let list = events;
-
-    if (filterCity !== "All Cities") {
-      list = list.filter(
-        (e) =>
-          e.location &&
-          normalizeCityName(e.location.split(",")[1] || "").trim() ===
-            filterCity,
-      );
-    }
-
-    list = list.filter(isTabMatch);
-
-    return list.sort((a, b) => {
-      const aLoc = a.location || "";
-      const bLoc = b.location || "";
-      const aClub = aLoc.includes("Spokane Comedy Club");
-      const bClub = bLoc.includes("Spokane Comedy Club");
-
-      if (aClub && !bClub) return -1;
-      if (!aClub && bClub) return 1;
-
-      const tA = a.numericTimestamp || 0;
-      const tB = b.numericTimestamp || 0;
-      return tB - tA;
-    });
-  }, [events, filterCity, isTabMatch, normalizeCityName]);
-
   // --- Handlers ---
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const fetchUserLocation = useCallback(() => {
+    if (!navigator.geolocation)
+      return showToast("Geolocation not supported", "error");
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        let closestCity = null;
+        let minDistance = Infinity;
+
+        for (const [city, coords] of Object.entries(cityCoordinates)) {
+          const dist = getDistanceFromLatLonInKm(
+            latitude,
+            longitude,
+            coords.lat,
+            coords.lng,
+          );
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestCity = city;
+          }
+        }
+
+        if (closestCity) {
+          const normalized = normalizeCityName(closestCity);
+          setSelectedCity(normalized);
+          setFilterCity(normalized);
+          setSearchTerm(normalized);
+          sendDataLayerEvent("auto_locate", {
+            event_category: "Geolocation",
+            event_label: normalized,
+          });
+        } else {
+          showToast("No supported cities found nearby", "info");
+        }
+      },
+      (err) => {
+        console.error("Geo error", err);
+        showToast("Location access denied", "error");
+      },
+    );
+  }, [cityCoordinates, normalizeCityName, sendDataLayerEvent, showToast]);
 
   const handleCitySelect = (city: string) => {
     const normalized = normalizeCityName(city);
     setSelectedCity(normalized);
     setFilterCity(normalized);
     setSearchTerm(normalized);
-    setDebouncedSearchTerm(normalized);
     setIsFirstDropdownOpen(false);
     sendDataLayerEvent("select_city", {
       event_category: "City Selection",
@@ -444,18 +297,10 @@ const MicFinderClient = () => {
   };
 
   const handleCityFilterChange = (city: string) => {
-    if (city === "All Cities") {
-      setFilterCity(city);
-      setSelectedCity("");
-      setSearchTerm("");
-      setDebouncedSearchTerm("");
-    } else {
-      const normalized = normalizeCityName(city);
-      setFilterCity(normalized);
-      setSelectedCity(normalized);
-      setSearchTerm(normalized);
-      setDebouncedSearchTerm(normalized);
-    }
+    const normalized = city === "All Cities" ? "" : normalizeCityName(city);
+    setFilterCity(city);
+    setSelectedCity(normalized);
+    setSearchTerm(normalized);
     setIsSecondDropdownOpen(false);
     sendDataLayerEvent("filter_city", {
       event_category: "City Filter",
@@ -466,31 +311,27 @@ const MicFinderClient = () => {
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
-        showToast("Please sign in to save events. *profile page*", "info");
+        showToast("Please sign in to save events.", "info");
         return;
       }
 
       try {
         const user = authRef.current?.currentUser;
-        if (!user) throw new Error("User not found.");
-
-        if (!event.id) throw new Error("Event ID missing.");
+        if (!user || !event.id) throw new Error("Invalid state");
 
         const { doc, setDoc, collection } = await import("firebase/firestore");
-
         const { parsedDateObj, ...dataToSave } = event;
 
-        const userSavedEventRef = doc(collection(db, "savedEvents"), event.id);
-        await setDoc(userSavedEventRef, { ...dataToSave, userId: user.uid });
-
+        await setDoc(doc(collection(db, "savedEvents"), event.id), {
+          ...dataToSave,
+          userId: user.uid,
+        });
         showToast("Event saved successfully!", "success");
-
         sendDataLayerEvent("save_event", {
           event_category: "Event Interaction",
           event_label: event.name,
         });
-      } catch (error) {
-        console.error("Save failed:", error);
+      } catch {
         showToast("Failed to save event. Please try again.", "error");
       }
     },
@@ -500,17 +341,12 @@ const MicFinderClient = () => {
   const toggleMapVisibility = () => {
     if (!hasMapInit) setHasMapInit(true);
     setIsMapVisible((prev) => {
-      const newVal = !prev;
       sendDataLayerEvent("toggle_map", {
         event_category: "Map Interaction",
-        event_label: newVal ? "Show Map" : "Hide Map",
+        event_label: !prev ? "Show Map" : "Hide Map",
       });
-      return newVal;
+      return !prev;
     });
-  };
-
-  const getFormattedDateForInput = (date: Date) => {
-    return date.toLocaleDateString("en-CA");
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -520,9 +356,74 @@ const MicFinderClient = () => {
     setSelectedDate(newDate);
   };
 
-  const MemoizedEventForm = React.memo(EventForm);
+  // --- Memos ---
 
-  const parentRef = useRef<HTMLDivElement>(null);
+  const allAvailableCities = useMemo(() => {
+    const set = new Set<string>();
+    events.forEach((e) => {
+      const city = e.location.split(",")[1]?.trim();
+      if (city) set.add(normalizeCityName(city));
+    });
+    return Array.from(set).sort((a, b) =>
+      a === "Spokane WA" ? -1 : b === "Spokane WA" ? 1 : a.localeCompare(b),
+    );
+  }, [events, normalizeCityName]);
+
+  const dropdownCities = useMemo(() => {
+    return !debouncedSearchTerm
+      ? allAvailableCities
+      : allAvailableCities.filter((c) =>
+          c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+        );
+  }, [allAvailableCities, debouncedSearchTerm]);
+
+  const isTabMatch = useCallback(
+    (event: Event) => {
+      if (selectedTab === "Festivals") return event.festival;
+      if (selectedTab === "Other") return event.isMusic;
+      return !event.festival && !event.isMusic;
+    },
+    [selectedTab],
+  );
+
+  const filteredEventsForView = useMemo(() => {
+    const dateCheck = new Date(selectedDate);
+    dateCheck.setHours(0, 0, 0, 0);
+    const term = debouncedSearchTerm.toLowerCase();
+    const city = selectedCity.toLowerCase();
+
+    return events.filter((e) => {
+      if (!isTabMatch(e)) return false;
+      const matchesCity = !city || e.location.toLowerCase().includes(city);
+      const matchesSearch =
+        !term ||
+        e.name.toLowerCase().includes(term) ||
+        e.location.toLowerCase().includes(term);
+
+      let matchesDate = false;
+      if (e.isRecurring) {
+        matchesDate = DAY_MAP[e.date] === selectedDate.getDay();
+      } else if (e.parsedDateObj) {
+        matchesDate = e.parsedDateObj.getTime() === dateCheck.getTime();
+      }
+      return matchesCity && matchesDate && matchesSearch;
+    });
+  }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
+
+  const sortedEventsByCity = useMemo(() => {
+    let list = events.filter(isTabMatch);
+    if (filterCity !== "All Cities") {
+      list = list.filter(
+        (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity,
+      );
+    }
+    return list.sort((a, b) => {
+      const aClub = a.location.includes("Spokane Comedy Club");
+      const bClub = b.location.includes("Spokane Comedy Club");
+      if (aClub !== bClub) return aClub ? -1 : 1;
+      return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
+    });
+  }, [events, filterCity, isTabMatch, normalizeCityName]);
 
   const rowVirtualizer = useVirtualizer({
     count: sortedEventsByCity.length,
@@ -535,7 +436,6 @@ const MicFinderClient = () => {
     <>
       <Header />
       <div className="screen-container content-with-sidebar">
-        {/* Alert Box */}
         <div className="border border-red-400 text-red-700 px-3 py-2 rounded-lg shadow-md text-center mb-3 bg-zinc-200 text-xs sm:text-sm">
           <p className="m-0">
             <strong className="font-bold">📢 Note: </strong>
@@ -560,7 +460,6 @@ const MicFinderClient = () => {
           going!
         </p>
 
-        {/* Form Container */}
         <div className="text-center mb-4 h-16 w-full rounded-lg">
           <MemoizedEventForm />
         </div>
@@ -569,7 +468,6 @@ const MicFinderClient = () => {
           Find your next show or night out. Pick a city and date!
         </h3>
 
-        {/* City Selection Dropdown */}
         <div className="flex flex-col justify-center items-center mt-2 relative z-20">
           <div className="relative w-full max-w-xs min-h-[60px]">
             <p id="city-select-label" className="sr-only">
@@ -594,7 +492,7 @@ const MicFinderClient = () => {
               <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 absolute top-full left-0 max-h-[192px] overflow-y-auto z-30">
                 <input
                   type="text"
-                  placeholder="Search for a city..."
+                  placeholder="Search city..."
                   value={searchTerm}
                   onChange={handleSearchInputChange}
                   className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
@@ -626,15 +524,15 @@ const MicFinderClient = () => {
             )}
           </div>
 
-          {/* Date Picker */}
           <div className="flex flex-col justify-center items-center mt-2 w-full max-w-xs relative">
             <label htmlFor="event-date-picker" className="sr-only">
               Select Event Date
             </label>
             <input
               id="event-date-picker"
+              name="event-date-picker"
               type="date"
-              value={getFormattedDateForInput(selectedDate)}
+              value={selectedDate.toLocaleDateString("en-CA")}
               onChange={handleDateChange}
               className="modern-input w-full cursor-pointer bg-zinc-200 text-zinc-900 font-semibold px-2"
             />
@@ -644,30 +542,21 @@ const MicFinderClient = () => {
         <section className="w-full h-[25rem] rounded-lg shadow-md relative border border-zinc-200 mt-6 overflow-hidden bg-zinc-800">
           <button
             onClick={toggleMapVisibility}
-            className={`absolute z-10 rounded-lg shadow-xl px-4 py-2 transition cursor-pointer font-semibold
-              ${
-                !isMapVisible
-                  ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-white p-2"
-                  : "top-4 right-4 bg-zinc-900 text-zinc-100 hover:bg-black"
-              }`}
+            className={`absolute z-10 rounded-lg shadow-xl px-4 py-2 transition cursor-pointer font-semibold ${!isMapVisible ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-zinc-900 p-2" : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950"}`}
           >
             {!isMapVisible ? "Show Map" : "Hide Map"}
           </button>
-
           {hasMapInit && (
             <div
-              className={`h-full w-full transition-opacity duration-300 ${
-                !isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
+              className={`h-full w-full transition-opacity duration-300 ${!isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"}`}
             >
               <GoogleMap
                 lat={mapLocation?.lat || 47.6588}
                 lng={mapLocation?.lng || -117.426}
-                events={eventsForMap}
+                events={events.filter(isTabMatch)}
               />
             </div>
           )}
-
           {!isMapVisible && <div className="absolute inset-0 bg-zinc-800" />}
         </section>
 
@@ -675,15 +564,16 @@ const MicFinderClient = () => {
           *Scroll through events to find your next Mic or Festival!*
         </p>
 
-        {/* Top List */}
         <section className="card-style">
           <h2 className="title text-center border-b-4 border-[#b35a30] pb-2">
-            {selectedTab === "Mics" && "Comedy Mics"}
-            {selectedTab === "Festivals" && "Festivals"}
-            {selectedTab === "Other" && "Music/All Arts"}
+            {selectedTab === "Mics"
+              ? "Comedy Mics"
+              : selectedTab === "Festivals"
+                ? "Festivals"
+                : "Music/All Arts"}
           </h2>
 
-          {selectedCity === "" ? (
+          {!selectedCity ? (
             <p className="text-center py-4">
               Please select a city above to see events.
             </p>
@@ -723,10 +613,9 @@ const MicFinderClient = () => {
           )}
         </section>
 
-        {/* Tab Buttons */}
         <div className="tab-container flex justify-center mt-4 gap-3">
           <button
-            className={`tab-button font-bold rounded-full transition ${
+            className={`tab-button font-bold rounded-xl shadow-lg transition ${
               selectedTab === "Mics"
                 ? "bg-blue-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
                 : "bg-blue-100 text-blue-700 hover:bg-blue-200"
@@ -736,7 +625,7 @@ const MicFinderClient = () => {
             Comedy Mics
           </button>
           <button
-            className={`tab-button font-bold rounded-full transition ${
+            className={`tab-button font-bold rounded-xl shadow-lg transition ${
               selectedTab === "Festivals"
                 ? "bg-purple-700 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
                 : "bg-purple-100 text-purple-800 hover:bg-purple-200"
@@ -746,7 +635,7 @@ const MicFinderClient = () => {
             Festivals
           </button>
           <button
-            className={`tab-button font-bold rounded-full transition ${
+            className={`tab-button font-bold rounded-xl shadow-lg transition ${
               selectedTab === "Other"
                 ? "bg-green-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
                 : "bg-green-100 text-green-700 hover:bg-green-200"
@@ -757,7 +646,6 @@ const MicFinderClient = () => {
           </button>
         </div>
 
-        {/* Bottom List */}
         <section className="card-style">
           <div className="flex flex-col justify-center items-center mt-2 relative z-10">
             <div className="relative w-full max-w-xs">
@@ -775,7 +663,6 @@ const MicFinderClient = () => {
               >
                 {filterCity || "All Cities"}
               </div>
-
               {isSecondDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-md rounded-lg mt-1 overflow-hidden">
                   <input
@@ -793,11 +680,7 @@ const MicFinderClient = () => {
                     <li
                       role="option"
                       aria-selected={filterCity === "All Cities"}
-                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${
-                        filterCity === "All Cities"
-                          ? "bg-zinc-200 font-semibold"
-                          : ""
-                      }`}
+                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${filterCity === "All Cities" ? "bg-zinc-200 font-semibold" : ""}`}
                       onClick={() => handleCityFilterChange("All Cities")}
                     >
                       All Cities
@@ -807,9 +690,7 @@ const MicFinderClient = () => {
                         key={city}
                         role="option"
                         aria-selected={filterCity === city}
-                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${
-                          filterCity === city ? "bg-zinc-200 font-semibold" : ""
-                        }`}
+                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${filterCity === city ? "bg-zinc-200 font-semibold" : ""}`}
                         onClick={() => handleCityFilterChange(city)}
                       >
                         {city}
@@ -820,37 +701,26 @@ const MicFinderClient = () => {
               )}
             </div>
           </div>
+
           <h2 className="title text-center mt-4 border-b-4 border-[#b35a30] pb-2">
             {filterCity === "All Cities"
-              ? `All ${
-                  selectedTab === "Mics"
-                    ? "Mics"
-                    : selectedTab === "Festivals"
-                      ? "Festivals"
-                      : "Arts"
-                }`
-              : `All ${
-                  selectedTab === "Mics"
-                    ? "Mics"
-                    : selectedTab === "Festivals"
-                      ? "Festivals"
-                      : "Arts"
-                } in ${filterCity}`}
+              ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
+              : `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"} in ${filterCity}`}
           </h2>
+
           {sortedEventsByCity.length === 0 && (
             <p className="text-center py-4">
               No events found for {filterCity}.
             </p>
           )}
+
           <div
             ref={parentRef}
             className="w-full h-[600px] overflow-y-auto contain-strict bg-transparent"
           >
             <div
               className="relative w-full"
-              style={{
-                height: `${rowVirtualizer.getTotalSize()}px`,
-              }}
+              style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
             >
               {rowVirtualizer.getVirtualItems().map((virtualItem) => {
                 const event = sortedEventsByCity[virtualItem.index];
@@ -860,9 +730,7 @@ const MicFinderClient = () => {
                     data-index={virtualItem.index}
                     ref={rowVirtualizer.measureElement}
                     className="absolute top-0 left-0 w-full p-2"
-                    style={{
-                      transform: `translateY(${virtualItem.start}px)`,
-                    }}
+                    style={{ transform: `translateY(${virtualItem.start}px)` }}
                   >
                     <div className="event-item my-2 h-auto flex flex-col p-4">
                       <h3 className="text-xl font-bold">{event.name}</h3>
@@ -870,14 +738,12 @@ const MicFinderClient = () => {
                       <p className="details-label">
                         📍 Location: {event.location}
                       </p>
-
                       <div className="details-label mt-2">
                         <span className="details-label">ℹ️ Details:</span>
                         <div
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
                       </div>
-
                       <button
                         className="btn mt-4 mb-4 px-2 py-1 self-center"
                         onClick={() => handleEventSave(event)}
@@ -895,6 +761,4 @@ const MicFinderClient = () => {
       <Footer />
     </>
   );
-};
-
-export default MicFinderClient;
+}

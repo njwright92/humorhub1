@@ -99,6 +99,7 @@ export default function ContactForm() {
                     name="name"
                     placeholder="Your Name"
                     required
+                    autoComplete="false"
                     value={formState.name}
                     onChange={handleInputChange}
                     className="w-full bg-zinc-900 border border-zinc-600 rounded-lg px-4 py-3 text-zinc-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
@@ -118,6 +119,7 @@ export default function ContactForm() {
                     name="email"
                     placeholder="you@example.com"
                     required
+                    autoComplete="false"
                     value={formState.email}
                     onChange={handleInputChange}
                     className="w-full bg-zinc-900 border border-zinc-600 rounded-lg px-4 py-3 text-zinc-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
@@ -139,6 +141,7 @@ export default function ContactForm() {
                   placeholder="How can we help you?"
                   required
                   rows={5}
+                  autoComplete="false"
                   value={formState.message}
                   onChange={handleInputChange}
                   className="w-full bg-zinc-900 border border-zinc-600 rounded-lg px-4 py-3 text-zinc-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"

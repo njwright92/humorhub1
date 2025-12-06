@@ -17,7 +17,6 @@ import NewsIcon from "../icons/NewsIcon";
 import ContactIcon from "../icons/ContactIcon";
 import AboutIcon from "../icons/AboutIcon";
 import UserIconComponent from "../icons/UserIconComponent";
-
 import SearchBar from "./searchBar";
 
 const AuthModal = dynamic(() => import("./authModal"), {
@@ -25,41 +24,27 @@ const AuthModal = dynamic(() => import("./authModal"), {
   loading: () => null,
 });
 
-/* Stable debounce helper */
-function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  wait: number,
-  immediate: boolean = false,
-) {
+function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
   let timeout: ReturnType<typeof setTimeout> | null = null;
-
   return (...args: Parameters<T>) => {
-    const callNow = immediate && !timeout;
     if (timeout) clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-      timeout = null;
-      if (!immediate) func(...args);
-    }, wait);
-
-    if (callNow) func(...args);
+    timeout = setTimeout(() => func(...args), wait);
   };
 }
 
 export default function Header() {
-  const { showToast } = useToast(); // ✅ Init Toast Hook
+  const { showToast } = useToast();
+  const router = useRouter();
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [cityList, setCityList] = useState<string[]>([]);
-  const router = useRouter();
-
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  // Store auth reference
   const authRef = useRef<Auth | null>(null);
+  const debouncedSearchRef = useRef<((term: string) => void) | null>(null);
 
-  // Auth Redirect Logic - Runs when user signs in
   useEffect(() => {
     if (isUserSignedIn && pendingRedirect) {
       router.push(pendingRedirect);
@@ -68,22 +53,15 @@ export default function Header() {
     }
   }, [isUserSignedIn, pendingRedirect, router]);
 
-  const debouncedSearchRef = useRef<((term: string) => void) | null>(null);
-
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
     [],
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+  const handleLoginSuccess = useCallback(() => setIsUserSignedIn(true), []);
 
-  const handleLoginSuccess = useCallback(() => {
-    setIsUserSignedIn(true);
-  }, []);
-
-  /* Fetch Cities Logic */
   useEffect(() => {
     let mounted = true;
-
     const fetchCities = async () => {
       try {
         const cached = sessionStorage.getItem("hh_cities");
@@ -91,14 +69,8 @@ export default function Header() {
           if (mounted) setCityList(JSON.parse(cached));
           return;
         }
-
         const snapshot = await getDocs(collection(db, "cities"));
-        const fetched: string[] = [];
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data?.city) fetched.push(String(data.city));
-        });
-
+        const fetched = snapshot.docs.map((doc) => String(doc.data()?.city));
         if (mounted) {
           setCityList(fetched);
           sessionStorage.setItem("hh_cities", JSON.stringify(fetched));
@@ -109,47 +81,34 @@ export default function Header() {
     };
 
     if ("requestIdleCallback" in window) {
-      (window as any).requestIdleCallback(() => fetchCities(), {
-        timeout: 2000,
-      });
+      (window as any).requestIdleCallback(fetchCities, { timeout: 2000 });
     } else {
-      setTimeout(() => fetchCities(), 1000);
+      setTimeout(fetchCities, 1000);
     }
-
     return () => {
       mounted = false;
     };
   }, []);
 
-  // Auth Listener
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
-
     const initAuth = async () => {
       const { auth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
-
       authRef.current = auth as Auth;
-
-      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
-        setIsUserSignedIn(!!user);
-      });
+      unsubscribe = onAuthStateChanged(auth, (user) =>
+        setIsUserSignedIn(!!user),
+      );
     };
-
     initAuth();
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    return () => unsubscribe?.();
   }, []);
 
-  // ✅ REFACTORED: Single handler for all protected routes
   const handleProtectedRoute = useCallback(
     (path: string, label: string) => {
       if (isUserSignedIn || authRef.current?.currentUser) {
         router.push(path);
       } else {
-        // ✅ Show toast notification
         showToast(`Please sign in to view ${label}`, "info");
         setPendingRedirect(path);
         setIsAuthModalOpen(true);
@@ -158,7 +117,6 @@ export default function Header() {
     [isUserSignedIn, router, showToast],
   );
 
-  /* Search Logic */
   const performSearch = useCallback(
     async (searchTerm: string) => {
       const normalized = searchTerm.toLowerCase().trim();
@@ -174,7 +132,7 @@ export default function Header() {
             city: searchTerm,
             timestamp: new Date(),
           });
-        } catch (error) {}
+        } catch {}
       }
     },
     [cityList, router],
@@ -182,20 +140,19 @@ export default function Header() {
 
   useEffect(() => {
     debouncedSearchRef.current = debounce((term: string) => {
-      if (!term || typeof term !== "string") return;
-      performSearch(term);
+      if (term) performSearch(term);
     }, 300);
   }, [performSearch]);
 
-  const handleOnSearch = useCallback((term: string) => {
-    if (debouncedSearchRef.current) debouncedSearchRef.current(term);
-  }, []);
+  const handleOnSearch = useCallback(
+    (term: string) => debouncedSearchRef.current?.(term),
+    [],
+  );
 
   return (
     <>
       <header className="p-2 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
         <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
-          {/* --- Logo (Mobile) --- */}
           <Link href="/">
             <Image
               src={hh}
@@ -204,11 +161,9 @@ export default function Header() {
               height={50}
               className="rounded-full cursor-pointer bg-zinc-900 p-1 sm:hidden object-contain"
               priority
-              sizes="(max-width: 640px) 40px, 50px"
             />
           </Link>
 
-          {/* --- Sidebar (Desktop) --- */}
           <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all">
             <div className="flex flex-col items-center justify-center space-y-8 mt-4 w-full mx-auto text-zinc-900">
               <Link href="/" aria-label="Home" className="sidebar-icon-link ">
@@ -241,7 +196,6 @@ export default function Header() {
                 <span className="sidebar-tooltip">Mic Finder</span>
               </Link>
 
-              {/* News Link */}
               <button
                 onClick={() => handleProtectedRoute("/HHapi", "News")}
                 aria-label="News"
@@ -251,7 +205,6 @@ export default function Header() {
                 <span className="sidebar-tooltip">News</span>
               </button>
 
-              {/* Profile Link */}
               <button
                 onClick={() => handleProtectedRoute("/Profile", "Profile")}
                 aria-label="Profile"
@@ -302,12 +255,10 @@ export default function Header() {
             </button>
           </div>
 
-          {/* --- Mobile Header Title --- */}
-          <h1 className=" text-zinc-950 text-5xl font-extrabold sm:hidden justify-center tracking-wide">
+          <h1 className="text-zinc-950 text-5xl font-extrabold sm:hidden justify-center tracking-wide">
             Humor Hub!
           </h1>
 
-          {/* --- Mobile Menu Toggle --- */}
           <button
             onClick={toggleMenu}
             className="text-zinc-950 sm:hidden cursor-pointer"
@@ -329,7 +280,6 @@ export default function Header() {
             </svg>
           </button>
 
-          {/* --- Full Screen Mobile Menu --- */}
           {isMenuOpen && (
             <div className="fixed top-0 left-0 w-full h-full bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-6 p-4 backdrop-blur-sm">
               <button
@@ -350,7 +300,9 @@ export default function Header() {
 
               <SearchBar
                 onSearch={handleOnSearch}
-                isUserSignedIn={false}
+                isUserSignedIn={
+                  isUserSignedIn || !!authRef.current?.currentUser
+                }
                 setIsAuthModalOpen={setIsAuthModalOpen}
                 cities={cityList}
               />
@@ -374,8 +326,6 @@ export default function Header() {
                 >
                   Mic Finder
                 </Link>
-
-                {/* Mobile News */}
                 <button
                   onClick={() => {
                     setIsMenuOpen(false);
@@ -385,8 +335,6 @@ export default function Header() {
                 >
                   News
                 </button>
-
-                {/* Mobile Profile */}
                 <button
                   onClick={() => {
                     setIsMenuOpen(false);
@@ -396,7 +344,6 @@ export default function Header() {
                 >
                   Profile
                 </button>
-
                 <Link
                   href="/contact"
                   className="mobile-menu-item"

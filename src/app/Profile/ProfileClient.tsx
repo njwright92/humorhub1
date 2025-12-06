@@ -2,16 +2,14 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Image from "next/image";
-import { db } from "../../../firebase.config";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { db } from "../../../firebase.config";
+import { useToast } from "../components/ToastContext";
+import Header from "../components/header";
+import Footer from "../components/footer";
 import type { Auth, User } from "firebase/auth";
 import type { FirebaseStorage } from "firebase/storage";
-import { useToast } from "../components/ToastContext";
-
-const Header = dynamic(() => import("../components/header"), {});
-const Footer = dynamic(() => import("../components/footer"), {});
 
 type Event = {
   id: string;
@@ -20,42 +18,31 @@ type Event = {
   isRecurring: boolean;
   location: string;
   details: string;
-  lng: number;
-  lat: number;
-  googleTimestamp: string;
   festival?: boolean;
-  userId?: string;
 };
 
 export default function ProfileClient() {
-  // --- STATE ---
+  const { showToast } = useToast();
+  const router = useRouter();
+
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-
-  // Used to reset data on cancel
   const [originalName, setOriginalName] = useState("");
   const [originalBio, setOriginalBio] = useState("");
-
   const [isEditing, setIsEditing] = useState(false);
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
-  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
 
-  // --- REFS for lazy-loaded Firebase modules ---
   const authRef = useRef<Auth | null>(null);
   const storageRef = useRef<FirebaseStorage | null>(null);
   const uidRef = useRef<string | null>(null);
-  const router = useRouter();
 
-  // --- MEMOS ---
   const profileImageObjectURL = useMemo(() => {
-    if (!profileImage) return null;
-    return URL.createObjectURL(profileImage);
+    return profileImage ? URL.createObjectURL(profileImage) : null;
   }, [profileImage]);
 
-  // --- DATA FETCHING ---
   const fetchUserDataAndEvents = useCallback(async (user: User) => {
     try {
       setIsLoading(true);
@@ -63,15 +50,14 @@ export default function ProfileClient() {
         "firebase/firestore"
       );
 
-      const userRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userRef);
+      const userDocSnap = await getDoc(doc(db, "users", user.uid));
 
       if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        const dbName = userData?.name || "";
-        const dbBio = userData?.bio || "";
-        const dbImage = userData?.profileImageUrl || "";
-
+        const {
+          name: dbName = "",
+          bio: dbBio = "",
+          profileImageUrl: dbImage = "",
+        } = userDocSnap.data();
         setName(dbName);
         setBio(dbBio);
         setProfileImageUrl(dbImage);
@@ -84,10 +70,11 @@ export default function ProfileClient() {
         where("userId", "==", user.uid),
       );
       const querySnapshot = await getDocs(q);
-      const fetchedEvents: Event[] = querySnapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() }) as Event,
+      setSavedEvents(
+        querySnapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() }) as Event,
+        ),
       );
-      setSavedEvents(fetchedEvents);
     } catch (error) {
       console.error("Error fetching profile:", error);
     } finally {
@@ -102,15 +89,11 @@ export default function ProfileClient() {
       const { getAuth, onAuthStateChanged } = await import("firebase/auth");
       const { getStorage } = await import("firebase/storage");
 
-      const auth = getAuth();
-      const storage = getStorage();
+      authRef.current = getAuth();
+      storageRef.current = getStorage();
 
-      authRef.current = auth;
-      storageRef.current = storage;
-
-      unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe = onAuthStateChanged(authRef.current, (user) => {
         uidRef.current = user?.uid || null;
-
         if (user) {
           fetchUserDataAndEvents(user);
         } else {
@@ -123,10 +106,7 @@ export default function ProfileClient() {
     };
 
     initAuth();
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    return () => unsubscribe?.();
   }, [fetchUserDataAndEvents]);
 
   const handleSignOut = useCallback(async () => {
@@ -137,19 +117,17 @@ export default function ProfileClient() {
         await signOut(authRef.current);
         router.push("/");
       }
-    } catch (error) {
-      console.error("Error signing out:", error);
+    } catch {
       showToast("Error signing out", "error");
     }
   }, [router, showToast]);
 
   const handleImageChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      setProfileImage(file);
-      if (!uidRef.current || !storageRef.current) return;
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !uidRef.current || !storageRef.current) return;
 
+      setProfileImage(file);
       try {
         const { ref, uploadBytes, getDownloadURL } = await import(
           "firebase/storage"
@@ -159,10 +137,9 @@ export default function ProfileClient() {
           `profileImages/${uidRef.current}`,
         );
         await uploadBytes(imageRef, file);
-        const url = await getDownloadURL(imageRef);
-        setProfileImageUrl(url);
+        setProfileImageUrl(await getDownloadURL(imageRef));
         showToast("Image uploaded!", "success");
-      } catch (error) {
+      } catch {
         showToast("Error uploading image.", "error");
       }
     },
@@ -175,13 +152,16 @@ export default function ProfileClient() {
 
     try {
       const { doc, setDoc } = await import("firebase/firestore");
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, { name, bio, profileImageUrl }, { merge: true });
+      await setDoc(
+        doc(db, "users", user.uid),
+        { name, bio, profileImageUrl },
+        { merge: true },
+      );
       setOriginalName(name);
       setOriginalBio(bio);
       setIsEditing(false);
       showToast("Profile saved!", "success");
-    } catch (error) {
+    } catch {
       showToast("Error saving profile.", "error");
     }
   }, [name, bio, profileImageUrl, showToast]);
@@ -200,24 +180,12 @@ export default function ProfileClient() {
         await deleteDoc(doc(db, "savedEvents", eventId));
         setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
         showToast("Event removed!", "success");
-      } catch (error) {
+      } catch {
         showToast("Error deleting event.", "error");
       }
     },
     [showToast],
   );
-
-  function sendDataLayerEvent(
-    event_name: string,
-    params: { event_category: string; event_label: string },
-  ) {
-    if (typeof window !== "undefined") {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: event_name, ...params });
-    }
-  }
-
-  // --- RENDER ---
 
   if (isLoading) {
     return (
@@ -243,7 +211,6 @@ export default function ProfileClient() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
-          {/* --- LEFT COLUMN: PROFILE CARD --- */}
           <div className="lg:col-span-1">
             <section className="bg-zinc-200 border border-zinc-300 p-6 rounded-lg shadow-lg sticky top-24">
               <div className="flex flex-col items-center">
@@ -260,7 +227,8 @@ export default function ProfileClient() {
                       alt="Profile"
                       fill
                       className="object-cover"
-                      unoptimized
+                      priority
+                      fetchPriority="high"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-zinc-300 text-zinc-500">
@@ -281,12 +249,6 @@ export default function ProfileClient() {
                         type="file"
                         onChange={handleImageChange}
                         className="hidden"
-                        onClick={() => {
-                          sendDataLayerEvent("click_upload_profile_image", {
-                            event_category: "Profile_Interaction",
-                            event_label: "Profile_Image_Upload",
-                          });
-                        }}
                       />
                     </label>
                   )}
@@ -295,26 +257,40 @@ export default function ProfileClient() {
                 {isEditing ? (
                   <div className="w-full space-y-4">
                     <div>
-                      <label className="text-xs font-bold text-zinc-900 uppercase mb-1 block">
+                      <label
+                        htmlFor="display-name"
+                        className="text-xs font-bold text-zinc-900 uppercase mb-1 block"
+                      >
                         Display Name
                       </label>
                       <input
                         type="text"
+                        id="display-name"
+                        name="displayName"
+                        autoComplete="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-blue-500 outline-none"
                         placeholder="Stage Name"
                       />
                     </div>
+
                     <div>
-                      <label className="text-xs font-bold text-zinc-900 uppercase mb-1 block">
+                      <label
+                        htmlFor="bio"
+                        className="text-xs font-bold text-zinc-900 uppercase mb-1 block"
+                      >
                         Personal Note / Bio
                       </label>
                       <textarea
+                        id="bio"
+                        name="bio"
+                        autoComplete="off"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-blue-500 outline-none text-sm"
                         rows={4}
+                        placeholder="Tell us a bit about yourself..."
                       />
                     </div>
                     <div className="flex gap-2 pt-2">
@@ -364,7 +340,6 @@ export default function ProfileClient() {
             </section>
           </div>
 
-          {/* --- RIGHT COLUMN: SAVED EVENTS --- */}
           <div className="lg:col-span-2">
             <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px]">
               <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
@@ -392,7 +367,6 @@ export default function ProfileClient() {
                             </span>
                           )}
                         </div>
-
                         <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
                           <span>📍</span> {event.location}
                         </p>
@@ -400,7 +374,6 @@ export default function ProfileClient() {
                           <span>📅</span> {event.date}{" "}
                           {event.isRecurring ? "(Recurring)" : ""}
                         </p>
-
                         <div className="text-zinc-300 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
                           <div
                             dangerouslySetInnerHTML={{ __html: event.details }}
@@ -410,14 +383,11 @@ export default function ProfileClient() {
 
                       <div className="flex sm:flex-col justify-between items-end gap-2 min-w-[100px]">
                         <Link
-                          href={`/MicFinder?city=${
-                            event.location.split(",")[1]?.trim() || ""
-                          }`}
+                          href={`/MicFinder?city=${event.location.split(",")[1]?.trim() || ""}`}
                           className="text-xs text-zinc-400 hover:text-zinc-100 underline"
                         >
                           Find on Map
                         </Link>
-
                         <button
                           onClick={() => handleDeleteEvent(event.id)}
                           className="text-red-400 hover:text-red-300 hover:bg-red-900/20 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400"

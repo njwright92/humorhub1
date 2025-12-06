@@ -31,6 +31,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "thehumorhub.com",
       },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
     ],
     formats: ["image/avif", "image/webp"],
   },

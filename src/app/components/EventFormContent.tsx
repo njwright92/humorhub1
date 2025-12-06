@@ -315,6 +315,8 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                     <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
+                        id="isRecurring-yes"
+                        name="isRecurring"
                         checked={event.isRecurring === true}
                         onChange={() =>
                           handleCheckboxChange("isRecurring", true)
@@ -326,6 +328,8 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                     <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
+                        id="isRecurring-no"
+                        name="isRecurring"
                         checked={event.isRecurring === false}
                         onChange={() =>
                           handleCheckboxChange("isRecurring", false)
@@ -343,6 +347,8 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                     <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
+                        id="isFestival-yes"
+                        name="isFestival"
                         checked={event.isFestival === true}
                         onChange={() =>
                           handleCheckboxChange("isFestival", true)
@@ -354,6 +360,8 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                     <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
                       <input
                         type="checkbox"
+                        id="isFestival-no"
+                        name="isFestival"
                         checked={event.isFestival === false}
                         onChange={() =>
                           handleCheckboxChange("isFestival", false)
@@ -365,7 +373,6 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                   </div>
                 </div>
               </div>
-
               <label
                 htmlFor="details"
                 className="block text-zinc-900 font-bold mb-1"

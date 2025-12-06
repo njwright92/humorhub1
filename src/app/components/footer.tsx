@@ -6,7 +6,6 @@ import ScrollToTop from "./ScrollToTop";
 export default function Footer() {
   return (
     <footer
-      // Uses your custom zinc-900 (#2e2c28)
       className="bg-zinc-900 md:ml-20"
       aria-labelledby="footer-heading"
       id="footer"
@@ -33,7 +32,6 @@ export default function Footer() {
               alt="Humor Hub Logo"
               width={120}
               height={120}
-              // Kept amber-300 here because the Rust color looks great as a border
               className="rounded-full shadow-xl transition-transform transform group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-800 group-hover:border-amber-300 object-contain w-auto h-auto"
               sizes="(max-width: 768px) 60px, 120px"
               loading="lazy"
@@ -42,7 +40,6 @@ export default function Footer() {
 
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:w-3/4 md:pr-10">
             <div>
-              {/* CHANGED: text-amber-300 -> text-zinc-200 to fix Contrast Error */}
               <h2 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider text-nowrap">
                 Get to Know Us
               </h2>
@@ -50,7 +47,6 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/about"
-                    // Lighter blue for better visibility on dark bg
                     className="hover:text-blue-400 hover:underline transition-colors md:text-lg"
                   >
                     About Humor Hub

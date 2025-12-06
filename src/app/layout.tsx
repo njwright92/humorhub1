@@ -10,7 +10,6 @@ const comicNeue = Comic_Neue({
   subsets: ["latin"],
   variable: "--font-comic-neue",
   display: "swap",
-  preload: true,
 });
 
 export const viewport: Viewport = {
@@ -57,24 +56,6 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
   },
-  twitter: {
-    card: "summary_large_image",
-    creator: "@natebug321",
-    title: "Humor Hub - The Hub of Humor, Open Mics",
-    description:
-      "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore at Humor Hub.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -100,10 +81,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-KVJSFKV8');
       }
-      setTimeout(loadGTM, 3500);
-      ['scroll','click','touchstart','keydown'].forEach(e => 
-        window.addEventListener(e, loadGTM, {once: true, passive: true})
-      );
     `,
           }}
         />

@@ -4,18 +4,11 @@ import { useState, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
-// --- Types ---
-
-export interface SearchBarProps {
+interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   cities: string[];
-}
-
-interface City {
-  id: string;
-  city: string;
 }
 
 interface PageSuggestion {
@@ -28,10 +21,8 @@ type Suggestion = {
   type: "page" | "city";
   label: string;
   page?: PageSuggestion;
-  cityData?: City;
+  city?: string;
 };
-
-// --- Static Data ---
 
 const PAGES: PageSuggestion[] = [
   { label: "Mic Finder", route: "/MicFinder" },
@@ -48,8 +39,6 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-// --- Main Component ---
-
 export default function SearchBar({
   onSearch,
   isUserSignedIn,
@@ -57,11 +46,10 @@ export default function SearchBar({
   cities,
 }: SearchBarProps) {
   const { showToast } = useToast();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isInputVisible, setInputVisible] = useState(false);
-
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isInputVisible, setInputVisible] = useState(false);
 
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -69,35 +57,25 @@ export default function SearchBar({
 
     const results: Suggestion[] = [];
 
-    // Keywords
     if (["login", "sign in", "sign up"].includes(normalized)) {
       results.push({ type: "page", label: "Login / Sign Up" });
     }
+
     if (KEYWORDS_TO_MICFINDER.has(normalized)) {
-      results.push({
-        type: "page",
-        label: "Mic Finder",
-        page: { label: "Mic Finder", route: "/MicFinder" },
-      });
+      results.push({ type: "page", label: "Mic Finder", page: PAGES[0] });
     }
 
-    // Pages
     for (const page of PAGES) {
       if (page.label.toLowerCase().includes(normalized)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
-    // Cities (Limit 5)
     let count = 0;
-    for (const cityName of cities) {
+    for (const city of cities) {
       if (count >= 5) break;
-      if (cityName.toLowerCase().includes(normalized)) {
-        results.push({
-          type: "city",
-          label: cityName,
-          cityData: { id: cityName, city: cityName },
-        });
+      if (city.toLowerCase().includes(normalized)) {
+        results.push({ type: "city", label: city, city });
         count++;
       }
     }
@@ -111,29 +89,23 @@ export default function SearchBar({
   };
 
   const handleSelectSuggestion = (suggestion: Suggestion) => {
-    // Handle city selection
-    if (suggestion.type === "city" && suggestion.cityData) {
-      router.push(
-        `/MicFinder?city=${encodeURIComponent(suggestion.cityData.city)}`,
-      );
-      onSearch(suggestion.cityData.city);
+    if (suggestion.type === "city" && suggestion.city) {
+      router.push(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
+      onSearch(suggestion.city);
       closeSearchBar();
       return;
     }
 
-    // Handle Login / Sign Up
     if (suggestion.label === "Login / Sign Up") {
       setIsAuthModalOpen(true);
       closeSearchBar();
       return;
     }
 
-    // Handle page selection
-    if (suggestion.type === "page" && suggestion.page) {
+    if (suggestion.page) {
       const { route, requiresAuth, label } = suggestion.page;
 
       if (requiresAuth && !isUserSignedIn) {
-        // ✅ Fixed: Show toast and open auth modal
         showToast(`Please sign in to access ${label}`, "info");
         setIsAuthModalOpen(true);
         closeSearchBar();
@@ -151,7 +123,6 @@ export default function SearchBar({
     const normalized = searchTerm.trim().toLowerCase();
     if (!normalized) return;
 
-    // Check for exact match
     const exactMatch = suggestions.find(
       (s) => s.label.toLowerCase() === normalized,
     );
@@ -160,7 +131,6 @@ export default function SearchBar({
       return;
     }
 
-    // ✅ Fixed: Show toast BEFORE closing (so it has time to mount)
     if (suggestions.length === 0) {
       showToast("No results found. We've noted your search!", "info");
     }
@@ -181,11 +151,10 @@ export default function SearchBar({
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center p-1 bg-zinc-200 text-zinc-900 rounded-full transform transition-colors"
+          className="flex items-center justify-center p-1 bg-zinc-200 text-zinc-900 rounded-full transition-colors"
           aria-label="Toggle search"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8"
             viewBox="0 0 24 24"
             fill="none"
@@ -219,8 +188,8 @@ export default function SearchBar({
             <div className="flex gap-2 w-full mt-2">
               <button
                 type="button"
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-200 hover:bg-zinc-300 transition-colors"
                 onClick={closeSearchBar}
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-200 hover:bg-zinc-300 transition-colors"
               >
                 Cancel
               </button>
