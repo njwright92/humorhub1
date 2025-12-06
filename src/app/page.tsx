@@ -92,6 +92,7 @@ export default function Home() {
                   alt="Comedy News Update"
                   width={160}
                   height={160}
+                  sizes="160px"
                   className="rounded-full shadow-2xl border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                   loading="lazy"
                   quality={70}
