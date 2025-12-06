@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+firebase-admin
 
 /backend/__pycache__
 /backend/venv
