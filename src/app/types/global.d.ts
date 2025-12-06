@@ -1,8 +1,8 @@
-interface DataLayerEvent {
-  event: string;
-  [key: string]: any;
-}
+export {};
 
-interface Window {
-  dataLayer: DataLayerEvent[];
+declare global {
+  interface Window {
+    // ✅ BEST: Use the official type instead of 'any'
+    google: typeof google;
+  }
 }

@@ -165,7 +165,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
           } else {
             throw new Error("Invalid coordinates");
           }
-        } catch (geocodeError) {
+        } catch {
           console.warn("Geocoding failed, sending to manual review.");
           finalEventData = prepareEventData(event);
 

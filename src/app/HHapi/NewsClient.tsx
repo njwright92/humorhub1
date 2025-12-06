@@ -65,7 +65,7 @@ export default function NewsClient() {
       if (json.error) throw new Error(json.error);
 
       setArticles(json.data || []);
-    } catch (err) {
+    } catch {
       setError("Unable to load the latest headlines. Please try again.");
       setArticles([]);
     } finally {

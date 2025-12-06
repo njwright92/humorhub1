@@ -13,9 +13,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "npx eslint .",
     "format": "prettier --write .",
-    "preview": "next build && npm run format && next start"
+    "preview": "next build && npm run format && npm run lint && next start"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -33,8 +33,8 @@
     "@types/node": "^22.15.21",
     "@types/react": "19.2.1",
     "@types/react-dom": "19.2.1",
-    "eslint": "^9.27.0",
-    "eslint-config-next": "16.0.7",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.7",
     "lint-staged": "^16.2.7",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",

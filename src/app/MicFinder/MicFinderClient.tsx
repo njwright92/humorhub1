@@ -51,12 +51,18 @@ const MemoizedEventForm = React.memo(EventForm);
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
   loading: () => (
-    <div className="h-[25rem] w-full flex items-center justify-center text-zinc-200">
+    <div className="h-100 w-full flex items-center justify-center text-zinc-200">
       Loading Map...
     </div>
   ),
   ssr: false,
 });
+
+declare global {
+  interface Window {
+    dataLayer: Record<string, unknown>[];
+  }
+}
 
 type Event = {
   id: string;
@@ -71,7 +77,7 @@ type Event = {
   isMusic?: boolean;
   parsedDateObj?: Date;
   numericTimestamp?: number;
-  googleTimestamp?: any;
+  googleTimestamp?: string | number | Date;
 };
 
 type CityCoordinates = { [key: string]: { lat: number; lng: number } };
@@ -105,12 +111,16 @@ export default function MicFinderClient() {
 
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
 
-  const sendDataLayerEvent = useCallback((event_name: string, params: any) => {
-    if (typeof window !== "undefined") {
-      (window as any).dataLayer?.push({ event: event_name, ...params });
-    }
-  }, []);
-
+  // ✅ NEW: 'Record<string, unknown>' is safer than 'any'
+  const sendDataLayerEvent = useCallback(
+    (event_name: string, params: Record<string, unknown>) => {
+      if (typeof window !== "undefined") {
+        // ✅ NEW: No more 'as any' needed
+        window.dataLayer?.push({ event: event_name, ...params });
+      }
+    },
+    [],
+  );
   // --- Effects ---
 
   useEffect(() => {
@@ -136,7 +146,9 @@ export default function MicFinderClient() {
       if (cachedEvents && cachedCities) {
         if (mounted) {
           setEvents(
-            JSON.parse(cachedEvents).map((e: any) => ({
+            // ❌ OLD: JSON.parse(cachedEvents).map((e: any) => ({
+            // ✅ NEW: Type 'e' correctly
+            JSON.parse(cachedEvents).map((e: Event) => ({
               ...e,
               parsedDateObj: e.parsedDateObj
                 ? new Date(e.parsedDateObj)
@@ -193,11 +205,7 @@ export default function MicFinderClient() {
       }
     };
 
-    if ("requestIdleCallback" in window) {
-      (window as any).requestIdleCallback(loadData);
-    } else {
-      setTimeout(loadData, 100);
-    }
+    loadData();
     return () => {
       mounted = false;
     };
@@ -320,7 +328,7 @@ export default function MicFinderClient() {
         if (!user || !event.id) throw new Error("Invalid state");
 
         const { doc, setDoc, collection } = await import("firebase/firestore");
-        const { parsedDateObj, ...dataToSave } = event;
+        const { ...dataToSave } = event;
 
         await setDoc(doc(collection(db, "savedEvents"), event.id), {
           ...dataToSave,
@@ -489,7 +497,7 @@ export default function MicFinderClient() {
               {selectedCity || "Select a City"}
             </div>
             {isFirstDropdownOpen && (
-              <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 absolute top-full left-0 max-h-[192px] overflow-y-auto z-30">
+              <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30">
                 <input
                   type="text"
                   placeholder="Search city..."

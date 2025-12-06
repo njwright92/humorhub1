@@ -24,9 +24,12 @@ const AuthModal = dynamic(() => import("./authModal"), {
   loading: () => null,
 });
 
-function debounce<T extends (...args: any[]) => void>(func: T, wait: number) {
+function debounce<A extends unknown[]>(
+  func: (...args: A) => void,
+  wait: number,
+) {
   let timeout: ReturnType<typeof setTimeout> | null = null;
-  return (...args: Parameters<T>) => {
+  return (...args: A) => {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };
@@ -80,11 +83,7 @@ export default function Header() {
       }
     };
 
-    if ("requestIdleCallback" in window) {
-      (window as any).requestIdleCallback(fetchCities, { timeout: 2000 });
-    } else {
-      setTimeout(fetchCities, 1000);
-    }
+    fetchCities();
     return () => {
       mounted = false;
     };
