@@ -85,13 +85,16 @@ export default function ProfileClient() {
     let unsubscribe: (() => void) | undefined;
 
     const initAuth = async () => {
-      const { getAuth, onAuthStateChanged } = await import("firebase/auth");
+      const { getAuth } = await import("../../../firebase.config");
+      const { onAuthStateChanged } = await import("firebase/auth");
       const { getStorage } = await import("firebase/storage");
+      const { app } = await import("../../../firebase.config");
 
-      authRef.current = getAuth();
-      storageRef.current = getStorage();
+      const auth = await getAuth();
+      authRef.current = auth;
+      storageRef.current = getStorage(app);
 
-      unsubscribe = onAuthStateChanged(authRef.current, (user) => {
+      unsubscribe = onAuthStateChanged(auth, (user) => {
         uidRef.current = user?.uid || null;
         if (user) {
           fetchUserDataAndEvents(user);

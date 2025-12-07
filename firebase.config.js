@@ -1,11 +1,9 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import {
-  getAuth,
-  setPersistence,
-  browserLocalPersistence,
-  GoogleAuthProvider,
-} from "firebase/auth";
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -20,17 +18,35 @@ const firebaseConfig = {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager(),
+  }),
+});
 
 const storage = getStorage(app);
 
-const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence)
-  .then(() => {})
-  .catch((error) => {
-    console.error("Error setting persistence:", error);
-  });
+let _auth = null;
 
-const provider = new GoogleAuthProvider();
+export async function getAuth() {
+  if (_auth) return _auth;
 
-export { app, db, auth, provider, storage };
+  const {
+    getAuth: firebaseGetAuth,
+    setPersistence,
+    indexedDBLocalPersistence,
+    browserLocalPersistence,
+  } = await import("firebase/auth");
+
+  _auth = firebaseGetAuth(app);
+
+  try {
+    await setPersistence(_auth, indexedDBLocalPersistence);
+  } catch {
+    await setPersistence(_auth, browserLocalPersistence);
+  }
+
+  return _auth;
+}
+
+export { app, db, storage };

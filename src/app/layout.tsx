@@ -79,11 +79,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <link
           rel="preconnect"
-          href="https://www.googleapis.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
           href="https://firestore.googleapis.com"
           crossOrigin="anonymous"
         />

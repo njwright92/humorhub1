@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, memo } from "react";
-import { auth } from "../../../firebase.config";
+import { getAuth } from "../../../firebase.config";
 import { useToast } from "./ToastContext";
 import {
   createUserWithEmailAndPassword,
@@ -10,8 +10,6 @@ import {
   signInWithPopup,
   type AuthError,
 } from "firebase/auth";
-
-// --- Types & Constants ---
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -70,10 +68,11 @@ const AuthModal: React.FC<AuthModalProps> = ({
   onLoginSuccess,
 }) => {
   const { showToast } = useToast();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isSignIn, setIsSignIn] = useState<boolean>(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSignIn, setIsSignIn] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAuth = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,24 +89,24 @@ const AuthModal: React.FC<AuthModalProps> = ({
         );
         return;
       }
-
       if (!isSignIn && password !== confirmPassword) {
         showToast("Passwords do not match.", "error");
         return;
       }
 
+      setIsLoading(true);
       try {
-        const authInstance = auth as unknown as import("firebase/auth").Auth;
+        const auth = await getAuth();
 
         if (!isSignIn) {
-          await createUserWithEmailAndPassword(authInstance, email, password);
+          await createUserWithEmailAndPassword(auth, email, password);
           showToast("Sign-up successful! Welcome.", "success");
         } else {
-          await signInWithEmailAndPassword(authInstance, email, password);
+          await signInWithEmailAndPassword(auth, email, password);
           showToast("Sign-in successful! Welcome back.", "success");
         }
 
-        if (onLoginSuccess) onLoginSuccess();
+        onLoginSuccess?.();
         onClose();
       } catch (error) {
         const authError = error as AuthError;
@@ -122,6 +121,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
         } else {
           showToast(authError.message, "error");
         }
+      } finally {
+        setIsLoading(false);
       }
     },
     [
@@ -135,29 +136,25 @@ const AuthModal: React.FC<AuthModalProps> = ({
     ],
   );
 
-  const handleSocialSignIn = useCallback(
-    (provider: GoogleAuthProvider) => {
-      const authInstance = auth as unknown as import("firebase/auth").Auth;
-
-      signInWithPopup(authInstance, provider)
-        .then(() => {
-          console.log(`${provider.providerId} sign-in successful`);
-          showToast("Google sign-in successful!", "success");
-
-          if (onLoginSuccess) onLoginSuccess();
-          onClose();
-        })
-        .catch((error) => {
-          console.error(`Error during ${provider.providerId} sign-in:`, error);
-          if (error.code === "auth/popup-blocked") {
-            showToast("Popup blocked. Please allow popups.", "error");
-          } else if (error.code !== "auth/popup-closed-by-user") {
-            showToast("Google sign-in failed.", "error");
-          }
-        });
-    },
-    [onClose, onLoginSuccess, showToast],
-  );
+  const handleGoogleSignIn = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const auth = await getAuth();
+      await signInWithPopup(auth, new GoogleAuthProvider());
+      showToast("Google sign-in successful!", "success");
+      onLoginSuccess?.();
+      onClose();
+    } catch (error: unknown) {
+      const authError = error as AuthError;
+      if (authError.code === "auth/popup-blocked") {
+        showToast("Popup blocked. Please allow popups.", "error");
+      } else if (authError.code !== "auth/popup-closed-by-user") {
+        showToast("Google sign-in failed.", "error");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [onClose, onLoginSuccess, showToast]);
 
   if (!isOpen) return null;
 
@@ -168,6 +165,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
           onClick={onClose}
           className="absolute top-2 right-2 text-zinc-900 hover:text-zinc-950 transition-colors p-2"
           aria-label="Close Modal"
+          disabled={isLoading}
         >
           <svg
             className="h-6 w-6"
@@ -201,6 +199,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             placeholder="Email"
             className="input-field bg-zinc-100 w-full p-2 rounded-lg"
             autoComplete="email"
+            disabled={isLoading}
           />
 
           <label htmlFor="password" className="block text-sm text-zinc-900">
@@ -215,6 +214,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             placeholder="Password"
             className="input-field bg-zinc-100 w-full p-2 rounded-lg"
             autoComplete={isSignIn ? "current-password" : "new-password"}
+            disabled={isLoading}
           />
 
           {!isSignIn && (
@@ -234,19 +234,21 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 placeholder="Confirm Password"
                 className="input-field w-full bg-zinc-100 p-2 rounded-lg"
                 autoComplete="new-password"
+                disabled={isLoading}
               />
             </>
           )}
 
           <button
             type="submit"
-            className={`w-full py-2 text-zinc-100 font-medium rounded-lg shadow-lg transition-colors mt-2 ${
+            disabled={isLoading}
+            className={`w-full py-2 text-zinc-100 font-medium rounded-lg shadow-lg transition-colors mt-2 disabled:opacity-50 ${
               isSignIn
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-green-600 hover:bg-green-700"
             }`}
           >
-            {isSignIn ? "Sign In" : "Sign Up"}
+            {isLoading ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
           </button>
 
           <p className="mt-4 text-center text-sm text-zinc-900">
@@ -257,6 +259,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
                   type="button"
                   onClick={() => setIsSignIn(false)}
                   className="text-blue-600 underline cursor-pointer font-medium"
+                  disabled={isLoading}
                 >
                   Sign Up
                 </button>
@@ -268,6 +271,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
                   type="button"
                   onClick={() => setIsSignIn(true)}
                   className="text-blue-600 underline cursor-pointer font-medium"
+                  disabled={isLoading}
                 >
                   Sign In
                 </button>
@@ -277,13 +281,13 @@ const AuthModal: React.FC<AuthModalProps> = ({
         </form>
 
         <div className="my-2 flex items-center">
-          <p className="flex-shrink mx-auto text-zinc-900 text-sm">OR</p>
+          <p className="shrink mx-auto text-zinc-900 text-sm">OR</p>
         </div>
 
         <SocialSignInButton
-          onClick={() => handleSocialSignIn(new GoogleAuthProvider())}
+          onClick={handleGoogleSignIn}
           icon={<GoogleIcon />}
-          label="Sign in with Google"
+          label={isLoading ? "Loading..." : "Sign in with Google"}
         />
       </div>
     </div>

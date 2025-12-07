@@ -225,7 +225,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
 
       {showModal && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
           onClick={() => setShowModal(false)}
         >
           <div
@@ -234,7 +234,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
           >
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 z-[110] text-zinc-500 hover:text-red-600 transition-colors"
+              className="absolute top-4 right-4 z-110 text-zinc-500 hover:text-red-600 transition-colors"
               aria-label="Close Modal"
             >
               <svg

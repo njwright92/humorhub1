@@ -105,17 +105,12 @@ export default function MicFinderClient() {
     "Mics" | "Festivals" | "Other"
   >("Mics");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
   const authRef = useRef<Auth | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
-
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
-
-  // ✅ NEW: 'Record<string, unknown>' is safer than 'any'
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
       if (typeof window !== "undefined") {
-        // ✅ NEW: No more 'as any' needed
         window.dataLayer?.push({ event: event_name, ...params });
       }
     },
@@ -139,15 +134,11 @@ export default function MicFinderClient() {
   useEffect(() => {
     let mounted = true;
     const loadData = async () => {
-      // Check Cache
       const cachedEvents = sessionStorage.getItem("hh_events");
       const cachedCities = sessionStorage.getItem("hh_city_coords");
-
       if (cachedEvents && cachedCities) {
         if (mounted) {
           setEvents(
-            // ❌ OLD: JSON.parse(cachedEvents).map((e: any) => ({
-            // ✅ NEW: Type 'e' correctly
             JSON.parse(cachedEvents).map((e: Event) => ({
               ...e,
               parsedDateObj: e.parsedDateObj
@@ -184,7 +175,6 @@ export default function MicFinderClient() {
               : 0,
           } as Event;
         });
-
         const citiesData: CityCoordinates = {};
         citiesSnap.docs.forEach((doc) => {
           const d = doc.data();
@@ -193,7 +183,6 @@ export default function MicFinderClient() {
             lng: d.coordinates.lng,
           };
         });
-
         if (mounted) {
           setEvents(fetchedEvents);
           setCityCoordinates(citiesData);
@@ -204,7 +193,6 @@ export default function MicFinderClient() {
         console.error("Error loading data:", error);
       }
     };
-
     loadData();
     return () => {
       mounted = false;
@@ -213,13 +201,15 @@ export default function MicFinderClient() {
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
+
     const initAuth = async () => {
-      const { auth } = await import("../../../firebase.config");
+      const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
-      authRef.current = auth as Auth;
-      unsubscribe = onAuthStateChanged(auth, (user) =>
-        setIsUserSignedIn(!!user),
-      );
+      const auth = await getAuth();
+      authRef.current = auth;
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        setIsUserSignedIn(!!user);
+      });
     };
     setTimeout(initAuth, 100);
     return () => unsubscribe?.();
@@ -249,16 +239,13 @@ export default function MicFinderClient() {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation)
       return showToast("Geolocation not supported", "error");
-
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         let closestCity = null;
         let minDistance = Infinity;
-
         for (const [city, coords] of Object.entries(cityCoordinates)) {
           const dist = getDistanceFromLatLonInKm(
             latitude,
@@ -271,7 +258,6 @@ export default function MicFinderClient() {
             closestCity = city;
           }
         }
-
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
           setSelectedCity(normalized);
@@ -327,19 +313,35 @@ export default function MicFinderClient() {
         const user = authRef.current?.currentUser;
         if (!user || !event.id) throw new Error("Invalid state");
 
-        const { doc, setDoc, collection } = await import("firebase/firestore");
-        const { ...dataToSave } = event;
+        const { doc, setDoc } = await import("firebase/firestore");
 
-        await setDoc(doc(collection(db, "savedEvents"), event.id), {
-          ...dataToSave,
+        const dataToSave: Record<string, unknown> = {
+          id: event.id,
           userId: user.uid,
-        });
+        };
+
+        if (event.name) dataToSave.name = event.name;
+        if (event.location) dataToSave.location = event.location;
+        if (event.date) dataToSave.date = event.date;
+        if (event.lat != null) dataToSave.lat = event.lat;
+        if (event.lng != null) dataToSave.lng = event.lng;
+        if (event.details) dataToSave.details = event.details;
+        if (event.isRecurring != null)
+          dataToSave.isRecurring = event.isRecurring;
+        if (event.festival != null) dataToSave.festival = event.festival;
+        if (event.isMusic != null) dataToSave.isMusic = event.isMusic;
+        if (event.googleTimestamp)
+          dataToSave.googleTimestamp = event.googleTimestamp;
+
+        await setDoc(doc(db, "savedEvents", event.id), dataToSave);
+
         showToast("Event saved successfully!", "success");
         sendDataLayerEvent("save_event", {
           event_category: "Event Interaction",
           event_label: event.name,
         });
-      } catch {
+      } catch (error) {
+        console.error("Failed to save event:", error);
         showToast("Failed to save event. Please try again.", "error");
       }
     },
@@ -399,7 +401,6 @@ export default function MicFinderClient() {
     dateCheck.setHours(0, 0, 0, 0);
     const term = debouncedSearchTerm.toLowerCase();
     const city = selectedCity.toLowerCase();
-
     return events.filter((e) => {
       if (!isTabMatch(e)) return false;
       const matchesCity = !city || e.location.toLowerCase().includes(city);
@@ -407,7 +408,6 @@ export default function MicFinderClient() {
         !term ||
         e.name.toLowerCase().includes(term) ||
         e.location.toLowerCase().includes(term);
-
       let matchesDate = false;
       if (e.isRecurring) {
         matchesDate = DAY_MAP[e.date] === selectedDate.getDay();
@@ -547,7 +547,7 @@ export default function MicFinderClient() {
           </div>
         </div>
 
-        <section className="w-full h-[25rem] rounded-lg shadow-md relative border border-zinc-200 mt-6 overflow-hidden bg-zinc-800">
+        <section className="w-full h-100 rounded-lg shadow-md relative border border-zinc-200 mt-6 overflow-hidden bg-zinc-800">
           <button
             onClick={toggleMapVisibility}
             className={`absolute z-10 rounded-lg shadow-xl px-4 py-2 transition cursor-pointer font-semibold ${!isMapVisible ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-zinc-900 p-2" : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950"}`}
@@ -591,16 +591,6 @@ export default function MicFinderClient() {
                 <h3 className="text-lg font-semibold">{event.name}</h3>
                 <p className="details-label">📅 Date: {event.date}</p>
                 <p className="details-label">📍 Location: {event.location}</p>
-                {event.festival && (
-                  <p className="details-label text-purple-600 font-bold">
-                    🏆 This is a festival!
-                  </p>
-                )}
-                {event.isMusic && !event.festival && (
-                  <p className="details-label text-green-600 font-bold">
-                    🎶 This is a Music/Other event!
-                  </p>
-                )}
                 <div className="details-label">
                   <span className="details-label">ℹ️ Details:</span>
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
@@ -737,10 +727,10 @@ export default function MicFinderClient() {
                     key={virtualItem.key}
                     data-index={virtualItem.index}
                     ref={rowVirtualizer.measureElement}
-                    className="absolute top-0 left-0 w-full p-2"
+                    className="absolute top-0 left-0 w-full p-1"
                     style={{ transform: `translateY(${virtualItem.start}px)` }}
                   >
-                    <div className="event-item my-2 h-auto flex flex-col p-4">
+                    <div className="event-item my-2 h-auto flex flex-col p-1">
                       <h3 className="text-xl font-bold">{event.name}</h3>
                       <p className="details-label">📅 Date: {event.date}</p>
                       <p className="details-label">

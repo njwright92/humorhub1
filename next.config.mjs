@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
 
-  transpilePackages: ["@googlemaps/js-api-loader", "firebase"],
+  transpilePackages: ["@googlemaps/js-api-loader"],
 
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
@@ -97,19 +97,6 @@ const nextConfig = {
             value: "Content-Type, Authorization",
           },
         ],
-      },
-    ];
-  },
-
-  async rewrites() {
-    return [
-      {
-        source: "/__firebase/:path*",
-        destination: "https://humorhub-73ff9.firebaseapp.com/:path*",
-      },
-      {
-        source: "/firebase/:path*",
-        destination: "https://www.gstatic.com/firebasejs/:path*",
       },
     ];
   },

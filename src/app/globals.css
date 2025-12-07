@@ -99,7 +99,7 @@
   }
 
   .card-style {
-    @apply flex-grow bg-transparent text-zinc-200 p-6 mt-10 mb-10 shadow-lg rounded-lg;
+    @apply grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg;
   }
 
   .content-with-sidebar {
@@ -252,7 +252,7 @@
 
   /* Guide & Dialog */
   .guide-container {
-    @apply fixed right-12 bottom-12 z-[1000];
+    @apply fixed right-12 bottom-12 z-1000;
   }
 
   .custom-backdrop {
@@ -260,7 +260,7 @@
   }
 
   .custom-dialog {
-    @apply bg-zinc-300 rounded-lg shadow-md p-2.5 z-[9999];
+    @apply bg-zinc-300 rounded-lg shadow-md p-2.5 z-9999;
   }
 
   .custom-dialog::before {

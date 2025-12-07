@@ -26,7 +26,6 @@ export default function Home() {
         {/* Mic Finder Section */}
         <section className="card-style mx-auto w-full">
           <h2 className="title mb-8 text-center sm:mb-10">Mic Finder!</h2>
-
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
             <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
               <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
@@ -39,9 +38,7 @@ export default function Home() {
                   With 1000s of open mic listings, find your next Mic now!
                 </span>
               </p>
-
               <EventForm />
-
               <Link
                 href="/MicFinder"
                 className="btn w-80 text-center self-center"
@@ -54,8 +51,8 @@ export default function Home() {
                 <Image
                   src={micFinder}
                   alt="Mic Finder Logo"
-                  width={160}
-                  height={160}
+                  width={140}
+                  height={140}
                   className="rounded-full shadow-lg border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                   priority
                   fetchPriority="high"
@@ -68,7 +65,6 @@ export default function Home() {
         {/* Hub News Section */}
         <section className="card-style mx-auto w-full animate-pulse-once">
           <h2 className="title mb-8 text-center sm:mb-10">Hub News!</h2>
-
           <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
             <div className="flex-1 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
               <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
@@ -81,18 +77,16 @@ export default function Home() {
                   Check out the Hub News for the latest updates!
                 </span>
               </p>
-
               <NewsButton />
             </div>
-
             <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
               <NewsButton className="relative group cursor-pointer bg-transparent p-0 border-0">
                 <Image
                   src={news}
                   alt="Comedy News Update"
-                  width={160}
-                  height={160}
-                  sizes="160px"
+                  width={140}
+                  height={140}
+                  sizes="140px"
                   className="rounded-full shadow-2xl border-2 border-zinc-700 transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3 object-contain"
                   loading="lazy"
                 />

@@ -27,19 +27,19 @@ export default function NewsButton({ children, className }: Props) {
     let unsubscribe: (() => void) | undefined;
 
     const initAuth = async () => {
-      const { auth } = await import("../../../firebase.config");
+      const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
-      authRef.current = auth as Auth;
 
-      unsubscribe = onAuthStateChanged(auth as Auth, (user) => {
+      const auth = await getAuth();
+      authRef.current = auth;
+
+      unsubscribe = onAuthStateChanged(auth, (user) => {
         setIsUserSignedIn(!!user);
       });
     };
 
     initAuth();
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    return () => unsubscribe?.();
   }, []);
 
   const handleClick = () => {

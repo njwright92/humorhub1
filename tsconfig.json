@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "../.vscode/route.ts",
     "src/app/api/route.js",
-    "src/app/utils/geocode.js",
+    "src/app/utils/geocode.tsx",
     "src/app/components/GoogleMap.tsx",
     ".next/dev/types/**/*.ts"
   ],
