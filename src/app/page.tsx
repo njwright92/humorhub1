@@ -83,7 +83,7 @@ export default function Home() {
         </section>
 
         {/* Hub News Section */}
-        <section className="card-style mx-auto w-full animate-pulse-once">
+        <section className="card-style mx-auto w-full">
           <h2 className="title mb-8 text-center sm:mb-10">Hub News!</h2>
           <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
             <div className="flex-1 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
