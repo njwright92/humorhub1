@@ -205,18 +205,24 @@ export default function ProfileClient() {
   return (
     <>
       <Header />
-      <main className="screen-container content-with-sidebar">
-        <div className="flex flex-col items-center mb-8">
-          <h1 className="title text-center">Profile</h1>
-          <p className="text-zinc-300 text-sm">Manage your personal schedule</p>
+
+      <main className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
+        <div className="flex flex-col items-center mb-8 mt-10">
+          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-3xl sm:text-5xl md:text-6xl lg:text-6xl text-center font-heading">
+            Profile
+          </h1>
+          <p className="text-zinc-300 text-smmd mt-2 font-sans">
+            Manage your personal schedule
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
+          {/* --- Left Column: Profile Card --- */}
           <div className="lg:col-span-1">
-            <section className="bg-zinc-200 border border-zinc-300 p-6 rounded-lg shadow-lg sticky top-24">
+            <section className="bg-zinc-200 border border-zinc-300 p-4 rounded-lg shadow-lg sticky top-24 text-zinc-900">
               <div className="flex flex-col items-center">
                 {!isEditing && (
-                  <h2 className="text-2xl font-bold text-zinc-900 mb-4 text-center">
+                  <h2 className="text-2xl font-bold text-zinc-900 mb-4 text-center font-heading">
                     {name || "Anonymous Comic"}
                   </h2>
                 )}
@@ -260,7 +266,7 @@ export default function ProfileClient() {
                     <div>
                       <label
                         htmlFor="display-name"
-                        className="text-xs font-bold text-zinc-900 uppercase mb-1 block"
+                        className="text-md font-bold text-zinc-900 uppercase mb-1 block"
                       >
                         Display Name
                       </label>
@@ -271,7 +277,7 @@ export default function ProfileClient() {
                         autoComplete="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-blue-500 outline-none"
+                        className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 outline-hidden"
                         placeholder="Stage Name"
                       />
                     </div>
@@ -279,7 +285,7 @@ export default function ProfileClient() {
                     <div>
                       <label
                         htmlFor="bio"
-                        className="text-xs font-bold text-zinc-900 uppercase mb-1 block"
+                        className="text-sm font-bold text-zinc-900 uppercase mb-1 block"
                       >
                         Personal Note / Bio
                       </label>
@@ -289,7 +295,7 @@ export default function ProfileClient() {
                         autoComplete="off"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-blue-500 outline-none text-sm"
+                        className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 outline-hidden text-sm"
                         rows={4}
                         placeholder="Tell us a bit about yourself..."
                       />
@@ -297,13 +303,13 @@ export default function ProfileClient() {
                     <div className="flex gap-2 pt-2">
                       <button
                         onClick={handleSubmit}
-                        className="flex-1 bg-blue-900 hover:bg-blue-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition"
+                        className="flex-1 bg-blue-900 hover:bg-blue-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition cursor-pointer shadow-md"
                       >
                         Save
                       </button>
                       <button
                         onClick={handleCancel}
-                        className="flex-1 bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition"
+                        className="flex-1 bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition cursor-pointer shadow-md"
                       >
                         Cancel
                       </button>
@@ -312,7 +318,7 @@ export default function ProfileClient() {
                 ) : (
                   <div className="text-center w-full">
                     {bio ? (
-                      <p className="text-zinc-800 text-md mb-6 italic border-t border-zinc-400 pt-4">
+                      <p className="text-zinc-800 text-md mb-6 italic border-t border-zinc-400 pt-4 font-sans">
                         &rdquo;{bio}&rdquo;
                       </p>
                     ) : (
@@ -324,13 +330,13 @@ export default function ProfileClient() {
                     <div className="space-y-3">
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="w-full bg-green-900 hover:bg-green-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                        className="w-full bg-green-900 hover:bg-green-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg cursor-pointer"
                       >
                         Edit Profile
                       </button>
                       <button
                         onClick={handleSignOut}
-                        className="w-full bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                        className="w-full bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg cursor-pointer"
                       >
                         Sign Out
                       </button>
@@ -341,11 +347,12 @@ export default function ProfileClient() {
             </section>
           </div>
 
+          {/* --- Right Column: Saved Events --- */}
           <div className="lg:col-span-2">
-            <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px]">
-              <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+            <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px] shadow-xl backdrop-blur-sm">
+              <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center justify-center lg:justify-start gap-2 font-heading">
                 <span>🎟️</span> Saved Events
-                <span className="bg-zinc-700 text-zinc-300 text-xs px-2 py-1 rounded-full">
+                <span className="bg-zinc-700 text-zinc-300 text-xs px-2 py-1 rounded-full font-sans">
                   {savedEvents.length}
                 </span>
               </h2>
@@ -355,11 +362,11 @@ export default function ProfileClient() {
                   {savedEvents.map((event) => (
                     <div
                       key={event.id}
-                      className="group relative bg-zinc-900 border border-zinc-700 rounded-lg p-5 hover:border-blue-500/50 transition-all hover:shadow-lg flex flex-col sm:flex-row gap-4 justify-between"
+                      className="group relative bg-zinc-900 border border-zinc-700 rounded-lg p-5 hover:border-amber-300 transition-all hover:shadow-lg flex flex-col sm:flex-row gap-4 justify-between text-left"
                     >
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-bold text-blue-400 group-hover:text-blue-300 transition-colors">
+                          <h3 className="text-lg font-bold text-amber-300 group-hover:text-amber-200 transition-colors font-heading">
                             {event.name}
                           </h3>
                           {event.festival && (
@@ -368,14 +375,14 @@ export default function ProfileClient() {
                             </span>
                           )}
                         </div>
-                        <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
+                        <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1 font-sans">
                           <span>📍</span> {event.location}
                         </p>
-                        <p className="text-zinc-300 text-xs mb-3 flex items-center gap-1">
+                        <p className="text-zinc-300 text-xs mb-3 flex items-center gap-1 font-sans">
                           <span>📅</span> {event.date}{" "}
                           {event.isRecurring ? "(Recurring)" : ""}
                         </p>
-                        <div className="text-zinc-300 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                        <div className="text-zinc-300 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300 font-sans">
                           <div
                             dangerouslySetInnerHTML={{ __html: event.details }}
                           />
@@ -385,13 +392,13 @@ export default function ProfileClient() {
                       <div className="flex sm:flex-col justify-between items-end gap-2 min-w-[100px]">
                         <Link
                           href={`/MicFinder?city=${event.location.split(",")[1]?.trim() || ""}`}
-                          className="text-xs text-zinc-400 hover:text-zinc-100 underline"
+                          className="text-sm text-zinc-300 hover:text-amber-300 underline transition-colors"
                         >
                           Find on Map
                         </Link>
                         <button
                           onClick={() => handleDeleteEvent(event.id)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-900/20 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400"
+                          className="text-red-400 hover:text-red-100 hover:bg-red-900/50 px-3 py-1 rounded-lg text-sm font-semibold transition w-auto border border-red-500 hover:border-red-400 cursor-pointer"
                         >
                           Remove
                         </button>
@@ -402,11 +409,15 @@ export default function ProfileClient() {
               ) : (
                 <div className="flex flex-col items-center justify-center h-64 text-zinc-500 border-2 border-dashed border-zinc-700 rounded-lg">
                   <span className="text-4xl mb-2">📭</span>
-                  <p className="text-lg font-semibold">No events saved yet</p>
-                  <p className="text-sm mb-4">Go find some mics to hit!</p>
+                  <p className="text-lg font-semibold font-heading">
+                    No events saved yet
+                  </p>
+                  <p className="text-sm mb-4 font-sans">
+                    Go find some mics to hit!
+                  </p>
                   <Link
                     href="/MicFinder"
-                    className="bg-blue-600 hover:bg-blue-700 text-zinc-100 px-4 py-2 rounded-lg font-bold transition"
+                    className="bg-amber-300 hover:bg-amber-400 text-zinc-950 px-4 py-2 rounded-lg font-bold transition shadow-lg transform hover:scale-105"
                   >
                     Go to MicFinder
                   </Link>

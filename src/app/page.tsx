@@ -38,21 +38,23 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="screen-container content-with-sidebar">
-        <h1 className="hidden md:block text-zinc-200 text-7xl font-bold mb-6 tracking-wide">
+      <div className="flex flex-col p-4 text-zinc-200 text-center md:ml-20 min-h-screen">
+        <h1 className="hidden md:block text-zinc-200 text-7xl font-bold mb-6 tracking-wide font-heading">
           Humor Hub!
         </h1>
 
         {/* Mic Finder Section */}
-        <section className="card-style mx-auto w-full">
-          <h2 className="title mb-8 text-center sm:mb-10">Mic Finder!</h2>
+        <section className="grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg mx-auto w-full">
+          <h2 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-8 text-center sm:mb-10 font-heading">
+            Mic Finder!
+          </h2>
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
             <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
-              <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
+              <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg font-sans">
                 Looking for your next Mic?
                 <br />
-                <span className="font-bold">MicFinder</span> helps comedians
-                find and share Mics worldwide!
+                <span className="font-bold text-amber-300">MicFinder</span>{" "}
+                helps comedians find and share Mics worldwide!
                 <br />
                 <span className="mt-2 block">
                   With 1000s of open mic listings, find your next Mic now!
@@ -61,7 +63,7 @@ export default function Home() {
               <EventForm />
               <Link
                 href="/MicFinder"
-                className="btn w-80 text-center self-center"
+                className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 hover:outline hover:outline-white w-80 text-center self-center"
               >
                 Find Your Mic!
               </Link>
@@ -83,13 +85,17 @@ export default function Home() {
         </section>
 
         {/* Hub News Section */}
-        <section className="card-style mx-auto w-full">
-          <h2 className="title mb-8 text-center sm:mb-10">Hub News!</h2>
+        <section className="grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg mx-auto w-full">
+          <h2 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-8 text-center sm:mb-10 font-heading">
+            Hub News!
+          </h2>
           <div className="flex flex-col md:flex-row-reverse items-center justify-between gap-8 w-full">
             <div className="flex-1 flex flex-col items-center md:items-end text-center md:text-right space-y-6">
-              <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg">
+              <p className="text-md lg:text-lg text-zinc-200 leading-relaxed max-w-lg drop-shadow-lg font-sans">
                 Your Source for{" "}
-                <span className="font-bold">Fresh Headlines!</span>
+                <span className="font-bold text-amber-300">
+                  Fresh Headlines!
+                </span>
                 <br />
                 Looking for something topical?
                 <br />
@@ -97,10 +103,12 @@ export default function Home() {
                   Check out the Hub News for the latest updates!
                 </span>
               </p>
+              {/* Renders with default button styles defined in NewsButton.tsx */}
               <NewsButton />
             </div>
             <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
-              <NewsButton className="relative group cursor-pointer bg-transparent p-0 border-0">
+              {/* Renders with custom transparent styles for the Image */}
+              <NewsButton className="relative group cursor-pointer bg-transparent p-0 border-0 outline-none">
                 <Image
                   src={news}
                   alt="Comedy News Update"

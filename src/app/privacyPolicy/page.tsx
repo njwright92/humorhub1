@@ -19,18 +19,20 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <main className="screen-container content-with-sidebar bg-zinc-900">
-        <h1 className="title text-center mb-8">Privacy Policy</h1>
+      <main className="flex flex-col items-center justify-center p-4 text-zinc-200 text-center md:ml-24 min-h-screen bg-zinc-900">
+        <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl text-center mb-8 font-heading">
+          Privacy Policy
+        </h1>
 
-        <section className="bg-zinc-200 border border-zinc-300 p-8 max-w-4xl mx-auto shadow-xl rounded-xl">
-          <p className="text-zinc-700 text-sm mb-6 border-b border-zinc-300 pb-4">
+        <section className="bg-zinc-200 border border-zinc-300 p-8 max-w-4xl mx-auto shadow-2xl rounded-xl text-left">
+          <p className="text-zinc-700 text-sm mb-6 border-b border-zinc-300 pb-4 font-sans">
             <strong>Last Updated:</strong> November 2025
           </p>
 
-          <div className="space-y-8 text-zinc-800">
+          <div className="space-y-8 text-zinc-800 font-sans">
             {/* 1. Introduction */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2">
+              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
                 1. Introduction
               </h2>
               <p className="text-zinc-800 leading-relaxed">
@@ -43,7 +45,7 @@ export default function PrivacyPolicyPage() {
 
             {/* 2. Information We Collect */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2">
+              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
                 2. Information We Collect
               </h2>
               <p className="text-zinc-800 leading-relaxed mb-2">
@@ -67,7 +69,7 @@ export default function PrivacyPolicyPage() {
 
             {/* 3. Third-Party Services */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2">
+              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
                 3. Third-Party Services
               </h2>
               <p className="text-zinc-800 leading-relaxed">
@@ -91,7 +93,7 @@ export default function PrivacyPolicyPage() {
 
             {/* 4. Data Security */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2">
+              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
                 4. Data Security
               </h2>
               <p className="text-zinc-800 leading-relaxed">
@@ -104,27 +106,26 @@ export default function PrivacyPolicyPage() {
 
             {/* 5. Contact */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2">
+              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
                 5. Contact
               </h2>
               <p className="text-zinc-800">
                 If you have questions about this policy or wish to delete your
-                data, please contact us at{" "}
-                <a
-                  href="mailto:thehumorhub777@gmail.com"
-                  className="text-blue-600 hover:text-blue-800 underline transition-colors"
+                data, please{" "}
+                <Link
+                  href="/contact"
+                  className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
                 >
-                  Humor Hub
-                </a>
-                .
+                  Contact Us
+                </Link>
               </p>
             </div>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-zinc-900 text-center">
+          <div className="mt-10 pt-6 border-t border-zinc-300 text-center">
             <Link
               href="/"
-              className="btn bg-zinc-900 hover:bg-zinc-800 text-zinc-100 px-6 py-3 rounded-lg font-bold transition inline-block shadow-md"
+              className="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 px-6 py-3 rounded-lg font-bold transition inline-block shadow-md hover:scale-105 transform"
             >
               Return Home
             </Link>

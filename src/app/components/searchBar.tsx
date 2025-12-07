@@ -151,7 +151,7 @@ export default function SearchBar({
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center p-1 bg-zinc-200 text-zinc-900 rounded-full transition-colors"
+          className="flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 text-zinc-900 rounded-full transition-colors p-1"
           aria-label="Toggle search"
         >
           <svg
@@ -170,10 +170,10 @@ export default function SearchBar({
       )}
 
       {isInputVisible && (
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-72 sm:w-80 z-50">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-70 sm:w-80 z-50">
           <form
             onSubmit={handleSearch}
-            className="flex flex-col items-center rounded-lg bg-zinc-200 shadow-xl p-2 animate-fade-in-down border border-zinc-400"
+            className="flex flex-col items-center rounded-lg bg-zinc-200 shadow-2xl p-2 border border-zinc-400"
           >
             <input
               ref={inputRef}
@@ -181,7 +181,7 @@ export default function SearchBar({
               placeholder="Search city, page, or keyword..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full outline-none border border-transparent focus:border-orange-500 transition-colors"
+              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full outline-hidden border-2 border-transparent focus:border-amber-300 transition-colors placeholder:text-zinc-500"
               autoComplete="off"
             />
 
@@ -189,31 +189,31 @@ export default function SearchBar({
               <button
                 type="button"
                 onClick={closeSearchBar}
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-200 hover:bg-zinc-300 transition-colors"
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-300 hover:bg-zinc-400 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-700 transition-colors"
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors"
               >
                 Search
               </button>
             </div>
 
             {suggestions.length > 0 && (
-              <ul className="w-full mt-2 max-h-60 overflow-y-auto divide-y divide-zinc-100">
+              <ul className="w-full mt-2 max-h-60 overflow-y-auto divide-y divide-zinc-300 border-t border-zinc-300">
                 {suggestions.map((sug, idx) => (
                   <li
                     key={idx}
-                    className="p-2 cursor-pointer hover:bg-zinc-100 text-zinc-800 text-sm flex justify-between items-center"
+                    className="p-2 cursor-pointer hover:bg-zinc-300 text-zinc-900 text-sm flex justify-between items-center transition-colors"
                     onMouseDown={(e) => {
                       e.preventDefault();
                       handleSelectSuggestion(sug);
                     }}
                   >
-                    <span>{sug.label}</span>
-                    <span className="text-xs text-zinc-400 uppercase tracking-wider">
+                    <span className="font-medium">{sug.label}</span>
+                    <span className="text-xs text-zinc-600 uppercase tracking-wider font-bold">
                       {sug.type}
                     </span>
                   </li>

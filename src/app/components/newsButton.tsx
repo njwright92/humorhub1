@@ -55,7 +55,10 @@ export default function NewsButton({ children, className }: Props) {
     <>
       <button
         onClick={handleClick}
-        className={className || "btn w-80 text-center self-center md:self-end"}
+        className={
+          className ||
+          "bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 hover:outline hover:outline-white w-80 text-center self-center md:self-end"
+        }
       >
         {children || "Check It Out"}
       </button>

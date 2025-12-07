@@ -155,7 +155,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-2 text-zinc-900 sticky top-0 z-50 bg-gradient-animation">
+      <header className="p-2 text-zinc-900 sticky top-0 z-50 bg-amber-300">
         <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
           {/* Mobile: Logo (left side) */}
           <Link href="/" aria-label="Home" className="sm:hidden">
@@ -170,9 +170,14 @@ export default function Header() {
           </Link>
 
           {/* Desktop Sidebar */}
-          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all">
+          <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all backdrop-blur-sm">
             <div className="flex flex-col items-center justify-center space-y-6 mt-4 w-full mx-auto text-zinc-900">
-              <Link href="/" aria-label="Home" className="sidebar-icon-link">
+              {/* Home Link */}
+              <Link
+                href="/"
+                aria-label="Home"
+                className="group relative transform transition-transform hover:scale-110 text-zinc-900"
+              >
                 <Image
                   src={hh}
                   alt="Humor Hub Logo"
@@ -181,10 +186,13 @@ export default function Header() {
                   className="rounded-full cursor-pointer bg-zinc-900 p-1 mx-auto shadow-lg"
                   priority
                 />
-                <span className="sidebar-tooltip">Home</span>
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  Home
+                </span>
               </Link>
 
-              <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer">
+              {/* Search Bar Wrapper */}
+              <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer relative z-50">
                 <SearchBar
                   onSearch={handleOnSearch}
                   isUserSignedIn={isUserSignedIn}
@@ -193,53 +201,68 @@ export default function Header() {
                 />
               </div>
 
+              {/* Mic Finder */}
               <Link
                 href="/MicFinder"
                 aria-label="MicFinder"
-                className="sidebar-icon-link"
+                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
               >
                 <MicFinderIcon />
-                <span className="sidebar-tooltip">Mic Finder</span>
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  Mic Finder
+                </span>
               </Link>
 
+              {/* News */}
               <button
                 onClick={() => handleProtectedRoute("/HHapi", "News")}
                 aria-label="News"
-                className="sidebar-icon-link"
+                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
               >
                 <NewsIcon />
-                <span className="sidebar-tooltip">News</span>
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  News
+                </span>
               </button>
 
+              {/* Profile */}
               <button
                 onClick={() => handleProtectedRoute("/Profile", "Profile")}
                 aria-label="Profile"
-                className="sidebar-icon-link"
+                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
               >
                 <UserIconComponent />
-                <span className="sidebar-tooltip">Profile</span>
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  Profile
+                </span>
               </button>
 
+              {/* Contact */}
               <Link
                 href="/contact"
                 aria-label="Contact Us"
-                className="sidebar-icon-link"
+                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
               >
                 <ContactIcon />
-                <span className="sidebar-tooltip">Contact Us</span>
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  Contact Us
+                </span>
               </Link>
 
+              {/* About */}
               <Link
                 href="/about"
                 aria-label="About"
-                className="sidebar-icon-link"
+                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
               >
                 <AboutIcon />
-                <span className="sidebar-tooltip">About</span>
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  About
+                </span>
               </Link>
             </div>
 
-            {/* Desktop: Sign In button at bottom of sidebar */}
+            {/* Desktop: Sign In button / Menu Toggle */}
             <div className="mt-auto mb-4 flex flex-col items-center gap-3">
               <button
                 onClick={toggleMenu}
@@ -265,14 +288,14 @@ export default function Header() {
           </div>
 
           {/* Mobile: Title */}
-          <h1 className="text-zinc-950 text-5xl font-extrabold sm:hidden justify-center tracking-wide">
+          <h1 className="text-zinc-950 font-heading text-5xl font-extrabold sm:hidden justify-center tracking-wide">
             Humor Hub!
           </h1>
 
           {/* Mobile: Hamburger menu button */}
           <button
             onClick={toggleMenu}
-            className="text-zinc-950 sm:hidden cursor-pointer"
+            className="text-zinc-950 sm:hidden cursor-pointer hover:scale-105 transition-transform"
             aria-label="Toggle menu"
           >
             <svg
@@ -293,10 +316,10 @@ export default function Header() {
 
           {/* Mobile Menu Overlay */}
           {isMenuOpen && (
-            <div className="fixed top-0 left-0 w-full h-full bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-sm">
+            <div className="fixed inset-0 w-full h-full bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-sm animate-slide-in">
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="self-end cursor-pointer mb-2 p-2"
+                className="self-end cursor-pointer mb-2 p-2 hover:text-amber-300 transition-colors"
                 aria-label="Close menu"
               >
                 <svg
@@ -324,14 +347,15 @@ export default function Header() {
                   alt="Humor Hub Logo"
                   width={50}
                   height={50}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1"
+                  className="rounded-full cursor-pointer bg-zinc-900 p-1 hover:scale-105 transition-transform"
                 />
               </Link>
 
+              {/* Mobile Menu Links - Refactored with inline styles */}
               <div className="flex flex-col gap-4 text-center w-full max-w-xs">
                 <Link
                   href="/MicFinder"
-                  className="mobile-menu-item"
+                  className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Mic Finder
@@ -341,7 +365,7 @@ export default function Header() {
                     setIsMenuOpen(false);
                     handleProtectedRoute("/HHapi", "News");
                   }}
-                  className="mobile-menu-item"
+                  className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
                 >
                   News
                 </button>
@@ -350,20 +374,20 @@ export default function Header() {
                     setIsMenuOpen(false);
                     handleProtectedRoute("/Profile", "Profile");
                   }}
-                  className="mobile-menu-item"
+                  className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
                 >
                   Profile
                 </button>
                 <Link
                   href="/contact"
-                  className="mobile-menu-item"
+                  className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact Us
                 </Link>
                 <Link
                   href="/about"
-                  className="mobile-menu-item"
+                  className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About
@@ -373,7 +397,6 @@ export default function Header() {
           )}
         </nav>
       </header>
-
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={toggleAuthModal}

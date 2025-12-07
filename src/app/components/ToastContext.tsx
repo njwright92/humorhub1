@@ -30,7 +30,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     <ToastContext.Provider value={{ showToast }}>
       {children}
       {toast && (
-        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-1000 animate-fade-in">
+        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
           <div
             className={`px-6 py-3 rounded-lg shadow-xl text-zinc-100 font-medium text-nowrap ${
               toast.type === "success"

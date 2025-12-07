@@ -98,10 +98,13 @@ export default function NewsClient() {
   return (
     <>
       <Header />
-      <main className="screen-container content-with-sidebar bg-transparent">
+      <main className="flex flex-col p-4 text-zinc-200 text-center md:ml-20 min-h-screen bg-transparent">
         <div className="text-center mb-10">
-          <h1 className="title mb-4">Hub News</h1>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
+          {/* Replaced .title */}
+          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-4 font-heading">
+            Hub News
+          </h1>
+          <p className="text-zinc-400 text-lg max-w-2xl mx-auto font-sans">
             Curated stories from around the world. Stay informed with the latest
             updates in{" "}
             <span className="text-amber-300 font-medium">
@@ -120,14 +123,15 @@ export default function NewsClient() {
             <p className="text-red-200 font-medium">{error}</p>
             <button
               onClick={() => fetchNews(selectedCategory, selectedSubcategory)}
-              className="mt-2 text-sm underline text-red-300 hover:text-white"
+              className="mt-2 text-sm underline text-red-300 hover:text-white cursor-pointer"
             >
               Try Again
             </button>
           </div>
         )}
 
-        <section className="card-style bg-zinc-800/80 border border-zinc-700 w-full max-w-4xl mx-auto mb-12 shadow-xl rounded-xl p-6">
+        {/* Filter Section - Replaced .card-style */}
+        <section className="bg-zinc-800/80 border border-zinc-700 w-full max-w-4xl mx-auto mb-12 shadow-xl rounded-xl p-6 backdrop-blur-sm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
             <div className="flex flex-col text-left">
               <label
@@ -142,7 +146,7 @@ export default function NewsClient() {
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                   disabled={isPending}
-                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
+                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-hidden cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
                 >
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
@@ -150,6 +154,7 @@ export default function NewsClient() {
                     </option>
                   ))}
                 </select>
+                {/* Ensure SelectArrow is correctly positioned/imported */}
                 <SelectArrow />
               </div>
             </div>
@@ -167,7 +172,7 @@ export default function NewsClient() {
                   value={selectedSubcategory}
                   onChange={handleSubcategoryChange}
                   disabled={isPending}
-                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
+                  className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-hidden cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
                 >
                   {SUBCATEGORIES.map((sub) => (
                     <option key={sub} value={sub}>
@@ -182,7 +187,7 @@ export default function NewsClient() {
             <button
               onClick={resetNews}
               disabled={isPending}
-              className="w-full md:w-auto h-[46px] bg-zinc-700 hover:bg-zinc-600 disabled:opacity-70 text-zinc-200 font-bold rounded-lg transition-all border border-zinc-600 hover:border-zinc-500 shadow-md"
+              className="w-full md:w-auto h-[46px] bg-zinc-700 hover:bg-zinc-600 disabled:opacity-70 text-zinc-200 font-bold rounded-lg transition-all border border-zinc-600 hover:border-zinc-500 shadow-md cursor-pointer"
             >
               Reset Filters
             </button>
@@ -197,7 +202,7 @@ export default function NewsClient() {
           ) : articles.length > 0 ? (
             <div
               key={`${selectedCategory}-${selectedSubcategory}`}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-in"
             >
               {articles.map((article, index) => (
                 <article
@@ -223,23 +228,23 @@ export default function NewsClient() {
                         <span className="text-4xl">Newspaper</span>
                       </div>
                     )}
-                    <div className="absolute top-0 right-0 bg-orange-300 text-zinc-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                    <div className="absolute top-0 right-0 bg-amber-300 text-zinc-950 text-xs font-bold px-3 py-1 rounded-bl-lg">
                       {article.source || "News"}
                     </div>
                   </div>
 
-                  <div className="flex flex-col flex-grow p-5">
-                    <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-400 transition-colors duration-300">
+                  <div className="flex flex-col grow p-5">
+                    <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-300 transition-colors duration-300 font-heading">
                       {article.title}
                     </h2>
-                    <p className="text-zinc-400 text-sm line-clamp-3 mb-6 flex-grow">
+                    <p className="text-zinc-400 text-sm line-clamp-3 mb-6 grow font-sans">
                       {article.description}
                     </p>
                     <a
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center w-full py-2.5 bg-zinc-900 hover:bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-700 rounded-lg transition-all font-medium text-sm group-hover:border-amber-300/50 underline "
+                      className="inline-flex items-center justify-center w-full py-2.5 bg-zinc-900 hover:bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-700 rounded-lg transition-all font-medium text-sm group-hover:border-amber-300/50 underline"
                     >
                       Read Full Story
                     </a>
@@ -249,7 +254,9 @@ export default function NewsClient() {
             </div>
           ) : (
             <div className="text-center py-20 text-zinc-500">
-              <p className="text-xl">No articles found for this category.</p>
+              <p className="text-xl font-heading">
+                No articles found for this category.
+              </p>
             </div>
           )}
         </div>

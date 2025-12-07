@@ -2,41 +2,46 @@
 
 /* ===== Tailwind v4 Theme Configuration ===== */
 @theme {
-  /* Override default zinc colors */
+  /* --- Colors --- */
   --color-zinc-900: #2e2c28;
   --color-zinc-200: #f4f4f5;
-
-  /* Override amber-300 to your accent color */
   --color-amber-300: #b35a30;
-  --color-amber-400: #a0512b; /* hover state */
 
-  /* Override orange-500 */
-  --color-orange-500: #b35a30;
-
-  /* Custom colors */
+  /* Custom Colors */
+  --color-accent: #b35a30;
+  --color-accent-hover: #a0512b;
   --color-dark-bg: #121212;
   --color-dark-accent: #1f1f1f;
   --color-dark-text: #f5f5f5;
 
-  /* Custom spacing */
+  /* --- Layout & Spacing --- */
   --spacing-4_5: 1.125rem;
-
-  /* Custom border radius */
   --radius-soft: 0.635rem;
 
-  /* Custom shadows (extend existing) */
+  /* --- Shadows --- */
   --shadow-lg:
     0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-
-  /* Custom drop shadows */
   --drop-shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 
-  /* Custom animations */
+  /* --- Animations --- */
   --animate-slide-in: slide-in 0.3s forwards;
   --animate-slide-out: slide-out 0.3s forwards;
+  --animate-gradient: gradient-anim 5s ease infinite;
+
+  /* --- Fonts --- */
+
+  /* HEADING: Comic Neue -> Apple Chalkboard -> Windows Ink Free -> Generic Cursive */
+  --font-heading:
+    var(--font-comic-neue), "Chalkboard SE", "Chalkboard", "Ink Free",
+    "Segoe Print", cursive;
+
+  /* BODY: Century Gothic -> AppleGothic -> Sans Serif */
+  /* Note: We removed var(--font-century) since you aren't loading it in layout.tsx */
+  --font-body:
+    "Century Gothic", "CenturyGothic", "AppleGothic", "Segoe UI", sans-serif;
 }
 
-/* Background gradients (custom utilities) */
+/* ===== Custom Utilities ===== */
 @utility bg-gradient-radial {
   background-image: radial-gradient(var(--tw-gradient-stops));
 }
@@ -48,13 +53,7 @@
   );
 }
 
-/* --- CSS Variables (non-Tailwind) --- */
-:root {
-  --accent-color: #b35a30;
-  --accent-hover: #a0512b;
-}
-
-/* --- Base Styles --- */
+/* ===== Base Styles ===== */
 @layer base {
   body {
     background-image: linear-gradient(
@@ -63,18 +62,19 @@
       #27272a 80%
     );
     color: var(--color-zinc-200);
-    font-family: "Century Gothic", "Calibri", "Segoe UI", sans-serif;
+
+    /* Apply Body Font Default */
+    font-family: var(--font-body);
   }
 
+  /* Apply Heading Font Default */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family:
-      "Comic Neue", "Chalkboard SE", "Ink Free", "Arial Rounded MT Bold",
-      sans-serif;
+    font-family: var(--font-heading);
   }
 
   select,
@@ -91,208 +91,7 @@
   }
 }
 
-/* --- Component Classes --- */
-@layer components {
-  /* Layout & Containers */
-  .screen-container {
-    @apply flex flex-col p-4 text-zinc-200 text-center;
-  }
-
-  .card-style {
-    @apply grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg;
-  }
-
-  .content-with-sidebar {
-    @apply md:ml-20 min-h-screen;
-  }
-
-  .flex-row-wrap {
-    @apply flex flex-row flex-wrap sm:flex-nowrap;
-  }
-
-  .section-style {
-    @apply mb-6;
-  }
-
-  /* Typography */
-  .title {
-    @apply text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg;
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-6xl;
-    @apply mt-10 mb-2;
-  }
-
-  .subtitle-style {
-    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-2 font-bold drop-shadow-xl;
-  }
-
-  .the-text {
-    @apply block text-zinc-200 text-sm font-semibold mb-2;
-  }
-
-  .error-message {
-    @apply text-red-500 my-4 font-bold;
-  }
-
-  /* Buttons */
-  .btn {
-    @apply bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg;
-    @apply transform transition-transform hover:scale-105;
-  }
-
-  .btn:hover {
-    @apply outline outline-white;
-  }
-
-  /* Inputs - NOTE: outline-none → outline-hidden in v4 */
-  .input-field,
-  .standard-input,
-  .modern-input {
-    @apply border-2 border-zinc-500 p-2 rounded-lg shadow-lg text-zinc-900;
-    @apply outline-hidden focus:border-zinc-300 focus:shadow-md;
-  }
-
-  .standard-input {
-    @apply border-zinc-400 px-4 py-2 bg-zinc-800 text-zinc-200;
-  }
-
-  /* Modals */
-  .modal-backdrop {
-    @apply fixed inset-0 bg-black/50 flex justify-center items-center z-50;
-  }
-
-  .modal-container {
-    @apply bg-zinc-300 p-8 border-4 border-zinc-600 rounded-lg shadow-lg relative max-w-sm;
-  }
-
-  .close-button {
-    @apply absolute top-2 right-2 text-zinc-200 cursor-pointer bg-transparent border-none text-xl hover:text-zinc-300;
-  }
-
-  /* Cards */
-  .card {
-    @apply bg-gray-100 p-2.5 rounded-lg text-center mx-auto max-w-md text-gray-800;
-  }
-
-  /* Event List */
-  .event-item {
-    @apply p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200;
-  }
-
-  .event-item h3 {
-    @apply text-lg font-semibold mb-1;
-  }
-
-  .event-item p {
-    @apply text-sm mb-2;
-  }
-
-  .event-item h3::before,
-  .event-item p::before {
-    @apply text-xl align-middle;
-  }
-
-  /* Profile & Checkboxes */
-  .profile-image {
-    @apply rounded-full mx-auto;
-  }
-
-  .checkbox-container {
-    @apply grid grid-cols-2 justify-items-start bg-zinc-300 rounded-lg;
-  }
-
-  .checkbox-container label {
-    @apply cursor-pointer transition-colors duration-200;
-  }
-
-  .checkbox-wrapper {
-    @apply flex items-center;
-  }
-
-  /* Navigation */
-  .nav-link {
-    @apply flex flex-col items-center p-3 m-1 cursor-pointer text-2xl text-inherit no-underline transition-transform duration-300;
-  }
-
-  .nav-link:hover {
-    transform: scale(1.05);
-  }
-
-  /* Tabs */
-  .tab-button {
-    padding: 0.625rem 1.25rem;
-    margin: 0 0.325rem;
-    cursor: pointer;
-    border-radius: 0.325rem;
-    transition:
-      background-color 0.1s,
-      color 0.1s;
-    border: none;
-  }
-
-  .tab-button-active {
-    @apply bg-amber-300 text-zinc-900;
-  }
-
-  .tab-button-active:hover {
-    background-color: var(--accent-hover);
-  }
-
-  .tab-button-inactive {
-    @apply bg-zinc-100 text-amber-300;
-  }
-
-  .tab-button-inactive:hover {
-    background-color: #e4e4e7;
-  }
-
-  /* Social Buttons */
-  .social-signin-button {
-    @apply flex items-center justify-center w-full max-w-xs mx-auto py-2 px-4 rounded-md shadow-md;
-  }
-
-  /* Guide & Dialog */
-  .guide-container {
-    @apply fixed right-12 bottom-12 z-1000;
-  }
-
-  .custom-backdrop {
-    pointer-events: none;
-  }
-
-  .custom-dialog {
-    @apply bg-zinc-300 rounded-lg shadow-md p-2.5 z-9999;
-  }
-
-  .custom-dialog::before {
-    content: "";
-    transform: translateY(-50%);
-  }
-
-  /* Sidebar */
-  .sidebar-icon-link {
-    @apply relative transform transition-transform hover:scale-110 hover:text-zinc-700;
-  }
-
-  .sidebar-tooltip {
-    @apply absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg;
-  }
-
-  .sidebar-icon-link:hover .sidebar-tooltip {
-    @apply opacity-100;
-  }
-
-  .mobile-menu-item {
-    @apply flex flex-col items-center p-3 m-1 cursor-pointer text-2xl text-inherit no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 w-full;
-  }
-
-  .bg-gradient-animation {
-    background: var(--accent-color);
-    background-size: 400% 400%;
-    animation: gradientAnimation 5s ease infinite;
-  }
-}
-
-/* --- Keyframe Animations --- */
+/* ===== Keyframe Definitions ===== */
 @keyframes slide-in {
   0% {
     transform: translateX(-100%);
@@ -312,5 +111,17 @@
   100% {
     transform: translateX(-100%);
     opacity: 0;
+  }
+}
+
+@keyframes gradient-anim {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

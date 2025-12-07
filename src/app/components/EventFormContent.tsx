@@ -216,7 +216,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
   return (
     <>
       <button
-        className="bg-green-600 hover:bg-green-700 text-zinc-950 px-2 py-1 rounded-lg shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide"
+        className="bg-green-600 hover:bg-green-700 text-zinc-950 px-2 py-1 rounded-lg shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide cursor-pointer"
         onClick={() => setShowModal(true)}
         disabled={isSubmitting}
       >
@@ -225,7 +225,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
 
       {showModal && (
         <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
           onClick={() => setShowModal(false)}
         >
           <div
@@ -234,7 +234,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
           >
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 z-110 text-zinc-500 hover:text-red-600 transition-colors"
+              className="absolute top-4 right-4 z-50 text-zinc-500 hover:text-red-600 transition-colors"
               aria-label="Close Modal"
             >
               <svg
@@ -256,16 +256,18 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
             <form
               onSubmit={handleSubmit}
               noValidate
-              className="form-container w-full overflow-auto bg-zinc-200 p-6 rounded-lg shadow-2xl border-2 border-zinc-900"
+              className="w-full overflow-auto bg-zinc-200 p-6 rounded-lg shadow-2xl border-2 border-zinc-900"
             >
               {formErrors && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm font-bold">
                   {formErrors}
                 </div>
               )}
-              <h1 className="text-3xl font-bold text-center text-zinc-900 mb-2 font-comic">
+
+              <h1 className="text-3xl font-bold text-center text-zinc-900 mb-2 font-heading">
                 Event Form
               </h1>
+
               <p className="text-red-600 text-center mb-4 text-sm font-semibold">
                 * Indicates required fields
               </p>
@@ -282,7 +284,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 name="name"
                 value={event.name}
                 onChange={handleChange}
-                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 outline-hidden focus:border-green-600 focus:ring-2 focus:ring-green-600"
                 required
                 autoComplete="off"
                 placeholder="e.g., The Comedy Store Open Mic"
@@ -300,7 +302,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 name="location"
                 value={event.location}
                 onChange={handleChange}
-                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 outline-hidden focus:border-green-600 focus:ring-2 focus:ring-green-600"
                 required
                 placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
                 autoComplete="off"
@@ -373,6 +375,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                   </div>
                 </div>
               </div>
+
               <label
                 htmlFor="details"
                 className="block text-zinc-900 font-bold mb-1"
@@ -392,7 +395,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 required
                 autoComplete="off"
                 rows={4}
-                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600 resize-y"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 outline-hidden focus:border-green-600 focus:ring-2 focus:ring-green-600 resize-y"
                 placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
               />
 
@@ -417,7 +420,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                       date: dateStr ? new Date(dateStr + "T12:00:00") : null,
                     });
                   }}
-                  className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600 cursor-pointer appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full outline-hidden focus:border-green-600 focus:ring-2 focus:ring-green-600 cursor-pointer appearance-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -442,14 +445,14 @@ const EventFormContent: React.FC<EventFormContentProps> = ({
                 name="email"
                 value={event.email || ""}
                 onChange={handleChange}
-                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-6 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+                className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-6 outline-hidden focus:border-green-600 focus:ring-2 focus:ring-green-600"
                 placeholder="yourname@example.com"
                 autoComplete="email"
               />
 
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-zinc-950 font-bold py-3 rounded-lg shadow-lg transform transition hover:scale-[1.02]"
+                className="w-full bg-green-600 hover:bg-green-700 text-zinc-950 font-bold py-3 rounded-lg shadow-lg transform transition hover:scale-[1.02] cursor-pointer"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Submit Event"}
