@@ -250,10 +250,6 @@ export default function MicFinderClient() {
           setSelectedCity(normalized);
           setFilterCity(normalized);
           setSearchTerm(normalized);
-          sendDataLayerEvent("auto_locate", {
-            event_category: "Geolocation",
-            event_label: normalized,
-          });
         } else {
           showToast("No supported cities found nearby", "info");
         }
@@ -263,7 +259,7 @@ export default function MicFinderClient() {
         showToast("Location access denied", "error");
       },
     );
-  }, [cityCoordinates, normalizeCityName, sendDataLayerEvent, showToast]);
+  }, [cityCoordinates, normalizeCityName, showToast]);
 
   const handleCitySelect = (city: string) => {
     const normalized = normalizeCityName(city);
@@ -271,10 +267,6 @@ export default function MicFinderClient() {
     setFilterCity(normalized);
     setSearchTerm(normalized);
     setIsFirstDropdownOpen(false);
-    sendDataLayerEvent("select_city", {
-      event_category: "City Selection",
-      event_label: normalized,
-    });
   };
 
   const handleCityFilterChange = (city: string) => {
@@ -283,10 +275,6 @@ export default function MicFinderClient() {
     setSelectedCity(normalized);
     setSearchTerm(normalized);
     setIsSecondDropdownOpen(false);
-    sendDataLayerEvent("filter_city", {
-      event_category: "City Filter",
-      event_label: city,
-    });
   };
 
   const handleEventSave = useCallback(

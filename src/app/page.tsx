@@ -9,9 +9,29 @@ import EventForm from "./components/EventForm";
 import NewsButton from "./components/newsButton";
 
 export const metadata: Metadata = {
-  title: "Humor Hub | The #1 Open Mic Map & Comedian Toolkit",
+  title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
   description:
-    "Instantly locate comedy, music, and all-arts open mics near you. The ultimate app for comedians to find gigs, track festivals, and connect with the scene.",
+    "Your ultimate comedy destination. Find open mics, discover jokes, and connect with the comedy community at Humor Hub.",
+  keywords: [
+    "comedy platform",
+    "stand-up comedy",
+    "funny jokes",
+    "puns",
+    "open mic events",
+    "humor content",
+    "comedy community",
+    "comedy tools",
+  ],
+  openGraph: {
+    title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
+    description:
+      "Your ultimate comedy destination. Find open mics, discover jokes, and connect with the comedy community.",
+    url: "https://www.thehumorhub.com/",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://www.thehumorhub.com/",
+  },
 };
 
 export default function Home() {
