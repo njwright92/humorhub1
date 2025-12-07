@@ -38,10 +38,16 @@ interface Event {
 interface GoogleMapProps {
   lat: number;
   lng: number;
+  zoom?: number;
   events: Event[];
 }
 
-export default function GoogleMap({ lat, lng, events }: GoogleMapProps) {
+export default function GoogleMap({
+  lat,
+  lng,
+  zoom = 3,
+  events,
+}: GoogleMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
@@ -81,9 +87,9 @@ export default function GoogleMap({ lat, lng, events }: GoogleMapProps) {
   useEffect(() => {
     if (isMapLoaded && mapInstanceRef.current) {
       mapInstanceRef.current.panTo({ lat, lng });
-      mapInstanceRef.current.setZoom(12);
+      mapInstanceRef.current.setZoom(zoom);
     }
-  }, [lat, lng, isMapLoaded]);
+  }, [lat, lng, isMapLoaded, zoom]);
 
   useEffect(() => {
     if (!isMapLoaded || !mapInstanceRef.current) return;
@@ -151,7 +157,7 @@ export default function GoogleMap({ lat, lng, events }: GoogleMapProps) {
       ref={mapContainerRef}
       role="application"
       aria-label="Interactive map showing open mic locations and festivals"
-      className="h-[25rem] w-full rounded-lg shadow-lg overflow-hidden bg-zinc-900"
+      className="h-100 w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800"
     />
   );
 }

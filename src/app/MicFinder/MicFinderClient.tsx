@@ -46,6 +46,11 @@ const DAY_MAP: { [key: string]: number } = {
   Saturday: 6,
 };
 
+// ⭐ NEW: Default map settings
+const DEFAULT_US_CENTER = { lat: 39.8283, lng: -98.5795 };
+const DEFAULT_ZOOM = 3;
+const CITY_ZOOM = 12;
+
 const MemoizedEventForm = React.memo(EventForm);
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
@@ -115,6 +120,7 @@ export default function MicFinderClient() {
     },
     [],
   );
+
   // --- Effects ---
 
   useEffect(() => {
@@ -168,8 +174,6 @@ export default function MicFinderClient() {
         if (mounted) {
           setEvents(fetchedEvents);
           setCityCoordinates(citiesData);
-          sessionStorage.setItem("hh_events", JSON.stringify(fetchedEvents));
-          sessionStorage.setItem("hh_city_coords", JSON.stringify(citiesData));
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -211,8 +215,8 @@ export default function MicFinderClient() {
   useEffect(() => {
     if (selectedCity && cityCoordinates[selectedCity]) {
       setMapLocation(cityCoordinates[selectedCity]);
-    } else if (cityCoordinates["Spokane WA"]) {
-      setMapLocation(cityCoordinates["Spokane WA"]);
+    } else {
+      setMapLocation(null); // ⭐ CHANGED: null when no city selected
     }
   }, [selectedCity, cityCoordinates]);
 
@@ -221,6 +225,7 @@ export default function MicFinderClient() {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
+
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation)
       return showToast("Geolocation not supported", "error");
@@ -374,6 +379,34 @@ export default function MicFinderClient() {
     [selectedTab],
   );
 
+  // ⭐ NEW: Events filtered for map based on tab
+  const eventsForMap = useMemo(() => {
+    if (selectedTab === "Mics") {
+      return events; // Show ALL events when Mics tab selected
+    }
+    if (selectedTab === "Festivals") {
+      return events.filter((e) => e.festival);
+    }
+    // Other tab
+    return events.filter((e) => e.isMusic);
+  }, [events, selectedTab]);
+
+  // ⭐ NEW: Map configuration based on city selection
+  const mapConfig = useMemo(() => {
+    if (mapLocation) {
+      return {
+        lat: mapLocation.lat,
+        lng: mapLocation.lng,
+        zoom: CITY_ZOOM,
+      };
+    }
+    return {
+      lat: DEFAULT_US_CENTER.lat,
+      lng: DEFAULT_US_CENTER.lng,
+      zoom: DEFAULT_ZOOM,
+    };
+  }, [mapLocation]);
+
   const filteredEventsForView = useMemo(() => {
     const dateCheck = new Date(selectedDate);
     dateCheck.setHours(0, 0, 0, 0);
@@ -422,7 +455,7 @@ export default function MicFinderClient() {
     <>
       <Header />
       <div className="screen-container content-with-sidebar">
-        <div className="border border-red-400 text-red-700 px-3 py-2 rounded-lg shadow-md text-center mb-3 bg-zinc-200 text-xs sm:text-sm">
+        <div className="border border-red-400 text-red-700 px-2 py-1 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm sm:text-md">
           <p className="m-0">
             <strong className="font-bold">📢 Note: </strong>
             Open mic events evolve quickly. See something outdated?{" "}
@@ -432,7 +465,7 @@ export default function MicFinderClient() {
             >
               Contact Us
             </Link>{" "}
-            to let us know. Help keep the comedy community thriving!
+            Help keep the comedy community thriving!
           </p>
         </div>
 
@@ -455,7 +488,7 @@ export default function MicFinderClient() {
         </h3>
 
         <div className="flex flex-col justify-center items-center mt-2 relative z-20">
-          <div className="relative w-full max-w-xs min-h-[60px]">
+          <div className="relative w-full max-w-xs min-h-12">
             <p id="city-select-label" className="sr-only">
               Select a City
             </p>
@@ -475,7 +508,7 @@ export default function MicFinderClient() {
               {selectedCity || "Select a City"}
             </div>
             {isFirstDropdownOpen && (
-              <div className="w-full max-w-xs bg-zinc-100 shadow-md rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30">
+              <div className="w-full max-w-xs bg-zinc-100 shadow-lg rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30">
                 <input
                   type="text"
                   placeholder="Search city..."
@@ -486,7 +519,7 @@ export default function MicFinderClient() {
                 />
                 <ul className="text-zinc-900" role="listbox">
                   <li
-                    className="px-4 py-3 cursor-pointer bg-green-50 hover:bg-green-100 text-center font-bold text-green-700 border-b border-zinc-200 flex justify-center items-center gap-2"
+                    className="px-4 py-3 cursor-pointer bg-amber-100 hover:bg-amber-300 text-center font-bold text-zinc-900 border-b border-zinc-200 flex justify-center items-center gap-2"
                     onClick={() => {
                       fetchUserLocation();
                       setIsFirstDropdownOpen(false);
@@ -499,7 +532,7 @@ export default function MicFinderClient() {
                       key={city}
                       role="option"
                       aria-selected={selectedCity === city}
-                      className="px-4 py-2 cursor-pointer hover:bg-green-100 text-center"
+                      className="px-4 py-2 cursor-pointer hover:bg-amber-100 text-center"
                       onClick={() => handleCitySelect(city)}
                     >
                       {city}
@@ -525,21 +558,23 @@ export default function MicFinderClient() {
           </div>
         </div>
 
-        <section className="w-full h-100 rounded-lg shadow-md relative border border-zinc-200 mt-6 overflow-hidden bg-zinc-800">
+        <section className="w-full h-100 rounded-lg shadow-lg relative border border-amber-300 mt-6 overflow-hidden bg-zinc-800">
           <button
             onClick={toggleMapVisibility}
-            className={`absolute z-10 rounded-lg shadow-xl px-4 py-2 transition cursor-pointer font-semibold ${!isMapVisible ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-zinc-900 p-2" : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950"}`}
+            className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition cursor-pointer font-bold ${!isMapVisible ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn text-zinc-950 p-2" : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950"}`}
           >
             {!isMapVisible ? "Show Map" : "Hide Map"}
           </button>
           {hasMapInit && (
             <div
-              className={`h-full w-full transition-opacity duration-300 ${!isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+              className={`h-full w-full transition-opacity duration-100 ${!isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"}`}
             >
+              {/* ⭐ CHANGED: Use mapConfig and eventsForMap */}
               <GoogleMap
-                lat={mapLocation?.lat || 47.6588}
-                lng={mapLocation?.lng || -117.426}
-                events={events}
+                lat={mapConfig.lat}
+                lng={mapConfig.lng}
+                zoom={mapConfig.zoom}
+                events={eventsForMap}
               />
             </div>
           )}
@@ -551,7 +586,7 @@ export default function MicFinderClient() {
         </p>
 
         <section className="card-style">
-          <h2 className="title text-center border-b-4 border-[#b35a30] pb-2">
+          <h2 className="title text-center border-b-4 border-amber-300 pb-2">
             {selectedTab === "Mics"
               ? "Comedy Mics"
               : selectedTab === "Festivals"
@@ -574,7 +609,7 @@ export default function MicFinderClient() {
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
                 </div>
                 <button
-                  className="btn mt-1 mb-1"
+                  className="btn mt-2 mb-2 text-zinc-950 self-center"
                   onClick={() => handleEventSave(event)}
                 >
                   Save Event
@@ -589,7 +624,7 @@ export default function MicFinderClient() {
           )}
         </section>
 
-        <div className="tab-container flex justify-center mt-4 gap-3">
+        <div className="tab-container flex justify-center mt-4 gap-1">
           <button
             className={`tab-button font-bold rounded-xl shadow-lg transition ${
               selectedTab === "Mics"
@@ -640,7 +675,7 @@ export default function MicFinderClient() {
                 {filterCity || "All Cities"}
               </div>
               {isSecondDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-md rounded-lg mt-1 overflow-hidden">
+                <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-lg rounded-lg mt-1 overflow-hidden">
                   <input
                     type="text"
                     placeholder="Search for a city..."
@@ -656,7 +691,7 @@ export default function MicFinderClient() {
                     <li
                       role="option"
                       aria-selected={filterCity === "All Cities"}
-                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${filterCity === "All Cities" ? "bg-zinc-200 font-semibold" : ""}`}
+                      className={`px-4 py-2 cursor-pointer hover:bg-zinc300 text-center ${filterCity === "All Cities" ? "bg-zinc-200 font-semibold" : ""}`}
                       onClick={() => handleCityFilterChange("All Cities")}
                     >
                       All Cities
@@ -666,7 +701,7 @@ export default function MicFinderClient() {
                         key={city}
                         role="option"
                         aria-selected={filterCity === city}
-                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-200 text-center ${filterCity === city ? "bg-zinc-200 font-semibold" : ""}`}
+                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center ${filterCity === city ? "bg-zinc-200 font-semibold" : ""}`}
                         onClick={() => handleCityFilterChange(city)}
                       >
                         {city}
@@ -678,7 +713,7 @@ export default function MicFinderClient() {
             </div>
           </div>
 
-          <h2 className="title text-center mt-4 border-b-4 border-[#b35a30] pb-2">
+          <h2 className="title text-center mt-4 border-b-4 border-amber-300 pb-2">
             {filterCity === "All Cities"
               ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
               : `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"} in ${filterCity}`}
@@ -692,7 +727,7 @@ export default function MicFinderClient() {
 
           <div
             ref={parentRef}
-            className="w-full h-[600px] overflow-y-auto contain-strict bg-transparent"
+            className="w-full h-180 overflow-y-auto contain-strict bg-transparent"
           >
             <div
               className="relative w-full"
@@ -705,7 +740,7 @@ export default function MicFinderClient() {
                     key={virtualItem.key}
                     data-index={virtualItem.index}
                     ref={rowVirtualizer.measureElement}
-                    className="absolute top-0 left-0 w-full p-1"
+                    className="absolute top-0 left-0 w-full"
                     style={{ transform: `translateY(${virtualItem.start}px)` }}
                   >
                     <div className="event-item my-2 h-auto flex flex-col p-1">
@@ -721,7 +756,7 @@ export default function MicFinderClient() {
                         />
                       </div>
                       <button
-                        className="btn mt-4 mb-4 px-2 py-1 self-center"
+                        className="btn mt-2 mb-2 text-zinc-950 self-center"
                         onClick={() => handleEventSave(event)}
                       >
                         Save Event
