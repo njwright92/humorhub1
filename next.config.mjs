@@ -5,7 +5,9 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
 
-  transpilePackages: ["@googlemaps/js-api-loader"],
+  transpilePackages: [
+    "@googlemaps/js-api-loader, @tanstack/react-virtual, firebase",
+  ],
 
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",

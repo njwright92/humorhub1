@@ -23,7 +23,7 @@ function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -118,7 +118,7 @@ export default function MicFinderClient() {
         window.dataLayer?.push({ event: event_name, ...params });
       }
     },
-    []
+    [],
   );
 
   // --- Effects ---
@@ -238,7 +238,7 @@ export default function MicFinderClient() {
             latitude,
             longitude,
             coords.lat,
-            coords.lng
+            coords.lng,
           );
           if (dist < minDistance) {
             minDistance = dist;
@@ -257,7 +257,7 @@ export default function MicFinderClient() {
       (err) => {
         console.error("Geo error", err);
         showToast("Location access denied", "error");
-      }
+      },
     );
   }, [cityCoordinates, normalizeCityName, showToast]);
 
@@ -320,7 +320,7 @@ export default function MicFinderClient() {
         showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [isUserSignedIn, sendDataLayerEvent, showToast]
+    [isUserSignedIn, sendDataLayerEvent, showToast],
   );
 
   const toggleMapVisibility = () => {
@@ -346,7 +346,7 @@ export default function MicFinderClient() {
       if (city) set.add(normalizeCityName(city));
     });
     return Array.from(set).sort((a, b) =>
-      a === "Spokane WA" ? -1 : b === "Spokane WA" ? 1 : a.localeCompare(b)
+      a === "Spokane WA" ? -1 : b === "Spokane WA" ? 1 : a.localeCompare(b),
     );
   }, [events, normalizeCityName]);
 
@@ -354,7 +354,7 @@ export default function MicFinderClient() {
     return !debouncedSearchTerm
       ? allAvailableCities
       : allAvailableCities.filter((c) =>
-          c.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+          c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
         );
   }, [allAvailableCities, debouncedSearchTerm]);
 
@@ -364,7 +364,7 @@ export default function MicFinderClient() {
       if (selectedTab === "Other") return event.isMusic;
       return !event.festival && !event.isMusic;
     },
-    [selectedTab]
+    [selectedTab],
   );
 
   // ⭐ NEW: Events filtered for map based on tab
@@ -421,7 +421,7 @@ export default function MicFinderClient() {
     let list = events.filter(isTabMatch);
     if (filterCity !== "All Cities") {
       list = list.filter(
-        (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity
+        (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity,
       );
     }
     return list.sort((a, b) => {

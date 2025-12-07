@@ -15,11 +15,11 @@ let markerLibrary: google.maps.MarkerLibrary | null = null;
 const loadLibraries = async () => {
   if (!mapsLibrary)
     mapsLibrary = (await loader.importLibrary(
-      "maps"
+      "maps",
     )) as google.maps.MapsLibrary;
   if (!markerLibrary)
     markerLibrary = (await loader.importLibrary(
-      "marker"
+      "marker",
     )) as google.maps.MarkerLibrary;
   return { mapsLibrary, markerLibrary };
 };
