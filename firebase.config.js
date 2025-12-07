@@ -1,9 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import {
-  initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager,
-} from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -18,12 +14,7 @@ const firebaseConfig = {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({
-    tabManager: persistentMultipleTabManager(),
-  }),
-});
-
+const db = getFirestore(app);
 const storage = getStorage(app);
 
 let _auth = null;
@@ -31,20 +22,9 @@ let _auth = null;
 export async function getAuth() {
   if (_auth) return _auth;
 
-  const {
-    getAuth: firebaseGetAuth,
-    setPersistence,
-    indexedDBLocalPersistence,
-    browserLocalPersistence,
-  } = await import("firebase/auth");
+  const { getAuth: firebaseGetAuth } = await import("firebase/auth");
 
   _auth = firebaseGetAuth(app);
-
-  try {
-    await setPersistence(_auth, indexedDBLocalPersistence);
-  } catch {
-    await setPersistence(_auth, browserLocalPersistence);
-  }
 
   return _auth;
 }
