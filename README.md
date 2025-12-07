@@ -8,7 +8,7 @@
 
 **The Definitive Digital Ecosystem for Comedians & Performers**
 
-[**Visit Live Site**](https://thehumorhub.com/)
+[**Visit Live Site**](https://www.thehumorhub.com/)
 
 </div>
 
@@ -18,7 +18,7 @@
 
 **Humor Hub** is a robust, full-stack platform engineered to modernize the workflow of stand-up comedians, writers, and live performers. By bridging the gap between talent and opportunity, the application provides a centralized interface for venue discovery and material development.
 
-Currently serving as a premier resource for the industry, the platform aggregates real-time data for over **1,300 live open mic events** across **290+ US cities**, utilizing geospatial technology to connect performers with their next stage.
+Currently serving as a premier resource for the industry, the platform aggregates real-time data for live open mic events** across **500+ cities worldwide\*\*, utilizing geospatial technology to connect performers with their next stage.
 
 ## 🚀 Key Features
 
@@ -34,7 +34,6 @@ A high-performance "Mic Finder" engine that allows users to discover, filter, an
 A curated content stream tailored for comedic professionals.
 
 - **Real-Time News:** Fetches and filters trending news topics to inspire fresh comedic material.
-- **Trend Analysis:** Keeps performers ahead of the curve with up-to-date cultural context.
 
 ---
 
@@ -44,10 +43,10 @@ This project utilizes a modern **Next.js 15** framework, leveraging server-side 
 
 | Domain                 | Technology                                                   |
 | :--------------------- | :----------------------------------------------------------- |
-| **Core Framework**     | **Next.js 15**, **React 18**, Node.js                        |
-| **Styling & UI**       | **Tailwind CSS**, AOS (Animate On Scroll)                    |
-| **Backend & Auth**     | **Firebase Authentication**, Firebase Admin SDK              |
-| **Database**           | **Cloud Firestore** (NoSQL)                                  |
+| **Core Framework**     | **Next.js 16**, **React 19**, Node.js                        |
+| **Styling & UI**       | **Tailwind CSS**,                                            |
+| **Backend & Auth**     | **Firebase Authentication**,                                 |
+| **Database**           | **Cloud Firestore**                                          |
 | **Geospatial**         | **Google Maps JavaScript API** (`@googlemaps/js-api-loader`) |
 | **Image Optimization** | `sharp`                                                      |
 | **Deployment**         | **Vercel** (CI/CD Integration)                               |
@@ -60,7 +59,7 @@ Follow these steps to set up the environment locally.
 
 ### Prerequisites
 
-- **Node.js** (v14+ recommended)
+- **Node.js**
 - **npm** or **yarn**
 - A configured **Firebase** project
 
