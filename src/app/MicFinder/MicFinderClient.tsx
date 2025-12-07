@@ -46,7 +46,6 @@ const DAY_MAP: { [key: string]: number } = {
   Saturday: 6,
 };
 
-// ✅ OPTIMIZATION: Define outside component to prevent re-renders
 const MemoizedEventForm = React.memo(EventForm);
 
 const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
@@ -134,23 +133,6 @@ export default function MicFinderClient() {
   useEffect(() => {
     let mounted = true;
     const loadData = async () => {
-      const cachedEvents = sessionStorage.getItem("hh_events");
-      const cachedCities = sessionStorage.getItem("hh_city_coords");
-      if (cachedEvents && cachedCities) {
-        if (mounted) {
-          setEvents(
-            JSON.parse(cachedEvents).map((e: Event) => ({
-              ...e,
-              parsedDateObj: e.parsedDateObj
-                ? new Date(e.parsedDateObj)
-                : undefined,
-            })),
-          );
-          setCityCoordinates(JSON.parse(cachedCities));
-        }
-        return;
-      }
-
       try {
         const { collection, getDocs } = await import("firebase/firestore");
         const [eventsSnap, citiesSnap] = await Promise.all([
@@ -351,10 +333,6 @@ export default function MicFinderClient() {
   const toggleMapVisibility = () => {
     if (!hasMapInit) setHasMapInit(true);
     setIsMapVisible((prev) => {
-      sendDataLayerEvent("toggle_map", {
-        event_category: "Map Interaction",
-        event_label: !prev ? "Show Map" : "Hide Map",
-      });
       return !prev;
     });
   };
@@ -561,7 +539,7 @@ export default function MicFinderClient() {
               <GoogleMap
                 lat={mapLocation?.lat || 47.6588}
                 lng={mapLocation?.lng || -117.426}
-                events={events.filter(isTabMatch)}
+                events={events}
               />
             </div>
           )}
