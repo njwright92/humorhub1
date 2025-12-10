@@ -178,9 +178,9 @@ export default function MicFinderPage() {
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 font-bold drop-shadow-xl text-center font-heading">
             Discover Mics and Festivals Near You!
           </h2>
-          <p className="text-center mt-2 mb-6 text-zinc-200 max-w-2xl mx-auto text-lg leading-relaxed">
-            Need stage time? Find a Mic tonight or list yours, built by comics
-            for comics. Use Mic Finder to connect with your community!
+          <p className="text-center mt-2 mb-6 text-zinc-200 max-w-2xl mx-auto xs:text-sm sm:text-md md:tx-lg">
+            Find a Mic tonight or list yours, built by comics for comics. Use
+            Mic Finder to connect with your community!
           </p>
         </div>
 

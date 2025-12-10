@@ -479,7 +479,7 @@ export default function MicFinderClient({
                 <div dangerouslySetInnerHTML={{ __html: event.details }} />
               </div>
               <button
-                className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
+                className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
                 onClick={() => handleEventSave(event)}
               >
                 Save Event
@@ -633,7 +633,7 @@ export default function MicFinderClient({
                       />
                     </div>
                     <button
-                      className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
+                      className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
                       onClick={() => handleEventSave(event)}
                     >
                       Save Event
