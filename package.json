@@ -13,8 +13,7 @@
     "start": "next start",
     "lint": "npx eslint .",
     "format": "prettier --write .",
-    "preview": "npm run build:css && next build && npm run format && npm run lint && next start",
-    "build:css": "npx @tailwindcss/cli -i ./src/app/globals.css -o ./public/styles.css --minify"
+    "preview": "next build && npm run format && npm run lint && next start"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
