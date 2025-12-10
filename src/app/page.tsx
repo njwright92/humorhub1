@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import micFinder from "../app/micFinder.webp";
-import news from "../app/news.webp";
+import news from "../app/news1.webp";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import dynamic from "next/dynamic";
