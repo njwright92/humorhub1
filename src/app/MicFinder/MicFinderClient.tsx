@@ -46,7 +46,6 @@ const DAY_MAP: { [key: string]: number } = {
   Saturday: 6,
 };
 
-// ⭐ NEW: Default map settings
 const DEFAULT_US_CENTER = { lat: 39.8283, lng: -98.5795 };
 const DEFAULT_ZOOM = 4;
 const CITY_ZOOM = 12;
@@ -101,17 +100,18 @@ export default function MicFinderClient() {
   const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
   const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
-  const [mapLocation, setMapLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+
+  // Note: mapLocation state removed in favor of derived calculation
+
   const [selectedTab, setSelectedTab] = useState<
     "Mics" | "Festivals" | "Other"
   >("Mics");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const authRef = useRef<Auth | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
+
   const normalizeCityName = useCallback((name: string) => name.trim(), []);
+
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
       if (typeof window !== "undefined") {
@@ -211,14 +211,6 @@ export default function MicFinderClient() {
     const term = params.get("searchTerm");
     if (term) setSearchTerm(term);
   }, []);
-
-  useEffect(() => {
-    if (selectedCity && cityCoordinates[selectedCity]) {
-      setMapLocation(cityCoordinates[selectedCity]);
-    } else {
-      setMapLocation(null); // ⭐ CHANGED: null when no city selected
-    }
-  }, [selectedCity, cityCoordinates]);
 
   // --- Handlers ---
 
@@ -323,18 +315,20 @@ export default function MicFinderClient() {
     [isUserSignedIn, sendDataLayerEvent, showToast],
   );
 
-  const toggleMapVisibility = () => {
-    if (!hasMapInit) setHasMapInit(true);
-    setIsMapVisible((prev) => {
-      return !prev;
-    });
-  };
-
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value) return;
     const [year, month, day] = e.target.value.split("-").map(Number);
     const newDate = new Date(year, month - 1, day);
     setSelectedDate(newDate);
+  };
+
+  const handleMapHover = useCallback(() => {
+    if (!hasMapInit) setHasMapInit(true);
+  }, [hasMapInit]);
+
+  const toggleMapVisibility = () => {
+    if (!hasMapInit) setHasMapInit(true);
+    setIsMapVisible((prev) => !prev);
   };
 
   // --- Memos ---
@@ -367,33 +361,31 @@ export default function MicFinderClient() {
     [selectedTab],
   );
 
-  // ⭐ NEW: Events filtered for map based on tab
   const eventsForMap = useMemo(() => {
-    if (selectedTab === "Mics") {
-      return events; // Show ALL events when Mics tab selected
-    }
-    if (selectedTab === "Festivals") {
-      return events.filter((e) => e.festival);
-    }
-    // Other tab
+    if (selectedTab === "Mics") return events;
+    if (selectedTab === "Festivals") return events.filter((e) => e.festival);
     return events.filter((e) => e.isMusic);
   }, [events, selectedTab]);
 
-  // ⭐ NEW: Map configuration based on city selection
+  // ⭐ IMPROVED: Map logic uses selectedCity state directly.
   const mapConfig = useMemo(() => {
-    if (mapLocation) {
+    // Check if we have coordinates for the selected city
+    const cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
+
+    if (cityCoords) {
       return {
-        lat: mapLocation.lat,
-        lng: mapLocation.lng,
+        lat: cityCoords.lat,
+        lng: cityCoords.lng,
         zoom: CITY_ZOOM,
       };
     }
+    // Default fallback
     return {
       lat: DEFAULT_US_CENTER.lat,
       lng: DEFAULT_US_CENTER.lng,
       zoom: DEFAULT_ZOOM,
     };
-  }, [mapLocation]);
+  }, [selectedCity, cityCoordinates]);
 
   const filteredEventsForView = useMemo(() => {
     const dateCheck = new Date(selectedDate);
@@ -458,7 +450,7 @@ export default function MicFinderClient() {
           </p>
         </div>
 
-        {/* Titles: Replaces .title and .subtitle-style */}
+        {/* Titles */}
         <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-6 text-center font-heading">
           MicFinder
         </h1>
@@ -491,7 +483,8 @@ export default function MicFinderClient() {
               id="city-select"
               aria-labelledby="city-select-label"
               tabIndex={0}
-              /* Replaces .modern-input */
+              onMouseEnter={handleMapHover}
+              onTouchStart={handleMapHover}
               className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-hidden focus:border-zinc-300 focus:shadow-md w-full h-full"
               role="button"
               aria-haspopup="listbox"
@@ -549,9 +542,10 @@ export default function MicFinderClient() {
               id="event-date-picker"
               name="event-date-picker"
               type="date"
+              onMouseEnter={handleMapHover}
+              onTouchStart={handleMapHover}
               value={selectedDate.toLocaleDateString("en-CA")}
               onChange={handleDateChange}
-              /* Replaces .modern-input */
               className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold px-2 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-hidden focus:border-zinc-300 focus:shadow-md w-full text-center"
             />
           </div>
@@ -561,7 +555,9 @@ export default function MicFinderClient() {
         <section className="w-full h-100 rounded-lg shadow-lg relative border-2 border-amber-300 mt-6 mb-6  bg-zinc-800">
           <button
             onClick={toggleMapVisibility}
-            /* Replaces .btn logic inside the ternary */
+            onMouseEnter={handleMapHover}
+            onTouchStart={handleMapHover}
+            onFocus={handleMapHover}
             className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition cursor-pointer font-bold ${
               !isMapVisible
                 ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-white shadow-lg font-semibold text-lg hover:scale-105"
@@ -591,7 +587,7 @@ export default function MicFinderClient() {
           *Scroll through events to find your next Mic or Festival!*
         </p>
 
-        {/* === Results Section (Replaces .card-style) === */}
+        {/* === Results Section === */}
         <section className="grow bg-transparent text-zinc-200 mt-10 mb-10 shadow-lg rounded-lg w-full">
           <h2 className="text-3xl font-heading text-center border-b-4 border-amber-300 pb-2 mb-6 rounded-lg shadow-lg">
             {selectedTab === "Mics"
@@ -607,7 +603,6 @@ export default function MicFinderClient() {
             </p>
           ) : filteredEventsForView.length > 0 ? (
             filteredEventsForView.map((event) => (
-              /* Replaces .event-item */
               <div
                 key={event.id}
                 className="p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200"
@@ -621,7 +616,6 @@ export default function MicFinderClient() {
                   <span className="font-bold">ℹ️ Details:</span>
                   <div dangerouslySetInnerHTML={{ __html: event.details }} />
                 </div>
-                {/* Replaces .btn */}
                 <button
                   className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center"
                   onClick={() => handleEventSave(event)}
@@ -672,14 +666,13 @@ export default function MicFinderClient() {
           </button>
         </div>
 
-        {/* === All Cities Filter (Bottom Section) === */}
+        {/* === All Cities Filter === */}
         <section className="grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg w-full">
           <div className="flex flex-col justify-center items-center mt-2 relative z-10">
             <div className="relative w-full max-w-xs">
               <div
                 id="city-filter-select"
                 aria-label="Filter by City"
-                /* Replaces .modern-input */
                 className="cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-hidden focus:border-zinc-300 focus:shadow-md font-bold"
                 role="button"
                 aria-haspopup="listbox"
@@ -765,7 +758,6 @@ export default function MicFinderClient() {
                     className="absolute top-0 left-0 w-full"
                     style={{ transform: `translateY(${virtualItem.start}px)` }}
                   >
-                    {/* Replaces .event-item */}
                     <div className="my-2 h-auto flex flex-col p-1 mb-4 border-b border-zinc-600 text-zinc-200 bg-zinc-800/20">
                       <h3 className="text-xl font-bold text-amber-300">
                         {event.name}
@@ -780,7 +772,6 @@ export default function MicFinderClient() {
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
                       </div>
-                      {/* Replaces .btn */}
                       <button
                         className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center"
                         onClick={() => handleEventSave(event)}

@@ -1,28 +1,14 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-
-const loader = new Loader({
-  apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
-  version: "weekly",
-  libraries: ["places", "marker"],
-});
-
-let mapsLibrary: google.maps.MapsLibrary | null = null;
-let markerLibrary: google.maps.MarkerLibrary | null = null;
-
-const loadLibraries = async () => {
-  if (!mapsLibrary)
-    mapsLibrary = (await loader.importLibrary(
-      "maps",
-    )) as google.maps.MapsLibrary;
-  if (!markerLibrary)
-    markerLibrary = (await loader.importLibrary(
-      "marker",
-    )) as google.maps.MarkerLibrary;
-  return { mapsLibrary, markerLibrary };
-};
+import { useState, useEffect } from "react";
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  InfoWindow,
+  useMap,
+  useApiIsLoaded,
+} from "@vis.gl/react-google-maps";
 
 interface Event {
   lat: number | string;
@@ -42,122 +28,164 @@ interface GoogleMapProps {
   events: Event[];
 }
 
-export default function GoogleMap({
-  lat,
-  lng,
-  zoom = 4,
-  events,
-}: GoogleMapProps) {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
-  const markersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
-  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
+const EventPin = ({ color }: { color: string }) => (
+  <div className="cursor-pointer hover:scale-110 transition-transform">
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 32 32"
+      style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.3))" }}
+    >
+      <circle
+        cx="16"
+        cy="16"
+        r="12"
+        fill={color}
+        stroke="#fff"
+        strokeWidth="4"
+      />
+      <circle cx="16" cy="16" r="4" fill="#fff" />
+    </svg>
+  </div>
+);
+
+// ⭐ FIX IS HERE: Added safety checks to MapHandler
+const MapHandler = ({
+  place,
+  zoom,
+}: {
+  place: { lat: number; lng: number };
+  zoom: number;
+}) => {
+  const map = useMap();
 
   useEffect(() => {
-    let mounted = true;
+    // 1. Check if map instance exists
+    if (!map) return;
 
-    const initMap = async () => {
-      try {
-        const { mapsLibrary } = await loadLibraries();
-        if (!mounted || !mapContainerRef.current || mapInstanceRef.current)
-          return;
-
-        mapInstanceRef.current = new mapsLibrary.Map(mapContainerRef.current, {
-          center: { lat, lng },
-          zoom: 12,
-          mapId: "ac1223",
-          disableDefaultUI: false,
-          clickableIcons: false,
-        });
-
-        infoWindowRef.current = new mapsLibrary.InfoWindow({ maxWidth: 250 });
-        setIsMapLoaded(true);
-      } catch (error) {
-        console.error("Error loading Google Maps:", error);
-      }
-    };
-
-    initMap();
-    return () => {
-      mounted = false;
-    };
-  }, [lat, lng]);
-
-  useEffect(() => {
-    if (isMapLoaded && mapInstanceRef.current) {
-      mapInstanceRef.current.panTo({ lat, lng });
-      mapInstanceRef.current.setZoom(zoom);
+    // 2. SAFETY CHECK: Ensure lat/lng are actual valid numbers before panning
+    if (
+      !place ||
+      typeof place.lat !== "number" ||
+      typeof place.lng !== "number" ||
+      isNaN(place.lat) ||
+      isNaN(place.lng)
+    ) {
+      return;
     }
-  }, [lat, lng, isMapLoaded, zoom]);
 
-  useEffect(() => {
-    if (!isMapLoaded || !mapInstanceRef.current) return;
+    map.panTo(place);
+    map.setZoom(zoom);
+  }, [map, place, zoom]);
 
-    const updateMarkers = async () => {
-      const { markerLibrary } = await loadLibraries();
+  return null;
+};
 
-      markersRef.current.forEach((m) => {
-        m.map = null;
-      });
-      markersRef.current = [];
+// Internal component allows us to use useApiIsLoaded inside the Provider
+const InnerMap = ({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
+  const apiIsLoaded = useApiIsLoaded();
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-      events.forEach((event) => {
-        const eventLat = Number(event.lat);
-        const eventLng = Number(event.lng);
-        if (isNaN(eventLat) || isNaN(eventLng)) return;
+  const getPinColor = (event: Event) => {
+    if (event.festival) return "#a21caf";
+    if (event.isMusic) return "#2563eb";
+    return "#22c55e";
+  };
 
-        const color = event.festival
-          ? "#a21caf"
-          : event.isMusic
-            ? "#2563eb"
-            : "#22c55e";
-
-        const content = document.createElement("div");
-        content.className =
-          "cursor-pointer hover:scale-110 transition-transform";
-        content.innerHTML = `
-          <svg width="28" height="28" viewBox="0 0 32 32" style="filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3))">
-            <circle cx="16" cy="16" r="12" fill="${color}" stroke="#fff" stroke-width="4"/>
-            <circle cx="16" cy="16" r="4" fill="#fff"/>
-          </svg>
-        `;
-
-        const marker = new markerLibrary.AdvancedMarkerElement({
-          map: mapInstanceRef.current,
-          position: { lat: eventLat, lng: eventLng },
-          title: event.name,
-          content,
-        });
-
-        marker.addListener("click", () => {
-          infoWindowRef.current?.setContent(`
-            <div style="padding:.5rem;text-align:center;color:#333">
-              <h2 style="font-weight:bold;font-size:1.1rem;margin-bottom:.25rem">${event.name}</h2>
-              <p style="font-size:.9rem;margin-bottom:.25rem">${event.location}</p>
-              <p style="font-size:.85rem;color:#555;margin-bottom:.5rem">${event.date}</p>
-              ${event.details ? `<p style="font-size:.85rem;margin-top:.5rem">${event.details}</p>` : ""}
-            </div>
-          `);
-          infoWindowRef.current?.open({
-            map: mapInstanceRef.current,
-            anchor: marker,
-          });
-        });
-
-        markersRef.current.push(marker);
-      });
-    };
-
-    updateMarkers();
-  }, [events, isMapLoaded]);
+  // Skeleton Loader: Shows while the heavy Google script downloads
+  if (!apiIsLoaded) {
+    return (
+      <div className="h-full w-full bg-zinc-800 animate-pulse flex items-center justify-center text-zinc-500">
+        <span className="font-semibold">Loading Map...</span>
+      </div>
+    );
+  }
 
   return (
+    <Map
+      defaultCenter={{ lat, lng }}
+      defaultZoom={zoom}
+      mapId="ac1223"
+      disableDefaultUI={false}
+      clickableIcons={false}
+      className="h-full w-full"
+      onClick={() => setSelectedEvent(null)}
+    >
+      <MapHandler place={{ lat, lng }} zoom={zoom} />
+
+      {events.map((event, index) => {
+        const eventLat = Number(event.lat);
+        const eventLng = Number(event.lng);
+        // Safety check for markers too
+        if (isNaN(eventLat) || isNaN(eventLng)) return null;
+
+        return (
+          <AdvancedMarker
+            key={`${event.name}-${index}`}
+            position={{ lat: eventLat, lng: eventLng }}
+            onClick={() => setSelectedEvent(event)}
+            title={event.name}
+          >
+            <EventPin color={getPinColor(event)} />
+          </AdvancedMarker>
+        );
+      })}
+
+      {selectedEvent && (
+        <InfoWindow
+          position={{
+            lat: Number(selectedEvent.lat),
+            lng: Number(selectedEvent.lng),
+          }}
+          onCloseClick={() => setSelectedEvent(null)}
+          maxWidth={250}
+          pixelOffset={[0, -30]}
+        >
+          <div style={{ padding: ".5rem", textAlign: "center", color: "#333" }}>
+            <h2
+              style={{
+                fontWeight: "bold",
+                fontSize: "1.1rem",
+                marginBottom: ".25rem",
+              }}
+            >
+              {selectedEvent.name}
+            </h2>
+            <p style={{ fontSize: ".9rem", marginBottom: ".25rem" }}>
+              {selectedEvent.location}
+            </p>
+            <p
+              style={{
+                fontSize: ".85rem",
+                color: "#555",
+                marginBottom: ".5rem",
+              }}
+            >
+              {selectedEvent.date}
+            </p>
+            {selectedEvent.details && (
+              <p style={{ fontSize: ".85rem", marginTop: ".5rem" }}>
+                {selectedEvent.details}
+              </p>
+            )}
+          </div>
+        </InfoWindow>
+      )}
+    </Map>
+  );
+};
+
+export default function GoogleMap(props: GoogleMapProps) {
+  return (
     <div
-      ref={mapContainerRef}
-      role="application"
-      aria-label="Interactive map showing open mic locations and festivals"
-      className="h-100 w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800"
-    />
+      className="h-full w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800 relative"
+      style={{ minHeight: "400px" }}
+    >
+      <APIProvider
+        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
+      >
+        <InnerMap {...props} />
+      </APIProvider>
+    </div>
   );
 }
