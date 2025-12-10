@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import {
   APIProvider,
   Map,
@@ -10,16 +10,8 @@ import {
   useApiIsLoaded,
 } from "@vis.gl/react-google-maps";
 
-interface Event {
-  lat: number | string;
-  lng: number | string;
-  name: string;
-  location: string;
-  date: string;
-  details?: string;
-  festival?: boolean;
-  isMusic?: boolean;
-}
+// Import shared type from lib
+import type { Event } from "../lib/types";
 
 interface GoogleMapProps {
   lat: number;
@@ -28,7 +20,8 @@ interface GoogleMapProps {
   events: Event[];
 }
 
-const EventPin = ({ color }: { color: string }) => (
+// Memoized pin component for better performance with many markers
+const EventPin = memo(({ color }: { color: string }) => (
   <div className="cursor-pointer hover:scale-110 transition-transform">
     <svg
       width="28"
@@ -47,52 +40,65 @@ const EventPin = ({ color }: { color: string }) => (
       <circle cx="16" cy="16" r="4" fill="#fff" />
     </svg>
   </div>
+));
+
+EventPin.displayName = "EventPin";
+
+// Map controller component with safety checks
+const MapHandler = memo(
+  ({ place, zoom }: { place: { lat: number; lng: number }; zoom: number }) => {
+    const map = useMap();
+
+    useEffect(() => {
+      // Check if map instance exists
+      if (!map) return;
+
+      // Safety check: Ensure lat/lng are valid numbers before panning
+      if (
+        !place ||
+        typeof place.lat !== "number" ||
+        typeof place.lng !== "number" ||
+        isNaN(place.lat) ||
+        isNaN(place.lng)
+      ) {
+        return;
+      }
+
+      map.panTo(place);
+      map.setZoom(zoom);
+    }, [map, place, zoom]);
+
+    return null;
+  },
 );
 
-// ⭐ FIX IS HERE: Added safety checks to MapHandler
-const MapHandler = ({
-  place,
-  zoom,
-}: {
-  place: { lat: number; lng: number };
-  zoom: number;
-}) => {
-  const map = useMap();
+MapHandler.displayName = "MapHandler";
 
-  useEffect(() => {
-    // 1. Check if map instance exists
-    if (!map) return;
-
-    // 2. SAFETY CHECK: Ensure lat/lng are actual valid numbers before panning
-    if (
-      !place ||
-      typeof place.lat !== "number" ||
-      typeof place.lng !== "number" ||
-      isNaN(place.lat) ||
-      isNaN(place.lng)
-    ) {
-      return;
-    }
-
-    map.panTo(place);
-    map.setZoom(zoom);
-  }, [map, place, zoom]);
-
-  return null;
+// Helper function to get pin color based on event type
+const getPinColor = (event: Event): string => {
+  if (event.festival) return "#a21caf"; // Purple for festivals
+  if (event.isMusic) return "#2563eb"; // Blue for music
+  return "#22c55e"; // Green for comedy mics
 };
 
-// Internal component allows us to use useApiIsLoaded inside the Provider
-const InnerMap = ({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
+// Inner map component (uses hooks that require APIProvider context)
+const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
   const apiIsLoaded = useApiIsLoaded();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const getPinColor = (event: Event) => {
-    if (event.festival) return "#a21caf";
-    if (event.isMusic) return "#2563eb";
-    return "#22c55e";
-  };
+  const handleMapClick = useCallback(() => {
+    setSelectedEvent(null);
+  }, []);
 
-  // Skeleton Loader: Shows while the heavy Google script downloads
+  const handleMarkerClick = useCallback((event: Event) => {
+    setSelectedEvent(event);
+  }, []);
+
+  const handleInfoWindowClose = useCallback(() => {
+    setSelectedEvent(null);
+  }, []);
+
+  // Skeleton loader while Google Maps API loads
   if (!apiIsLoaded) {
     return (
       <div className="h-full w-full bg-zinc-800 animate-pulse flex items-center justify-center text-zinc-500">
@@ -109,21 +115,22 @@ const InnerMap = ({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
       disableDefaultUI={false}
       clickableIcons={false}
       className="h-full w-full"
-      onClick={() => setSelectedEvent(null)}
+      onClick={handleMapClick}
     >
       <MapHandler place={{ lat, lng }} zoom={zoom} />
 
       {events.map((event, index) => {
         const eventLat = Number(event.lat);
         const eventLng = Number(event.lng);
-        // Safety check for markers too
+
+        // Safety check for markers
         if (isNaN(eventLat) || isNaN(eventLng)) return null;
 
         return (
           <AdvancedMarker
-            key={`${event.name}-${index}`}
+            key={`${event.id || event.name}-${index}`}
             position={{ lat: eventLat, lng: eventLng }}
-            onClick={() => setSelectedEvent(event)}
+            onClick={() => handleMarkerClick(event)}
             title={event.name}
           >
             <EventPin color={getPinColor(event)} />
@@ -137,53 +144,53 @@ const InnerMap = ({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
             lat: Number(selectedEvent.lat),
             lng: Number(selectedEvent.lng),
           }}
-          onCloseClick={() => setSelectedEvent(null)}
+          onCloseClick={handleInfoWindowClose}
           maxWidth={250}
           pixelOffset={[0, -30]}
         >
-          <div style={{ padding: ".5rem", textAlign: "center", color: "#333" }}>
-            <h2
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-                marginBottom: ".25rem",
-              }}
-            >
-              {selectedEvent.name}
-            </h2>
-            <p style={{ fontSize: ".9rem", marginBottom: ".25rem" }}>
-              {selectedEvent.location}
-            </p>
-            <p
-              style={{
-                fontSize: ".85rem",
-                color: "#555",
-                marginBottom: ".5rem",
-              }}
-            >
-              {selectedEvent.date}
+          <div className="p-2 text-center text-zinc-800">
+            <h2 className="font-bold text-lg mb-1">{selectedEvent.name}</h2>
+            <p className="text-sm mb-1">📍 {selectedEvent.location}</p>
+            <p className="text-sm text-zinc-600 mb-2">
+              📅 {selectedEvent.date}
             </p>
             {selectedEvent.details && (
-              <p style={{ fontSize: ".85rem", marginTop: ".5rem" }}>
-                {selectedEvent.details}
-              </p>
+              <div
+                className="text-sm mt-2 text-left"
+                dangerouslySetInnerHTML={{ __html: selectedEvent.details }}
+              />
             )}
           </div>
         </InfoWindow>
       )}
     </Map>
   );
-};
+});
 
+InnerMap.displayName = "InnerMap";
+
+// Main export component
 export default function GoogleMap(props: GoogleMapProps) {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  // Handle missing API key gracefully
+  if (!apiKey) {
+    return (
+      <div className="h-full w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800 flex items-center justify-center min-h-[400px]">
+        <div className="text-center text-zinc-400 p-4">
+          <p className="text-lg font-semibold mb-2">⚠️ Map Unavailable</p>
+          <p className="text-sm">Google Maps API key is not configured.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="h-full w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800 relative"
       style={{ minHeight: "400px" }}
     >
-      <APIProvider
-        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
-      >
+      <APIProvider apiKey={apiKey}>
         <InnerMap {...props} />
       </APIProvider>
     </div>

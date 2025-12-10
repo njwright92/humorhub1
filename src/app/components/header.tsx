@@ -1,37 +1,116 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, memo } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { collection, addDoc, getDocs } from "firebase/firestore";
-import { db } from "../../../firebase.config";
 import { useToast } from "./ToastContext";
 import hh from "../../app/hh.webp";
 
-import MicFinderIcon from "../icons/MicFinderIcon";
-import NewsIcon from "../icons/NewsIcon";
-import ContactIcon from "../icons/ContactIcon";
-import AboutIcon from "../icons/AboutIcon";
-import UserIconComponent from "../icons/UserIconComponent";
-import SearchBar from "./searchBar";
+// Lazy load icons
+const MicFinderIcon = dynamic(() => import("../icons/MicFinderIcon"), {
+  ssr: false,
+});
+const NewsIcon = dynamic(() => import("../icons/NewsIcon"), { ssr: false });
+const ContactIcon = dynamic(() => import("../icons/ContactIcon"), {
+  ssr: false,
+});
+const AboutIcon = dynamic(() => import("../icons/AboutIcon"), { ssr: false });
+const UserIconComponent = dynamic(() => import("../icons/UserIconComponent"), {
+  ssr: false,
+});
+
+const SearchBar = dynamic(() => import("./searchBar"), {
+  ssr: false,
+  loading: () => <div className="h-8 w-8 bg-zinc-700/50 rounded-full" />,
+});
 
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
   loading: () => null,
 });
 
-function debounce<A extends unknown[]>(
-  func: (...args: A) => void,
-  wait: number,
-) {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
-  return (...args: A) => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
+// Define a minimal interface for what we actually use
+interface MinimalAuth {
+  currentUser: unknown;
 }
+
+// Memoized nav link
+const NavLink = memo(function NavLink({
+  href,
+  label,
+  icon,
+  onClick,
+}: {
+  href?: string;
+  label: string;
+  icon: React.ReactNode;
+  onClick?: () => void;
+}) {
+  const content = (
+    <>
+      {icon}
+      <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+        {label}
+      </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        aria-label={label}
+        className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      aria-label={label}
+      className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
+    >
+      {content}
+    </button>
+  );
+});
+
+const HamburgerIcon = memo(function HamburgerIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-8 w-8"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+});
+
+const CloseIcon = memo(function CloseIcon() {
+  return (
+    <svg
+      className="fill-current h-9 w-9 text-zinc-200"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+    >
+      <title>Close</title>
+      <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
+    </svg>
+  );
+});
 
 export default function Header() {
   const { showToast } = useToast();
@@ -43,11 +122,47 @@ export default function Header() {
   const [cityList, setCityList] = useState<string[]>([]);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  const authRef = useRef<Awaited<
-    ReturnType<typeof import("../../../firebase.config").getAuth>
-  > | null>(null);
-  const debouncedSearchRef = useRef<((term: string) => void) | null>(null);
+  // We use 'any' here to avoid importing complex Firebase types on main thread
+  const authRef = useRef<MinimalAuth | null>(null);
+  // 1. OPTIMISTIC AUTH CHECK: Runs instantly on mount
+  // Checks LocalStorage for Firebase keys to set UI state BEFORE downloading SDK
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hasAuthData = Object.keys(window.localStorage).some((key) =>
+        key.startsWith("firebase:authUser:"),
+      );
+      if (hasAuthData) setIsUserSignedIn(true);
+    }
+  }, []);
 
+  // 2. REAL AUTH INIT: Runs in background (off main thread)
+  // This downloads the iframe.js but the UI is already painted
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+
+    const initAuth = async () => {
+      // requestIdleCallback ensures we don't block interaction
+      const idleCallback =
+        window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+
+      idleCallback(async () => {
+        const { getAuth } = await import("../../../firebase.config");
+        const { onAuthStateChanged } = await import("firebase/auth");
+
+        const auth = await getAuth();
+        authRef.current = auth;
+
+        unsubscribe = onAuthStateChanged(auth, (user) => {
+          setIsUserSignedIn(!!user);
+        });
+      });
+    };
+
+    initAuth();
+    return () => unsubscribe?.();
+  }, []);
+
+  // Handle pending redirect after auth
   useEffect(() => {
     if (isUserSignedIn && pendingRedirect) {
       router.push(pendingRedirect);
@@ -61,8 +176,10 @@ export default function Header() {
     [],
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
   const handleLoginSuccess = useCallback(() => setIsUserSignedIn(true), []);
 
+  // Fetch Cities: De-prioritized
   useEffect(() => {
     let mounted = true;
     const fetchCities = async () => {
@@ -72,40 +189,27 @@ export default function Header() {
           if (mounted) setCityList(JSON.parse(cached));
           return;
         }
-        const snapshot = await getDocs(collection(db, "cities"));
-        const fetched = snapshot.docs.map((doc) => String(doc.data()?.city));
-        if (mounted) {
-          setCityList(fetched);
-          sessionStorage.setItem("hh_cities", JSON.stringify(fetched));
+
+        // Use API route instead of heavy client Firestore SDK
+        const response = await fetch("/api/cities");
+        if (response.ok) {
+          const data = await response.json();
+          if (mounted && data.cities) {
+            setCityList(data.cities);
+            sessionStorage.setItem("hh_cities", JSON.stringify(data.cities));
+          }
         }
       } catch (err) {
         console.error("Error fetching cities:", err);
       }
     };
 
-    fetchCities();
+    // Run after main paint
+    const timer = setTimeout(fetchCities, 0);
     return () => {
       mounted = false;
+      clearTimeout(timer);
     };
-  }, []);
-
-  useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-
-    const initAuth = async () => {
-      const { getAuth } = await import("../../../firebase.config");
-      const { onAuthStateChanged } = await import("firebase/auth");
-
-      const auth = await getAuth();
-      authRef.current = auth;
-
-      unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsUserSignedIn(!!user);
-      });
-    };
-
-    initAuth();
-    return () => unsubscribe?.();
   }, []);
 
   const handleProtectedRoute = useCallback(
@@ -121,43 +225,26 @@ export default function Header() {
     [isUserSignedIn, router, showToast],
   );
 
-  const performSearch = useCallback(
-    async (searchTerm: string) => {
-      const normalized = searchTerm.toLowerCase().trim();
+  const handleOnSearch = useCallback(
+    (term: string) => {
+      if (!term.trim()) return;
+      const normalized = term.toLowerCase().trim();
       const matchingCity = cityList.find((city) =>
         city.toLowerCase().includes(normalized),
       );
 
       if (matchingCity) {
         router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
-      } else {
-        try {
-          await addDoc(collection(db, "searchedCities"), {
-            city: searchTerm,
-            timestamp: new Date(),
-          });
-        } catch {}
       }
     },
     [cityList, router],
-  );
-
-  useEffect(() => {
-    debouncedSearchRef.current = debounce((term: string) => {
-      if (term) performSearch(term);
-    }, 300);
-  }, [performSearch]);
-
-  const handleOnSearch = useCallback(
-    (term: string) => debouncedSearchRef.current?.(term),
-    [],
   );
 
   return (
     <>
       <header className="p-2 text-zinc-900 sticky top-0 z-50 bg-amber-300">
         <nav className="flex sm:flex-col justify-between items-center sm:fixed md:h-full md:w-20">
-          {/* Mobile: Logo (left side) */}
+          {/* Mobile: Logo */}
           <Link href="/" aria-label="Home" className="sm:hidden">
             <Image
               src={hh}
@@ -172,7 +259,6 @@ export default function Header() {
           {/* Desktop Sidebar */}
           <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 z-50 shadow-lg transition-all backdrop-blur-sm">
             <div className="flex flex-col items-center justify-center space-y-6 mt-4 w-full mx-auto text-zinc-900">
-              {/* Home Link */}
               <Link
                 href="/"
                 aria-label="Home"
@@ -191,7 +277,6 @@ export default function Header() {
                 </span>
               </Link>
 
-              {/* Search Bar Wrapper */}
               <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer relative z-50">
                 <SearchBar
                   onSearch={handleOnSearch}
@@ -201,88 +286,36 @@ export default function Header() {
                 />
               </div>
 
-              {/* Mic Finder */}
-              <Link
+              <NavLink
                 href="/MicFinder"
-                aria-label="MicFinder"
-                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
-              >
-                <MicFinderIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  Mic Finder
-                </span>
-              </Link>
-
-              {/* News */}
-              <button
+                label="Mic Finder"
+                icon={<MicFinderIcon />}
+              />
+              <NavLink
+                label="News"
+                icon={<NewsIcon />}
                 onClick={() => handleProtectedRoute("/HHapi", "News")}
-                aria-label="News"
-                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
-              >
-                <NewsIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  News
-                </span>
-              </button>
-
-              {/* Profile */}
-              <button
+              />
+              <NavLink
+                label="Profile"
+                icon={<UserIconComponent />}
                 onClick={() => handleProtectedRoute("/Profile", "Profile")}
-                aria-label="Profile"
-                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
-              >
-                <UserIconComponent />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  Profile
-                </span>
-              </button>
-
-              {/* Contact */}
-              <Link
+              />
+              <NavLink
                 href="/contact"
-                aria-label="Contact Us"
-                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
-              >
-                <ContactIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  Contact Us
-                </span>
-              </Link>
-
-              {/* About */}
-              <Link
-                href="/about"
-                aria-label="About"
-                className="group relative transform transition-transform hover:scale-110 hover:text-zinc-700"
-              >
-                <AboutIcon />
-                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-                  About
-                </span>
-              </Link>
+                label="Contact Us"
+                icon={<ContactIcon />}
+              />
+              <NavLink href="/about" label="About" icon={<AboutIcon />} />
             </div>
 
-            {/* Desktop: Sign In button / Menu Toggle */}
             <div className="mt-auto mb-4 flex flex-col items-center gap-3">
               <button
                 onClick={toggleMenu}
                 className="text-zinc-900 hover:text-zinc-700 transform transition-transform hover:scale-110"
                 aria-label="Open full menu"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
+                <HamburgerIcon />
               </button>
             </div>
           </div>
@@ -292,56 +325,32 @@ export default function Header() {
             Humor Hub!
           </h1>
 
-          {/* Mobile: Hamburger menu button */}
           <button
             onClick={toggleMenu}
             className="text-zinc-950 sm:hidden cursor-pointer hover:scale-105 transition-transform"
             aria-label="Toggle menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-9 w-9"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
+            <HamburgerIcon />
           </button>
 
-          {/* Mobile Menu Overlay */}
           {isMenuOpen && (
             <div className="fixed inset-0 w-full h-full bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-sm animate-slide-in">
               <button
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
                 className="self-end cursor-pointer mb-2 p-2 hover:text-amber-300 transition-colors"
                 aria-label="Close menu"
               >
-                <svg
-                  className="fill-current h-9 w-9 text-zinc-200"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <title>Close</title>
-                  <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
-                </svg>
+                <CloseIcon />
               </button>
 
               <SearchBar
                 onSearch={handleOnSearch}
-                isUserSignedIn={
-                  isUserSignedIn || !!authRef.current?.currentUser
-                }
+                isUserSignedIn={isUserSignedIn}
                 setIsAuthModalOpen={setIsAuthModalOpen}
                 cities={cityList}
               />
 
-              <Link href="/" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/" onClick={closeMenu}>
                 <Image
                   src={hh}
                   alt="Humor Hub Logo"
@@ -351,18 +360,17 @@ export default function Header() {
                 />
               </Link>
 
-              {/* Mobile Menu Links - Refactored with inline styles */}
               <div className="flex flex-col gap-4 text-center w-full max-w-xs">
                 <Link
                   href="/MicFinder"
                   className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                 >
                   Mic Finder
                 </Link>
                 <button
                   onClick={() => {
-                    setIsMenuOpen(false);
+                    closeMenu();
                     handleProtectedRoute("/HHapi", "News");
                   }}
                   className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
@@ -371,7 +379,7 @@ export default function Header() {
                 </button>
                 <button
                   onClick={() => {
-                    setIsMenuOpen(false);
+                    closeMenu();
                     handleProtectedRoute("/Profile", "Profile");
                   }}
                   className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
@@ -381,14 +389,14 @@ export default function Header() {
                 <Link
                   href="/contact"
                   className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                 >
                   Contact Us
                 </Link>
                 <Link
                   href="/about"
                   className="flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={closeMenu}
                 >
                   About
                 </Link>
@@ -397,11 +405,15 @@ export default function Header() {
           )}
         </nav>
       </header>
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={toggleAuthModal}
-        onLoginSuccess={handleLoginSuccess}
-      />
+
+      {/* Only render AuthModal when needed */}
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={toggleAuthModal}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
     </>
   );
 }

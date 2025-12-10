@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
@@ -39,7 +39,25 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-export default function SearchBar({
+// Memoized search icon
+const SearchIcon = memo(function SearchIcon() {
+  return (
+    <svg
+      className="h-8 w-8"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+});
+
+function SearchBar({
   onSearch,
   isUserSignedIn,
   setIsAuthModalOpen,
@@ -53,24 +71,28 @@ export default function SearchBar({
 
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
-    if (!normalized) return [];
+    if (!normalized || normalized.length < 2) return [];
 
     const results: Suggestion[] = [];
 
+    // Check for login keywords
     if (["login", "sign in", "sign up"].includes(normalized)) {
       results.push({ type: "page", label: "Login / Sign Up" });
     }
 
+    // Check for mic finder keywords
     if (KEYWORDS_TO_MICFINDER.has(normalized)) {
       results.push({ type: "page", label: "Mic Finder", page: PAGES[0] });
     }
 
+    // Match pages
     for (const page of PAGES) {
       if (page.label.toLowerCase().includes(normalized)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
+    // Match cities (limit to 5)
     let count = 0;
     for (const city of cities) {
       if (count >= 5) break;
@@ -83,89 +105,107 @@ export default function SearchBar({
     return results;
   }, [searchTerm, cities]);
 
-  const closeSearchBar = () => {
+  const closeSearchBar = useCallback(() => {
     setSearchTerm("");
     setInputVisible(false);
-  };
+  }, []);
 
-  const handleSelectSuggestion = (suggestion: Suggestion) => {
-    if (suggestion.type === "city" && suggestion.city) {
-      router.push(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
-      onSearch(suggestion.city);
-      closeSearchBar();
-      return;
-    }
+  const handleSelectSuggestion = useCallback(
+    (suggestion: Suggestion) => {
+      if (suggestion.type === "city" && suggestion.city) {
+        router.push(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
+        onSearch(suggestion.city);
+        closeSearchBar();
+        return;
+      }
 
-    if (suggestion.label === "Login / Sign Up") {
-      setIsAuthModalOpen(true);
-      closeSearchBar();
-      return;
-    }
-
-    if (suggestion.page) {
-      const { route, requiresAuth, label } = suggestion.page;
-
-      if (requiresAuth && !isUserSignedIn) {
-        showToast(`Please sign in to access ${label}`, "info");
+      if (suggestion.label === "Login / Sign Up") {
         setIsAuthModalOpen(true);
         closeSearchBar();
         return;
       }
 
-      router.push(route);
-      onSearch(label);
+      if (suggestion.page) {
+        const { route, requiresAuth, label } = suggestion.page;
+
+        if (requiresAuth && !isUserSignedIn) {
+          showToast(`Please sign in to access ${label}`, "info");
+          setIsAuthModalOpen(true);
+          closeSearchBar();
+          return;
+        }
+
+        router.push(route);
+        onSearch(label);
+        closeSearchBar();
+      }
+    },
+    [
+      router,
+      onSearch,
+      closeSearchBar,
+      setIsAuthModalOpen,
+      isUserSignedIn,
+      showToast,
+    ],
+  );
+
+  const handleSearch = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const normalized = searchTerm.trim().toLowerCase();
+      if (!normalized) return;
+
+      const exactMatch = suggestions.find(
+        (s) => s.label.toLowerCase() === normalized,
+      );
+      if (exactMatch) {
+        handleSelectSuggestion(exactMatch);
+        return;
+      }
+
+      if (suggestions.length === 0) {
+        showToast("No results found. We've noted your search!", "info");
+      }
+
+      onSearch(searchTerm);
       closeSearchBar();
-    }
-  };
+    },
+    [
+      searchTerm,
+      suggestions,
+      handleSelectSuggestion,
+      onSearch,
+      closeSearchBar,
+      showToast,
+    ],
+  );
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const normalized = searchTerm.trim().toLowerCase();
-    if (!normalized) return;
+  const handleToggleInput = useCallback(() => {
+    setInputVisible((prev) => {
+      if (!prev) {
+        setTimeout(() => inputRef.current?.focus(), 50);
+      }
+      return !prev;
+    });
+  }, []);
 
-    const exactMatch = suggestions.find(
-      (s) => s.label.toLowerCase() === normalized,
-    );
-    if (exactMatch) {
-      handleSelectSuggestion(exactMatch);
-      return;
-    }
-
-    if (suggestions.length === 0) {
-      showToast("No results found. We've noted your search!", "info");
-    }
-
-    onSearch(searchTerm);
-    closeSearchBar();
-  };
-
-  const handleToggleInput = () => {
-    setInputVisible(!isInputVisible);
-    if (!isInputVisible) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(e.target.value);
+    },
+    [],
+  );
 
   return (
     <div className="relative" id="searchBar">
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 text-zinc-900 rounded-full transition-colors p-1"
+          className="flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 text-zinc-900 rounded-full transition-colors p-1 cursor-pointer"
           aria-label="Toggle search"
         >
-          <svg
-            className="h-8 w-8"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+          <SearchIcon />
         </button>
       )}
 
@@ -180,8 +220,8 @@ export default function SearchBar({
               type="text"
               placeholder="Search city, page, or keyword..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full outline-hidden border-2 border-transparent focus:border-amber-300 transition-colors placeholder:text-zinc-500"
+              onChange={handleInputChange}
+              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full outline-none border-2 border-transparent focus:border-amber-300 transition-colors placeholder:text-zinc-500"
               autoComplete="off"
             />
 
@@ -189,13 +229,13 @@ export default function SearchBar({
               <button
                 type="button"
                 onClick={closeSearchBar}
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-300 hover:bg-zinc-400 transition-colors"
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-300 hover:bg-zinc-400 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors"
+                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 Search
               </button>
@@ -205,7 +245,7 @@ export default function SearchBar({
               <ul className="w-full mt-2 max-h-60 overflow-y-auto divide-y divide-zinc-300 border-t border-zinc-300">
                 {suggestions.map((sug, idx) => (
                   <li
-                    key={idx}
+                    key={`${sug.type}-${sug.label}-${idx}`}
                     className="p-2 cursor-pointer hover:bg-zinc-300 text-zinc-900 text-sm flex justify-between items-center transition-colors"
                     onMouseDown={(e) => {
                       e.preventDefault();
@@ -226,3 +266,5 @@ export default function SearchBar({
     </div>
   );
 }
+
+export default memo(SearchBar);

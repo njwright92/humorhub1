@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ProfileClient from "./ProfileClient";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
 
 export const metadata: Metadata = {
   title: "Your Profile - Manage Your Humor Hub Account",
@@ -24,5 +26,11 @@ export const metadata: Metadata = {
 };
 
 export default function ProfilePage() {
-  return <ProfileClient />;
+  return (
+    <>
+      <Header />
+      <ProfileClient />
+      <Footer />
+    </>
+  );
 }

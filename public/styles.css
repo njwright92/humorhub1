@@ -134,6 +134,8 @@
     --text-xs--line-height: calc(1/0.75);
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25/0.875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5/1);
     --text-lg: 1.125rem;
     --text-lg--line-height: calc(1.75/1.125);
     --text-xl: 1.25rem;
@@ -517,9 +519,6 @@
   .right-2 {
     right: calc(var(--spacing) * 2);
   }
-  .right-3 {
-    right: calc(var(--spacing) * 3);
-  }
   .right-4 {
     right: calc(var(--spacing) * 4);
   }
@@ -628,14 +627,14 @@
   .hidden {
     display: none;
   }
-  .inline {
-    display: inline;
-  }
   .inline-block {
     display: inline-block;
   }
   .inline-flex {
     display: inline-flex;
+  }
+  .h-3 {
+    height: calc(var(--spacing) * 3);
   }
   .h-4 {
     height: calc(var(--spacing) * 4);
@@ -655,8 +654,14 @@
   .h-10 {
     height: calc(var(--spacing) * 10);
   }
+  .h-12 {
+    height: calc(var(--spacing) * 12);
+  }
   .h-16 {
     height: calc(var(--spacing) * 16);
+  }
+  .h-32 {
+    height: calc(var(--spacing) * 32);
   }
   .h-36 {
     height: calc(var(--spacing) * 36);
@@ -666,6 +671,9 @@
   }
   .h-64 {
     height: calc(var(--spacing) * 64);
+  }
+  .h-96 {
+    height: calc(var(--spacing) * 96);
   }
   .h-100 {
     height: calc(var(--spacing) * 100);
@@ -697,11 +705,23 @@
   .min-h-\[60vh\] {
     min-height: 60vh;
   }
+  .min-h-\[400px\] {
+    min-height: 400px;
+  }
   .min-h-\[500px\] {
     min-height: 500px;
   }
   .min-h-screen {
     min-height: 100vh;
+  }
+  .w-1\/2 {
+    width: 50%;
+  }
+  .w-1\/4 {
+    width: 25%;
+  }
+  .w-3\/4 {
+    width: 75%;
   }
   .w-4 {
     width: calc(var(--spacing) * 4);
@@ -724,14 +744,23 @@
   .w-15 {
     width: calc(var(--spacing) * 15);
   }
+  .w-32 {
+    width: calc(var(--spacing) * 32);
+  }
   .w-36 {
     width: calc(var(--spacing) * 36);
+  }
+  .w-64 {
+    width: calc(var(--spacing) * 64);
   }
   .w-70 {
     width: calc(var(--spacing) * 70);
   }
   .w-80 {
     width: calc(var(--spacing) * 80);
+  }
+  .w-96 {
+    width: calc(var(--spacing) * 96);
   }
   .w-auto {
     width: auto;
@@ -807,9 +836,6 @@
   }
   .cursor-pointer {
     cursor: pointer;
-  }
-  .cursor-wait {
-    cursor: wait;
   }
   .resize-none {
     resize: none;
@@ -1185,6 +1211,18 @@
   .bg-zinc-700 {
     background-color: var(--color-zinc-700);
   }
+  .bg-zinc-700\/50 {
+    background-color: #3f3f4680;
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-zinc-700\/50 {
+      background-color: color-mix(
+        in oklab,
+        var(--color-zinc-700) 50%,
+        transparent
+      );
+    }
+  }
   .bg-zinc-800 {
     background-color: var(--color-zinc-800);
   }
@@ -1369,6 +1407,10 @@
     font-size: var(--text-5xl);
     line-height: var(--tw-leading, var(--text-5xl--line-height));
   }
+  .text-6xl {
+    font-size: var(--text-6xl);
+    line-height: var(--tw-leading, var(--text-6xl--line-height));
+  }
   .text-7xl {
     font-size: var(--text-7xl);
     line-height: var(--tw-leading, var(--text-7xl--line-height));
@@ -1443,6 +1485,9 @@
   }
   .text-amber-700 {
     color: var(--color-amber-700);
+  }
+  .text-blue-200 {
+    color: var(--color-blue-200);
   }
   .text-blue-400 {
     color: var(--color-blue-400);
@@ -1541,8 +1586,8 @@
   .opacity-25 {
     opacity: 0.25;
   }
-  .opacity-80 {
-    opacity: 0.8;
+  .opacity-50 {
+    opacity: 0.5;
   }
   .opacity-100 {
     opacity: 1;
@@ -2212,6 +2257,10 @@
       font-size: var(--text-6xl);
       line-height: var(--tw-leading, var(--text-6xl--line-height));
     }
+    .md\:text-base {
+      font-size: var(--text-base);
+      line-height: var(--tw-leading, var(--text-base--line-height));
+    }
     .md\:text-lg {
       font-size: var(--text-lg);
       line-height: var(--tw-leading, var(--text-lg--line-height));
@@ -2253,24 +2302,6 @@
       font-size: var(--text-lg);
       line-height: var(--tw-leading, var(--text-lg--line-height));
     }
-  }
-  .\[\&\:\:-webkit-calendar-picker-indicator\]\:absolute::-webkit-calendar-picker-indicator {
-    position: absolute;
-  }
-  .\[\&\:\:-webkit-calendar-picker-indicator\]\:right-0::-webkit-calendar-picker-indicator {
-    right: calc(var(--spacing) * 0);
-  }
-  .\[\&\:\:-webkit-calendar-picker-indicator\]\:h-full::-webkit-calendar-picker-indicator {
-    height: 100%;
-  }
-  .\[\&\:\:-webkit-calendar-picker-indicator\]\:w-full::-webkit-calendar-picker-indicator {
-    width: 100%;
-  }
-  .\[\&\:\:-webkit-calendar-picker-indicator\]\:cursor-pointer::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-  }
-  .\[\&\:\:-webkit-calendar-picker-indicator\]\:opacity-0::-webkit-calendar-picker-indicator {
-    opacity: 0;
   }
 }
 @keyframes slide-in {

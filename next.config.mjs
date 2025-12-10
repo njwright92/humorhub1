@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
 
-  transpilePackages: ["@tanstack/react-virtual, firebase"],
+  transpilePackages: ["@tanstack/react-virtual", "firebase"],
 
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",

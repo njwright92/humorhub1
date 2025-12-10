@@ -9,50 +9,33 @@ import React, {
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
-import { db } from "../../../firebase.config";
 import Link from "next/link";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import EventForm from "../components/EventForm";
 import type { Auth } from "firebase/auth";
-import { useToast } from "../components/ToastContext";
+import { useToast } from "@/app/components/ToastContext";
 
-// --- Utils & Constants ---
+// Import from lib files
+import type { Event, CityCoordinates } from "../lib/types";
+import {
+  DAY_MAP,
+  DEFAULT_US_CENTER,
+  DEFAULT_ZOOM,
+  CITY_ZOOM,
+} from "../lib/constants";
+import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
-function getDistanceFromLatLonInKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-) {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-const DAY_MAP: { [key: string]: number } = {
-  Sunday: 0,
-  Monday: 1,
-  Tuesday: 2,
-  Wednesday: 3,
-  Thursday: 4,
-  Friday: 5,
-  Saturday: 6,
-};
-
-const DEFAULT_US_CENTER = { lat: 39.8283, lng: -98.5795 };
-const DEFAULT_ZOOM = 4;
-const CITY_ZOOM = 12;
+// Dynamic imports for code splitting
+const EventForm = dynamic(() => import("@/app/components/EventForm"), {
+  loading: () => (
+    <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
+      Loading...
+    </button>
+  ),
+  ssr: false,
+});
 
 const MemoizedEventForm = React.memo(EventForm);
 
-const GoogleMap = dynamic(() => import("../components/GoogleMap"), {
+const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
     <div className="h-100 w-full flex items-center justify-center text-zinc-200">
       Loading Map...
@@ -67,51 +50,44 @@ declare global {
   }
 }
 
-type Event = {
-  id: string;
-  name: string;
-  location: string;
-  date: string;
-  lat: number;
-  lng: number;
-  details: string;
-  isRecurring: boolean;
-  festival: boolean;
-  isMusic?: boolean;
-  parsedDateObj?: Date;
-  numericTimestamp?: number;
-  googleTimestamp?: string | number | Date;
-};
+// Props interface for server-passed data
+interface MicFinderClientProps {
+  initialEvents: Event[];
+  initialCityCoordinates: CityCoordinates;
+  initialCities: string[];
+}
 
-type CityCoordinates = { [key: string]: { lat: number; lng: number } };
-
-export default function MicFinderClient() {
+export default function MicFinderClient({
+  initialEvents,
+  initialCityCoordinates,
+  initialCities,
+}: MicFinderClientProps) {
   const { showToast } = useToast();
 
-  // State
+  // Use server-fetched data as initial state (no need to fetch again)
+  const [events] = useState<Event[]>(initialEvents);
+  const [cityCoordinates] = useState<CityCoordinates>(initialCityCoordinates);
+  const [allAvailableCities] = useState<string[]>(initialCities);
+
+  // UI State
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [events, setEvents] = useState<Event[]>([]);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [hasMapInit, setHasMapInit] = useState(false);
-  const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
   const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
-
-  // Note: mapLocation state removed in favor of derived calculation
-
   const [selectedTab, setSelectedTab] = useState<
     "Mics" | "Festivals" | "Other"
   >("Mics");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
   const authRef = useRef<Auth | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
-  const normalizeCityName = useCallback((name: string) => name.trim(), []);
-
+  // Analytics helper
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
       if (typeof window !== "undefined") {
@@ -121,8 +97,7 @@ export default function MicFinderClient() {
     [],
   );
 
-  // --- Effects ---
-
+  // Debounced search
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -136,71 +111,28 @@ export default function MicFinderClient() {
     return () => clearTimeout(handler);
   }, [searchTerm, sendDataLayerEvent]);
 
-  useEffect(() => {
-    let mounted = true;
-    const loadData = async () => {
-      try {
-        const { collection, getDocs } = await import("firebase/firestore");
-        const [eventsSnap, citiesSnap] = await Promise.all([
-          getDocs(collection(db, "userEvents")),
-          getDocs(collection(db, "cities")),
-        ]);
-
-        const fetchedEvents = eventsSnap.docs.map((doc) => {
-          const data = doc.data();
-          const parsedDateObj = data.date ? new Date(data.date) : undefined;
-          if (parsedDateObj && !isNaN(parsedDateObj.getTime()))
-            parsedDateObj.setHours(0, 0, 0, 0);
-
-          return {
-            id: doc.id,
-            ...data,
-            festival: data.festival === true,
-            isMusic: data.isMusic === true,
-            parsedDateObj,
-            numericTimestamp: data.googleTimestamp
-              ? new Date(data.googleTimestamp).getTime()
-              : 0,
-          } as Event;
-        });
-        const citiesData: CityCoordinates = {};
-        citiesSnap.docs.forEach((doc) => {
-          const d = doc.data();
-          citiesData[d.city] = {
-            lat: d.coordinates.lat,
-            lng: d.coordinates.lng,
-          };
-        });
-        if (mounted) {
-          setEvents(fetchedEvents);
-          setCityCoordinates(citiesData);
-        }
-      } catch (error) {
-        console.error("Error loading data:", error);
-      }
-    };
-    loadData();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
+  // Lazy load Firebase Auth (client-side only)
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
+
       const auth = await getAuth();
       authRef.current = auth;
+
       unsubscribe = onAuthStateChanged(auth, (user) => {
         setIsUserSignedIn(!!user);
       });
     };
-    setTimeout(initAuth, 100);
+
+    // Small delay allows UI to paint first
+    setTimeout(initAuth, 500);
     return () => unsubscribe?.();
   }, []);
 
+  // URL params handling (client-side only)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const city = params.get("city");
@@ -219,12 +151,15 @@ export default function MicFinderClient() {
   };
 
   const fetchUserLocation = useCallback(() => {
-    if (!navigator.geolocation)
+    if (!navigator.geolocation) {
       return showToast("Geolocation not supported", "error");
+    }
+
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         let closestCity = null;
         let minDistance = Infinity;
+
         for (const [city, coords] of Object.entries(cityCoordinates)) {
           const dist = getDistanceFromLatLonInKm(
             latitude,
@@ -237,6 +172,7 @@ export default function MicFinderClient() {
             closestCity = city;
           }
         }
+
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
           setSelectedCity(normalized);
@@ -251,7 +187,7 @@ export default function MicFinderClient() {
         showToast("Location access denied", "error");
       },
     );
-  }, [cityCoordinates, normalizeCityName, showToast]);
+  }, [cityCoordinates, showToast]);
 
   const handleCitySelect = (city: string) => {
     const normalized = normalizeCityName(city);
@@ -269,6 +205,7 @@ export default function MicFinderClient() {
     setIsSecondDropdownOpen(false);
   };
 
+  // Save event via API route
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
@@ -278,29 +215,26 @@ export default function MicFinderClient() {
 
       try {
         const user = authRef.current?.currentUser;
-        if (!user || !event.id) throw new Error("Invalid state");
+        if (!user || !event.id) {
+          throw new Error("Invalid state");
+        }
 
-        const { doc, setDoc } = await import("firebase/firestore");
+        const token = await user.getIdToken();
 
-        const dataToSave: Record<string, unknown> = {
-          id: event.id,
-          userId: user.uid,
-        };
+        const response = await fetch("/api/events/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(event),
+        });
 
-        if (event.name) dataToSave.name = event.name;
-        if (event.location) dataToSave.location = event.location;
-        if (event.date) dataToSave.date = event.date;
-        if (event.lat != null) dataToSave.lat = event.lat;
-        if (event.lng != null) dataToSave.lng = event.lng;
-        if (event.details) dataToSave.details = event.details;
-        if (event.isRecurring != null)
-          dataToSave.isRecurring = event.isRecurring;
-        if (event.festival != null) dataToSave.festival = event.festival;
-        if (event.isMusic != null) dataToSave.isMusic = event.isMusic;
-        if (event.googleTimestamp)
-          dataToSave.googleTimestamp = event.googleTimestamp;
+        const result = await response.json();
 
-        await setDoc(doc(db, "savedEvents", event.id), dataToSave);
+        if (!response.ok) {
+          throw new Error(result.error || "Failed to save");
+        }
 
         showToast("Event saved successfully!", "success");
         sendDataLayerEvent("save_event", {
@@ -333,23 +267,12 @@ export default function MicFinderClient() {
 
   // --- Memos ---
 
-  const allAvailableCities = useMemo(() => {
-    const set = new Set<string>();
-    events.forEach((e) => {
-      const city = e.location.split(",")[1]?.trim();
-      if (city) set.add(normalizeCityName(city));
-    });
-    return Array.from(set).sort((a, b) =>
-      a === "Spokane WA" ? -1 : b === "Spokane WA" ? 1 : a.localeCompare(b),
-    );
-  }, [events, normalizeCityName]);
-
+  // Filter cities based on search term
   const dropdownCities = useMemo(() => {
-    return !debouncedSearchTerm
-      ? allAvailableCities
-      : allAvailableCities.filter((c) =>
-          c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-        );
+    if (!debouncedSearchTerm) return allAvailableCities;
+    return allAvailableCities.filter((c) =>
+      c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    );
   }, [allAvailableCities, debouncedSearchTerm]);
 
   const isTabMatch = useCallback(
@@ -367,19 +290,11 @@ export default function MicFinderClient() {
     return events.filter((e) => e.isMusic);
   }, [events, selectedTab]);
 
-  // ⭐ IMPROVED: Map logic uses selectedCity state directly.
   const mapConfig = useMemo(() => {
-    // Check if we have coordinates for the selected city
     const cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
-
     if (cityCoords) {
-      return {
-        lat: cityCoords.lat,
-        lng: cityCoords.lng,
-        zoom: CITY_ZOOM,
-      };
+      return { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM };
     }
-    // Default fallback
     return {
       lat: DEFAULT_US_CENTER.lat,
       lng: DEFAULT_US_CENTER.lng,
@@ -392,19 +307,27 @@ export default function MicFinderClient() {
     dateCheck.setHours(0, 0, 0, 0);
     const term = debouncedSearchTerm.toLowerCase();
     const city = selectedCity.toLowerCase();
+
     return events.filter((e) => {
       if (!isTabMatch(e)) return false;
+
       const matchesCity = !city || e.location.toLowerCase().includes(city);
       const matchesSearch =
         !term ||
         e.name.toLowerCase().includes(term) ||
         e.location.toLowerCase().includes(term);
+
       let matchesDate = false;
       if (e.isRecurring) {
         matchesDate = DAY_MAP[e.date] === selectedDate.getDay();
-      } else if (e.parsedDateObj) {
-        matchesDate = e.parsedDateObj.getTime() === dateCheck.getTime();
+      } else {
+        const parsedDate = new Date(e.date);
+        if (!isNaN(parsedDate.getTime())) {
+          parsedDate.setHours(0, 0, 0, 0);
+          matchesDate = parsedDate.getTime() === dateCheck.getTime();
+        }
       }
+
       return matchesCity && matchesDate && matchesSearch;
     });
   }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
@@ -422,7 +345,7 @@ export default function MicFinderClient() {
       if (aClub !== bClub) return aClub ? -1 : 1;
       return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
     });
-  }, [events, filterCity, isTabMatch, normalizeCityName]);
+  }, [events, filterCity, isTabMatch]);
 
   const rowVirtualizer = useVirtualizer({
     count: sortedEventsByCity.length,
@@ -431,99 +354,292 @@ export default function MicFinderClient() {
     overscan: 5,
   });
 
+  // --- RENDER ---
   return (
-    <>
-      <Header />
-      <div className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
-        {/* Alert Box */}
-        <div className="border border-red-400 text-red-700 px-2 py-1 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm sm:text-md">
-          <p className="m-0">
-            <strong className="font-bold">📢 Note: </strong>
-            Open mic events evolve quickly. See something outdated?{" "}
-            <Link
-              href="/contact"
-              className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
-            >
-              Contact Us
-            </Link>{" "}
-            Help keep the comedy community thriving!
-          </p>
-        </div>
-
-        {/* Titles */}
-        <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-6 text-center font-heading">
-          MicFinder
-        </h1>
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-6 font-bold drop-shadow-xl text-center font-heading">
-          Discover Mics and Festivals Near You!
-        </h2>
-        <p className="text-center mt-4 mb-6 text-zinc-300 max-w-3xl mx-auto">
-          Share a mic or find your next one: MicFinder helps you discover and
-          add comedy events to connect with your community and keep the laughs
-          going!
+    <div className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
+      {/* Alert Banner */}
+      <div className="border border-red-400 text-red-700 px-2 py-1 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm sm:text-md">
+        <p className="m-0">
+          <strong className="font-bold">📢 Note: </strong>
+          Open mic events evolve quickly. See something outdated?{" "}
+          <Link
+            href="/contact"
+            className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
+          >
+            Contact Us
+          </Link>{" "}
+          Help keep the comedy community thriving!
         </p>
+      </div>
 
-        {/* Event Form Button Wrapper */}
-        <div className="text-center mb-4 h-16 w-full rounded-lg flex justify-center items-center">
-          <MemoizedEventForm />
+      {/* Titles */}
+      <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-6 text-center font-heading">
+        MicFinder
+      </h1>
+      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-6 font-bold drop-shadow-xl text-center font-heading">
+        Discover Mics and Festivals Near You!
+      </h2>
+      <p className="text-center mt-4 mb-6 text-zinc-300 max-w-3xl mx-auto">
+        Share a mic or find your next one: MicFinder helps you discover and add
+        comedy events to connect with your community and keep the laughs going!
+      </p>
+
+      {/* Event Form Button Wrapper */}
+      <div className="text-center mb-4 h-16 w-full rounded-lg flex justify-center items-center">
+        <MemoizedEventForm />
+      </div>
+
+      <h3 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2 text-zinc-400">
+        Find your next show or night out. Pick a city and date!
+      </h3>
+
+      {/* === Inputs Section === */}
+      <div className="flex flex-col justify-center items-center mt-2 relative z-20 gap-4">
+        {/* City Dropdown */}
+        <div className="relative w-full max-w-xs min-h-12">
+          <p id="city-select-label" className="sr-only">
+            Select a City
+          </p>
+          <div
+            id="city-select"
+            aria-labelledby="city-select-label"
+            tabIndex={0}
+            onMouseEnter={handleMapHover}
+            onTouchStart={handleMapHover}
+            className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-none focus:border-zinc-300 focus:shadow-md w-full h-full"
+            role="button"
+            aria-haspopup="listbox"
+            aria-expanded={isFirstDropdownOpen}
+            onClick={() => {
+              setIsFirstDropdownOpen(!isFirstDropdownOpen);
+              setIsSecondDropdownOpen(false);
+            }}
+          >
+            {selectedCity || "Select a City"}
+          </div>
+
+          {isFirstDropdownOpen && (
+            <div className="w-full max-w-xs bg-zinc-100 shadow-lg rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30 border border-zinc-300">
+              <input
+                type="text"
+                placeholder="Search city..."
+                value={searchTerm}
+                onChange={handleSearchInputChange}
+                className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
+                autoFocus
+              />
+              <ul className="text-zinc-900" role="listbox">
+                <li
+                  className="px-4 py-3 cursor-pointer bg-amber-100 hover:bg-amber-300 text-center font-bold text-zinc-900 border-b border-zinc-200 flex justify-center items-center gap-2"
+                  onClick={() => {
+                    fetchUserLocation();
+                    setIsFirstDropdownOpen(false);
+                  }}
+                >
+                  <span>📍</span> Use My Current Location
+                </li>
+                {dropdownCities.map((city) => (
+                  <li
+                    key={city}
+                    role="option"
+                    aria-selected={selectedCity === city}
+                    className="px-4 py-2 cursor-pointer hover:bg-amber-100 text-center border-b border-zinc-200 last:border-0"
+                    onClick={() => handleCitySelect(city)}
+                  >
+                    {city}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
-        <h3 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2 text-zinc-400">
-          Find your next show or night out. Pick a city and date!
-        </h3>
+        {/* Date Picker */}
+        <div className="flex flex-col justify-center items-center w-full max-w-xs relative">
+          <label htmlFor="event-date-picker" className="sr-only">
+            Select Event Date
+          </label>
+          <input
+            id="event-date-picker"
+            name="event-date-picker"
+            type="date"
+            onMouseEnter={handleMapHover}
+            onTouchStart={handleMapHover}
+            value={selectedDate.toLocaleDateString("en-CA")}
+            onChange={handleDateChange}
+            className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold px-2 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-none focus:border-zinc-300 focus:shadow-md w-full text-center"
+          />
+        </div>
+      </div>
 
-        {/* === Inputs Section === */}
-        <div className="flex flex-col justify-center items-center mt-2 relative z-20 gap-4">
-          {/* City Dropdown */}
-          <div className="relative w-full max-w-xs min-h-12">
-            <p id="city-select-label" className="sr-only">
-              Select a City
-            </p>
+      {/* === Map Section === */}
+      <section className="w-full h-100 rounded-lg shadow-lg relative border-2 border-amber-300 mt-6 mb-6 bg-zinc-800">
+        <button
+          onClick={toggleMapVisibility}
+          onMouseEnter={handleMapHover}
+          onTouchStart={handleMapHover}
+          onFocus={handleMapHover}
+          className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition cursor-pointer font-bold ${
+            !isMapVisible
+              ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-white shadow-lg font-semibold text-lg hover:scale-105"
+              : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950 border border-zinc-700"
+          }`}
+        >
+          {!isMapVisible ? "Show Map" : "Hide Map"}
+        </button>
+        {hasMapInit && (
+          <div
+            className={`h-full w-full transition-opacity duration-100 ${
+              !isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"
+            }`}
+          >
+            <GoogleMap
+              lat={mapConfig.lat}
+              lng={mapConfig.lng}
+              zoom={mapConfig.zoom}
+              events={eventsForMap}
+            />
+          </div>
+        )}
+        {!isMapVisible && <div className="absolute inset-0 bg-zinc-800" />}
+      </section>
+
+      <p className="text-lg text-center sm:mb-1 xs:mb-1 mt-6 mb-6 text-zinc-300 italic">
+        *Scroll through events to find your next Mic or Festival!*
+      </p>
+
+      {/* === Results Section === */}
+      <section className="grow bg-transparent text-zinc-200 mt-10 mb-10 shadow-lg rounded-lg w-full">
+        <h2 className="text-3xl font-heading text-center border-b-4 border-amber-300 pb-2 mb-6 rounded-lg shadow-lg">
+          {selectedTab === "Mics"
+            ? "Comedy Mics"
+            : selectedTab === "Festivals"
+              ? "Festivals"
+              : "Music/All Arts"}
+        </h2>
+
+        {!selectedCity ? (
+          <p className="text-center py-4 text-lg">
+            Please select a city above to see events.
+          </p>
+        ) : filteredEventsForView.length > 0 ? (
+          filteredEventsForView.map((event) => (
             <div
-              id="city-select"
-              aria-labelledby="city-select-label"
-              tabIndex={0}
-              onMouseEnter={handleMapHover}
-              onTouchStart={handleMapHover}
-              className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-hidden focus:border-zinc-300 focus:shadow-md w-full h-full"
+              key={event.id}
+              className="p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200"
+            >
+              <h3 className="text-lg font-semibold text-amber-300">
+                {event.name}
+              </h3>
+              <p className="text-sm mb-1">📅 Date: {event.date}</p>
+              <p className="text-sm mb-1">📍 Location: {event.location}</p>
+              <div className="text-sm mb-2">
+                <span className="font-bold">ℹ️ Details:</span>
+                <div dangerouslySetInnerHTML={{ __html: event.details }} />
+              </div>
+              <button
+                className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
+                onClick={() => handleEventSave(event)}
+              >
+                Save Event
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-center py-4 text-zinc-400">
+            No {selectedTab.toLowerCase()} found for {selectedCity} on{" "}
+            {selectedDate.toLocaleDateString()}.
+          </p>
+        )}
+      </section>
+
+      {/* === Tabs === */}
+      <div className="flex flex-wrap justify-center mt-4 gap-2">
+        <button
+          className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform cursor-pointer ${
+            selectedTab === "Mics"
+              ? "bg-blue-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
+              : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+          }`}
+          onClick={() => setSelectedTab("Mics")}
+        >
+          Comedy Mics
+        </button>
+        <button
+          className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform cursor-pointer ${
+            selectedTab === "Festivals"
+              ? "bg-purple-700 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
+              : "bg-purple-100 text-purple-800 hover:bg-purple-200"
+          }`}
+          onClick={() => setSelectedTab("Festivals")}
+        >
+          Festivals
+        </button>
+        <button
+          className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform cursor-pointer ${
+            selectedTab === "Other"
+              ? "bg-green-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
+              : "bg-green-100 text-green-700 hover:bg-green-200"
+          }`}
+          onClick={() => setSelectedTab("Other")}
+        >
+          Music/All arts
+        </button>
+      </div>
+
+      {/* === All Cities Filter === */}
+      <section className="grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg w-full">
+        <div className="flex flex-col justify-center items-center mt-2 relative z-10">
+          <div className="relative w-full max-w-xs">
+            <div
+              id="city-filter-select"
+              aria-label="Filter by City"
+              className="cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-none focus:border-zinc-300 focus:shadow-md font-bold"
               role="button"
               aria-haspopup="listbox"
-              aria-expanded={isFirstDropdownOpen}
+              aria-expanded={isSecondDropdownOpen}
               onClick={() => {
-                setIsFirstDropdownOpen(!isFirstDropdownOpen);
-                setIsSecondDropdownOpen(false);
+                setIsSecondDropdownOpen(!isSecondDropdownOpen);
+                setIsFirstDropdownOpen(false);
               }}
             >
-              {selectedCity || "Select a City"}
+              {filterCity || "All Cities"}
             </div>
-
-            {isFirstDropdownOpen && (
-              <div className="w-full max-w-xs bg-zinc-100 shadow-lg rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30 border border-zinc-300">
+            {isSecondDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-lg rounded-lg mt-1 overflow-hidden border border-zinc-300">
                 <input
                   type="text"
-                  placeholder="Search city..."
+                  placeholder="Search for a city..."
                   value={searchTerm}
                   onChange={handleSearchInputChange}
-                  className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-hidden"
+                  className="w-full px-3 py-2 border-b-2 bg-zinc-200 text-zinc-900 outline-none"
                   autoFocus
                 />
-                <ul className="text-zinc-900" role="listbox">
+                <ul
+                  className="max-h-48 overflow-y-auto text-zinc-900"
+                  role="listbox"
+                >
                   <li
-                    className="px-4 py-3 cursor-pointer bg-amber-100 hover:bg-amber-300 text-center font-bold text-zinc-900 border-b border-zinc-200 flex justify-center items-center gap-2"
-                    onClick={() => {
-                      fetchUserLocation();
-                      setIsFirstDropdownOpen(false);
-                    }}
+                    role="option"
+                    aria-selected={filterCity === "All Cities"}
+                    className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center border-b border-zinc-200 ${
+                      filterCity === "All Cities"
+                        ? "bg-zinc-200 font-semibold"
+                        : ""
+                    }`}
+                    onClick={() => handleCityFilterChange("All Cities")}
                   >
-                    <span>📍</span> Use My Current Location
+                    All Cities
                   </li>
                   {dropdownCities.map((city) => (
                     <li
                       key={city}
                       role="option"
-                      aria-selected={selectedCity === city}
-                      className="px-4 py-2 cursor-pointer hover:bg-amber-100 text-center border-b border-zinc-200 last:border-0"
-                      onClick={() => handleCitySelect(city)}
+                      aria-selected={filterCity === city}
+                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center border-b border-zinc-200 last:border-0 ${
+                        filterCity === city ? "bg-zinc-200 font-semibold" : ""
+                      }`}
+                      onClick={() => handleCityFilterChange(city)}
                     >
                       {city}
                     </li>
@@ -532,261 +648,62 @@ export default function MicFinderClient() {
               </div>
             )}
           </div>
-
-          {/* Date Picker */}
-          <div className="flex flex-col justify-center items-center w-full max-w-xs relative">
-            <label htmlFor="event-date-picker" className="sr-only">
-              Select Event Date
-            </label>
-            <input
-              id="event-date-picker"
-              name="event-date-picker"
-              type="date"
-              onMouseEnter={handleMapHover}
-              onTouchStart={handleMapHover}
-              value={selectedDate.toLocaleDateString("en-CA")}
-              onChange={handleDateChange}
-              className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold px-2 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-hidden focus:border-zinc-300 focus:shadow-md w-full text-center"
-            />
-          </div>
         </div>
 
-        {/* === Map Section === */}
-        <section className="w-full h-100 rounded-lg shadow-lg relative border-2 border-amber-300 mt-6 mb-6  bg-zinc-800">
-          <button
-            onClick={toggleMapVisibility}
-            onMouseEnter={handleMapHover}
-            onTouchStart={handleMapHover}
-            onFocus={handleMapHover}
-            className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition cursor-pointer font-bold ${
-              !isMapVisible
-                ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-white shadow-lg font-semibold text-lg hover:scale-105"
-                : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950 border border-zinc-700"
-            }`}
-          >
-            {!isMapVisible ? "Show Map" : "Hide Map"}
-          </button>
-          {hasMapInit && (
-            <div
-              className={`h-full w-full transition-opacity duration-100 ${
-                !isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
-            >
-              <GoogleMap
-                lat={mapConfig.lat}
-                lng={mapConfig.lng}
-                zoom={mapConfig.zoom}
-                events={eventsForMap}
-              />
-            </div>
-          )}
-          {!isMapVisible && <div className="absolute inset-0 bg-zinc-800" />}
-        </section>
+        <h2 className="text-3xl font-heading text-center mt-4 border-b-4 border-amber-300 pb-2 rounded-lg shadow-lg">
+          {filterCity === "All Cities"
+            ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
+            : `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"} in ${filterCity}`}
+        </h2>
 
-        <p className="text-lg text-center sm:mb-1 xs:mb-1 mt-6 mb-6 text-zinc-300 italic">
-          *Scroll through events to find your next Mic or Festival!*
-        </p>
-
-        {/* === Results Section === */}
-        <section className="grow bg-transparent text-zinc-200 mt-10 mb-10 shadow-lg rounded-lg w-full">
-          <h2 className="text-3xl font-heading text-center border-b-4 border-amber-300 pb-2 mb-6 rounded-lg shadow-lg">
-            {selectedTab === "Mics"
-              ? "Comedy Mics"
-              : selectedTab === "Festivals"
-                ? "Festivals"
-                : "Music/All Arts"}
-          </h2>
-
-          {!selectedCity ? (
-            <p className="text-center py-4 text-lg">
-              Please select a city above to see events.
-            </p>
-          ) : filteredEventsForView.length > 0 ? (
-            filteredEventsForView.map((event) => (
-              <div
-                key={event.id}
-                className="p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200"
-              >
-                <h3 className="text-lg font-semibold text-amber-300">
-                  {event.name}
-                </h3>
-                <p className="text-sm mb-1">📅 Date: {event.date}</p>
-                <p className="text-sm mb-1">📍 Location: {event.location}</p>
-                <div className="text-sm mb-2">
-                  <span className="font-bold">ℹ️ Details:</span>
-                  <div dangerouslySetInnerHTML={{ __html: event.details }} />
-                </div>
-                <button
-                  className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center"
-                  onClick={() => handleEventSave(event)}
-                >
-                  Save Event
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="text-center py-4 text-zinc-400">
-              No {selectedTab.toLowerCase()} found for {selectedCity} on{" "}
-              {selectedDate.toLocaleDateString()}.
-            </p>
-          )}
-        </section>
-
-        {/* === Tabs === */}
-        <div className="flex flex-wrap justify-center mt-4 gap-2">
-          <button
-            className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform ${
-              selectedTab === "Mics"
-                ? "bg-blue-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
-                : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-            }`}
-            onClick={() => setSelectedTab("Mics")}
-          >
-            Comedy Mics
-          </button>
-          <button
-            className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform ${
-              selectedTab === "Festivals"
-                ? "bg-purple-700 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
-                : "bg-purple-100 text-purple-800 hover:bg-purple-200"
-            }`}
-            onClick={() => setSelectedTab("Festivals")}
-          >
-            Festivals
-          </button>
-          <button
-            className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform ${
-              selectedTab === "Other"
-                ? "bg-green-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
-                : "bg-green-100 text-green-700 hover:bg-green-200"
-            }`}
-            onClick={() => setSelectedTab("Other")}
-          >
-            Music/All arts
-          </button>
-        </div>
-
-        {/* === All Cities Filter === */}
-        <section className="grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg w-full">
-          <div className="flex flex-col justify-center items-center mt-2 relative z-10">
-            <div className="relative w-full max-w-xs">
-              <div
-                id="city-filter-select"
-                aria-label="Filter by City"
-                className="cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-hidden focus:border-zinc-300 focus:shadow-md font-bold"
-                role="button"
-                aria-haspopup="listbox"
-                aria-expanded={isSecondDropdownOpen}
-                onClick={() => {
-                  setIsSecondDropdownOpen(!isSecondDropdownOpen);
-                  setIsFirstDropdownOpen(false);
-                }}
-              >
-                {filterCity || "All Cities"}
-              </div>
-              {isSecondDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-lg rounded-lg mt-1 overflow-hidden border border-zinc-300">
-                  <input
-                    type="text"
-                    placeholder="Search for a city..."
-                    value={searchTerm}
-                    onChange={handleSearchInputChange}
-                    className="w-full px-3 py-2 border-b-2 bg-zinc-200 text-zinc-900 outline-hidden"
-                    autoFocus
-                  />
-                  <ul
-                    className="max-h-48 overflow-y-auto text-zinc-900"
-                    role="listbox"
-                  >
-                    <li
-                      role="option"
-                      aria-selected={filterCity === "All Cities"}
-                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center border-b border-zinc-200 ${
-                        filterCity === "All Cities"
-                          ? "bg-zinc-200 font-semibold"
-                          : ""
-                      }`}
-                      onClick={() => handleCityFilterChange("All Cities")}
-                    >
-                      All Cities
-                    </li>
-                    {dropdownCities.map((city) => (
-                      <li
-                        key={city}
-                        role="option"
-                        aria-selected={filterCity === city}
-                        className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center border-b border-zinc-200 last:border-0 ${
-                          filterCity === city ? "bg-zinc-200 font-semibold" : ""
-                        }`}
-                        onClick={() => handleCityFilterChange(city)}
-                      >
-                        {city}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <h2 className="text-3xl font-heading text-center mt-4 border-b-4 border-amber-300 pb-2 rounded-lg shadow-lg">
-            {filterCity === "All Cities"
-              ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
-              : `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"} in ${filterCity}`}
-          </h2>
-
-          {sortedEventsByCity.length === 0 && (
-            <p className="text-center py-4">
-              No events found for {filterCity}.
-            </p>
-          )}
+        {sortedEventsByCity.length === 0 && (
+          <p className="text-center py-4">No events found for {filterCity}.</p>
+        )}
+        <div
+          ref={parentRef}
+          className="w-full h-160 overflow-y-auto contain-strict bg-transparent mt-4 scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 border border-zinc-700 rounded-lg"
+        >
           <div
-            ref={parentRef}
-            className="w-full h-160 overflow-y-auto contain-strict bg-transparent mt-4 scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 border border-zinc-700 rounded-lg"
+            className="relative w-full"
+            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
           >
-            <div
-              className="relative w-full"
-              style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
-            >
-              {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                const event = sortedEventsByCity[virtualItem.index];
-                return (
-                  <div
-                    key={virtualItem.key}
-                    data-index={virtualItem.index}
-                    ref={rowVirtualizer.measureElement}
-                    className="absolute top-0 left-0 w-full"
-                    style={{ transform: `translateY(${virtualItem.start}px)` }}
-                  >
-                    <div className="my-2 h-auto flex flex-col p-1 mb-4 border-b border-zinc-600 text-zinc-200 bg-zinc-800/20">
-                      <h3 className="text-xl font-bold text-amber-300">
-                        {event.name}
-                      </h3>
-                      <p className="text-sm mb-1">📅 Date: {event.date}</p>
-                      <p className="text-sm mb-1">
-                        📍 Location: {event.location}
-                      </p>
-                      <div className="text-sm mt-2">
-                        <span className="font-bold">ℹ️ Details:</span>
-                        <div
-                          dangerouslySetInnerHTML={{ __html: event.details }}
-                        />
-                      </div>
-                      <button
-                        className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center"
-                        onClick={() => handleEventSave(event)}
-                      >
-                        Save Event
-                      </button>
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+              const event = sortedEventsByCity[virtualItem.index];
+              return (
+                <div
+                  key={virtualItem.key}
+                  data-index={virtualItem.index}
+                  ref={rowVirtualizer.measureElement}
+                  className="absolute top-0 left-0 w-full"
+                  style={{ transform: `translateY(${virtualItem.start}px)` }}
+                >
+                  <div className="my-2 h-auto flex flex-col p-1 mb-4 border-b border-zinc-600 text-zinc-200 bg-zinc-800/20">
+                    <h3 className="text-xl font-bold text-amber-300">
+                      {event.name}
+                    </h3>
+                    <p className="text-sm mb-1">📅 Date: {event.date}</p>
+                    <p className="text-sm mb-1">
+                      📍 Location: {event.location}
+                    </p>
+                    <div className="text-sm mt-2">
+                      <span className="font-bold">ℹ️ Details:</span>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: event.details }}
+                      />
                     </div>
+                    <button
+                      className="bg-amber-300 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
+                      onClick={() => handleEventSave(event)}
+                    >
+                      Save Event
+                    </button>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
-        </section>
-      </div>
-      <Footer />
-    </>
+        </div>
+      </section>
+    </div>
   );
 }

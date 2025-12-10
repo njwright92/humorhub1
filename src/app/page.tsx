@@ -5,8 +5,23 @@ import micFinder from "../app/micFinder.webp";
 import news from "../app/news.webp";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import EventForm from "./components/EventForm";
-import NewsButton from "./components/newsButton";
+import dynamic from "next/dynamic";
+
+const EventForm = dynamic(() => import("./components/EventForm"), {
+  loading: () => (
+    <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
+      Loading...
+    </button>
+  ),
+});
+
+const NewsButton = dynamic(() => import("./components/newsButton"), {
+  loading: () => (
+    <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
+      Loading...
+    </button>
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",

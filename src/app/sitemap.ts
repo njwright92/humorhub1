@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase.config";
+// ⭐ CHANGE: Import getDb instead of db
+import { getDb } from "../../firebase.config";
+
 export const revalidate = 86400;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -25,6 +27,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cityRoutes: MetadataRoute.Sitemap = [];
 
   try {
+    // ⭐ CHANGE: Await the database initialization
+    const db = await getDb();
+
     const citiesRef = collection(db, "cities");
     const snapshot = await getDocs(citiesRef);
 
