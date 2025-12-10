@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { fetchMicFinderData } from "../lib/data/events";
+import Link from "next/link";
+import { fetchMicFinderData } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
 import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
@@ -23,21 +24,14 @@ export const metadata: Metadata = {
   },
 };
 
-// Loading skeleton component
 function MicFinderSkeleton() {
   return (
     <div className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen animate-pulse">
-      <div className="h-10 bg-zinc-700 rounded-lg mb-6 max-w-2xl mx-auto w-full" />
-      <div className="h-16 bg-zinc-700 rounded-lg w-64 mx-auto mb-4" />
-      <div className="h-10 bg-zinc-700 rounded-lg w-80 mx-auto mb-4" />
-      <div className="h-6 bg-zinc-700 rounded-lg w-96 mx-auto mb-8" />
-      <div className="h-12 bg-zinc-700 rounded-lg w-32 mx-auto mb-6" />
-      <div className="flex flex-col items-center gap-4 mb-6">
-        <div className="h-12 bg-zinc-700 rounded-lg w-full max-w-xs" />
-        <div className="h-12 bg-zinc-700 rounded-lg w-full max-w-xs" />
-      </div>
-      <div className="h-96 bg-zinc-700 rounded-lg mb-6 border-2 border-zinc-600" />
-      <div className="space-y-4 mt-10">
+      <div className="h-16 bg-zinc-700 rounded-lg mb-6" />
+      <div className="h-12 bg-zinc-700 rounded-lg w-3/4 mx-auto mb-4" />
+      <div className="h-8 bg-zinc-700 rounded-lg w-1/2 mx-auto mb-8" />
+      <div className="h-64 bg-zinc-700 rounded-lg mb-6" />
+      <div className="space-y-4">
         {[...Array(5)].map((_, i) => (
           <div key={i} className="h-32 bg-zinc-700 rounded-lg" />
         ))}
@@ -46,7 +40,6 @@ function MicFinderSkeleton() {
   );
 }
 
-// JSON-LD Structured Data Component
 function StructuredData() {
   return (
     <script
@@ -146,7 +139,6 @@ function StructuredData() {
   );
 }
 
-// Async Server Component that fetches data
 async function MicFinderContent() {
   const { events, cities, cityCoordinates } = await fetchMicFinderData();
 
@@ -164,9 +156,38 @@ export default function MicFinderPage() {
     <>
       <StructuredData />
       <Header />
-      <Suspense fallback={<MicFinderSkeleton />}>
-        <MicFinderContent />
-      </Suspense>
+      <main className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
+        <div className="flex flex-col items-center animate-fade-in">
+          <div className="border border-red-400 text-red-700 px-2 py-1 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm sm:text-md max-w-2xl mx-auto">
+            <p className="m-0">
+              <strong className="font-bold">📢 Note: </strong>
+              Open mic events evolve quickly. See something outdated?{" "}
+              <Link
+                href="/contact"
+                className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
+              >
+                Contact Us
+              </Link>{" "}
+              keep the comedy community thriving!
+            </p>
+          </div>
+
+          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-6 mb-4 text-center font-heading">
+            Mic Finder
+          </h1>
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 font-bold drop-shadow-xl text-center font-heading">
+            Discover Mics and Festivals Near You!
+          </h2>
+          <p className="text-center mt-2 mb-6 text-zinc-200 max-w-2xl mx-auto text-lg leading-relaxed">
+            Need stage time? Find a Mic tonight or list yours, built by comics
+            for comics. Use Mic Finder to connect with your community!
+          </p>
+        </div>
+
+        <Suspense fallback={<MicFinderSkeleton />}>
+          <MicFinderContent />
+        </Suspense>
+      </main>
       <Footer />
     </>
   );

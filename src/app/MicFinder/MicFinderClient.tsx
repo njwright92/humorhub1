@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
 
@@ -23,7 +22,7 @@ import {
 } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
-// Dynamic imports for code splitting
+// Dynamic imports
 const EventForm = dynamic(() => import("@/app/components/EventForm"), {
   loading: () => (
     <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
@@ -50,7 +49,6 @@ declare global {
   }
 }
 
-// Props interface for server-passed data
 interface MicFinderClientProps {
   initialEvents: Event[];
   initialCityCoordinates: CityCoordinates;
@@ -64,12 +62,10 @@ export default function MicFinderClient({
 }: MicFinderClientProps) {
   const { showToast } = useToast();
 
-  // Use server-fetched data as initial state (no need to fetch again)
   const [events] = useState<Event[]>(initialEvents);
   const [cityCoordinates] = useState<CityCoordinates>(initialCityCoordinates);
   const [allAvailableCities] = useState<string[]>(initialCities);
 
-  // UI State
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
@@ -87,7 +83,6 @@ export default function MicFinderClient({
   const authRef = useRef<Auth | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
-  // Analytics helper
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
       if (typeof window !== "undefined") {
@@ -97,7 +92,6 @@ export default function MicFinderClient({
     [],
   );
 
-  // Debounced search
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -111,28 +105,21 @@ export default function MicFinderClient({
     return () => clearTimeout(handler);
   }, [searchTerm, sendDataLayerEvent]);
 
-  // Lazy load Firebase Auth (client-side only)
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
-
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
-
       const auth = await getAuth();
       authRef.current = auth;
-
       unsubscribe = onAuthStateChanged(auth, (user) => {
         setIsUserSignedIn(!!user);
       });
     };
-
-    // Small delay allows UI to paint first
     setTimeout(initAuth, 500);
     return () => unsubscribe?.();
   }, []);
 
-  // URL params handling (client-side only)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const city = params.get("city");
@@ -144,8 +131,6 @@ export default function MicFinderClient({
     if (term) setSearchTerm(term);
   }, []);
 
-  // --- Handlers ---
-
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -154,12 +139,10 @@ export default function MicFinderClient({
     if (!navigator.geolocation) {
       return showToast("Geolocation not supported", "error");
     }
-
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         let closestCity = null;
         let minDistance = Infinity;
-
         for (const [city, coords] of Object.entries(cityCoordinates)) {
           const dist = getDistanceFromLatLonInKm(
             latitude,
@@ -172,7 +155,6 @@ export default function MicFinderClient({
             closestCity = city;
           }
         }
-
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
           setSelectedCity(normalized);
@@ -205,22 +187,18 @@ export default function MicFinderClient({
     setIsSecondDropdownOpen(false);
   };
 
-  // Save event via API route
   const handleEventSave = useCallback(
     async (event: Event) => {
       if (!isUserSignedIn) {
         showToast("Please sign in to save events.", "info");
         return;
       }
-
       try {
         const user = authRef.current?.currentUser;
         if (!user || !event.id) {
           throw new Error("Invalid state");
         }
-
         const token = await user.getIdToken();
-
         const response = await fetch("/api/events/save", {
           method: "POST",
           headers: {
@@ -229,13 +207,10 @@ export default function MicFinderClient({
           },
           body: JSON.stringify(event),
         });
-
         const result = await response.json();
-
         if (!response.ok) {
           throw new Error(result.error || "Failed to save");
         }
-
         showToast("Event saved successfully!", "success");
         sendDataLayerEvent("save_event", {
           event_category: "Event Interaction",
@@ -265,14 +240,12 @@ export default function MicFinderClient({
     setIsMapVisible((prev) => !prev);
   };
 
-  // --- Memos ---
-
-  // Filter cities based on search term
   const dropdownCities = useMemo(() => {
-    if (!debouncedSearchTerm) return allAvailableCities;
-    return allAvailableCities.filter((c) =>
-      c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-    );
+    return !debouncedSearchTerm
+      ? allAvailableCities
+      : allAvailableCities.filter((c) =>
+          c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+        );
   }, [allAvailableCities, debouncedSearchTerm]);
 
   const isTabMatch = useCallback(
@@ -307,16 +280,13 @@ export default function MicFinderClient({
     dateCheck.setHours(0, 0, 0, 0);
     const term = debouncedSearchTerm.toLowerCase();
     const city = selectedCity.toLowerCase();
-
     return events.filter((e) => {
       if (!isTabMatch(e)) return false;
-
       const matchesCity = !city || e.location.toLowerCase().includes(city);
       const matchesSearch =
         !term ||
         e.name.toLowerCase().includes(term) ||
         e.location.toLowerCase().includes(term);
-
       let matchesDate = false;
       if (e.isRecurring) {
         matchesDate = DAY_MAP[e.date] === selectedDate.getDay();
@@ -327,7 +297,6 @@ export default function MicFinderClient({
           matchesDate = parsedDate.getTime() === dateCheck.getTime();
         }
       }
-
       return matchesCity && matchesDate && matchesSearch;
     });
   }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
@@ -354,36 +323,8 @@ export default function MicFinderClient({
     overscan: 5,
   });
 
-  // --- RENDER ---
   return (
-    <div className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
-      {/* Alert Banner */}
-      <div className="border border-red-400 text-red-700 px-2 py-1 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm sm:text-md">
-        <p className="m-0">
-          <strong className="font-bold">📢 Note: </strong>
-          Open mic events evolve quickly. See something outdated?{" "}
-          <Link
-            href="/contact"
-            className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
-          >
-            Contact Us
-          </Link>{" "}
-          Help keep the comedy community thriving!
-        </p>
-      </div>
-
-      {/* Titles */}
-      <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-10 mb-6 text-center font-heading">
-        MicFinder
-      </h1>
-      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-6 font-bold drop-shadow-xl text-center font-heading">
-        Discover Mics and Festivals Near You!
-      </h2>
-      <p className="text-center mt-4 mb-6 text-zinc-300 max-w-3xl mx-auto">
-        Share a mic or find your next one: MicFinder helps you discover and add
-        comedy events to connect with your community and keep the laughs going!
-      </p>
-
+    <>
       {/* Event Form Button Wrapper */}
       <div className="text-center mb-4 h-16 w-full rounded-lg flex justify-center items-center">
         <MemoizedEventForm />
@@ -704,6 +645,6 @@ export default function MicFinderClient({
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }

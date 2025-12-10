@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
+import Header from "@/app/components/header";
+import Footer from "@/app/components/footer";
 
 export const metadata: Metadata = {
   title: "Contact Us | Humor Hub",
@@ -17,5 +19,24 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactForm />;
+  return (
+    <>
+      <Header />
+      <main className="flex flex-col items-center justify-center p-4 text-zinc-200 text-center md:ml-20 min-h-screen">
+        <div className="w-full max-w-4xl animate-fade-in">
+          {/* ✅ LCP OPTIMIZATION: Static Text moved to Server Component */}
+          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl text-center mb-2 font-heading">
+            Contact Us
+          </h1>
+          <p className="text-zinc-300 text-center mb-8 font-sans">
+            Questions, feedback, or support? We&#39;re here to help.
+          </p>
+
+          {/* Client Form Component */}
+          <ContactForm />
+        </div>
+      </main>
+      <Footer />
+    </>
+  );
 }

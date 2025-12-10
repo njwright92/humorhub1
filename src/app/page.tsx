@@ -9,16 +9,16 @@ import dynamic from "next/dynamic";
 
 const EventForm = dynamic(() => import("./components/EventForm"), {
   loading: () => (
-    <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
-      Loading...
+    <button className="bg-green-600 text-zinc-950 px-2 py-1 rounded-lg shadow-lg font-bold text-lg tracking-wide opacity-80 cursor-wait">
+      Add Your Event
     </button>
   ),
 });
 
 const NewsButton = dynamic(() => import("./components/newsButton"), {
   loading: () => (
-    <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
-      Loading...
+    <button className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg w-80 text-center self-center md:self-end opacity-80 cursor-wait">
+      Check It Out
     </button>
   ),
 });
@@ -53,8 +53,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="flex flex-col p-4 text-zinc-200 text-center md:ml-20 min-h-screen">
-        <h1 className="hidden md:block text-zinc-200 text-7xl font-bold mb-6 tracking-wide font-heading">
+      {/* Changed div to main for semantics */}
+      <main className="flex flex-col p-4 text-zinc-200 text-center md:ml-20 min-h-screen">
+        <h1 className="hidden md:block text-zinc-200 text-7xl font-bold mb-6 tracking-wide font-heading animate-fade-in">
           Humor Hub!
         </h1>
 
@@ -69,13 +70,12 @@ export default function Home() {
                 Looking for your next Mic?
                 <br />
                 <span className="font-bold text-amber-300">MicFinder</span>{" "}
-                helps comedians find and share Mics worldwide!
-                <br />
-                <span className="mt-2 block">
-                  With 1000s of open mic listings, find your next Mic now!
-                </span>
+                connects comics and all artists with open mics worldwide!
+                Explore 1,000s of listings and get on stage!
               </p>
+
               <EventForm />
+
               <Link
                 href="/MicFinder"
                 className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 hover:outline hover:outline-white w-80 text-center self-center"
@@ -118,11 +118,11 @@ export default function Home() {
                   Check out the Hub News for the latest updates!
                 </span>
               </p>
-              {/* Renders with default button styles defined in NewsButton.tsx */}
+              {/* Default button style */}
               <NewsButton />
             </div>
             <div className="flex-1 flex justify-center md:justify-start w-full md:w-auto">
-              {/* Renders with custom transparent styles for the Image */}
+              {/* Image button style */}
               <NewsButton className="relative group cursor-pointer bg-transparent p-0 border-0 outline-none">
                 <Image
                   src={news}
@@ -137,7 +137,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
       <Footer />
     </>
   );

@@ -251,9 +251,12 @@ export default function Header() {
               alt="Humor Hub Logo"
               width={50}
               height={50}
-              className="rounded-full cursor-pointer bg-zinc-900 p-1 object-contain"
+              className="rounded-full cursor-pointer border-2 border-zinc-900 mx-auto shadow-lg"
               priority
             />
+            <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+              Home
+            </span>
           </Link>
 
           {/* Desktop Sidebar */}
@@ -269,7 +272,7 @@ export default function Header() {
                   alt="Humor Hub Logo"
                   width={50}
                   height={50}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1 mx-auto shadow-lg"
+                  className="rounded-full cursor-pointer border-2 border-zinc-900 mx-auto shadow-lg"
                   priority
                 />
                 <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
@@ -312,7 +315,7 @@ export default function Header() {
             <div className="mt-auto mb-4 flex flex-col items-center gap-3">
               <button
                 onClick={toggleMenu}
-                className="text-zinc-900 hover:text-zinc-700 transform transition-transform hover:scale-110"
+                className="text-zinc-950 hover:text-zinc-700 transform transition-transform hover:scale-110"
                 aria-label="Open full menu"
               >
                 <HamburgerIcon />
@@ -343,22 +346,30 @@ export default function Header() {
                 <CloseIcon />
               </button>
 
+              <Link
+                href="/"
+                aria-label="Home"
+                className="group relative transform transition-transform hover:scale-110 text-zinc-900"
+              >
+                <Image
+                  src={hh}
+                  alt="Humor Hub Logo"
+                  width={50}
+                  height={50}
+                  className="rounded-full cursor-pointer border-2 border-zinc-900 mx-auto shadow-lg"
+                  priority
+                />
+                <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+                  Home
+                </span>
+              </Link>
+
               <SearchBar
                 onSearch={handleOnSearch}
                 isUserSignedIn={isUserSignedIn}
                 setIsAuthModalOpen={setIsAuthModalOpen}
                 cities={cityList}
               />
-
-              <Link href="/" onClick={closeMenu}>
-                <Image
-                  src={hh}
-                  alt="Humor Hub Logo"
-                  width={50}
-                  height={50}
-                  className="rounded-full cursor-pointer bg-zinc-900 p-1 hover:scale-105 transition-transform"
-                />
-              </Link>
 
               <div className="flex flex-col gap-4 text-center w-full max-w-xs">
                 <Link

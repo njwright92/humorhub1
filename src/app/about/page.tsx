@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const Header = dynamic(() => import("../components/header"));
-const Footer = dynamic(() => import("../components/footer"));
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 export const metadata: Metadata = {
   title: "About Humor Hub | Mission & Tools",
@@ -25,11 +23,9 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-
-      {/* Main Container: Replaced .screen-container .content-with-sidebar */}
       <main className="flex flex-col items-center p-4 text-zinc-100 text-center md:ml-24 min-h-screen">
         {/* HERO SECTION */}
-        <section className="text-center mx-auto mb-4 mt-10 max-w-4xl">
+        <section className="text-center mx-auto mb-4 mt-10 max-w-4xl animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-bold text-zinc-200 mb-4 tracking-tight font-heading">
             Built for Comics
           </h1>
@@ -118,7 +114,6 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-
       <Footer />
     </>
   );
