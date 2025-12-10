@@ -8,7 +8,7 @@ const nextConfig = {
   transpilePackages: ["@tanstack/react-virtual", "firebase"],
 
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: true,
   },
 
   experimental: {

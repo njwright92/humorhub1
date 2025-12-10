@@ -10,22 +10,12 @@ export type MicFinderDataWithCities = MicFinderData & {
 export const fetchMicFinderData = cache(
   async (): Promise<MicFinderDataWithCities> => {
     try {
-      console.log("📚 [Server] Fetching MicFinder data with Admin SDK...");
-
       const db = getServerDb();
 
       const [eventsSnap, citiesSnap] = await Promise.all([
         db.collection("userEvents").get(),
         db.collection("cities").get(),
       ]);
-
-      console.log(
-        "📊 [Server] Found",
-        eventsSnap.docs.length,
-        "events and",
-        citiesSnap.docs.length,
-        "cities",
-      );
 
       const events: Event[] = eventsSnap.docs.map((doc) => {
         const data = doc.data();
@@ -66,7 +56,6 @@ export const fetchMicFinderData = cache(
         a === "Spokane WA" ? -1 : b === "Spokane WA" ? 1 : a.localeCompare(b),
       );
 
-      console.log("✅ [Server] Data fetched successfully");
       return { events, cityCoordinates, cities };
     } catch (error) {
       console.error("❌ [Server] Error fetching MicFinder data:", error);

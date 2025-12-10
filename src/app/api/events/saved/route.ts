@@ -19,8 +19,6 @@ interface SavedEventData {
 }
 
 export async function GET(request: NextRequest) {
-  console.log("📥 [API] Fetch saved events called");
-
   try {
     const authHeader = request.headers.get("authorization");
 
@@ -43,13 +41,10 @@ export async function GET(request: NextRequest) {
 
     const db = getServerDb();
 
-    console.log("📚 [API] Querying savedEvents for user:", uid);
     const snapshot = await db
       .collection("savedEvents")
       .where("userId", "==", uid)
       .get();
-
-    console.log("📊 [API] Found", snapshot.docs.length, "events");
 
     // Map with proper typing
     const events: SavedEventData[] = snapshot.docs.map((doc) => {
@@ -78,7 +73,6 @@ export async function GET(request: NextRequest) {
       return dateB - dateA;
     });
 
-    console.log("✅ [API] Returning events");
     return NextResponse.json({ success: true, events });
   } catch (error) {
     console.error("❌ [API] Fetch saved events error:", error);
