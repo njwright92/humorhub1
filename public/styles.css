@@ -2057,9 +2057,6 @@
     opacity: 0.7;
   }
   @media (min-width: 40rem) {
-    .sm\:fixed {
-      position: fixed;
-    }
     .sm\:left-full {
       left: 100%;
     }
@@ -2141,9 +2138,6 @@
     .md\:h-12 {
       height: calc(var(--spacing) * 12);
     }
-    .md\:h-full {
-      height: 100%;
-    }
     .md\:w-1\/4 {
       width: 25%;
     }
@@ -2155,9 +2149,6 @@
     }
     .md\:w-12 {
       width: calc(var(--spacing) * 12);
-    }
-    .md\:w-20 {
-      width: calc(var(--spacing) * 20);
     }
     .md\:w-auto {
       width: auto;

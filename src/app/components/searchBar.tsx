@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback, memo } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
 interface SearchBarProps {
-  onSearch: (searchTerm: string) => void;
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
-  cities: string[];
 }
 
 interface PageSuggestion {
@@ -39,7 +37,6 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-// Memoized search icon
 const SearchIcon = memo(function SearchIcon() {
   return (
     <svg
@@ -57,17 +54,48 @@ const SearchIcon = memo(function SearchIcon() {
   );
 });
 
-function SearchBar({
-  onSearch,
-  isUserSignedIn,
-  setIsAuthModalOpen,
-  cities,
-}: SearchBarProps) {
+function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
+  const [cities, setCities] = useState<string[]>([]);
+
+  // Fetch cities only when search opens (lazy load)
+  useEffect(() => {
+    if (!isInputVisible) return;
+    if (cities.length > 0) return; // Already fetched
+
+    let mounted = true;
+
+    const fetchCities = async () => {
+      try {
+        const cached = sessionStorage.getItem("hh_cities");
+        if (cached) {
+          if (mounted) setCities(JSON.parse(cached));
+          return;
+        }
+
+        const response = await fetch("/api/cities");
+        if (response.ok) {
+          const data = await response.json();
+          if (mounted && data.cities) {
+            setCities(data.cities);
+            sessionStorage.setItem("hh_cities", JSON.stringify(data.cities));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching cities:", err);
+      }
+    };
+
+    fetchCities();
+    return () => {
+      mounted = false;
+    };
+  }, [isInputVisible, cities.length]);
 
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -75,24 +103,20 @@ function SearchBar({
 
     const results: Suggestion[] = [];
 
-    // Check for login keywords
     if (["login", "sign in", "sign up"].includes(normalized)) {
       results.push({ type: "page", label: "Login / Sign Up" });
     }
 
-    // Check for mic finder keywords
     if (KEYWORDS_TO_MICFINDER.has(normalized)) {
       results.push({ type: "page", label: "Mic Finder", page: PAGES[0] });
     }
 
-    // Match pages
     for (const page of PAGES) {
       if (page.label.toLowerCase().includes(normalized)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
-    // Match cities (limit to 5)
     let count = 0;
     for (const city of cities) {
       if (count >= 5) break;
@@ -114,7 +138,6 @@ function SearchBar({
     (suggestion: Suggestion) => {
       if (suggestion.type === "city" && suggestion.city) {
         router.push(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
-        onSearch(suggestion.city);
         closeSearchBar();
         return;
       }
@@ -136,18 +159,10 @@ function SearchBar({
         }
 
         router.push(route);
-        onSearch(label);
         closeSearchBar();
       }
     },
-    [
-      router,
-      onSearch,
-      closeSearchBar,
-      setIsAuthModalOpen,
-      isUserSignedIn,
-      showToast,
-    ],
+    [router, closeSearchBar, setIsAuthModalOpen, isUserSignedIn, showToast],
   );
 
   const handleSearch = useCallback(
@@ -164,18 +179,28 @@ function SearchBar({
         return;
       }
 
+      // Check if it matches a city
+      const matchingCity = cities.find((city) =>
+        city.toLowerCase().includes(normalized),
+      );
+      if (matchingCity) {
+        router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
+        closeSearchBar();
+        return;
+      }
+
       if (suggestions.length === 0) {
         showToast("No results found. We've noted your search!", "info");
       }
 
-      onSearch(searchTerm);
       closeSearchBar();
     },
     [
       searchTerm,
       suggestions,
+      cities,
       handleSelectSuggestion,
-      onSearch,
+      router,
       closeSearchBar,
       showToast,
     ],
