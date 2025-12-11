@@ -40,16 +40,17 @@ const KEYWORDS_TO_MICFINDER = new Set([
 const SearchIcon = memo(function SearchIcon() {
   return (
     <svg
-      className="h-8 w-8"
+      className="size-8"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="3"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <path d="m21 21-4.35-4.35" />
     </svg>
   );
 });
@@ -58,44 +59,31 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
   const [cities, setCities] = useState<string[]>([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
-  // Fetch cities only when search opens (lazy load)
-  useEffect(() => {
-    if (!isInputVisible) return;
-    if (cities.length > 0) return; // Already fetched
+  // ============ CALLBACKS FIRST (before useEffects that use them) ============
 
-    let mounted = true;
+  const closeSearchBar = useCallback(() => {
+    setSearchTerm("");
+    setInputVisible(false);
+    setActiveIndex(-1);
+  }, []);
 
-    const fetchCities = async () => {
-      try {
-        const cached = sessionStorage.getItem("hh_cities");
-        if (cached) {
-          if (mounted) setCities(JSON.parse(cached));
-          return;
-        }
-
-        const response = await fetch("/api/cities");
-        if (response.ok) {
-          const data = await response.json();
-          if (mounted && data.cities) {
-            setCities(data.cities);
-            sessionStorage.setItem("hh_cities", JSON.stringify(data.cities));
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching cities:", err);
+  const handleToggleInput = useCallback(() => {
+    setInputVisible((prev) => {
+      if (!prev) {
+        setTimeout(() => inputRef.current?.focus(), 50);
       }
-    };
+      return !prev;
+    });
+  }, []);
 
-    fetchCities();
-    return () => {
-      mounted = false;
-    };
-  }, [isInputVisible, cities.length]);
+  // ============ MEMOS ============
 
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -129,10 +117,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
     return results;
   }, [searchTerm, cities]);
 
-  const closeSearchBar = useCallback(() => {
-    setSearchTerm("");
-    setInputVisible(false);
-  }, []);
+  // ============ MORE CALLBACKS (that depend on suggestions) ============
 
   const handleSelectSuggestion = useCallback(
     (suggestion: Suggestion) => {
@@ -162,7 +147,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
         closeSearchBar();
       }
     },
-    [router, closeSearchBar, setIsAuthModalOpen, isUserSignedIn, showToast],
+    [router, closeSearchBar, setIsAuthModalOpen, isUserSignedIn, showToast]
   );
 
   const handleSearch = useCallback(
@@ -171,17 +156,21 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
       const normalized = searchTerm.trim().toLowerCase();
       if (!normalized) return;
 
+      if (activeIndex >= 0 && suggestions[activeIndex]) {
+        handleSelectSuggestion(suggestions[activeIndex]);
+        return;
+      }
+
       const exactMatch = suggestions.find(
-        (s) => s.label.toLowerCase() === normalized,
+        (s) => s.label.toLowerCase() === normalized
       );
       if (exactMatch) {
         handleSelectSuggestion(exactMatch);
         return;
       }
 
-      // Check if it matches a city
       const matchingCity = cities.find((city) =>
-        city.toLowerCase().includes(normalized),
+        city.toLowerCase().includes(normalized)
       );
       if (matchingCity) {
         router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
@@ -199,86 +188,187 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
       searchTerm,
       suggestions,
       cities,
+      activeIndex,
       handleSelectSuggestion,
       router,
       closeSearchBar,
       showToast,
-    ],
+    ]
   );
 
-  const handleToggleInput = useCallback(() => {
-    setInputVisible((prev) => {
-      if (!prev) {
-        setTimeout(() => inputRef.current?.focus(), 50);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (suggestions.length === 0) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setActiveIndex((prev) =>
+            prev < suggestions.length - 1 ? prev + 1 : 0
+          );
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setActiveIndex((prev) =>
+            prev > 0 ? prev - 1 : suggestions.length - 1
+          );
+          break;
+        case "Enter":
+          if (activeIndex >= 0) {
+            e.preventDefault();
+            handleSelectSuggestion(suggestions[activeIndex]);
+          }
+          break;
       }
-      return !prev;
-    });
-  }, []);
-
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value);
     },
-    [],
+    [suggestions, activeIndex, handleSelectSuggestion]
   );
+
+  // ============ EFFECTS (after all callbacks they depend on) ============
+
+  // Fetch cities only when search opens
+  useEffect(() => {
+    if (!isInputVisible || cities.length > 0) return;
+
+    let mounted = true;
+
+    const fetchCities = async () => {
+      try {
+        const cached = sessionStorage.getItem("hh_cities");
+        if (cached) {
+          if (mounted) setCities(JSON.parse(cached));
+          return;
+        }
+
+        const response = await fetch("/api/cities");
+        if (response.ok) {
+          const data = await response.json();
+          if (mounted && data.cities) {
+            setCities(data.cities);
+            sessionStorage.setItem("hh_cities", JSON.stringify(data.cities));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching cities:", err);
+      }
+    };
+
+    fetchCities();
+    return () => {
+      mounted = false;
+    };
+  }, [isInputVisible, cities.length]);
+
+  // Handle escape key and click outside
+  useEffect(() => {
+    if (!isInputVisible) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeSearchBar();
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(e.target as Node)) {
+        closeSearchBar();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isInputVisible, closeSearchBar]);
+
+  // ============ RENDER ============
+
+  const searchId = "site-search";
+  const listboxId = "search-suggestions";
 
   return (
-    <div className="relative" id="searchBar">
-      {!isInputVisible && (
+    <search className="relative">
+      {!isInputVisible ? (
         <button
+          type="button"
           onClick={handleToggleInput}
-          className="flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 text-zinc-900 rounded-full p-1 transition-colors"
-          aria-label="Toggle search"
+          className="flex items-center justify-center rounded-full bg-zinc-200 p-1 text-zinc-900 transition-colors hover:bg-zinc-300"
+          aria-label="Open search"
+          aria-expanded={isInputVisible}
+          aria-controls={searchId}
         >
           <SearchIcon />
         </button>
-      )}
-
-      {isInputVisible && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-70 sm:w-80 z-50">
+      ) : (
+        <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
           <form
+            ref={formRef}
+            id={searchId}
+            role="search"
             onSubmit={handleSearch}
-            className="flex flex-col items-center rounded-lg bg-zinc-200 shadow-2xl p-2 border border-zinc-400"
+            className="flex flex-col rounded-lg border border-zinc-400 bg-zinc-200 p-2 shadow-2xl"
           >
+            <label htmlFor="search-input" className="sr-only">
+              Search city, page, or keyword
+            </label>
             <input
               ref={inputRef}
-              type="text"
+              id="search-input"
+              type="search"
               placeholder="Search city, page, or keyword..."
               value={searchTerm}
-              onChange={handleInputChange}
-              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full border-2 border-transparent focus:border-amber-300 transition-colors placeholder:text-zinc-500"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="w-full rounded-lg border-2 border-transparent bg-zinc-100 p-2 text-zinc-950 transition-colors placeholder:text-zinc-500 focus:border-amber-300"
               autoComplete="off"
+              aria-autocomplete="list"
+              aria-controls={listboxId}
+              aria-activedescendant={
+                activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
+              }
             />
 
-            <div className="flex gap-2 w-full mt-2">
+            <div className="mt-2 flex gap-2">
               <button
                 type="button"
                 onClick={closeSearchBar}
-                className="flex-1 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-300 hover:bg-zinc-400 transition-colors"
+                className="flex-1 rounded-lg bg-zinc-300 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-400"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors"
+                className="flex-1 rounded-lg bg-zinc-900 py-2 text-sm font-semibold text-zinc-100 transition-colors hover:bg-zinc-800"
               >
                 Search
               </button>
             </div>
 
             {suggestions.length > 0 && (
-              <ul className="w-full mt-2 max-h-60 overflow-y-auto divide-y divide-zinc-300 border-t border-zinc-300">
+              <ul
+                id={listboxId}
+                role="listbox"
+                aria-label="Search suggestions"
+                className="mt-2 max-h-60 w-full divide-y divide-zinc-300 overflow-y-auto border-t border-zinc-300"
+              >
                 {suggestions.map((sug, idx) => (
                   <li
                     key={`${sug.type}-${sug.label}-${idx}`}
-                    className="p-2 hover:bg-zinc-300 text-zinc-900 text-sm flex justify-between items-center transition-colors"
+                    id={`suggestion-${idx}`}
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    className={`flex cursor-pointer items-center justify-between p-2 text-sm text-zinc-900 transition-colors ${
+                      idx === activeIndex ? "bg-amber-100" : "hover:bg-zinc-300"
+                    }`}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       handleSelectSuggestion(sug);
                     }}
+                    onMouseEnter={() => setActiveIndex(idx)}
                   >
                     <span className="font-medium">{sug.label}</span>
-                    <span className="text-xs text-zinc-600 uppercase tracking-wider font-bold">
+                    <span className="text-xs font-bold tracking-wider text-zinc-600 uppercase">
                       {sug.type}
                     </span>
                   </li>
@@ -288,7 +378,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
           </form>
         </div>
       )}
-    </div>
+    </search>
   );
 }
 

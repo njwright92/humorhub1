@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   if (!NEWS_API_TOKEN) {
     return NextResponse.json(
       { error: "Server API Token missing" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
@@ -39,13 +39,13 @@ export async function GET(request: Request) {
     return NextResponse.json({
       data: data.filter(
         (a: { title?: string; description?: string }) =>
-          a.title && a.description,
+          a.title && a.description
       ),
     });
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch news" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

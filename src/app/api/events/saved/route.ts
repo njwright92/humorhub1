@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { success: false, error: "Missing authorization header" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     if (!valid || !uid) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
         error: "Failed to fetch events",
         details: errorMessage,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -11,7 +11,9 @@
     "start": "next start",
     "lint": "npx eslint .",
     "format": "prettier --write .",
-    "preview": "next build && npm run format && npm run lint && next start"
+    "format:check": "prettier --check .",
+    "preview": "next build && npm run format && npm run lint && next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -34,11 +36,12 @@
     "lint-staged": "^16.2.7",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "next lint --fix",
-    "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
+    "*.{js,jsx,ts,tsx,mjs,cjs}": "next lint --fix",
+    "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,mdx,html,yml,yaml}": "prettier --write"
   }
 }

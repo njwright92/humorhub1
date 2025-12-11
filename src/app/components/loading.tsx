@@ -1,10 +1,11 @@
 export default function Loading() {
   return (
-    <div role="status" aria-label="loading" className="flex items-center gap-3">
+    <output role="status" className="flex items-center gap-3">
       <svg
         className="size-8 animate-spin text-amber-300"
         viewBox="0 0 24 24"
         fill="none"
+        aria-hidden="true"
       >
         <circle
           cx="12"
@@ -21,7 +22,7 @@ export default function Loading() {
           strokeLinecap="round"
         />
       </svg>
-      <span className="text-amber-300 text-2xl font-bold">Loading...</span>
-    </div>
+      <span className="text-2xl font-bold text-amber-300">Loading...</span>
+    </output>
   );
 }

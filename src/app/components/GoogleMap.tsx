@@ -22,7 +22,7 @@ interface GoogleMapProps {
 
 // Memoized pin component for better performance with many markers
 const EventPin = memo(({ color }: { color: string }) => (
-  <div className="cursor-pointer hover:scale-110 transition-transform">
+  <div className="cursor-pointer transition-transform hover:scale-110">
     <svg
       width="28"
       height="28"
@@ -69,7 +69,7 @@ const MapHandler = memo(
     }, [map, place, zoom]);
 
     return null;
-  },
+  }
 );
 
 MapHandler.displayName = "MapHandler";
@@ -101,7 +101,7 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
   // Skeleton loader while Google Maps API loads
   if (!apiIsLoaded) {
     return (
-      <div className="h-full w-full bg-zinc-800 animate-pulse flex items-center justify-center text-zinc-300">
+      <div className="flex h-full w-full animate-pulse items-center justify-center bg-zinc-800 text-zinc-300">
         <span className="font-semibold">Loading Map...</span>
       </div>
     );
@@ -148,19 +148,19 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
           pixelOffset={[0, -30]}
         >
           <article className="p-2 text-center text-zinc-800">
-            <h2 className="font-bold text-lg mb-1">{selectedEvent.name}</h2>
-            <p className="text-sm mb-1">
+            <h2 className="mb-1 text-lg font-bold">{selectedEvent.name}</h2>
+            <p className="mb-1 text-sm">
               <span aria-hidden="true">📍</span>
               <span className="sr-only">Location:</span>{" "}
               {selectedEvent.location}
             </p>
-            <p className="text-sm text-zinc-600 mb-2">
+            <p className="mb-2 text-sm text-zinc-600">
               <span aria-hidden="true">📅</span>
               <span className="sr-only">Date:</span> {selectedEvent.date}
             </p>
             {selectedEvent.details && (
               <div
-                className="text-sm mt-2 text-left"
+                className="mt-2 text-left text-sm"
                 dangerouslySetInnerHTML={{ __html: selectedEvent.details }}
               />
             )}
@@ -179,11 +179,11 @@ export default function GoogleMap(props: GoogleMapProps) {
   if (!apiKey) {
     return (
       <div
-        className="size-full min-h-100 rounded-lg shadow-lg overflow-hidden bg-zinc-800 flex items-center justify-center"
+        className="flex size-full min-h-100 items-center justify-center overflow-hidden rounded-lg bg-zinc-800 shadow-lg"
         role="alert"
       >
-        <div className="text-center text-zinc-400 p-4">
-          <p className="text-lg font-semibold mb-2">
+        <div className="p-4 text-center text-zinc-400">
+          <p className="mb-2 text-lg font-semibold">
             <span aria-hidden="true">⚠️</span> Map Unavailable
           </p>
           <p className="text-sm">Google Maps API key is not configured.</p>
@@ -193,7 +193,7 @@ export default function GoogleMap(props: GoogleMapProps) {
   }
 
   return (
-    <div className="size-full min-h-100 rounded-lg shadow-lg overflow-hidden bg-zinc-800 relative">
+    <div className="relative size-full min-h-100 overflow-hidden rounded-lg bg-zinc-800 shadow-lg">
       <APIProvider apiKey={apiKey}>
         <InnerMap {...props} />
       </APIProvider>

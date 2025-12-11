@@ -1,47 +1,54 @@
 import type { MetadataRoute } from "next";
-import { collection, getDocs } from "firebase/firestore";
-import { getDb } from "../../firebase.config";
 
 export const revalidate = 86400;
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://www.thehumorhub.com";
+const BASE_URL = "https://www.thehumorhub.com";
 
-  const staticRoutes = [
-    "",
-    "/MicFinder",
-    "/HHapi",
-    "/Profile",
-    "/contact",
-    "/about",
-    "/userAgreement",
-    "/privacyPolicy",
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: route === "" ? 1.0 : 0.8,
-  }));
+const STATIC_ROUTES: Array<{
+  path: string;
+  priority: number;
+  changeFrequency: "daily" | "weekly" | "monthly";
+}> = [
+  { path: "", priority: 1.0, changeFrequency: "weekly" },
+  { path: "/MicFinder", priority: 0.9, changeFrequency: "daily" },
+  { path: "/HHapi", priority: 0.8, changeFrequency: "daily" },
+  { path: "/Profile", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/contact", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/about", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/userAgreement", priority: 0.3, changeFrequency: "monthly" },
+  { path: "/privacyPolicy", priority: 0.3, changeFrequency: "monthly" },
+];
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+
+  // Generate static routes
+  const staticRoutes: MetadataRoute.Sitemap = STATIC_ROUTES.map(
+    ({ path, priority, changeFrequency }) => ({
+      url: `${BASE_URL}${path}`,
+      lastModified: now,
+      changeFrequency,
+      priority,
+    })
+  );
 
   let cityRoutes: MetadataRoute.Sitemap = [];
 
   try {
+    const { getDb } = await import("../../firebase.config");
+    const { collection, getDocs } = await import("firebase/firestore");
+
     const db = await getDb();
+    const snapshot = await getDocs(collection(db, "cities"));
 
-    const citiesRef = collection(db, "cities");
-    const snapshot = await getDocs(citiesRef);
-
-    cityRoutes = snapshot.docs.map((doc) => {
-      const city = doc.data().city;
-      return {
-        url: `${baseUrl}/MicFinder?city=${encodeURIComponent(city)}`,
-        lastModified: new Date(),
-        changeFrequency: "daily" as const,
-        priority: 0.9,
-      };
-    });
+    cityRoutes = snapshot.docs.map((doc) => ({
+      url: `${BASE_URL}/MicFinder?city=${encodeURIComponent(doc.data().city)}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+    }));
   } catch (error) {
-    console.error("Failed to generate city sitemap:", error);
+    console.error("Sitemap: Failed to fetch cities:", error);
   }
 
   return [...staticRoutes, ...cityRoutes];

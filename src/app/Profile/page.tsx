@@ -23,21 +23,25 @@ export const metadata: Metadata = {
     url: "https://www.thehumorhub.com/Profile",
     type: "website",
   },
+  robots: {
+    index: false, // Profile pages shouldn't be indexed
+    follow: true,
+  },
 };
 
 export default function ProfilePage() {
   return (
     <>
       <Header />
-      <main className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
-        <div className="flex flex-col items-center mb-8 mt-10 animate-fade-in">
-          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl text-3xl sm:text-5xl md:text-6xl lg:text-6xl text-center font-heading">
+      <main className="flex min-h-screen flex-col p-2 text-center text-zinc-200 md:ml-20">
+        <header className="animate-fade-in mt-10 mb-8 flex flex-col items-center">
+          <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-5xl md:text-6xl">
             Profile
           </h1>
-          <p className="text-zinc-300 text-sm md:text-base mt-2">
+          <p className="mt-2 text-sm text-zinc-300 md:text-base">
             Manage your personal schedule
           </p>
-        </div>
+        </header>
 
         <ProfileClient />
       </main>

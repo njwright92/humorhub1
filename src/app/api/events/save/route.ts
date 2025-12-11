@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { success: false, error: "Missing authorization header" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     if (!valid || !uid) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (!eventData.id) {
       return NextResponse.json(
         { success: false, error: "Event ID is required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     console.error("Save event error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to save event" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

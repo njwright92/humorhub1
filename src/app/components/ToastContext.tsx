@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  type ReactNode,
+} from "react";
 
 type ToastType = "success" | "error" | "info";
 
@@ -10,40 +18,77 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export const useToast = () => {
+export function useToast() {
   const context = useContext(ToastContext);
-  if (!context) throw new Error("useToast must be used within a ToastProvider");
+  if (!context) {
+    throw new Error("useToast must be used within a ToastProvider");
+  }
   return context;
+}
+
+// Toast styling by type
+const TOAST_STYLES: Record<ToastType, string> = {
+  success: "bg-green-600",
+  error: "bg-red-600",
+  info: "bg-blue-600",
 };
 
-export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+const TOAST_ICONS: Record<ToastType, string> = {
+  success: "✓",
+  error: "✗",
+  info: "ℹ",
+};
+
+const TOAST_DURATION = 3000;
+
+export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<{ msg: string; type: ToastType } | null>(
-    null,
+    null
   );
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const showToast = useCallback((msg: string, type: ToastType) => {
+    // Clear existing timeout to prevent stale dismissals
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
+
+    timeoutRef.current = setTimeout(() => {
+      setToast(null);
+      timeoutRef.current = null;
+    }, TOAST_DURATION);
   }, []);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
+
       {toast && (
-        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
+        <div
+          role="alert"
+          aria-live="polite"
+          aria-atomic="true"
+          className="animate-fade-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
+        >
           <div
-            className={`px-6 py-3 rounded-lg shadow-xl text-zinc-100 font-medium text-nowrap ${
-              toast.type === "success"
-                ? "bg-green-600"
-                : toast.type === "error"
-                  ? "bg-red-600"
-                  : "bg-blue-600"
-            }`}
+            className={`flex items-center gap-2 rounded-lg px-4 py-3 font-semibold whitespace-nowrap text-zinc-100 shadow-xl sm:px-6 ${TOAST_STYLES[toast.type]}`}
           >
-            {toast.msg}
+            <span aria-hidden="true">{TOAST_ICONS[toast.type]}</span>
+            <span>{toast.msg}</span>
           </div>
         </div>
       )}
     </ToastContext.Provider>
   );
-};
+}

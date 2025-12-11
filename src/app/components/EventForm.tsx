@@ -8,7 +8,7 @@ const EventFormContent = dynamic(() => import("./EventFormContent"), {
   ssr: false,
   loading: () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <div className="bg-zinc-800 p-4 rounded-lg shadow-xl text-zinc-200 animate-pulse font-bold">
+      <div className="animate-pulse rounded-lg bg-zinc-800 p-4 font-bold text-zinc-200 shadow-xl">
         Loading Form...
       </div>
     </div>
@@ -26,7 +26,7 @@ export default function EventForm() {
       <button
         type="button"
         onClick={handleOpen}
-        className="px-2 py-1 bg-green-600 hover:bg-green-700 text-zinc-950 font-bold text-lg rounded-lg shadow-lg hover:scale-105 transition-transform tracking-wide"
+        className="rounded-lg bg-green-600 px-2 py-1 text-lg font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-green-700"
       >
         Add Your Event
       </button>

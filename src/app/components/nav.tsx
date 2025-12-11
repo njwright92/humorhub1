@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useToast } from "./ToastContext";
 import hh from "../../app/hh.webp";
 
-// Lazy load icons
+// Lazy load icons (small but keeps initial bundle tiny)
 const MicFinderIcon = dynamic(() => import("../icons/MicFinderIcon"), {
   ssr: false,
 });
@@ -23,7 +23,7 @@ const UserIconComponent = dynamic(() => import("../icons/UserIconComponent"), {
 
 const SearchBar = dynamic(() => import("./searchBar"), {
   ssr: false,
-  loading: () => <div className="h-8 w-8 bg-zinc-700/50 rounded-full" />,
+  loading: () => <div className="size-8 rounded-full bg-zinc-700/50" />,
 });
 
 const AuthModal = dynamic(() => import("./authModal"), {
@@ -35,7 +35,46 @@ interface MinimalAuth {
   currentUser: unknown;
 }
 
+// ============ MEMOIZED SVG ICONS ============
+
+const HamburgerIcon = memo(function HamburgerIcon() {
+  return (
+    <svg
+      className="size-8"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M3 6h18M3 12h18M3 18h18" />
+    </svg>
+  );
+});
+
+const CloseIcon = memo(function CloseIcon() {
+  return (
+    <svg
+      className="size-9"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+  );
+});
+
 // ============ MEMOIZED SUB-COMPONENTS ============
+
+const tooltipClass =
+  "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded bg-zinc-950 px-2 py-1 text-sm font-bold text-amber-300 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
 
 const NavLink = memo(function NavLink({
   href,
@@ -48,17 +87,15 @@ const NavLink = memo(function NavLink({
   icon: React.ReactNode;
   onClick?: () => void;
 }) {
+  const className =
+    "group relative transition-transform hover:scale-110 hover:text-zinc-700";
+
   const content = (
     <>
       {icon}
-      <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
-        {label}
-      </span>
+      <span className={tooltipClass}>{label}</span>
     </>
   );
-
-  const className =
-    "group relative transform transition-transform hover:scale-110 hover:text-zinc-700";
 
   if (href) {
     return (
@@ -69,41 +106,14 @@ const NavLink = memo(function NavLink({
   }
 
   return (
-    <button onClick={onClick} aria-label={label} className={className}>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={className}
+    >
       {content}
     </button>
-  );
-});
-
-const HamburgerIcon = memo(function HamburgerIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-8 w-8"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-      <line x1="3" y1="18" x2="21" y2="18" />
-    </svg>
-  );
-});
-
-const CloseIcon = memo(function CloseIcon() {
-  return (
-    <svg
-      className="fill-current h-9 w-9 text-zinc-200"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-    >
-      <title>Close</title>
-      <path d="M14.348 5.652a.5.5 0 010 .707L10.707 10l3.641 3.641a.5.5 0 11-.707.707L10 10.707l-3.641 3.641a.5.5 0 11-.707-.707L9.293 10 5.652 6.359a.5.5 0 01.707-.707L10 9.293l3.641-3.641a.5.5 0 01.707 0z" />
-    </svg>
   );
 });
 
@@ -124,16 +134,12 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  // ============ AUTH EFFECTS ============
-
-  // Optimistic auth check (instant)
+  // Optimistic auth check (instant, safe for hydration)
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hasAuthData = Object.keys(window.localStorage).some((key) =>
-        key.startsWith("firebase:authUser:"),
-      );
-      if (hasAuthData) setIsUserSignedIn(true);
-    }
+    const hasAuthData = Object.keys(localStorage).some((key) =>
+      key.startsWith("firebase:authUser:")
+    );
+    if (hasAuthData) setIsUserSignedIn(true);
   }, []);
 
   // Real auth init (background)
@@ -142,7 +148,7 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
 
     const initAuth = async () => {
       const idleCallback =
-        window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+        window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1));
 
       idleCallback(async () => {
         const { getAuth } = await import("../../../firebase.config");
@@ -174,7 +180,7 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
 
   const toggleAuthModal = useCallback(
     () => setIsAuthModalOpen((prev) => !prev),
-    [],
+    []
   );
   const toggleMenu = useCallback(() => setIsMenuOpen((prev) => !prev), []);
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -190,18 +196,20 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
         setIsAuthModalOpen(true);
       }
     },
-    [isUserSignedIn, router, showToast],
+    [isUserSignedIn, router, showToast]
   );
 
-  // ============ MOBILE: Just the hamburger trigger ============
+  // ============ MOBILE ============
 
   if (isMobile) {
     return (
       <>
         <button
+          type="button"
           onClick={toggleMenu}
-          className="text-zinc-950 hover:scale-105 transition-transform"
-          aria-label="Toggle menu"
+          className="text-zinc-950 transition-transform hover:scale-105"
+          aria-label="Open menu"
+          aria-expanded={isMenuOpen}
         >
           <HamburgerIcon />
         </button>
@@ -226,41 +234,39 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
     );
   }
 
-  // ============ DESKTOP: Full sidebar ============
+  // ============ DESKTOP ============
 
   if (isDesktop) {
     return (
       <>
-        <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 inset-y-0 left-0 z-50 shadow-lg backdrop-blur-sm">
-          <div className="flex flex-col items-center space-y-6 mt-4 text-zinc-900">
-            {/* Logo */}
+        <nav
+          aria-label="Main navigation"
+          className="fixed inset-y-0 left-0 z-50 hidden w-16 flex-col items-center justify-between bg-amber-300/90 p-2 shadow-lg backdrop-blur-sm sm:flex"
+        >
+          <div className="mt-4 flex flex-col items-center space-y-6 text-zinc-900">
             <Link
               href="/"
               aria-label="Home"
-              className="group relative hover:scale-110 transition-transform"
+              className="group relative transition-transform hover:scale-110"
             >
               <Image
                 src={hh}
-                alt="Humor Hub Logo"
+                alt=""
                 width={50}
                 height={50}
                 className="rounded-full border-2 border-zinc-900 shadow-lg"
                 priority
               />
-              <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg transition-opacity">
-                Home
-              </span>
+              <span className={tooltipClass}>Home</span>
             </Link>
 
-            {/* Search */}
-            <div className="h-8 w-8 hover:scale-110 transition-transform relative z-50">
+            <div className="relative z-50 size-8 transition-transform hover:scale-110">
               <SearchBar
                 isUserSignedIn={isUserSignedIn}
                 setIsAuthModalOpen={setIsAuthModalOpen}
               />
             </div>
 
-            {/* Nav Links */}
             <NavLink
               href="/MicFinder"
               label="Mic Finder"
@@ -284,17 +290,16 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
             <NavLink href="/about" label="About" icon={<AboutIcon />} />
           </div>
 
-          {/* Hamburger for full menu */}
-          <div className="mb-4">
-            <button
-              onClick={toggleMenu}
-              className="text-zinc-950 hover:text-zinc-700 hover:scale-110 transition-all"
-              aria-label="Open full menu"
-            >
-              <HamburgerIcon />
-            </button>
-          </div>
-        </div>
+          <button
+            type="button"
+            onClick={toggleMenu}
+            className="mb-4 text-zinc-950 transition-transform hover:scale-110 hover:text-zinc-700"
+            aria-label="Open full menu"
+            aria-expanded={isMenuOpen}
+          >
+            <HamburgerIcon />
+          </button>
+        </nav>
 
         {isMenuOpen && (
           <MobileMenu
@@ -334,11 +339,31 @@ const MobileMenu = memo(function MobileMenu({
   setIsAuthModalOpen,
   handleProtectedRoute,
 }: MobileMenuProps) {
+  // Trap focus and handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu();
+    };
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [closeMenu]);
+
   return (
-    <div className="fixed inset-0 bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-sm animate-slide-in">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigation menu"
+      className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 bg-zinc-900/95 p-4 text-zinc-200 backdrop-blur-sm"
+    >
       <button
+        type="button"
         onClick={closeMenu}
-        className="self-end p-2 hover:text-amber-300 transition-colors"
+        className="self-end p-2 text-zinc-200 transition-colors hover:text-amber-300"
         aria-label="Close menu"
       >
         <CloseIcon />
@@ -347,7 +372,7 @@ const MobileMenu = memo(function MobileMenu({
       <Link href="/" aria-label="Home" onClick={closeMenu}>
         <Image
           src={hh}
-          alt="Humor Hub Logo"
+          alt=""
           width={50}
           height={50}
           className="rounded-full border-2 border-zinc-900 shadow-lg"
@@ -360,7 +385,10 @@ const MobileMenu = memo(function MobileMenu({
         setIsAuthModalOpen={setIsAuthModalOpen}
       />
 
-      <div className="flex flex-col gap-4 text-center w-full max-w-xs">
+      <nav
+        aria-label="Mobile navigation"
+        className="flex w-full max-w-xs flex-col gap-4"
+      >
         <MenuLink href="/MicFinder" label="Mic Finder" onClick={closeMenu} />
         <MenuButton
           label="News"
@@ -378,7 +406,7 @@ const MobileMenu = memo(function MobileMenu({
         />
         <MenuLink href="/contact" label="Contact Us" onClick={closeMenu} />
         <MenuLink href="/about" label="About" onClick={closeMenu} />
-      </div>
+      </nav>
     </div>
   );
 });
@@ -386,7 +414,7 @@ const MobileMenu = memo(function MobileMenu({
 // ============ MENU HELPERS ============
 
 const menuItemClass =
-  "flex items-center justify-center p-3 text-2xl bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 transition-all w-full text-zinc-200";
+  "flex items-center justify-center rounded-lg bg-zinc-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-zinc-700";
 
 function MenuLink({
   href,
@@ -412,7 +440,7 @@ function MenuButton({
   onClick: () => void;
 }) {
   return (
-    <button onClick={onClick} className={menuItemClass}>
+    <button type="button" onClick={onClick} className={menuItemClass}>
       {label}
     </button>
   );

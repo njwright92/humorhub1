@@ -7,7 +7,7 @@ export async function DELETE(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { success: false, error: "Missing authorization header" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -17,7 +17,7 @@ export async function DELETE(request: NextRequest) {
     if (!valid || !uid) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
     if (!eventId) {
       return NextResponse.json(
         { success: false, error: "Event ID is required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -38,7 +38,7 @@ export async function DELETE(request: NextRequest) {
     if (!eventDoc.exists) {
       return NextResponse.json(
         { success: false, error: "Event not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -46,7 +46,7 @@ export async function DELETE(request: NextRequest) {
     if (eventData?.userId !== uid) {
       return NextResponse.json(
         { success: false, error: "Unauthorized to delete this event" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -57,7 +57,7 @@ export async function DELETE(request: NextRequest) {
     console.error("Delete event error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to delete event" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -3,9 +3,10 @@
 export default function ScrollToTop() {
   return (
     <button
+      type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      aria-label="Back to top"
-      className="rounded-full bg-zinc-900 size-10 md:size-12 flex items-center justify-center text-amber-300 shadow-lg hover:scale-110 transition-transform border border-amber-300"
+      aria-label="Scroll back to top"
+      className="flex size-10 items-center justify-center rounded-full border border-amber-300 bg-zinc-900 text-amber-300 shadow-lg transition-transform hover:scale-110 md:size-12"
     >
       <svg
         viewBox="0 0 24 24"
@@ -14,6 +15,7 @@ export default function ScrollToTop() {
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
         className="size-6 md:size-8"
       >
         <path d="M12 19V5M5 12l7-7 7 7" />

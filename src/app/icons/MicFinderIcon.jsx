@@ -1,6 +1,6 @@
 const MicFinderIcon = () => (
   <svg
-    className="size-8 text-zinc-950 group-hover:text-zinc-700 transition-colors"
+    className="size-8 text-zinc-950 transition-colors group-hover:text-zinc-700"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"

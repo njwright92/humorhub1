@@ -22,17 +22,17 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="flex flex-col items-center justify-center p-4 text-zinc-200 text-center md:ml-20 min-h-screen">
-        <div className="w-full max-w-4xl animate-fade-in">
-          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl text-4xl sm:text-5xl md:text-6xl mb-2 font-heading">
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 text-center text-zinc-200 md:ml-20">
+        <header className="animate-fade-in mb-8 w-full max-w-4xl">
+          <h1 className="font-heading mb-2 text-3xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-4xl md:text-5xl lg:text-6xl">
             Contact Us
           </h1>
-          <p className="text-zinc-300 mb-8">
+          <p className="text-sm text-zinc-300 sm:text-base">
             Questions, feedback, or support? We&#39;re here to help.
           </p>
+        </header>
 
-          <ContactForm />
-        </div>
+        <ContactForm />
       </main>
       <Footer />
     </>

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     if (!eventData || !collectionName) {
       return NextResponse.json(
         { success: false, error: "Invalid data" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     console.error("Event creation error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to create event" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

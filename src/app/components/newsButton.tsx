@@ -1,41 +1,40 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import dynamic from "next/dynamic";
 
-// Only load modal if needed
 const AuthModal = dynamic(() => import("./authModal"), {
   ssr: false,
   loading: () => null,
 });
 
-interface Props {
-  children?: React.ReactNode;
+interface NewsButtonProps {
+  children?: ReactNode;
   className?: string;
 }
 
-export default function NewsButton({ children, className }: Props) {
+const defaultClassName =
+  "w-80 self-center rounded-lg bg-amber-300 px-2 py-1 text-center text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:self-end";
+
+export default function NewsButton({ children, className }: NewsButtonProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleClick = useCallback(async () => {
-    // 1. Optimistic Check (Instant)
-    const hasAuthData =
-      typeof window !== "undefined" &&
-      Object.keys(window.localStorage).some((key) =>
-        key.startsWith("firebase:authUser:"),
-      );
+    // Optimistic check (instant, no network)
+    const hasAuthData = Object.keys(localStorage).some((key) =>
+      key.startsWith("firebase:authUser:")
+    );
 
     if (hasAuthData) {
       router.push("/HHapi");
       return;
     }
 
-    // 2. Slow Check (Only if optimistic fails)
-    // Dynamically import auth only on click!
+    // Full check (only if optimistic fails)
     try {
       const { getAuth } = await import("../../../firebase.config");
       const auth = await getAuth();
@@ -43,37 +42,37 @@ export default function NewsButton({ children, className }: Props) {
       if (auth.currentUser) {
         router.push("/HHapi");
       } else {
-        // Not signed in
         showToast("Please sign in to view News.", "info");
         setIsAuthModalOpen(true);
       }
-    } catch (error) {
-      console.error("Auth check failed", error);
-      // Fallback to showing modal if anything fails
+    } catch {
+      // Fallback to modal on error
       setIsAuthModalOpen(true);
     }
   }, [router, showToast]);
 
+  const handleClose = useCallback(() => setIsAuthModalOpen(false), []);
+
+  const handleLoginSuccess = useCallback(() => {
+    setIsAuthModalOpen(false);
+    router.push("/HHapi");
+  }, [router]);
+
   return (
     <>
       <button
+        type="button"
         onClick={handleClick}
-        className={
-          className ||
-          "bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg hover:scale-105 hover:outline hover:outline-white w-80 text-center self-center md:self-end transition-transform"
-        }
+        className={className || defaultClassName}
       >
-        {children || "Check It Out"}
+        {children ?? "Check It Out"}
       </button>
 
       {isAuthModalOpen && (
         <AuthModal
           isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-          onLoginSuccess={() => {
-            setIsAuthModalOpen(false);
-            router.push("/HHapi");
-          }}
+          onClose={handleClose}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
     </>

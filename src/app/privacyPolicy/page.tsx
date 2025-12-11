@@ -16,19 +16,19 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <Header />
-      <main className="flex flex-col items-center justify-center p-4 text-zinc-200 text-center md:ml-24 min-h-screen bg-zinc-900">
-        <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl text-4xl sm:text-5xl md:text-6xl mb-8 font-heading">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 p-4 text-center text-zinc-200 md:ml-24">
+        <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-5xl md:text-6xl">
           Privacy Policy
         </h1>
 
-        <section className="bg-zinc-200 border border-zinc-300 p-8 max-w-4xl mx-auto shadow-2xl rounded-xl text-left text-zinc-800">
-          <p className="text-zinc-600 text-sm mb-6 border-b border-zinc-300 pb-4">
+        <section className="mx-auto max-w-4xl rounded-xl border border-zinc-300 bg-zinc-200 p-8 text-left text-zinc-800 shadow-2xl">
+          <p className="mb-6 border-b border-zinc-300 pb-4 text-sm text-zinc-600">
             <strong>Last Updated:</strong> November 2025
           </p>
 
           <div className="space-y-8">
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 1. Introduction
               </h2>
               <p className="leading-relaxed">
@@ -40,13 +40,13 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 2. Information We Collect
               </h2>
               <p className="mb-2">
                 We collect information to provide a better experience:
               </p>
-              <ul className="list-disc list-inside pl-4 space-y-1">
+              <ul className="list-inside list-disc space-y-1 pl-4">
                 <li>
                   <strong>Account Data:</strong> When you sign in via Google, we
                   store your email, display name, and profile picture.
@@ -63,14 +63,14 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 3. Third-Party Services
               </h2>
               <p className="leading-relaxed">
                 We utilize trusted third-party services to operate our platform.
                 Your data may be processed by:
               </p>
-              <ul className="list-disc list-inside pl-4 space-y-1 mt-2">
+              <ul className="mt-2 list-inside list-disc space-y-1 pl-4">
                 <li>
                   <strong>Google Firebase:</strong> For authentication, database
                   storage, and image hosting.
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 4. Data Security
               </h2>
               <p className="leading-relaxed">
@@ -98,7 +98,7 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 5. Contact
               </h2>
               <p>
@@ -106,7 +106,7 @@ export default function PrivacyPolicyPage() {
                 data, please{" "}
                 <Link
                   href="/contact"
-                  className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
+                  className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
                 >
                   Contact Us
                 </Link>
@@ -114,10 +114,10 @@ export default function PrivacyPolicyPage() {
             </article>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-zinc-300 text-center">
+          <div className="mt-10 border-t border-zinc-300 pt-6 text-center">
             <Link
               href="/"
-              className="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 px-6 py-3 rounded-lg font-bold transition-transform hover:scale-105 inline-block shadow-md"
+              className="inline-block rounded-lg bg-zinc-900 px-6 py-3 font-bold text-zinc-100 shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
             >
               Return Home
             </Link>

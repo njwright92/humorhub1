@@ -7,8 +7,7 @@ import Header from "@/app/components/header";
 import Footer from "@/app/components/footer";
 
 export const metadata: Metadata = {
-  title:
-    "MicFinder: 1,000's of Comedy, music, and all-arts Open Mics | The Humor Hub",
+  title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
   description:
     "Discover the best comedy open mics near you. Search by city, view our interactive map, and join the community. The ultimate directory for stand-up comedians.",
   alternates: {
@@ -26,115 +25,132 @@ export const metadata: Metadata = {
 
 function MicFinderSkeleton() {
   return (
-    <div className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen animate-pulse">
-      <div className="h-16 bg-zinc-700 rounded-lg mb-6" />
-      <div className="h-12 bg-zinc-700 rounded-lg w-3/4 mx-auto mb-4" />
-      <div className="h-8 bg-zinc-700 rounded-lg w-1/2 mx-auto mb-8" />
-      <div className="h-64 bg-zinc-700 rounded-lg mb-6" />
+    <div
+      role="status"
+      aria-label="Loading MicFinder"
+      className="flex min-h-screen animate-pulse flex-col p-2 text-center md:ml-20"
+    >
+      <div className="mb-6 h-16 rounded-lg bg-zinc-700" />
+      <div className="mx-auto mb-4 h-12 w-3/4 rounded-lg bg-zinc-700" />
+      <div className="mx-auto mb-8 h-8 w-1/2 rounded-lg bg-zinc-700" />
+      <div className="mb-6 h-64 rounded-lg bg-zinc-700" />
       <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-32 bg-zinc-700 rounded-lg" />
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="h-32 rounded-lg bg-zinc-700" />
         ))}
       </div>
+      <span className="sr-only">Loading MicFinder content...</span>
     </div>
   );
 }
 
 function StructuredData() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Comedy Open Mics Directory",
+    description:
+      "Directory of recurring comedy open mics and festivals across the USA.",
+    numberOfItems: 3,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@type": "Event",
+          name: "Open Mic Night at Spokane Comedy Club",
+          description:
+            "Every Wednesday. A night with professional and first-time comedians. Free admission.",
+          startDate: "2025-12-03T19:30:00-08:00",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          eventStatus: "https://schema.org/EventScheduled",
+          location: {
+            "@type": "Place",
+            name: "Spokane Comedy Club",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "315 W Sprague Ave",
+              addressLocality: "Spokane",
+              addressRegion: "WA",
+              addressCountry: "US",
+            },
+          },
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+          },
+          performer: {
+            "@type": "PerformingGroup",
+            name: "Local Comedians",
+          },
+          url: "https://www.thehumorhub.com/MicFinder?city=Spokane",
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        item: {
+          "@type": "Event",
+          name: "New York Comedy Club Open Mics",
+          description:
+            "Weekly stand-up open mic. $5 cover, 5 min sets. In-person signup.",
+          startDate: "2025-12-02T16:00:00-05:00",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          eventStatus: "https://schema.org/EventScheduled",
+          location: {
+            "@type": "Place",
+            name: "New York Comedy Club",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "85 E 4th St",
+              addressLocality: "New York",
+              addressRegion: "NY",
+              addressCountry: "US",
+            },
+          },
+          offers: {
+            "@type": "Offer",
+            price: "5.00",
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+          },
+          url: "https://www.thehumorhub.com/MicFinder?city=New+York",
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        item: {
+          "@type": "Event",
+          name: "Open Mic Lunch at Jimmy Kimmel's Comedy Club",
+          description:
+            "Open Mic Lunch with Hailey Brooks. Doors 11 AM, Show 12 PM.",
+          startDate: "2025-12-11T12:00:00-08:00",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          eventStatus: "https://schema.org/EventScheduled",
+          location: {
+            "@type": "Place",
+            name: "Jimmy Kimmel's Comedy Club",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "3535 S Las Vegas Blvd",
+              addressLocality: "Las Vegas",
+              addressRegion: "NV",
+              addressCountry: "US",
+            },
+          },
+          url: "https://www.thehumorhub.com/MicFinder?city=Las+Vegas",
+        },
+      },
+    ],
+  };
+
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "ItemList",
-          name: "Comedy Open Mics Directory",
-          description:
-            "Directory of recurring comedy open mics and festivals across the USA.",
-          numberOfItems: 3,
-          itemListElement: [
-            {
-              "@type": "ListItem",
-              position: 1,
-              item: {
-                "@type": "Event",
-                name: "Open Mic Night at Spokane Comedy Club",
-                description:
-                  "Every Wednesday. A night with professional and first-time comedians. Free admission.",
-                startDate: "2025-12-03T19:30:00-08:00",
-                location: {
-                  "@type": "Place",
-                  name: "Spokane Comedy Club",
-                  address: {
-                    "@type": "PostalAddress",
-                    streetAddress: "315 W Sprague Ave",
-                    addressLocality: "Spokane",
-                    addressRegion: "WA",
-                    addressCountry: "US",
-                  },
-                },
-                offers: {
-                  "@type": "Offer",
-                  price: "0",
-                  priceCurrency: "USD",
-                },
-                url: "https://www.thehumorhub.com/MicFinder?city=Spokane",
-              },
-            },
-            {
-              "@type": "ListItem",
-              position: 2,
-              item: {
-                "@type": "Event",
-                name: "New York Comedy Club Open Mics",
-                description:
-                  "Weekly stand-up open mic. $5 cover, 5 min sets. In-person signup.",
-                startDate: "2025-12-02T16:00:00-05:00",
-                location: {
-                  "@type": "Place",
-                  name: "New York Comedy Club",
-                  address: {
-                    "@type": "PostalAddress",
-                    streetAddress: "85 E 4th St",
-                    addressLocality: "New York",
-                    addressRegion: "NY",
-                    addressCountry: "US",
-                  },
-                },
-                offers: {
-                  "@type": "Offer",
-                  price: "5.00",
-                  priceCurrency: "USD",
-                },
-                url: "https://www.thehumorhub.com/MicFinder?city=New+York",
-              },
-            },
-            {
-              "@type": "ListItem",
-              position: 3,
-              item: {
-                "@type": "Event",
-                name: "Open Mic Lunch at Jimmy Kimmel's Comedy Club",
-                description:
-                  "Open Mic Lunch with Hailey Brooks. Doors 11 AM, Show 12 PM.",
-                startDate: "2025-12-11T12:00:00-08:00",
-                location: {
-                  "@type": "Place",
-                  name: "Jimmy Kimmel's Comedy Club",
-                  address: {
-                    "@type": "PostalAddress",
-                    streetAddress: "3535 S Las Vegas Blvd",
-                    addressLocality: "Las Vegas",
-                    addressRegion: "NV",
-                    addressCountry: "US",
-                  },
-                },
-                url: "https://www.thehumorhub.com/MicFinder?city=Las+Vegas",
-              },
-            },
-          ],
-        }),
-      }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
     />
   );
 }
@@ -156,37 +172,39 @@ export default function MicFinderPage() {
     <>
       <StructuredData />
       <Header />
-      <main className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
-        <div className="flex flex-col items-center animate-fade-in">
+      <main className="flex min-h-screen flex-col p-2 text-center text-zinc-200 md:ml-20">
+        <header className="animate-fade-in flex flex-col items-center">
           {/* Alert Banner */}
-          <div
+          <aside
             role="alert"
-            className="border border-red-400 text-red-700 px-3 py-2 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm max-w-2xl mx-auto"
+            className="mx-auto mb-3 max-w-2xl rounded-lg border border-red-400 bg-zinc-200 px-2 py-1.5 text-center text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm"
           >
             <p>
-              <strong className="font-bold">📢 Note: </strong>
+              <strong>
+                <span aria-hidden="true">📢 </span>Note:{" "}
+              </strong>
               Open mic events evolve quickly. See something outdated?{" "}
               <Link
                 href="/contact"
-                className="underline font-bold text-blue-700 hover:text-blue-900 transition-colors"
+                className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
               >
                 Contact Us
               </Link>{" "}
-              keep the comedy community thriving!
+              to keep the comedy community thriving!
             </p>
-          </div>
+          </aside>
 
-          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-6 mb-4 font-heading">
+          <h1 className="font-heading mt-4 mb-2 text-3xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:mt-6 sm:mb-4 sm:text-4xl md:text-5xl lg:text-6xl">
             Mic Finder
           </h1>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 font-bold drop-shadow-xl font-heading">
+          <p className="font-heading mb-3 text-lg font-bold drop-shadow-xl sm:mb-4 sm:text-xl md:text-2xl lg:text-3xl">
             Discover Mics and Festivals Near You!
-          </h2>
-          <p className="mt-2 mb-6 text-zinc-200 max-w-2xl mx-auto text-lg">
+          </p>
+          <p className="mx-auto mb-4 max-w-2xl text-sm text-zinc-300 sm:mb-6 sm:text-base md:text-lg">
             Find a Mic tonight or list yours, built by comics for comics. Use
             Mic Finder to connect with your community!
           </p>
-        </div>
+        </header>
 
         <Suspense fallback={<MicFinderSkeleton />}>
           <MicFinderContent />

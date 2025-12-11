@@ -6,13 +6,13 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  memo,
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
 
-// Import from lib files
 import type { Event, CityCoordinates } from "../lib/types";
 import {
   DAY_MAP,
@@ -25,18 +25,18 @@ import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 // Dynamic imports
 const EventForm = dynamic(() => import("@/app/components/EventForm"), {
   loading: () => (
-    <button className="bg-zinc-700 text-zinc-400 px-2 py-1 rounded-lg font-bold text-lg cursor-not-allowed opacity-50">
+    <span className="rounded-lg bg-zinc-700 px-2 py-1 text-lg font-bold text-zinc-400 opacity-50">
       Loading...
-    </button>
+    </span>
   ),
   ssr: false,
 });
 
-const MemoizedEventForm = React.memo(EventForm);
+const MemoizedEventForm = memo(EventForm);
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
-    <div className="h-100 w-full flex items-center justify-center text-zinc-200">
+    <div className="flex size-full items-center justify-center text-zinc-400">
       Loading Map...
     </div>
   ),
@@ -55,6 +55,125 @@ interface MicFinderClientProps {
   initialCities: string[];
 }
 
+// Shared styles
+const dropdownBtnClass =
+  "flex h-full w-full items-center justify-center rounded-lg border-2 border-zinc-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-zinc-900 shadow-lg outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50";
+
+const dropdownContainerClass =
+  "absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-zinc-300 bg-zinc-100 shadow-lg";
+
+const dropdownInputClass =
+  "w-full border-b bg-zinc-100 px-3 py-2 text-zinc-900 outline-none";
+
+const saveButtonClass =
+  "mt-2 mb-2 self-center rounded-lg bg-amber-300 px-3 py-1.5 text-base font-semibold text-zinc-950 shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
+
+// Tab configuration
+const TABS = [
+  {
+    id: "Mics",
+    label: "Comedy Mics",
+    activeClass: "bg-blue-600",
+    inactiveClass: "bg-blue-100 text-blue-700 hover:bg-blue-200",
+  },
+  {
+    id: "Festivals",
+    label: "Festivals",
+    activeClass: "bg-purple-600",
+    inactiveClass: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+  },
+  {
+    id: "Other",
+    label: "Music/All Arts",
+    activeClass: "bg-green-600",
+    inactiveClass: "bg-green-100 text-green-700 hover:bg-green-200",
+  },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
+
+// Memoized Event Card
+const EventCard = memo(function EventCard({
+  event,
+  onSave,
+}: {
+  event: Event;
+  onSave: (event: Event) => void;
+}) {
+  return (
+    <article className="mb-4 border-b-2 border-zinc-600 p-2 text-left text-zinc-200">
+      <h3 className="text-lg font-semibold text-amber-300">{event.name}</h3>
+      <p className="mb-1 text-sm">
+        <span aria-hidden="true">📅 </span>
+        <span className="sr-only">Date: </span>
+        {event.date}
+      </p>
+      <p className="mb-1 text-sm">
+        <span aria-hidden="true">📍 </span>
+        <span className="sr-only">Location: </span>
+        {event.location}
+      </p>
+      <div className="mb-2 text-sm">
+        <span className="font-bold">
+          <span aria-hidden="true">ℹ️ </span>
+          Details:
+        </span>
+        <div dangerouslySetInnerHTML={{ __html: event.details }} />
+      </div>
+      <button
+        type="button"
+        onClick={() => onSave(event)}
+        className={saveButtonClass}
+        aria-label={`Save ${event.name}`}
+      >
+        Save Event
+      </button>
+    </article>
+  );
+});
+
+// Memoized Virtual Event Card
+const VirtualEventCard = memo(function VirtualEventCard({
+  event,
+  onSave,
+}: {
+  event: Event;
+  onSave: (event: Event) => void;
+}) {
+  return (
+    <article className="my-2 mb-4 flex h-auto flex-col border-b border-zinc-600 bg-zinc-800/20 p-2 text-left text-zinc-200">
+      <h3 className="text-lg font-bold text-amber-300 sm:text-xl">
+        {event.name}
+      </h3>
+      <p className="mb-1 text-sm">
+        <span aria-hidden="true">📅 </span>
+        <span className="sr-only">Date: </span>
+        {event.date}
+      </p>
+      <p className="mb-1 text-sm">
+        <span aria-hidden="true">📍 </span>
+        <span className="sr-only">Location: </span>
+        {event.location}
+      </p>
+      <div className="mt-2 text-sm">
+        <span className="font-bold">
+          <span aria-hidden="true">ℹ️ </span>
+          Details:
+        </span>
+        <div dangerouslySetInnerHTML={{ __html: event.details }} />
+      </div>
+      <button
+        type="button"
+        onClick={() => onSave(event)}
+        className={saveButtonClass}
+        aria-label={`Save ${event.name}`}
+      >
+        Save Event
+      </button>
+    </article>
+  );
+});
+
 export default function MicFinderClient({
   initialEvents,
   initialCityCoordinates,
@@ -62,12 +181,14 @@ export default function MicFinderClient({
 }: MicFinderClientProps) {
   const { showToast } = useToast();
 
-  const [events] = useState<Event[]>(initialEvents);
-  const [cityCoordinates] = useState<CityCoordinates>(initialCityCoordinates);
-  const [allAvailableCities] = useState<string[]>(initialCities);
+  // Static data (won't change)
+  const events = initialEvents;
+  const cityCoordinates = initialCityCoordinates;
+  const allAvailableCities = initialCities;
 
+  // State
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
@@ -75,23 +196,22 @@ export default function MicFinderClient({
   const [hasMapInit, setHasMapInit] = useState(false);
   const [isFirstDropdownOpen, setIsFirstDropdownOpen] = useState(false);
   const [isSecondDropdownOpen, setIsSecondDropdownOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<
-    "Mics" | "Festivals" | "Other"
-  >("Mics");
+  const [selectedTab, setSelectedTab] = useState<TabId>("Mics");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
+  // Refs
   const authRef = useRef<Auth | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
+  // Analytics helper
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
-      if (typeof window !== "undefined") {
-        window.dataLayer?.push({ event: event_name, ...params });
-      }
+      window.dataLayer?.push({ event: event_name, ...params });
     },
-    [],
+    []
   );
 
+  // Debounced search
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -105,21 +225,28 @@ export default function MicFinderClient({
     return () => clearTimeout(handler);
   }, [searchTerm, sendDataLayerEvent]);
 
+  // Auth initialization
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
+
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
       const auth = await getAuth();
       authRef.current = auth;
-      unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsUserSignedIn(!!user);
-      });
+      unsubscribe = onAuthStateChanged(auth, (user) =>
+        setIsUserSignedIn(!!user)
+      );
     };
-    setTimeout(initAuth, 500);
-    return () => unsubscribe?.();
+
+    const timer = setTimeout(initAuth, 500);
+    return () => {
+      clearTimeout(timer);
+      unsubscribe?.();
+    };
   }, []);
 
+  // URL params on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const city = params.get("city");
@@ -131,30 +258,29 @@ export default function MicFinderClient({
     if (term) setSearchTerm(term);
   }, []);
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
+  // Handlers
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       return showToast("Geolocation not supported", "error");
     }
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
-        let closestCity = null;
+        let closestCity: string | null = null;
         let minDistance = Infinity;
+
         for (const [city, coords] of Object.entries(cityCoordinates)) {
           const dist = getDistanceFromLatLonInKm(
             latitude,
             longitude,
             coords.lat,
-            coords.lng,
+            coords.lng
           );
           if (dist < minDistance) {
             minDistance = dist;
             closestCity = city;
           }
         }
+
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
           setSelectedCity(normalized);
@@ -164,28 +290,25 @@ export default function MicFinderClient({
           showToast("No supported cities found nearby", "info");
         }
       },
-      (err) => {
-        console.error("Geo error", err);
-        showToast("Location access denied", "error");
-      },
+      () => showToast("Location access denied", "error")
     );
   }, [cityCoordinates, showToast]);
 
-  const handleCitySelect = (city: string) => {
+  const handleCitySelect = useCallback((city: string) => {
     const normalized = normalizeCityName(city);
     setSelectedCity(normalized);
     setFilterCity(normalized);
     setSearchTerm(normalized);
     setIsFirstDropdownOpen(false);
-  };
+  }, []);
 
-  const handleCityFilterChange = (city: string) => {
+  const handleCityFilterChange = useCallback((city: string) => {
     const normalized = city === "All Cities" ? "" : normalizeCityName(city);
     setFilterCity(city);
     setSelectedCity(normalized);
     setSearchTerm(normalized);
     setIsSecondDropdownOpen(false);
-  };
+  }, []);
 
   const handleEventSave = useCallback(
     async (event: Event) => {
@@ -195,9 +318,8 @@ export default function MicFinderClient({
       }
       try {
         const user = authRef.current?.currentUser;
-        if (!user || !event.id) {
-          throw new Error("Invalid state");
-        }
+        if (!user || !event.id) throw new Error("Invalid state");
+
         const token = await user.getIdToken();
         const response = await fetch("/api/events/save", {
           method: "POST",
@@ -207,45 +329,45 @@ export default function MicFinderClient({
           },
           body: JSON.stringify(event),
         });
+
         const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.error || "Failed to save");
-        }
+        if (!response.ok) throw new Error(result.error || "Failed to save");
+
         showToast("Event saved successfully!", "success");
         sendDataLayerEvent("save_event", {
           event_category: "Event Interaction",
           event_label: event.name,
         });
-      } catch (error) {
-        console.error("Failed to save event:", error);
+      } catch {
         showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [isUserSignedIn, sendDataLayerEvent, showToast],
+    [isUserSignedIn, sendDataLayerEvent, showToast]
   );
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value) return;
-    const [year, month, day] = e.target.value.split("-").map(Number);
-    const newDate = new Date(year, month - 1, day);
-    setSelectedDate(newDate);
-  };
+  const handleDateChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.value) return;
+      const [year, month, day] = e.target.value.split("-").map(Number);
+      setSelectedDate(new Date(year, month - 1, day));
+    },
+    []
+  );
 
   const handleMapHover = useCallback(() => {
     if (!hasMapInit) setHasMapInit(true);
   }, [hasMapInit]);
 
-  const toggleMapVisibility = () => {
+  const toggleMapVisibility = useCallback(() => {
     if (!hasMapInit) setHasMapInit(true);
     setIsMapVisible((prev) => !prev);
-  };
+  }, [hasMapInit]);
 
+  // Memoized data
   const dropdownCities = useMemo(() => {
-    return !debouncedSearchTerm
-      ? allAvailableCities
-      : allAvailableCities.filter((c) =>
-          c.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
-        );
+    if (!debouncedSearchTerm) return allAvailableCities;
+    const term = debouncedSearchTerm.toLowerCase();
+    return allAvailableCities.filter((c) => c.toLowerCase().includes(term));
   }, [allAvailableCities, debouncedSearchTerm]);
 
   const isTabMatch = useCallback(
@@ -254,7 +376,7 @@ export default function MicFinderClient({
       if (selectedTab === "Other") return event.isMusic;
       return !event.festival && !event.isMusic;
     },
-    [selectedTab],
+    [selectedTab]
   );
 
   const eventsForMap = useMemo(() => {
@@ -265,14 +387,13 @@ export default function MicFinderClient({
 
   const mapConfig = useMemo(() => {
     const cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
-    if (cityCoords) {
-      return { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM };
-    }
-    return {
-      lat: DEFAULT_US_CENTER.lat,
-      lng: DEFAULT_US_CENTER.lng,
-      zoom: DEFAULT_ZOOM,
-    };
+    return cityCoords
+      ? { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM }
+      : {
+          lat: DEFAULT_US_CENTER.lat,
+          lng: DEFAULT_US_CENTER.lng,
+          zoom: DEFAULT_ZOOM,
+        };
   }, [selectedCity, cityCoordinates]);
 
   const filteredEventsForView = useMemo(() => {
@@ -280,13 +401,16 @@ export default function MicFinderClient({
     dateCheck.setHours(0, 0, 0, 0);
     const term = debouncedSearchTerm.toLowerCase();
     const city = selectedCity.toLowerCase();
+
     return events.filter((e) => {
       if (!isTabMatch(e)) return false;
+
       const matchesCity = !city || e.location.toLowerCase().includes(city);
       const matchesSearch =
         !term ||
         e.name.toLowerCase().includes(term) ||
         e.location.toLowerCase().includes(term);
+
       let matchesDate = false;
       if (e.isRecurring) {
         matchesDate = DAY_MAP[e.date] === selectedDate.getDay();
@@ -297,6 +421,7 @@ export default function MicFinderClient({
           matchesDate = parsedDate.getTime() === dateCheck.getTime();
         }
       }
+
       return matchesCity && matchesDate && matchesSearch;
     });
   }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
@@ -305,7 +430,7 @@ export default function MicFinderClient({
     let list = events.filter(isTabMatch);
     if (filterCity !== "All Cities") {
       list = list.filter(
-        (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity,
+        (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity
       );
     }
     return list.sort((a, b) => {
@@ -323,70 +448,81 @@ export default function MicFinderClient({
     overscan: 5,
   });
 
+  const resultCountText = useMemo(() => {
+    const count = filteredEventsForView.length;
+    const type =
+      selectedTab === "Mics"
+        ? "mics"
+        : selectedTab === "Festivals"
+          ? "festivals"
+          : "events";
+    return `${count} ${type} found`;
+  }, [filteredEventsForView.length, selectedTab]);
+
   return (
     <>
-      {/* Event Form Button Wrapper */}
-      <div className="text-center mb-4 h-16 w-full flex justify-center items-center">
+      {/* Event Form */}
+      <div className="mb-4 flex h-14 w-full items-center justify-center sm:h-16">
         <MemoizedEventForm />
       </div>
 
-      <h3 className="text-base font-semibold text-center mt-2 mb-4 text-zinc-400">
+      <p className="mt-2 mb-4 text-center text-sm font-semibold text-zinc-400 sm:text-base">
         Find your next show or night out. Pick a city and date!
-      </h3>
+      </p>
 
-      {/* === Inputs Section === */}
-      <div className="flex flex-col justify-center items-center mt-2 relative z-20 gap-4">
+      {/* Inputs */}
+      <div className="relative z-20 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
         {/* City Dropdown */}
-        <div className="relative w-full max-w-xs min-h-12">
+        <div className="relative min-h-12 w-full max-w-xs">
           <label id="city-select-label" className="sr-only">
             Select a City
           </label>
           <button
-            id="city-select"
+            type="button"
             aria-labelledby="city-select-label"
-            onMouseEnter={handleMapHover}
-            onTouchStart={handleMapHover}
-            className="w-full h-full bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3 border-2 border-zinc-500 p-2 rounded-lg shadow-lg focus:border-zinc-300 focus:shadow-md outline-none"
             aria-haspopup="listbox"
             aria-expanded={isFirstDropdownOpen}
+            onMouseEnter={handleMapHover}
+            onTouchStart={handleMapHover}
             onClick={() => {
               setIsFirstDropdownOpen(!isFirstDropdownOpen);
               setIsSecondDropdownOpen(false);
             }}
+            className={dropdownBtnClass}
           >
             {selectedCity || "Select a City"}
           </button>
 
           {isFirstDropdownOpen && (
-            <div className="w-full max-w-xs bg-zinc-100 shadow-lg rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30 border border-zinc-300">
+            <div className={dropdownContainerClass}>
               <input
                 type="text"
                 placeholder="Search city..."
                 value={searchTerm}
-                onChange={handleSearchInputChange}
-                className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={dropdownInputClass}
                 autoFocus
                 aria-label="Filter cities"
               />
-              <ul role="listbox" className="text-zinc-900">
+              <ul role="listbox">
                 <li
-                  className="px-4 py-3 cursor-pointer bg-amber-100 hover:bg-amber-300 text-center font-bold border-b border-zinc-200 flex justify-center items-center gap-2"
+                  role="option"
+                  aria-selected={false}
                   onClick={() => {
                     fetchUserLocation();
                     setIsFirstDropdownOpen(false);
                   }}
-                  role="option"
-                  aria-selected={false}
+                  className="flex cursor-pointer items-center justify-center gap-2 border-b border-zinc-200 bg-amber-100 px-4 py-3 text-center font-bold text-zinc-900 hover:bg-amber-300"
                 >
-                  <span aria-hidden="true">📍</span> Use My Current Location
+                  <span aria-hidden="true">📍</span> Use My Location
                 </li>
                 {dropdownCities.map((city) => (
                   <li
                     key={city}
                     role="option"
                     aria-selected={selectedCity === city}
-                    className="px-4 py-2 cursor-pointer hover:bg-amber-100 text-center border-b border-zinc-200 last:border-0"
                     onClick={() => handleCitySelect(city)}
+                    className="cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-zinc-900 last:border-0 hover:bg-amber-100"
                   >
                     {city}
                   </li>
@@ -397,45 +533,46 @@ export default function MicFinderClient({
         </div>
 
         {/* Date Picker */}
-        <div className="flex flex-col justify-center items-center w-full max-w-xs relative">
+        <div className="relative w-full max-w-xs">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
           <input
             id="event-date-picker"
-            name="event-date-picker"
             type="date"
-            onMouseEnter={handleMapHover}
-            onTouchStart={handleMapHover}
             value={selectedDate.toLocaleDateString("en-CA")}
             onChange={handleDateChange}
-            className="w-full text-center bg-zinc-200 text-zinc-900 font-semibold px-2 border-2 border-zinc-500 p-2 rounded-lg shadow-lg focus:border-zinc-300 focus:shadow-md outline-none cursor-pointer"
+            onMouseEnter={handleMapHover}
+            onTouchStart={handleMapHover}
+            className={dropdownBtnClass}
           />
         </div>
       </div>
 
-      {/* === Map Section === */}
+      {/* Map */}
       <section
         aria-label="Event Map"
-        className="w-full h-100 rounded-lg shadow-lg relative border-2 border-amber-300 mt-6 mb-6 bg-zinc-800"
+        className="relative mt-6 mb-6 h-80 w-full rounded-lg border-2 border-amber-300 bg-zinc-800 shadow-lg sm:h-96 md:h-[400px]"
       >
         <button
+          type="button"
           onClick={toggleMapVisibility}
           onMouseEnter={handleMapHover}
           onTouchStart={handleMapHover}
           onFocus={handleMapHover}
-          className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition-transform font-bold ${
+          className={`absolute z-10 rounded-lg px-4 py-2 font-bold shadow-lg transition-transform ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-white text-lg hover:scale-105"
-              : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950 border border-zinc-700"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-base text-zinc-950 hover:scale-105 sm:text-lg"
+              : "top-4 right-4 border border-zinc-700 bg-zinc-900 text-sm text-zinc-200 hover:bg-zinc-950"
           }`}
         >
-          {!isMapVisible ? "Show Map" : "Hide Map"}
+          {isMapVisible ? "Hide Map" : "Show Map"}
         </button>
+
         {hasMapInit && (
           <div
             className={`size-full transition-opacity duration-100 ${
-              !isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"
+              isMapVisible ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
             aria-hidden={!isMapVisible}
           >
@@ -447,19 +584,25 @@ export default function MicFinderClient({
             />
           </div>
         )}
-        {!isMapVisible && <div className="absolute inset-0 bg-zinc-800" />}
+
+        {!isMapVisible && (
+          <div className="absolute inset-0 bg-zinc-800" aria-hidden="true" />
+        )}
       </section>
 
-      <p className="text-lg text-center my-6 text-zinc-300 italic">
-        *Scroll through events to find your next Mic or Festival!*
+      <p className="my-4 text-center text-sm text-zinc-400 italic sm:my-6 sm:text-base md:text-lg">
+        Scroll through events to find your next Mic or Festival!
       </p>
 
-      {/* === Results Section === */}
+      {/* Results */}
       <section
-        aria-label="Search Results"
-        className="grow mt-10 mb-10 shadow-lg rounded-lg w-full"
+        aria-labelledby="results-heading"
+        className="mt-6 mb-10 w-full rounded-lg shadow-lg sm:mt-10"
       >
-        <h2 className="text-3xl font-heading text-center border-b-4 border-amber-300 pb-2 mb-6 rounded-lg shadow-lg">
+        <h2
+          id="results-heading"
+          className="font-heading mb-4 rounded-lg border-b-4 border-amber-300 pb-2 text-center text-2xl shadow-lg sm:mb-6 sm:text-3xl"
+        >
           {selectedTab === "Mics"
             ? "Comedy Mics"
             : selectedTab === "Festivals"
@@ -467,118 +610,95 @@ export default function MicFinderClient({
               : "Music/All Arts"}
         </h2>
 
+        <p className="sr-only" aria-live="polite">
+          {resultCountText}
+        </p>
+
         {!selectedCity ? (
-          <p className="text-center py-4 text-lg">
+          <p className="py-4 text-center text-base sm:text-lg">
             Please select a city above to see events.
           </p>
         ) : filteredEventsForView.length > 0 ? (
-          filteredEventsForView.map((event) => (
-            <article
-              key={event.id}
-              className="p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200"
-            >
-              <h3 className="text-lg font-semibold text-amber-300">
-                {event.name}
-              </h3>
-              <p className="text-sm mb-1">
-                <span aria-hidden="true">📅</span> Date: {event.date}
-              </p>
-              <p className="text-sm mb-1">
-                <span aria-hidden="true">📍</span> Location: {event.location}
-              </p>
-              <div className="text-sm mb-2">
-                <span className="font-bold">
-                  <span aria-hidden="true">ℹ️</span> Details:
-                </span>
-                <div dangerouslySetInnerHTML={{ __html: event.details }} />
-              </div>
-              <button
-                className="mt-2 mb-2 self-center bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg hover:scale-105 transition-transform"
-                onClick={() => handleEventSave(event)}
-              >
-                Save Event
-              </button>
-            </article>
-          ))
+          <ul aria-label={resultCountText}>
+            {filteredEventsForView.map((event) => (
+              <li key={event.id}>
+                <EventCard event={event} onSave={handleEventSave} />
+              </li>
+            ))}
+          </ul>
         ) : (
-          <p className="text-center py-4 text-zinc-400">
+          <p className="py-4 text-center text-zinc-400">
             No {selectedTab.toLowerCase()} found for {selectedCity} on{" "}
             {selectedDate.toLocaleDateString()}.
           </p>
         )}
       </section>
 
-      {/* === Tabs === */}
-      {/* === Tabs === */}
-      <div className="flex flex-wrap justify-center mt-4 gap-2" role="tablist">
-        {[
-          { id: "Mics", label: "Comedy Mics", color: "blue" },
-          { id: "Festivals", label: "Festivals", color: "purple" },
-          { id: "Other", label: "Music/All arts", color: "green" },
-        ].map((tab) => (
+      {/* Tabs */}
+      <nav
+        aria-label="Event type filter"
+        className="mt-4 flex flex-wrap justify-center gap-2"
+      >
+        {TABS.map((tab) => (
           <button
             key={tab.id}
+            type="button"
             role="tab"
             aria-selected={selectedTab === tab.id}
-            className={`px-3 py-2 font-bold rounded-xl shadow-lg transition-transform ${
+            onClick={() => setSelectedTab(tab.id)}
+            className={`rounded-xl px-3 py-2 text-sm font-bold shadow-lg transition-transform sm:text-base ${
               selectedTab === tab.id
-                ? `bg-${tab.color}-600 text-zinc-100 ring-2 ring-zinc-200`
-                : `bg-${tab.color}-100 text-${tab.color}-700 hover:bg-${tab.color}-200`
+                ? `${tab.activeClass} text-zinc-100 ring-2 ring-zinc-200`
+                : tab.inactiveClass
             }`}
-            // 👇 FIXED: Cast to the specific type instead of 'any'
-            onClick={() =>
-              setSelectedTab(tab.id as "Mics" | "Festivals" | "Other")
-            }
           >
             {tab.label}
           </button>
         ))}
-      </div>
+      </nav>
 
-      {/* === All Cities Filter === */}
+      {/* All Cities Section */}
       <section
-        aria-label="All Cities Filter"
-        className="grow p-2 my-10 shadow-lg rounded-lg w-full"
+        aria-labelledby="all-events-heading"
+        className="my-8 w-full rounded-lg p-2 shadow-lg sm:my-10"
       >
-        <div className="flex flex-col justify-center items-center mt-2 relative z-10">
+        <div className="relative z-10 mt-2 flex flex-col items-center justify-center">
           <div className="relative w-full max-w-xs">
             <button
-              id="city-filter-select"
+              type="button"
               aria-label="Filter by City"
-              className="w-full bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center border-2 border-zinc-500 p-2 rounded-lg shadow-lg focus:border-zinc-300 focus:shadow-md font-bold outline-none"
               aria-haspopup="listbox"
               aria-expanded={isSecondDropdownOpen}
               onClick={() => {
                 setIsSecondDropdownOpen(!isSecondDropdownOpen);
                 setIsFirstDropdownOpen(false);
               }}
+              className={`${dropdownBtnClass} font-bold`}
             >
-              {filterCity || "All Cities"}
+              {filterCity}
             </button>
+
             {isSecondDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-lg rounded-lg mt-1 overflow-hidden border border-zinc-300">
+              <div className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-100 shadow-lg">
                 <input
                   type="text"
                   placeholder="Search for a city..."
                   value={searchTerm}
-                  onChange={handleSearchInputChange}
-                  className="w-full px-3 py-2 border-b-2 bg-zinc-200 text-zinc-900 outline-none"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-zinc-900 outline-none"
                   autoFocus
                   aria-label="Search filter cities"
                 />
-                <ul
-                  className="max-h-48 overflow-y-auto text-zinc-900"
-                  role="listbox"
-                >
+                <ul className="max-h-48 overflow-y-auto" role="listbox">
                   <li
                     role="option"
                     aria-selected={filterCity === "All Cities"}
-                    className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center border-b border-zinc-200 ${
+                    onClick={() => handleCityFilterChange("All Cities")}
+                    className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-zinc-900 hover:bg-zinc-300 ${
                       filterCity === "All Cities"
                         ? "bg-zinc-200 font-semibold"
                         : ""
                     }`}
-                    onClick={() => handleCityFilterChange("All Cities")}
                   >
                     All Cities
                   </li>
@@ -587,10 +707,10 @@ export default function MicFinderClient({
                       key={city}
                       role="option"
                       aria-selected={filterCity === city}
-                      className={`px-4 py-2 cursor-pointer hover:bg-zinc-300 text-center border-b border-zinc-200 last:border-0 ${
+                      onClick={() => handleCityFilterChange(city)}
+                      className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-zinc-900 last:border-0 hover:bg-zinc-300 ${
                         filterCity === city ? "bg-zinc-200 font-semibold" : ""
                       }`}
-                      onClick={() => handleCityFilterChange(city)}
                     >
                       {city}
                     </li>
@@ -601,64 +721,47 @@ export default function MicFinderClient({
           </div>
         </div>
 
-        <h2 className="text-3xl font-heading text-center mt-4 border-b-4 border-amber-300 pb-2 rounded-lg shadow-lg">
+        <h2
+          id="all-events-heading"
+          className="font-heading mt-4 rounded-lg border-b-4 border-amber-300 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
+        >
           {filterCity === "All Cities"
             ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
             : `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"} in ${filterCity}`}
         </h2>
 
-        {sortedEventsByCity.length === 0 && (
-          <p className="text-center py-4">No events found for {filterCity}.</p>
-        )}
-        <div
-          ref={parentRef}
-          className="w-full h-160 overflow-y-auto contain-strict mt-4 scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 border border-zinc-700 rounded-lg"
-        >
+        {sortedEventsByCity.length === 0 ? (
+          <p className="py-4 text-center text-zinc-400">
+            No events found for {filterCity}.
+          </p>
+        ) : (
           <div
-            className="relative w-full"
-            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+            ref={parentRef}
+            className="scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 mt-4 h-96 w-full overflow-y-auto rounded-lg border border-zinc-700 contain-strict sm:h-[500px] md:h-[600px]"
+            role="feed"
+            aria-label={`${sortedEventsByCity.length} events`}
           >
-            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-              const event = sortedEventsByCity[virtualItem.index];
-              return (
-                <div
-                  key={virtualItem.key}
-                  data-index={virtualItem.index}
-                  ref={rowVirtualizer.measureElement}
-                  className="absolute top-0 left-0 w-full"
-                  style={{ transform: `translateY(${virtualItem.start}px)` }}
-                >
-                  <article className="my-2 h-auto flex flex-col p-1 mb-4 border-b border-zinc-600 text-zinc-200 bg-zinc-800/20">
-                    <h3 className="text-xl font-bold text-amber-300">
-                      {event.name}
-                    </h3>
-                    <p className="text-sm mb-1">
-                      <span aria-hidden="true">📅</span> Date: {event.date}
-                    </p>
-                    <p className="text-sm mb-1">
-                      <span aria-hidden="true">📍</span> Location:{" "}
-                      {event.location}
-                    </p>
-                    <div className="text-sm mt-2">
-                      <span className="font-bold">
-                        <span aria-hidden="true">ℹ️</span> Details:
-                      </span>
-                      <div
-                        dangerouslySetInnerHTML={{ __html: event.details }}
-                      />
-                    </div>
-                    <button
-                      className="mt-2 mb-2 self-center bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg hover:scale-105 transition-transform"
-                      onClick={() => handleEventSave(event)}
-                    >
-                      Save Event
-                    </button>
-                  </article>
-                </div>
-              );
-            })}
+            <div
+              className="relative w-full"
+              style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+            >
+              {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                const event = sortedEventsByCity[virtualItem.index];
+                return (
+                  <div
+                    key={virtualItem.key}
+                    data-index={virtualItem.index}
+                    ref={rowVirtualizer.measureElement}
+                    className="absolute top-0 left-0 w-full"
+                    style={{ transform: `translateY(${virtualItem.start}px)` }}
+                  >
+                    <VirtualEventCard event={event} onSave={handleEventSave} />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </section>
     </>
   );

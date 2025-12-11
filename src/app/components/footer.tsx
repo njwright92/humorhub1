@@ -4,160 +4,160 @@ import hh from "../../app/hh.webp";
 import dynamic from "next/dynamic";
 
 const ScrollToTop = dynamic(() => import("./ScrollToTop"), {
-  loading: () => <div className="w-10 h-10" />,
+  loading: () => <div className="size-10" aria-hidden="true" />,
 });
+
+// Shared link styles
+const linkClass =
+  "transition-colors hover:text-amber-300 hover:underline md:text-lg";
+
+// External link with accessibility
+function ExternalLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={linkClass}
+    >
+      {children}
+      <span className="sr-only"> (opens in new tab)</span>
+    </a>
+  );
+}
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer
-      className="bg-zinc-900 md:ml-20 border-t border-zinc-500"
+      className="border-t border-zinc-500 bg-zinc-900 md:ml-20"
       aria-labelledby="footer-heading"
-      id="footer"
     >
       <div className="mx-auto max-w-screen-2xl p-4 py-6 lg:py-8">
         <h2 id="footer-heading" className="sr-only">
-          Footer
+          Site Footer
         </h2>
 
-        {/* Main Footer Title */}
-        <div className="text-2xl md:text-4xl font-extrabold text-zinc-200 mb-2 text-center tracking-wide font-heading">
+        <p className="font-heading mb-2 text-center text-2xl font-extrabold tracking-wide text-zinc-200 md:text-4xl">
           Humor Hub - The Hub of Humor!
-        </div>
+        </p>
 
-        <p className="md:text-xl mb-8 text-center text-zinc-400 max-w-2xl mx-auto">
+        <p className="mx-auto mb-8 max-w-2xl text-center text-zinc-400 md:text-xl">
           Connecting comics and fans with events, tools, and more. Join the fun!
         </p>
 
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-          {/* Logo Section */}
+        <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          {/* Logo */}
           <Link
             href="/"
             aria-label="Humor Hub Home"
-            className="group flex justify-center md:justify-start md:w-1/4 md:pl-10 mb-6 md:mb-0"
+            className="group mb-6 flex justify-center md:mb-0 md:w-1/4 md:justify-start md:pl-10"
           >
             <Image
               src={hh}
-              alt="Humor Hub Logo"
+              alt=""
               width={100}
               height={100}
-              className="rounded-full shadow-xl group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-800 group-hover:border-amber-300 object-contain transition-transform"
+              className="rounded-full border-4 border-zinc-800 object-contain shadow-xl transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:border-amber-300"
               loading="lazy"
               quality={70}
             />
           </Link>
 
-          {/* Links Grid */}
-          <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:w-3/4 md:pr-10">
-            {/* Column 1 */}
-            <div>
-              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider whitespace-nowrap font-heading">
+          {/* Navigation Links */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-6 md:w-3/4 md:pr-10">
+            {/* About Nav */}
+            <nav aria-labelledby="about-nav">
+              <h3
+                id="about-nav"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-zinc-200 uppercase md:mb-6 md:text-xl"
+              >
                 Get to Know Us
               </h3>
-              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium">
+              <ul className="space-y-3 font-medium text-zinc-400 md:space-y-4">
                 <li>
-                  <Link
-                    href="/about"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <Link href="/about" className={linkClass}>
                     About Humor Hub
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <Link href="/contact" className={linkClass}>
                     Contact Our Team
                   </Link>
                 </li>
               </ul>
-            </div>
+            </nav>
 
-            {/* Column 2 */}
-            <div>
-              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider whitespace-nowrap font-heading">
+            {/* Social Nav */}
+            <nav aria-labelledby="social-nav">
+              <h3
+                id="social-nav"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-zinc-200 uppercase md:mb-6 md:text-xl"
+              >
                 Stay Connected
               </h3>
-              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium">
+              <ul className="space-y-3 font-medium text-zinc-400 md:space-y-4">
                 <li>
-                  <a
-                    href="https://twitter.com/naterbug321"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <ExternalLink href="https://twitter.com/naterbug321">
                     X (Twitter)
-                  </a>
+                  </ExternalLink>
                 </li>
                 <li>
-                  <a
-                    href="https://www.facebook.com/nate_wrigh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <ExternalLink href="https://www.facebook.com/nate_wrigh">
                     Facebook
-                  </a>
+                  </ExternalLink>
                 </li>
                 <li>
-                  <a
-                    href="https://www.instagram.com/nate_wright3"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <ExternalLink href="https://www.instagram.com/nate_wright3">
                     Instagram
-                  </a>
+                  </ExternalLink>
                 </li>
                 <li>
-                  <a
-                    href="https://github.com/njwright92"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <ExternalLink href="https://github.com/njwright92">
                     GitHub
-                  </a>
+                  </ExternalLink>
                 </li>
               </ul>
-            </div>
+            </nav>
 
-            {/* Column 3 */}
-            <div>
-              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider whitespace-nowrap font-heading">
+            {/* Legal Nav */}
+            <nav aria-labelledby="legal-nav">
+              <h3
+                id="legal-nav"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-zinc-200 uppercase md:mb-6 md:text-xl"
+              >
                 Legal Info
               </h3>
-              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium">
+              <ul className="space-y-3 font-medium text-zinc-400 md:space-y-4">
                 <li>
-                  <Link
-                    href="/userAgreement"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <Link href="/userAgreement" className={linkClass}>
                     User Agreement
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/privacyPolicy"
-                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                  >
+                  <Link href="/privacyPolicy" className={linkClass}>
                     Privacy Policy
                   </Link>
                 </li>
               </ul>
-            </div>
+            </nav>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="mt-10 pt-4 flex flex-col sm:flex-row-reverse items-center justify-between gap-4 sm:gap-0 border-t border-zinc-950">
+        {/* Copyright Bar */}
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-zinc-950 pt-4 sm:flex-row-reverse sm:gap-0">
           <ScrollToTop />
 
-          <span className="text-xs md:text-sm text-zinc-400 font-mono">
+          <small className="font-mono text-xs text-zinc-400 md:text-sm">
             © {currentYear} Humor Hub™. All rights reserved.
-          </span>
+          </small>
         </div>
       </div>
     </footer>

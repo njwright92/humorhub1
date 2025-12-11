@@ -26,7 +26,7 @@ function getAdminApp(): App {
   if (!projectId || !clientEmail || !privateKey) {
     throw new Error(
       "Missing Firebase Admin SDK environment variables. " +
-        "Please check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY",
+        "Please check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY"
     );
   }
 

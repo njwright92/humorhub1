@@ -16,19 +16,19 @@ export default function UserAgreementPage() {
   return (
     <>
       <Header />
-      <main className="flex flex-col items-center justify-center p-4 text-zinc-200 text-center md:ml-24 min-h-screen bg-zinc-900">
-        <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl text-4xl sm:text-5xl md:text-6xl mb-8 font-heading">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 p-4 text-center text-zinc-200 md:ml-24">
+        <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-5xl md:text-6xl">
           User Agreement
         </h1>
 
-        <section className="bg-zinc-200 border border-zinc-300 p-8 max-w-4xl mx-auto shadow-2xl rounded-xl text-left text-zinc-800">
-          <p className="text-zinc-600 text-sm mb-6 border-b border-zinc-300 pb-4">
+        <section className="mx-auto max-w-4xl rounded-xl border border-zinc-300 bg-zinc-200 p-8 text-left text-zinc-800 shadow-2xl">
+          <p className="mb-6 border-b border-zinc-300 pb-4 text-sm text-zinc-600">
             <strong>Last Updated:</strong> November 2025
           </p>
 
           <div className="space-y-8">
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 1. Acceptance of Terms
               </h2>
               <p className="leading-relaxed">
@@ -38,7 +38,7 @@ export default function UserAgreementPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 2. Open Source & License
               </h2>
               <p className="mb-2">
@@ -46,7 +46,7 @@ export default function UserAgreementPage() {
                 You are free to use, copy, and modify the software, provided
                 that:
               </p>
-              <ul className="list-disc list-inside pl-4 space-y-1">
+              <ul className="list-inside list-disc space-y-1 pl-4">
                 <li>The software is free of charge.</li>
                 <li>
                   The software is provided &ldquo;as is&rdquo; without warranty.
@@ -55,7 +55,7 @@ export default function UserAgreementPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 3. User Responsibilities
               </h2>
               <p className="leading-relaxed">
@@ -67,7 +67,7 @@ export default function UserAgreementPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 4. Disclaimer & Liability
               </h2>
               <p className="leading-relaxed">
@@ -78,14 +78,14 @@ export default function UserAgreementPage() {
             </article>
 
             <article>
-              <h2 className="text-xl font-bold text-zinc-900 mb-2 font-heading">
+              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
                 5. Contact
               </h2>
               <p>
                 Questions? Contact us at{" "}
                 <a
                   href="mailto:thehumorhub777@gmail.com"
-                  className="text-amber-700 hover:text-amber-900 underline transition-colors font-bold"
+                  className="font-bold text-amber-700 underline transition-colors hover:text-amber-900"
                 >
                   Humor Hub
                 </a>
@@ -94,10 +94,10 @@ export default function UserAgreementPage() {
             </article>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-zinc-300 text-center">
+          <div className="mt-10 border-t border-zinc-300 pt-6 text-center">
             <Link
               href="/"
-              className="bg-zinc-900 hover:bg-zinc-800 text-zinc-100 px-6 py-3 rounded-lg font-bold transition-transform hover:scale-105 inline-block shadow-md"
+              className="inline-block rounded-lg bg-zinc-900 px-6 py-3 font-bold text-zinc-100 shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
             >
               Return Home
             </Link>

@@ -7,11 +7,11 @@ export default function Header() {
   return (
     <>
       {/* Mobile Header Bar */}
-      <header className="sm:hidden p-2 sticky top-0 z-50 bg-amber-300 flex justify-between items-center">
-        <Link href="/" aria-label="Home">
+      <header className="sticky top-0 z-50 flex items-center justify-between bg-amber-300 p-2 sm:hidden">
+        <Link href="/" aria-label="Humor Hub Home">
           <Image
             src={hh}
-            alt="Humor Hub Logo"
+            alt=""
             width={50}
             height={50}
             className="rounded-full border-2 border-zinc-900 shadow-lg"
@@ -19,7 +19,7 @@ export default function Header() {
           />
         </Link>
 
-        <h1 className="text-zinc-950 font-heading text-5xl font-extrabold tracking-wide">
+        <h1 className="font-heading text-5xl font-extrabold tracking-wide text-zinc-950">
           Humor Hub!
         </h1>
 

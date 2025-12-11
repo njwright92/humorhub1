@@ -61,3 +61,4 @@ updated_events.json
 events.json
 backend/.env
 backend/new_events.json
+.prettierrc

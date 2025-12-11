@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "Hub News - Latest Comedy & World Stories | Humor Hub",
   description:
     "Get the latest jokes, events, and comedy news along with top stories from around the world with Humor Hub.",
+  alternates: {
+    canonical: "https://www.thehumorhub.com/HHapi",
+  },
   openGraph: {
     title: "Hub News - Latest Comedy & World Stories",
     description: "Curated news and stories for the comedy community.",
@@ -20,17 +23,18 @@ export default function NewsPage() {
   return (
     <>
       <Header />
-      <main className="flex flex-col p-4 text-zinc-200 text-center md:ml-20 min-h-screen">
-        <div className="flex flex-col items-center">
-          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl text-3xl sm:text-4xl lg:text-5xl mt-10 mb-4 font-heading animate-fade-in">
+      <main className="flex min-h-screen flex-col p-4 text-center text-zinc-200 md:ml-20">
+        <header className="flex flex-col items-center">
+          <h1 className="font-heading animate-fade-in mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-4xl lg:text-5xl">
             Hub News
           </h1>
-          <p className="text-zinc-300 text-lg max-w-2xl mb-4">
+          <p className="mb-4 max-w-2xl text-lg text-zinc-300">
             Curated stories from around the world. Stay informed with the latest
             updates.
           </p>
-          <NewsClient />
-        </div>
+        </header>
+
+        <NewsClient />
       </main>
       <Footer />
     </>

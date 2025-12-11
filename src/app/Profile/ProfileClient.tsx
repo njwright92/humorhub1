@@ -20,6 +20,12 @@ type SavedEvent = {
   savedAt?: string;
 };
 
+// Shared button styles
+const btnBase =
+  "w-full rounded-lg py-2 text-sm font-semibold text-zinc-100 shadow-lg transition";
+const btnEdit = `${btnBase} bg-green-900 hover:bg-green-700`;
+const btnSignOut = `${btnBase} bg-red-900 hover:bg-red-700`;
+
 export default function ProfileClient() {
   const { showToast } = useToast();
   const router = useRouter();
@@ -33,7 +39,7 @@ export default function ProfileClient() {
   const [originalBio, setOriginalBio] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Separate loading states
+  // Loading states
   const [isLoading, setIsLoading] = useState(true);
   const [isEventsLoading, setIsEventsLoading] = useState(true);
 
@@ -52,48 +58,41 @@ export default function ProfileClient() {
 
   useEffect(() => {
     return () => {
-      if (profileImageObjectURL) {
-        URL.revokeObjectURL(profileImageObjectURL);
-      }
+      if (profileImageObjectURL) URL.revokeObjectURL(profileImageObjectURL);
     };
   }, [profileImageObjectURL]);
 
-  // Fetch profile via API route (uses Admin SDK - fast & reliable)
   const fetchUserProfile = useCallback(async (user: User) => {
     try {
       const token = await user.getIdToken();
       const response = await fetch("/api/profile", {
-        method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const result = await response.json();
       if (result.success) {
-        setName(result.profile.name || "");
-        setBio(result.profile.bio || "");
-        setProfileImageUrl(result.profile.profileImageUrl || "");
-        setOriginalName(result.profile.name || "");
-        setOriginalBio(result.profile.bio || "");
+        const { name = "", bio = "", profileImageUrl = "" } = result.profile;
+        setName(name);
+        setBio(bio);
+        setProfileImageUrl(profileImageUrl);
+        setOriginalName(name);
+        setOriginalBio(bio);
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
   }, []);
 
-  // Fetch saved events via API route
   const fetchSavedEvents = useCallback(async (user: User) => {
     setIsEventsLoading(true);
     try {
       const token = await user.getIdToken();
       const response = await fetch("/api/events/saved", {
-        method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const result = await response.json();
-      if (result.success) {
-        setSavedEvents(result.events || []);
-      }
+      if (result.success) setSavedEvents(result.events || []);
     } catch (error) {
       console.error("Error fetching saved events:", error);
     } finally {
@@ -101,7 +100,6 @@ export default function ProfileClient() {
     }
   }, []);
 
-  // Initialize auth and fetch data
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
@@ -117,11 +115,8 @@ export default function ProfileClient() {
         userRef.current = user;
 
         if (user) {
-          // Load profile via API (fast)
           await fetchUserProfile(user);
           setIsLoading(false);
-
-          // Load events in background
           fetchSavedEvents(user);
         } else {
           setSavedEvents([]);
@@ -173,38 +168,41 @@ export default function ProfileClient() {
         showToast("Error uploading image.", "error");
       }
     },
-    [showToast],
+    [showToast]
   );
 
-  // Save profile via API route
-  const handleSubmit = useCallback(async () => {
-    const user = userRef.current;
-    if (!user) return;
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      const user = userRef.current;
+      if (!user) return;
 
-    try {
-      const token = await user.getIdToken();
-      const response = await fetch("/api/profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ name, bio, profileImageUrl }),
-      });
+      try {
+        const token = await user.getIdToken();
+        const response = await fetch("/api/profile", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name, bio, profileImageUrl }),
+        });
 
-      const result = await response.json();
-      if (result.success) {
-        setOriginalName(name);
-        setOriginalBio(bio);
-        setIsEditing(false);
-        showToast("Profile saved!", "success");
-      } else {
-        throw new Error(result.error);
+        const result = await response.json();
+        if (result.success) {
+          setOriginalName(name);
+          setOriginalBio(bio);
+          setIsEditing(false);
+          showToast("Profile saved!", "success");
+        } else {
+          throw new Error(result.error);
+        }
+      } catch {
+        showToast("Error saving profile.", "error");
       }
-    } catch {
-      showToast("Error saving profile.", "error");
-    }
-  }, [name, bio, profileImageUrl, showToast]);
+    },
+    [name, bio, profileImageUrl, showToast]
+  );
 
   const handleCancel = useCallback(() => {
     setName(originalName);
@@ -213,8 +211,8 @@ export default function ProfileClient() {
   }, [originalName, originalBio]);
 
   const handleDeleteEvent = useCallback(
-    async (eventId: string) => {
-      if (!confirm("Are you sure you want to remove this event?")) return;
+    async (eventId: string, eventName: string) => {
+      if (!confirm(`Remove "${eventName}" from your saved events?`)) return;
 
       const user = userRef.current;
       if (!user) return;
@@ -246,79 +244,94 @@ export default function ProfileClient() {
         setIsDeleting(null);
       }
     },
-    [showToast],
+    [showToast]
   );
 
+  // Loading State
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center flex-1">
-        <div className="animate-pulse space-y-4 w-full max-w-md">
-          <div className="h-8 bg-zinc-700 rounded w-1/2 mx-auto" />
-          <div className="h-36 w-36 bg-zinc-700 rounded-full mx-auto" />
-          <div className="h-4 bg-zinc-700 rounded w-3/4 mx-auto" />
-          <div className="h-4 bg-zinc-700 rounded w-1/2 mx-auto" />
+      <div
+        className="flex flex-1 flex-col items-center justify-center"
+        role="status"
+        aria-label="Loading profile"
+      >
+        <div className="w-full max-w-md animate-pulse space-y-4">
+          <div className="mx-auto h-8 w-1/2 rounded bg-zinc-700" />
+          <div className="mx-auto size-36 rounded-full bg-zinc-700" />
+          <div className="mx-auto h-4 w-3/4 rounded bg-zinc-700" />
+          <div className="mx-auto h-4 w-1/2 rounded bg-zinc-700" />
         </div>
-        <p className="text-zinc-400 mt-4 font-semibold">Loading Profile...</p>
+        <p className="sr-only">Loading Profile...</p>
       </div>
     );
   }
 
+  // Not Signed In State
   if (!userRef.current) {
     return (
-      <div className="flex flex-col items-center justify-center flex-1 mt-10">
-        <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-8 max-w-md">
-          <span className="text-6xl mb-4 block">🔐</span>
-          <h1 className="text-2xl font-bold text-amber-300 mb-4 font-heading">
+      <div className="mt-10 flex flex-1 flex-col items-center justify-center">
+        <section className="max-w-md rounded-lg border border-zinc-700 bg-zinc-800 p-8 text-center">
+          <span className="mb-4 block text-6xl" aria-hidden="true">
+            🔐
+          </span>
+          <h2 className="font-heading mb-4 text-2xl font-bold text-amber-300">
             Sign In Required
-          </h1>
-          <p className="text-zinc-400 mb-6">
+          </h2>
+          <p className="mb-6 text-zinc-400">
             Please sign in to view your profile and saved events.
           </p>
           <Link
             href="/MicFinder"
-            className="inline-block bg-amber-300 hover:bg-amber-400 text-zinc-950 px-6 py-3 rounded-lg font-bold transition shadow-lg"
+            className="inline-block rounded-lg bg-amber-300 px-6 py-3 font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-amber-400"
           >
             Go to MicFinder
           </Link>
-        </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="grid lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto animate-fade-in">
-      {/* Left Column: Profile Card */}
-      <div className="lg:col-span-1">
-        <section className="bg-zinc-200 border border-zinc-300 p-4 rounded-lg shadow-lg sticky top-24 text-zinc-900">
+    <div className="animate-fade-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
+      {/* Profile Card */}
+      <aside className="lg:col-span-1">
+        <section
+          aria-labelledby="profile-heading"
+          className="sticky top-24 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-zinc-900 shadow-lg"
+        >
+          <h2 id="profile-heading" className="sr-only">
+            Your Profile
+          </h2>
+
           <div className="flex flex-col items-center">
             {!isEditing && (
-              <h2 className="text-2xl font-bold text-zinc-900 mb-4 text-center font-heading">
+              <p className="font-heading mb-4 text-center text-2xl font-bold">
                 {name || "Anonymous Comic"}
-              </h2>
+              </p>
             )}
 
-            <div className="relative size-36 mb-4 mx-auto group rounded-full overflow-hidden border-4 border-zinc-900 shadow-lg bg-zinc-300">
+            <figure className="group relative mx-auto mb-4 size-36 overflow-hidden rounded-full border-4 border-zinc-900 bg-zinc-300 shadow-lg">
               {profileImageObjectURL || profileImageUrl ? (
                 <Image
                   src={profileImageObjectURL || profileImageUrl}
-                  alt="Profile picture"
+                  alt={`${name || "User"}'s profile picture`}
                   fill
                   className="object-cover"
                   priority
                 />
               ) : (
                 <div
-                  className="size-full flex items-center justify-center bg-zinc-300 text-zinc-500"
+                  className="flex size-full items-center justify-center text-4xl text-zinc-500"
                   aria-hidden="true"
                 >
-                  <span className="text-4xl">🎤</span>
+                  🎤
                 </div>
               )}
 
               {isEditing && (
                 <label
                   htmlFor="profilePicture"
-                  className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
                 >
                   <span className="text-xs font-bold text-zinc-100">
                     Change
@@ -328,19 +341,18 @@ export default function ProfileClient() {
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    className="hidden"
-                    aria-label="Upload new profile picture"
+                    className="sr-only"
                   />
                 </label>
               )}
-            </div>
+            </figure>
 
             {isEditing ? (
               <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <div>
                   <label
                     htmlFor="display-name"
-                    className="text-md font-bold text-zinc-900 uppercase mb-1 block"
+                    className="mb-1 block text-sm font-bold uppercase"
                   >
                     Display Name
                   </label>
@@ -349,15 +361,16 @@ export default function ProfileClient() {
                     id="display-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 outline-none"
+                    className="w-full rounded-lg border border-zinc-400 bg-zinc-100 p-2 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50"
                     placeholder="Stage Name"
                     required
+                    aria-required="true"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="bio"
-                    className="text-sm font-bold text-zinc-900 uppercase mb-1 block"
+                    className="mb-1 block text-sm font-bold uppercase"
                   >
                     Personal Note / Bio
                   </label>
@@ -365,7 +378,7 @@ export default function ProfileClient() {
                     id="bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 outline-none text-sm resize-none"
+                    className="w-full resize-none rounded-lg border border-zinc-400 bg-zinc-100 p-2 text-sm focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50"
                     rows={4}
                     placeholder="Tell us a bit about yourself..."
                   />
@@ -373,40 +386,42 @@ export default function ProfileClient() {
                 <div className="flex gap-2 pt-2">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-900 hover:bg-blue-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition shadow-md"
+                    className="flex-1 rounded-lg bg-blue-900 py-2 text-sm font-bold text-zinc-100 shadow-md transition hover:bg-blue-700"
                   >
                     Save
                   </button>
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="flex-1 bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition shadow-md"
+                    className="flex-1 rounded-lg bg-red-900 py-2 text-sm font-bold text-zinc-100 shadow-md transition hover:bg-red-700"
                   >
                     Cancel
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="text-center w-full">
+              <div className="w-full text-center">
                 {bio ? (
-                  <p className="text-zinc-800 text-md mb-6 italic border-t border-zinc-400 pt-4">
+                  <blockquote className="mb-6 border-t border-zinc-400 pt-4 text-zinc-800 italic">
                     &ldquo;{bio}&rdquo;
-                  </p>
+                  </blockquote>
                 ) : (
-                  <p className="text-zinc-800 text-sm mb-6 mt-2 text-zinc-500 italic">
+                  <p className="mt-2 mb-6 text-sm text-zinc-500 italic">
                     No bio set.
                   </p>
                 )}
                 <div className="space-y-3">
                   <button
+                    type="button"
                     onClick={() => setIsEditing(true)}
-                    className="w-full bg-green-900 hover:bg-green-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                    className={btnEdit}
                   >
                     Edit Profile
                   </button>
                   <button
+                    type="button"
                     onClick={handleSignOut}
-                    className="w-full bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
+                    className={btnSignOut}
                   >
                     Sign Out
                   </button>
@@ -415,18 +430,19 @@ export default function ProfileClient() {
             )}
           </div>
         </section>
-      </div>
+      </aside>
 
-      {/* Right Column: Saved Events */}
-      <div className="lg:col-span-2">
-        <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px] shadow-xl backdrop-blur-sm">
-          <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center justify-center lg:justify-start gap-2 font-heading">
+      {/* Saved Events */}
+      <section aria-labelledby="events-heading" className="lg:col-span-2">
+        <div className="min-h-[500px] rounded-lg border border-zinc-700 bg-zinc-800/80 p-6 shadow-xl backdrop-blur-sm">
+          <h2
+            id="events-heading"
+            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-zinc-100 lg:justify-start"
+          >
             <span aria-hidden="true">🎟️</span> Saved Events
             {!isEventsLoading && (
-              <span
-                className="bg-zinc-700 text-zinc-300 text-xs px-2 py-1 rounded-full"
-                aria-label={`${savedEvents.length} events`}
-              >
+              <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs text-zinc-300">
+                <span className="sr-only">Total: </span>
                 {savedEvents.length}
               </span>
             )}
@@ -434,108 +450,106 @@ export default function ProfileClient() {
 
           {isEventsLoading ? (
             <div
-              className="space-y-4"
               role="status"
               aria-label="Loading events"
+              className="space-y-4"
             >
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="bg-zinc-900 border border-zinc-700 rounded-lg p-5 animate-pulse"
+                  className="animate-pulse rounded-lg border border-zinc-700 bg-zinc-900 p-5"
                 >
-                  <div className="h-5 bg-zinc-700 rounded w-1/2 mb-3" />
-                  <div className="h-4 bg-zinc-700 rounded w-3/4 mb-2" />
-                  <div className="h-4 bg-zinc-700 rounded w-1/4 mb-3" />
-                  <div className="h-3 bg-zinc-700 rounded w-full" />
+                  <div className="mb-3 h-5 w-1/2 rounded bg-zinc-700" />
+                  <div className="mb-2 h-4 w-3/4 rounded bg-zinc-700" />
+                  <div className="mb-3 h-4 w-1/4 rounded bg-zinc-700" />
+                  <div className="h-3 w-full rounded bg-zinc-700" />
                 </div>
               ))}
-              <p className="text-center text-zinc-500 mt-4 sr-only">
-                Loading saved events...
-              </p>
+              <p className="sr-only">Loading saved events...</p>
             </div>
           ) : savedEvents.length > 0 ? (
-            <div className="space-y-4">
+            <ul className="space-y-4">
               {savedEvents.map((event) => (
-                <article
-                  key={event.id}
-                  className="group relative bg-zinc-900 border border-zinc-700 rounded-lg p-5 hover:border-amber-300 transition-all hover:shadow-lg flex flex-col sm:flex-row gap-4 justify-between text-left"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h3 className="text-lg font-bold text-amber-300 group-hover:text-amber-200 transition-colors font-heading">
-                        {event.name}
-                      </h3>
-                      {event.festival && (
-                        <span className="bg-purple-900 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
-                          Festival
-                        </span>
-                      )}
-                      {event.isMusic && (
-                        <span className="bg-blue-900 text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
-                          Music
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
-                      <span aria-hidden="true">📍</span>
-                      <span className="sr-only">Location:</span>{" "}
-                      {event.location}
-                    </p>
-                    <p className="text-zinc-300 text-xs mb-3 flex items-center gap-1">
-                      <span aria-hidden="true">📅</span>
-                      <span className="sr-only">Date:</span> {event.date}{" "}
-                      {event.isRecurring && "(Recurring)"}
-                    </p>
-                    {event.details && (
-                      <div className="text-zinc-300 text-sm line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
+                <li key={event.id}>
+                  <article className="group relative flex flex-col justify-between gap-4 rounded-lg border border-zinc-700 bg-zinc-900 p-5 text-left transition-all hover:border-amber-300 hover:shadow-lg sm:flex-row">
+                    <div className="flex-1">
+                      <header className="mb-1 flex flex-wrap items-center gap-2">
+                        <h3 className="font-heading text-lg font-bold text-amber-300 transition-colors group-hover:text-amber-200">
+                          {event.name}
+                        </h3>
+                        {event.festival && (
+                          <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
+                            Festival
+                          </span>
+                        )}
+                        {event.isMusic && (
+                          <span className="rounded bg-blue-900 px-2 py-0.5 text-[10px] font-bold text-blue-200 uppercase">
+                            Music
+                          </span>
+                        )}
+                      </header>
+                      <p className="mb-1 flex items-center gap-1 text-sm text-zinc-300">
+                        <span aria-hidden="true">📍</span>
+                        <span className="sr-only">Location:</span>
+                        {event.location}
+                      </p>
+                      <p className="mb-3 flex items-center gap-1 text-xs text-zinc-300">
+                        <span aria-hidden="true">📅</span>
+                        <span className="sr-only">Date:</span>
+                        {event.date}
+                        {event.isRecurring && " (Recurring)"}
+                      </p>
+                      {event.details && (
                         <div
+                          className="line-clamp-2 text-sm text-zinc-300 transition-all duration-300 group-hover:line-clamp-none"
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex sm:flex-col justify-between items-end gap-2 min-w-[100px]">
-                    <Link
-                      href={`/MicFinder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
-                      className="text-sm text-zinc-300 hover:text-amber-300 underline transition-colors"
-                    >
-                      Find on Map
-                    </Link>
-                    <button
-                      onClick={() => handleDeleteEvent(event.id)}
-                      disabled={isDeleting === event.id}
-                      className={`px-3 py-1 rounded-lg text-sm font-semibold transition border disabled:opacity-50 ${
-                        isDeleting === event.id
-                          ? "bg-zinc-700 text-zinc-500 border-zinc-600 cursor-not-allowed"
-                          : "text-red-400 hover:text-red-100 hover:bg-red-900/50 border-red-500 hover:border-red-400"
-                      }`}
-                      aria-label={`Remove event ${event.name}`}
-                    >
-                      {isDeleting === event.id ? "Removing..." : "Remove"}
-                    </button>
-                  </div>
-                </article>
+                      )}
+                    </div>
+                    <footer className="flex min-w-[100px] items-end justify-between gap-2 sm:flex-col">
+                      <Link
+                        href={`/MicFinder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
+                        className="text-sm text-zinc-300 underline transition-colors hover:text-amber-300"
+                      >
+                        Find on Map
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteEvent(event.id, event.name)}
+                        disabled={isDeleting === event.id}
+                        className={`rounded-lg border px-3 py-1 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                          isDeleting === event.id
+                            ? "border-zinc-600 bg-zinc-700 text-zinc-500"
+                            : "border-red-500 text-red-400 hover:border-red-400 hover:bg-red-900/50 hover:text-red-100"
+                        }`}
+                        aria-label={`Remove ${event.name}`}
+                      >
+                        {isDeleting === event.id ? "Removing..." : "Remove"}
+                      </button>
+                    </footer>
+                  </article>
+                </li>
               ))}
-            </div>
+            </ul>
           ) : (
-            <div className="flex flex-col items-center justify-center h-64 text-zinc-500 border-2 border-dashed border-zinc-700 rounded-lg">
-              <span className="text-4xl mb-2" aria-hidden="true">
+            <div className="flex h-64 flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 text-center text-zinc-500">
+              <span className="mb-2 text-4xl" aria-hidden="true">
                 📭
               </span>
-              <p className="text-lg font-semibold font-heading">
+              <p className="font-heading text-lg font-semibold">
                 No events saved yet
               </p>
-              <p className="text-sm mb-4">Go find some mics to hit!</p>
+              <p className="mb-4 text-sm">Go find some mics to hit!</p>
               <Link
                 href="/MicFinder"
-                className="bg-amber-300 hover:bg-amber-400 text-zinc-950 px-4 py-2 rounded-lg font-bold transition shadow-lg hover:scale-105"
+                className="rounded-lg bg-amber-300 px-4 py-2 font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-amber-400"
               >
                 Go to MicFinder
               </Link>
             </div>
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

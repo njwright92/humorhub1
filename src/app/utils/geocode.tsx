@@ -33,7 +33,7 @@ export async function getLatLng(
   latitude?: number,
   longitude?: number,
   city?: string,
-  state?: string,
+  state?: string
 ): Promise<LatLng | CityAndState> {
   if (!API_KEY) {
     throw new Error("Configuration Error: Maps API Key not found.");

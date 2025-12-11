@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { success: false, error: "Missing authorization header" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (!valid || !uid) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     console.error("Fetch profile error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch profile" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { success: false, error: "Missing authorization header" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     if (!valid || !uid) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     console.error("Save profile error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to save profile" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -64,7 +64,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
         lng,
       };
     },
-    [],
+    []
   );
 
   const handleSubmit = useCallback(
@@ -138,7 +138,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
                 isFestival: finalEventData.isFestival ? "Yes" : "No",
                 user_email: finalEventData.email || "No email provided",
               },
-              process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string,
+              process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY as string
             );
           } catch (emailError) {
             console.warn("EmailJS failed:", emailError);
@@ -157,7 +157,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
         setIsSubmitting(false);
       }
     },
-    [event, prepareEventData, isSubmitting, resetForm, showToast, onClose],
+    [event, prepareEventData, isSubmitting, resetForm, showToast, onClose]
   );
 
   const handleChange = useCallback(
@@ -165,14 +165,14 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
       const { name, value } = e.target;
       setEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
     },
-    [],
+    []
   );
 
   const handleCheckboxChange = useCallback(
     (name: "isRecurring" | "isFestival", checked: boolean) => {
       setEvent((prevEvent) => ({ ...prevEvent, [name]: checked }));
     },
-    [],
+    []
   );
 
   return (
@@ -184,13 +184,13 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
       aria-labelledby="event-form-title"
     >
       <div
-        className="relative w-full max-w-md max-h-[90vh] flex flex-col"
+        className="relative flex max-h-[90vh] w-full max-w-md flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 right-4 z-10 text-zinc-500 hover:text-red-600 transition-colors"
+          className="absolute top-4 right-4 z-10 text-zinc-500 transition-colors hover:text-red-600"
           aria-label="Close modal"
         >
           <svg
@@ -211,12 +211,12 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="w-full overflow-auto bg-zinc-200 p-6 rounded-lg shadow-2xl border-2 border-zinc-900"
+          className="w-full overflow-auto rounded-lg border-2 border-zinc-900 bg-zinc-200 p-6 shadow-2xl"
         >
           {formErrors && (
             <div
               role="alert"
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm font-bold"
+              className="mb-4 rounded border border-red-400 bg-red-100 px-4 py-2 text-center text-sm font-bold text-red-700"
             >
               {formErrors}
             </div>
@@ -224,13 +224,13 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
 
           <h1
             id="event-form-title"
-            className="text-3xl font-bold text-center text-zinc-900 mb-2 font-heading"
+            className="font-heading mb-2 text-center text-3xl font-bold text-zinc-900"
           >
             Event Form
           </h1>
 
           <p
-            className="text-red-600 text-center mb-4 text-sm font-semibold"
+            className="mb-4 text-center text-sm font-semibold text-red-600"
             aria-hidden="true"
           >
             * Indicates required fields
@@ -239,7 +239,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           {/* Event Name */}
           <label
             htmlFor="event-name"
-            className="block text-zinc-900 font-bold mb-1"
+            className="mb-1 block font-bold text-zinc-900"
           >
             Event Name <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
@@ -250,7 +250,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             name="name"
             value={event.name}
             onChange={handleChange}
-            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full rounded-lg border-2 border-zinc-400 p-2 text-zinc-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
             aria-required="true"
             autoComplete="off"
@@ -260,7 +260,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           {/* Location */}
           <label
             htmlFor="event-location"
-            className="block text-zinc-900 font-bold mb-1"
+            className="mb-1 block font-bold text-zinc-900"
           >
             Location (Full Address) <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
@@ -271,7 +271,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             name="location"
             value={event.location}
             onChange={handleChange}
-            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full rounded-lg border-2 border-zinc-400 p-2 text-zinc-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
             aria-required="true"
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
@@ -279,73 +279,73 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           />
 
           {/* Recurring & Festival Options */}
-          <fieldset className="grid grid-cols-2 gap-4 mb-4">
+          <fieldset className="mb-4 grid grid-cols-2 gap-4">
             <legend className="sr-only">Event options</legend>
 
-            <div className="bg-zinc-100 p-2 rounded-lg text-center border border-zinc-300">
+            <div className="rounded-lg border border-zinc-300 bg-zinc-100 p-2 text-center">
               <span
-                className="text-zinc-900 font-bold text-sm"
+                className="text-sm font-bold text-zinc-900"
                 id="recurring-label"
               >
                 Recurring?
               </span>
               <div
-                className="flex justify-center gap-4 mt-2"
+                className="mt-2 flex justify-center gap-4"
                 role="radiogroup"
                 aria-labelledby="recurring-label"
               >
-                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
+                <label className="flex items-center gap-1 text-sm font-medium text-zinc-800">
                   <input
                     type="radio"
                     name="isRecurring"
                     checked={event.isRecurring === true}
                     onChange={() => handleCheckboxChange("isRecurring", true)}
-                    className="accent-green-600 size-4"
+                    className="size-4 accent-green-600"
                   />
                   Yes
                 </label>
-                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
+                <label className="flex items-center gap-1 text-sm font-medium text-zinc-800">
                   <input
                     type="radio"
                     name="isRecurring"
                     checked={event.isRecurring === false}
                     onChange={() => handleCheckboxChange("isRecurring", false)}
-                    className="accent-red-500 size-4"
+                    className="size-4 accent-red-500"
                   />
                   No
                 </label>
               </div>
             </div>
 
-            <div className="bg-zinc-100 p-2 rounded-lg text-center border border-zinc-300">
+            <div className="rounded-lg border border-zinc-300 bg-zinc-100 p-2 text-center">
               <span
-                className="text-zinc-900 font-bold text-sm"
+                className="text-sm font-bold text-zinc-900"
                 id="festival-label"
               >
                 Festival?
               </span>
               <div
-                className="flex justify-center gap-4 mt-2"
+                className="mt-2 flex justify-center gap-4"
                 role="radiogroup"
                 aria-labelledby="festival-label"
               >
-                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
+                <label className="flex items-center gap-1 text-sm font-medium text-zinc-800">
                   <input
                     type="radio"
                     name="isFestival"
                     checked={event.isFestival === true}
                     onChange={() => handleCheckboxChange("isFestival", true)}
-                    className="accent-green-600 size-4"
+                    className="size-4 accent-green-600"
                   />
                   Yes
                 </label>
-                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
+                <label className="flex items-center gap-1 text-sm font-medium text-zinc-800">
                   <input
                     type="radio"
                     name="isFestival"
                     checked={event.isFestival === false}
                     onChange={() => handleCheckboxChange("isFestival", false)}
-                    className="accent-red-500 size-4"
+                    className="size-4 accent-red-500"
                   />
                   No
                 </label>
@@ -356,13 +356,13 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           {/* Details */}
           <label
             htmlFor="event-details"
-            className="block text-zinc-900 font-bold mb-1"
+            className="mb-1 block font-bold text-zinc-900"
           >
             Details <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
           {event.isRecurring && (
-            <p className="text-xs text-red-600 font-bold mb-1" role="note">
+            <p className="mb-1 text-xs font-bold text-red-600" role="note">
               * Please include Frequency (e.g. Weekly)
             </p>
           )}
@@ -375,14 +375,14 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             aria-required="true"
             autoComplete="off"
             rows={4}
-            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600 resize-y"
+            className="mb-4 w-full resize-y rounded-lg border-2 border-zinc-400 p-2 text-zinc-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
           />
 
           {/* Date */}
           <label
             htmlFor="event-date"
-            className="block text-zinc-900 font-bold mb-1"
+            className="mb-1 block font-bold text-zinc-900"
           >
             Date <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
@@ -400,13 +400,13 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
                 date: dateStr ? new Date(dateStr + "T12:00:00") : null,
               });
             }}
-            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full rounded-lg border-2 border-zinc-400 p-2 text-zinc-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
           />
 
           {/* Email */}
           <label
             htmlFor="event-email"
-            className="block text-zinc-900 font-bold mb-1 text-sm"
+            className="mb-1 block text-sm font-bold text-zinc-900"
           >
             Email (Optional for Verification)
           </label>
@@ -416,7 +416,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             name="email"
             value={event.email || ""}
             onChange={handleChange}
-            className="w-full p-2 mb-6 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-6 w-full rounded-lg border-2 border-zinc-400 p-2 text-zinc-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             placeholder="yourname@example.com"
             autoComplete="email"
           />
@@ -424,7 +424,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 bg-green-600 hover:bg-green-700 text-zinc-950 font-bold rounded-lg shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
+            className="w-full rounded-lg bg-green-600 py-3 font-bold text-zinc-950 shadow-lg transition-transform hover:scale-[1.02] hover:bg-green-700 disabled:opacity-50"
           >
             {isSubmitting ? "Submitting..." : "Submit Event"}
           </button>
