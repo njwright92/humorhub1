@@ -286,7 +286,7 @@ export default function ProfileClient() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto animate-fade-in">
+    <div className="grid lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto animate-fade-in">
       {/* Left Column: Profile Card */}
       <div className="lg:col-span-1">
         <section className="bg-zinc-200 border border-zinc-300 p-4 rounded-lg shadow-lg sticky top-24 text-zinc-900">
@@ -297,17 +297,20 @@ export default function ProfileClient() {
               </h2>
             )}
 
-            <div className="relative w-36 h-36 mb-4 mx-auto group rounded-full overflow-hidden border-4 border-zinc-900 shadow-lg bg-zinc-300">
+            <div className="relative size-36 mb-4 mx-auto group rounded-full overflow-hidden border-4 border-zinc-900 shadow-lg bg-zinc-300">
               {profileImageObjectURL || profileImageUrl ? (
                 <Image
                   src={profileImageObjectURL || profileImageUrl}
-                  alt="Profile"
+                  alt="Profile picture"
                   fill
                   className="object-cover"
                   priority
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-zinc-300 text-zinc-500">
+                <div
+                  className="size-full flex items-center justify-center bg-zinc-300 text-zinc-500"
+                  aria-hidden="true"
+                >
                   <span className="text-4xl">🎤</span>
                 </div>
               )}
@@ -315,7 +318,7 @@ export default function ProfileClient() {
               {isEditing && (
                 <label
                   htmlFor="profilePicture"
-                  className="absolute inset-0 flex items-center justify-center bg-black/50 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                 >
                   <span className="text-xs font-bold text-zinc-100">
                     Change
@@ -326,13 +329,14 @@ export default function ProfileClient() {
                     accept="image/*"
                     onChange={handleImageChange}
                     className="hidden"
+                    aria-label="Upload new profile picture"
                   />
                 </label>
               )}
             </div>
 
             {isEditing ? (
-              <div className="w-full space-y-4">
+              <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <div>
                   <label
                     htmlFor="display-name"
@@ -345,8 +349,9 @@ export default function ProfileClient() {
                     id="display-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 outline-none"
+                    className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 outline-none"
                     placeholder="Stage Name"
+                    required
                   />
                 </div>
                 <div>
@@ -360,26 +365,27 @@ export default function ProfileClient() {
                     id="bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 outline-none text-sm"
+                    className="w-full bg-zinc-100 border border-zinc-400 rounded-lg p-2 text-zinc-900 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 outline-none text-sm resize-none"
                     rows={4}
                     placeholder="Tell us a bit about yourself..."
                   />
                 </div>
                 <div className="flex gap-2 pt-2">
                   <button
-                    onClick={handleSubmit}
-                    className="flex-1 bg-blue-900 hover:bg-blue-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition cursor-pointer shadow-md"
+                    type="submit"
+                    className="flex-1 bg-blue-900 hover:bg-blue-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition shadow-md"
                   >
                     Save
                   </button>
                   <button
+                    type="button"
                     onClick={handleCancel}
-                    className="flex-1 bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition cursor-pointer shadow-md"
+                    className="flex-1 bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-bold text-sm transition shadow-md"
                   >
                     Cancel
                   </button>
                 </div>
-              </div>
+              </form>
             ) : (
               <div className="text-center w-full">
                 {bio ? (
@@ -387,18 +393,20 @@ export default function ProfileClient() {
                     &ldquo;{bio}&rdquo;
                   </p>
                 ) : (
-                  <p className="text-zinc-800 text-sm mb-6 mt-2">No bio set.</p>
+                  <p className="text-zinc-800 text-sm mb-6 mt-2 text-zinc-500 italic">
+                    No bio set.
+                  </p>
                 )}
                 <div className="space-y-3">
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="w-full bg-green-900 hover:bg-green-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg cursor-pointer"
+                    className="w-full bg-green-900 hover:bg-green-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
                   >
                     Edit Profile
                   </button>
                   <button
                     onClick={handleSignOut}
-                    className="w-full bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg cursor-pointer"
+                    className="w-full bg-red-900 hover:bg-red-700 text-zinc-100 py-2 rounded-lg font-semibold text-sm transition shadow-lg"
                   >
                     Sign Out
                   </button>
@@ -413,16 +421,23 @@ export default function ProfileClient() {
       <div className="lg:col-span-2">
         <div className="bg-zinc-800/80 border border-zinc-700 rounded-lg p-6 min-h-[500px] shadow-xl backdrop-blur-sm">
           <h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center justify-center lg:justify-start gap-2 font-heading">
-            <span>🎟️</span> Saved Events
+            <span aria-hidden="true">🎟️</span> Saved Events
             {!isEventsLoading && (
-              <span className="bg-zinc-700 text-zinc-300 text-xs px-2 py-1 rounded-full">
+              <span
+                className="bg-zinc-700 text-zinc-300 text-xs px-2 py-1 rounded-full"
+                aria-label={`${savedEvents.length} events`}
+              >
                 {savedEvents.length}
               </span>
             )}
           </h2>
 
           {isEventsLoading ? (
-            <div className="space-y-4">
+            <div
+              className="space-y-4"
+              role="status"
+              aria-label="Loading events"
+            >
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -434,14 +449,14 @@ export default function ProfileClient() {
                   <div className="h-3 bg-zinc-700 rounded w-full" />
                 </div>
               ))}
-              <p className="text-center text-zinc-500 mt-4">
+              <p className="text-center text-zinc-500 mt-4 sr-only">
                 Loading saved events...
               </p>
             </div>
           ) : savedEvents.length > 0 ? (
             <div className="space-y-4">
               {savedEvents.map((event) => (
-                <div
+                <article
                   key={event.id}
                   className="group relative bg-zinc-900 border border-zinc-700 rounded-lg p-5 hover:border-amber-300 transition-all hover:shadow-lg flex flex-col sm:flex-row gap-4 justify-between text-left"
                 >
@@ -462,10 +477,13 @@ export default function ProfileClient() {
                       )}
                     </div>
                     <p className="text-zinc-300 text-sm mb-1 flex items-center gap-1">
-                      <span>📍</span> {event.location}
+                      <span aria-hidden="true">📍</span>
+                      <span className="sr-only">Location:</span>{" "}
+                      {event.location}
                     </p>
                     <p className="text-zinc-300 text-xs mb-3 flex items-center gap-1">
-                      <span>📅</span> {event.date}{" "}
+                      <span aria-hidden="true">📅</span>
+                      <span className="sr-only">Date:</span> {event.date}{" "}
                       {event.isRecurring && "(Recurring)"}
                     </p>
                     {event.details && (
@@ -486,24 +504,31 @@ export default function ProfileClient() {
                     <button
                       onClick={() => handleDeleteEvent(event.id)}
                       disabled={isDeleting === event.id}
-                      className={`px-3 py-1 rounded-lg text-sm font-semibold transition border cursor-pointer ${isDeleting === event.id ? "bg-zinc-700 text-zinc-500 border-zinc-600 cursor-not-allowed" : "text-red-400 hover:text-red-100 hover:bg-red-900/50 border-red-500 hover:border-red-400"}`}
+                      className={`px-3 py-1 rounded-lg text-sm font-semibold transition border disabled:opacity-50 ${
+                        isDeleting === event.id
+                          ? "bg-zinc-700 text-zinc-500 border-zinc-600 cursor-not-allowed"
+                          : "text-red-400 hover:text-red-100 hover:bg-red-900/50 border-red-500 hover:border-red-400"
+                      }`}
+                      aria-label={`Remove event ${event.name}`}
                     >
                       {isDeleting === event.id ? "Removing..." : "Remove"}
                     </button>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-64 text-zinc-500 border-2 border-dashed border-zinc-700 rounded-lg">
-              <span className="text-4xl mb-2">📭</span>
+              <span className="text-4xl mb-2" aria-hidden="true">
+                📭
+              </span>
               <p className="text-lg font-semibold font-heading">
                 No events saved yet
               </p>
               <p className="text-sm mb-4">Go find some mics to hit!</p>
               <Link
                 href="/MicFinder"
-                className="bg-amber-300 hover:bg-amber-400 text-zinc-950 px-4 py-2 rounded-lg font-bold transition shadow-lg transform hover:scale-105"
+                className="bg-amber-300 hover:bg-amber-400 text-zinc-950 px-4 py-2 rounded-lg font-bold transition shadow-lg hover:scale-105"
               >
                 Go to MicFinder
               </Link>

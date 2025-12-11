@@ -158,8 +158,12 @@ export default function MicFinderPage() {
       <Header />
       <main className="flex flex-col p-2 text-zinc-200 text-center md:ml-20 min-h-screen">
         <div className="flex flex-col items-center animate-fade-in">
-          <div className="border border-red-400 text-red-700 px-2 py-1 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm sm:text-md max-w-2xl mx-auto">
-            <p className="m-0">
+          {/* Alert Banner */}
+          <div
+            role="alert"
+            className="border border-red-400 text-red-700 px-3 py-2 rounded-lg shadow-lg text-center mb-3 bg-zinc-200 text-sm max-w-2xl mx-auto"
+          >
+            <p>
               <strong className="font-bold">📢 Note: </strong>
               Open mic events evolve quickly. See something outdated?{" "}
               <Link
@@ -172,13 +176,13 @@ export default function MicFinderPage() {
             </p>
           </div>
 
-          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-6 mb-4 text-center font-heading">
+          <h1 className="text-amber-300 font-bold tracking-wide drop-shadow-xl rounded-lg text-4xl sm:text-5xl md:text-6xl lg:text-6xl mt-6 mb-4 font-heading">
             Mic Finder
           </h1>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 font-bold drop-shadow-xl text-center font-heading">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 font-bold drop-shadow-xl font-heading">
             Discover Mics and Festivals Near You!
           </h2>
-          <p className="text-center mt-2 mb-6 text-zinc-200 max-w-2xl mx-auto xs:text-sm sm:text-md md:tx-lg">
+          <p className="mt-2 mb-6 text-zinc-200 max-w-2xl mx-auto text-lg">
             Find a Mic tonight or list yours, built by comics for comics. Use
             Mic Finder to connect with your community!
           </p>

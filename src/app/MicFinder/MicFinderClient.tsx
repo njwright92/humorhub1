@@ -326,11 +326,11 @@ export default function MicFinderClient({
   return (
     <>
       {/* Event Form Button Wrapper */}
-      <div className="text-center mb-4 h-16 w-full rounded-lg flex justify-center items-center">
+      <div className="text-center mb-4 h-16 w-full flex justify-center items-center">
         <MemoizedEventForm />
       </div>
 
-      <h3 className="text-md font-semibold text-center mt-4 sm:mt-2 mb-4 xs:mb-2 text-zinc-400">
+      <h3 className="text-base font-semibold text-center mt-2 mb-4 text-zinc-400">
         Find your next show or night out. Pick a city and date!
       </h3>
 
@@ -338,17 +338,15 @@ export default function MicFinderClient({
       <div className="flex flex-col justify-center items-center mt-2 relative z-20 gap-4">
         {/* City Dropdown */}
         <div className="relative w-full max-w-xs min-h-12">
-          <p id="city-select-label" className="sr-only">
+          <label id="city-select-label" className="sr-only">
             Select a City
-          </p>
-          <div
+          </label>
+          <button
             id="city-select"
             aria-labelledby="city-select-label"
-            tabIndex={0}
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
-            className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-none focus:border-zinc-300 focus:shadow-md w-full h-full"
-            role="button"
+            className="w-full h-full bg-zinc-200 text-zinc-900 font-semibold flex items-center justify-center text-center px-3 border-2 border-zinc-500 p-2 rounded-lg shadow-lg focus:border-zinc-300 focus:shadow-md outline-none"
             aria-haspopup="listbox"
             aria-expanded={isFirstDropdownOpen}
             onClick={() => {
@@ -357,7 +355,7 @@ export default function MicFinderClient({
             }}
           >
             {selectedCity || "Select a City"}
-          </div>
+          </button>
 
           {isFirstDropdownOpen && (
             <div className="w-full max-w-xs bg-zinc-100 shadow-lg rounded-lg mt-1 absolute top-full left-0 max-h-48 overflow-y-auto z-30 border border-zinc-300">
@@ -368,16 +366,19 @@ export default function MicFinderClient({
                 onChange={handleSearchInputChange}
                 className="w-full px-3 py-2 border-b bg-zinc-100 text-zinc-900 outline-none"
                 autoFocus
+                aria-label="Filter cities"
               />
-              <ul className="text-zinc-900" role="listbox">
+              <ul role="listbox" className="text-zinc-900">
                 <li
-                  className="px-4 py-3 cursor-pointer bg-amber-100 hover:bg-amber-300 text-center font-bold text-zinc-900 border-b border-zinc-200 flex justify-center items-center gap-2"
+                  className="px-4 py-3 cursor-pointer bg-amber-100 hover:bg-amber-300 text-center font-bold border-b border-zinc-200 flex justify-center items-center gap-2"
                   onClick={() => {
                     fetchUserLocation();
                     setIsFirstDropdownOpen(false);
                   }}
+                  role="option"
+                  aria-selected={false}
                 >
-                  <span>📍</span> Use My Current Location
+                  <span aria-hidden="true">📍</span> Use My Current Location
                 </li>
                 {dropdownCities.map((city) => (
                   <li
@@ -408,21 +409,24 @@ export default function MicFinderClient({
             onTouchStart={handleMapHover}
             value={selectedDate.toLocaleDateString("en-CA")}
             onChange={handleDateChange}
-            className="cursor-pointer bg-zinc-200 text-zinc-900 font-semibold px-2 border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-none focus:border-zinc-300 focus:shadow-md w-full text-center"
+            className="w-full text-center bg-zinc-200 text-zinc-900 font-semibold px-2 border-2 border-zinc-500 p-2 rounded-lg shadow-lg focus:border-zinc-300 focus:shadow-md outline-none cursor-pointer"
           />
         </div>
       </div>
 
       {/* === Map Section === */}
-      <section className="w-full h-100 rounded-lg shadow-lg relative border-2 border-amber-300 mt-6 mb-6 bg-zinc-800">
+      <section
+        aria-label="Event Map"
+        className="w-full h-100 rounded-lg shadow-lg relative border-2 border-amber-300 mt-6 mb-6 bg-zinc-800"
+      >
         <button
           onClick={toggleMapVisibility}
           onMouseEnter={handleMapHover}
           onTouchStart={handleMapHover}
           onFocus={handleMapHover}
-          className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition cursor-pointer font-bold ${
+          className={`absolute z-10 rounded-lg shadow-lg px-4 py-2 transition-transform font-bold ${
             !isMapVisible
-              ? "top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-white shadow-lg font-semibold text-lg hover:scale-105"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-white text-lg hover:scale-105"
               : "top-4 right-4 bg-zinc-900 text-zinc-200 hover:bg-zinc-950 border border-zinc-700"
           }`}
         >
@@ -430,9 +434,10 @@ export default function MicFinderClient({
         </button>
         {hasMapInit && (
           <div
-            className={`h-full w-full transition-opacity duration-100 ${
+            className={`size-full transition-opacity duration-100 ${
               !isMapVisible ? "opacity-0 pointer-events-none" : "opacity-100"
             }`}
+            aria-hidden={!isMapVisible}
           >
             <GoogleMap
               lat={mapConfig.lat}
@@ -445,12 +450,15 @@ export default function MicFinderClient({
         {!isMapVisible && <div className="absolute inset-0 bg-zinc-800" />}
       </section>
 
-      <p className="text-lg text-center sm:mb-1 xs:mb-1 mt-6 mb-6 text-zinc-300 italic">
+      <p className="text-lg text-center my-6 text-zinc-300 italic">
         *Scroll through events to find your next Mic or Festival!*
       </p>
 
       {/* === Results Section === */}
-      <section className="grow bg-transparent text-zinc-200 mt-10 mb-10 shadow-lg rounded-lg w-full">
+      <section
+        aria-label="Search Results"
+        className="grow mt-10 mb-10 shadow-lg rounded-lg w-full"
+      >
         <h2 className="text-3xl font-heading text-center border-b-4 border-amber-300 pb-2 mb-6 rounded-lg shadow-lg">
           {selectedTab === "Mics"
             ? "Comedy Mics"
@@ -465,26 +473,32 @@ export default function MicFinderClient({
           </p>
         ) : filteredEventsForView.length > 0 ? (
           filteredEventsForView.map((event) => (
-            <div
+            <article
               key={event.id}
               className="p-2 mb-4 border-b-2 border-zinc-600 text-zinc-200"
             >
               <h3 className="text-lg font-semibold text-amber-300">
                 {event.name}
               </h3>
-              <p className="text-sm mb-1">📅 Date: {event.date}</p>
-              <p className="text-sm mb-1">📍 Location: {event.location}</p>
+              <p className="text-sm mb-1">
+                <span aria-hidden="true">📅</span> Date: {event.date}
+              </p>
+              <p className="text-sm mb-1">
+                <span aria-hidden="true">📍</span> Location: {event.location}
+              </p>
               <div className="text-sm mb-2">
-                <span className="font-bold">ℹ️ Details:</span>
+                <span className="font-bold">
+                  <span aria-hidden="true">ℹ️</span> Details:
+                </span>
                 <div dangerouslySetInnerHTML={{ __html: event.details }} />
               </div>
               <button
-                className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
+                className="mt-2 mb-2 self-center bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg hover:scale-105 transition-transform"
                 onClick={() => handleEventSave(event)}
               >
                 Save Event
               </button>
-            </div>
+            </article>
           ))
         ) : (
           <p className="text-center py-4 text-zinc-400">
@@ -495,48 +509,43 @@ export default function MicFinderClient({
       </section>
 
       {/* === Tabs === */}
-      <div className="flex flex-wrap justify-center mt-4 gap-2">
-        <button
-          className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform cursor-pointer ${
-            selectedTab === "Mics"
-              ? "bg-blue-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
-              : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-          }`}
-          onClick={() => setSelectedTab("Mics")}
-        >
-          Comedy Mics
-        </button>
-        <button
-          className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform cursor-pointer ${
-            selectedTab === "Festivals"
-              ? "bg-purple-700 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
-              : "bg-purple-100 text-purple-800 hover:bg-purple-200"
-          }`}
-          onClick={() => setSelectedTab("Festivals")}
-        >
-          Festivals
-        </button>
-        <button
-          className={`px-3 py-2 font-bold rounded-xl shadow-lg transition transform cursor-pointer ${
-            selectedTab === "Other"
-              ? "bg-green-600 text-zinc-100 ring-2 ring-zinc-200 shadow-lg"
-              : "bg-green-100 text-green-700 hover:bg-green-200"
-          }`}
-          onClick={() => setSelectedTab("Other")}
-        >
-          Music/All arts
-        </button>
+      {/* === Tabs === */}
+      <div className="flex flex-wrap justify-center mt-4 gap-2" role="tablist">
+        {[
+          { id: "Mics", label: "Comedy Mics", color: "blue" },
+          { id: "Festivals", label: "Festivals", color: "purple" },
+          { id: "Other", label: "Music/All arts", color: "green" },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={selectedTab === tab.id}
+            className={`px-3 py-2 font-bold rounded-xl shadow-lg transition-transform ${
+              selectedTab === tab.id
+                ? `bg-${tab.color}-600 text-zinc-100 ring-2 ring-zinc-200`
+                : `bg-${tab.color}-100 text-${tab.color}-700 hover:bg-${tab.color}-200`
+            }`}
+            // 👇 FIXED: Cast to the specific type instead of 'any'
+            onClick={() =>
+              setSelectedTab(tab.id as "Mics" | "Festivals" | "Other")
+            }
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* === All Cities Filter === */}
-      <section className="grow bg-transparent text-zinc-200 p-2 mt-10 mb-10 shadow-lg rounded-lg w-full">
+      <section
+        aria-label="All Cities Filter"
+        className="grow p-2 my-10 shadow-lg rounded-lg w-full"
+      >
         <div className="flex flex-col justify-center items-center mt-2 relative z-10">
           <div className="relative w-full max-w-xs">
-            <div
+            <button
               id="city-filter-select"
               aria-label="Filter by City"
-              className="cursor-pointer bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center border-2 border-zinc-500 p-2 rounded-lg shadow-lg outline-none focus:border-zinc-300 focus:shadow-md font-bold"
-              role="button"
+              className="w-full bg-zinc-100 text-zinc-900 px-3 flex items-center justify-center text-center border-2 border-zinc-500 p-2 rounded-lg shadow-lg focus:border-zinc-300 focus:shadow-md font-bold outline-none"
               aria-haspopup="listbox"
               aria-expanded={isSecondDropdownOpen}
               onClick={() => {
@@ -545,7 +554,7 @@ export default function MicFinderClient({
               }}
             >
               {filterCity || "All Cities"}
-            </div>
+            </button>
             {isSecondDropdownOpen && (
               <div className="absolute top-full left-0 right-0 z-30 bg-zinc-100 shadow-lg rounded-lg mt-1 overflow-hidden border border-zinc-300">
                 <input
@@ -555,6 +564,7 @@ export default function MicFinderClient({
                   onChange={handleSearchInputChange}
                   className="w-full px-3 py-2 border-b-2 bg-zinc-200 text-zinc-900 outline-none"
                   autoFocus
+                  aria-label="Search filter cities"
                 />
                 <ul
                   className="max-h-48 overflow-y-auto text-zinc-900"
@@ -602,7 +612,7 @@ export default function MicFinderClient({
         )}
         <div
           ref={parentRef}
-          className="w-full h-160 overflow-y-auto contain-strict bg-transparent mt-4 scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 border border-zinc-700 rounded-lg"
+          className="w-full h-160 overflow-y-auto contain-strict mt-4 scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 border border-zinc-700 rounded-lg"
         >
           <div
             className="relative w-full"
@@ -618,27 +628,32 @@ export default function MicFinderClient({
                   className="absolute top-0 left-0 w-full"
                   style={{ transform: `translateY(${virtualItem.start}px)` }}
                 >
-                  <div className="my-2 h-auto flex flex-col p-1 mb-4 border-b border-zinc-600 text-zinc-200 bg-zinc-800/20">
+                  <article className="my-2 h-auto flex flex-col p-1 mb-4 border-b border-zinc-600 text-zinc-200 bg-zinc-800/20">
                     <h3 className="text-xl font-bold text-amber-300">
                       {event.name}
                     </h3>
-                    <p className="text-sm mb-1">📅 Date: {event.date}</p>
                     <p className="text-sm mb-1">
-                      📍 Location: {event.location}
+                      <span aria-hidden="true">📅</span> Date: {event.date}
+                    </p>
+                    <p className="text-sm mb-1">
+                      <span aria-hidden="true">📍</span> Location:{" "}
+                      {event.location}
                     </p>
                     <div className="text-sm mt-2">
-                      <span className="font-bold">ℹ️ Details:</span>
+                      <span className="font-bold">
+                        <span aria-hidden="true">ℹ️</span> Details:
+                      </span>
                       <div
                         dangerouslySetInnerHTML={{ __html: event.details }}
                       />
                     </div>
                     <button
-                      className="bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 mt-2 mb-2 self-center cursor-pointer"
+                      className="mt-2 mb-2 self-center bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg hover:scale-105 transition-transform"
                       onClick={() => handleEventSave(event)}
                     >
                       Save Event
                     </button>
-                  </div>
+                  </article>
                 </div>
               );
             })}

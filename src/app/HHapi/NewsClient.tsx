@@ -96,10 +96,10 @@ export default function NewsClient() {
           aria-live="assertive"
           className="max-w-2xl mx-auto bg-red-900/20 border border-red-500/50 p-4 rounded-lg mb-8 text-center"
         >
-          <p className="text-red-200 font-medium">{error}</p>
+          <p className="text-red-200 font-semibold">{error}</p>
           <button
             onClick={() => fetchNews(selectedCategory, selectedSubcategory)}
-            className="mt-2 text-sm underline text-red-300 hover:text-white cursor-pointer"
+            className="mt-2 text-sm underline text-red-300 hover:text-white transition-colors"
           >
             Try Again
           </button>
@@ -107,22 +107,29 @@ export default function NewsClient() {
       )}
 
       {/* Filter Section */}
-      <section className="bg-zinc-800/80 border border-zinc-700 w-full max-w-4xl mx-auto mb-12 shadow-xl rounded-xl p-6 backdrop-blur-sm">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-          <div className="flex flex-col text-left">
+      <section
+        aria-labelledby="filters-heading"
+        className="bg-zinc-800/80 border-2 border-amber-300/20 w-full max-w-4xl mx-auto mb-12 shadow-xl shadow-amber-900/10 rounded-xl p-6 backdrop-blur-sm"
+      >
+        <h2 id="filters-heading" className="sr-only">
+          Filter News
+        </h2>
+
+        <div className="grid md:grid-cols-3 gap-6 items-end text-left">
+          <div className="flex flex-col">
             <label
-              htmlFor="category-select"
-              className="mb-2 text-xs font-bold text-zinc-400 uppercase tracking-wider"
+              htmlFor="news-category"
+              className="mb-2 text-xs font-bold text-amber-300 uppercase tracking-wider"
             >
               Feed Type
             </label>
             <div className="relative">
               <select
-                id="category-select"
+                id="news-category"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
                 disabled={isPending}
-                className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
+                className="w-full bg-zinc-900 text-zinc-100 border-2 border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 hover:border-zinc-500 transition-all disabled:opacity-70"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -134,20 +141,20 @@ export default function NewsClient() {
             </div>
           </div>
 
-          <div className="flex flex-col text-left">
+          <div className="flex flex-col">
             <label
-              htmlFor="subcategory-select"
-              className="mb-2 text-xs font-bold text-zinc-400 uppercase tracking-wider"
+              htmlFor="news-subcategory"
+              className="mb-2 text-xs font-bold text-amber-300 uppercase tracking-wider"
             >
               Topic
             </label>
             <div className="relative">
               <select
-                id="subcategory-select"
+                id="news-subcategory"
                 value={selectedSubcategory}
                 onChange={handleSubcategoryChange}
                 disabled={isPending}
-                className="w-full bg-zinc-900 text-zinc-100 border border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:ring-2 focus:ring-amber-300 focus:border-transparent outline-none cursor-pointer transition-all hover:border-zinc-500 disabled:opacity-70"
+                className="w-full bg-zinc-900 text-zinc-100 border-2 border-zinc-600 rounded-lg px-4 py-3 appearance-none focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 hover:border-zinc-500 transition-all disabled:opacity-70"
               >
                 {SUBCATEGORIES.map((sub) => (
                   <option key={sub} value={sub}>
@@ -162,7 +169,7 @@ export default function NewsClient() {
           <button
             onClick={resetNews}
             disabled={isPending}
-            className="w-full md:w-auto h-[46px] bg-zinc-700 hover:bg-zinc-600 disabled:opacity-70 text-zinc-200 font-bold rounded-lg transition-all border border-zinc-600 hover:border-zinc-500 shadow-md cursor-pointer"
+            className="h-[46px] bg-zinc-700 hover:bg-zinc-600 text-zinc-200 font-bold rounded-lg border-2 border-zinc-600 hover:border-amber-300/50 shadow-md transition-all disabled:opacity-70"
           >
             Reset Filters
           </button>
@@ -177,21 +184,21 @@ export default function NewsClient() {
         ) : articles.length > 0 ? (
           <div
             key={`${selectedCategory}-${selectedSubcategory}`}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-in"
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-in"
           >
             {articles.map((article, index) => (
               <article
                 key={article.uuid}
-                className="group flex flex-col bg-zinc-800/50 border border-zinc-700 rounded-xl overflow-hidden hover:border-amber-300 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer h-full"
+                className="group flex flex-col bg-zinc-800/50 border border-zinc-700 rounded-xl overflow-hidden hover:border-amber-300 hover:shadow-2xl hover:shadow-amber-900/20 hover:-translate-y-1 transition-all h-full"
               >
                 <div className="relative h-48 w-full bg-zinc-900 overflow-hidden">
                   {article.image_url ? (
                     <Image
                       src={article.image_url}
-                      alt={article.title}
+                      alt=""
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                       priority={index < 3}
                       fetchPriority={
                         index === 0 ? "high" : index < 3 ? "auto" : "low"
@@ -199,37 +206,43 @@ export default function NewsClient() {
                       loading={index < 3 ? "eager" : "lazy"}
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full text-zinc-600">
-                      <span className="text-4xl">Newspaper</span>
+                    <div
+                      className="flex items-center justify-center h-full text-zinc-600 text-4xl"
+                      aria-hidden="true"
+                    >
+                      📰
                     </div>
                   )}
-                  <div className="absolute top-0 right-0 bg-amber-300 text-zinc-950 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  <span className="absolute top-0 right-0 bg-amber-300 text-zinc-950 text-xs font-bold px-3 py-1 rounded-bl-lg">
                     {article.source || "News"}
-                  </div>
+                  </span>
                 </div>
 
                 <div className="flex flex-col grow p-5">
-                  <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-300 transition-colors duration-300 font-heading">
+                  <h2 className="text-lg font-bold text-zinc-100 leading-tight mb-3 line-clamp-3 group-hover:text-amber-300 transition-colors font-heading">
                     {article.title}
                   </h2>
-                  <p className="text-zinc-400 text-sm line-clamp-3 mb-6 grow font-sans">
+                  <p className="text-zinc-400 text-sm line-clamp-3 mb-6 grow">
                     {article.description}
                   </p>
                   <a
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-full py-2.5 bg-zinc-900 hover:bg-zinc-950 text-zinc-300 hover:text-white border border-zinc-700 rounded-lg transition-all font-medium text-sm group-hover:border-amber-300/50 underline"
+                    className="inline-flex items-center justify-center py-2.5 bg-zinc-900 hover:bg-amber-300 text-zinc-300 hover:text-zinc-950 border border-zinc-700 hover:border-amber-300 rounded-lg font-semibold text-sm transition-all"
                   >
                     Read Full Story
+                    <span className="ml-1" aria-hidden="true">
+                      →
+                    </span>
                   </a>
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 text-zinc-500">
-            <p className="text-xl font-heading">
+          <div className="text-center py-20">
+            <p className="text-xl text-zinc-500 font-heading">
               No articles found for this category.
             </p>
           </div>
