@@ -1,38 +1,16 @@
-// src/app/icons/AboutIcon.jsx
-import React from "react";
-
 const AboutIcon = () => (
   <svg
-    className="h-8 w-8 text-zinc-900 group-hover:text-zinc-700 transition-colors"
+    className="size-8 text-zinc-950 group-hover:text-zinc-700 transition-colors"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.5"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     aria-hidden="true"
   >
-    {/* Globe */}
-    <circle
-      cx="12"
-      cy="12"
-      r="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M2 12h20M12 2c4 0 8 4 8 10s-4 10-8 10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    {/* "i" Symbol */}
-    <line
-      x1="12"
-      y1="9"
-      x2="12"
-      y2="15"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <circle cx="12" cy="7" r="0.5" fill="currentColor" />
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 16v-4M12 8h.01" />
   </svg>
 );
 

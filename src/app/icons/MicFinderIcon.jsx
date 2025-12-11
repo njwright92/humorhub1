@@ -1,22 +1,16 @@
-// MicFinderIcon.jsx
 const MicFinderIcon = () => (
   <svg
-    className="h-8 w-8 text-zinc-900 group-hover:text-zinc-700 transition-colors"
+    className="size-8 text-zinc-950 group-hover:text-zinc-700 transition-colors"
+    viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
-    viewBox="0 0 24 24"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
   >
-    <path
-      d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3z"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M19 11c0 7-7 11-7 11s-7-4-7-11a7 7 0 0114 0z"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <circle cx="12" cy="10" r="3" />
   </svg>
 );
 

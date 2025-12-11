@@ -1,17 +1,15 @@
-// ContactIcon.jsx
 const ContactIcon = () => (
   <svg
-    className="h-8 w-8 text-zinc-900 group-hover:text-zinc-700 transition-colors"
+    className="size-8 text-zinc-950 group-hover:text-zinc-700 transition-colors"
+    viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="2"
-    viewBox="0 0 24 24"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
   >
-    <path
-      d="M22 16.92V20a2 2 0 01-2.18 2A19.79 19.79 0 012 4.18 2 2 0 014 2h3.09a1 1 0 011 .75 12.73 12.73 0 00.36 1.54 1 1 0 01-.23 1L6.21 7.21a16 16 0 008.58 8.58l1.92-1.92a1 1 0 011-.23 12.73 12.73 0 001.54.36 1 1 0 01.75 1V20z"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
   </svg>
 );
 

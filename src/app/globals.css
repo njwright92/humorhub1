@@ -1,59 +1,30 @@
 @import "tailwindcss";
 
-/* ===== Tailwind v4 Theme Configuration ===== */
 @theme {
-  /* --- Colors --- */
+  /* --- Brand Color Overrides --- */
   --color-zinc-900: #2e2c28;
   --color-zinc-200: #f4f4f5;
   --color-amber-300: #b35a30;
 
-  /* Custom Colors */
-  --color-accent: #b35a30;
-  --color-accent-hover: #a0512b;
-  --color-dark-bg: #121212;
-  --color-dark-accent: #1f1f1f;
-  --color-dark-text: #f5f5f5;
-
-  /* --- Layout & Spacing --- */
+  /* --- Layout --- */
   --spacing-4_5: 1.125rem;
   --radius-soft: 0.635rem;
 
   /* --- Shadows --- */
   --shadow-lg:
     0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --drop-shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 
-  /* --- Animations --- */
+  /* --- Animation --- */
   --animate-slide-in: slide-in 0.3s forwards;
-  --animate-slide-out: slide-out 0.3s forwards;
-  --animate-gradient: gradient-anim 5s ease infinite;
 
   /* --- Fonts --- */
-
-  /* HEADING: Comic Neue -> Apple Chalkboard -> Windows Ink Free -> Generic Cursive */
   --font-heading:
     var(--font-comic-neue), "Chalkboard SE", "Chalkboard", "Ink Free",
     "Segoe Print", cursive;
-
-  /* BODY: Century Gothic -> AppleGothic -> Sans Serif */
-  /* Note: We removed var(--font-century) since you aren't loading it in layout.tsx */
   --font-body:
     "Century Gothic", "CenturyGothic", "AppleGothic", "Segoe UI", sans-serif;
 }
 
-/* ===== Custom Utilities ===== */
-@utility bg-gradient-radial {
-  background-image: radial-gradient(var(--tw-gradient-stops));
-}
-
-@utility bg-gradient-conic {
-  background-image: conic-gradient(
-    from 180deg at 50% 50%,
-    var(--tw-gradient-stops)
-  );
-}
-
-/* ===== Base Styles ===== */
 @layer base {
   body {
     background-image: linear-gradient(
@@ -62,12 +33,9 @@
       #27272a 80%
     );
     color: var(--color-zinc-200);
-
-    /* Apply Body Font Default */
     font-family: var(--font-body);
   }
 
-  /* Apply Heading Font Default */
   h1,
   h2,
   h3,
@@ -91,7 +59,6 @@
   }
 }
 
-/* ===== Keyframe Definitions ===== */
 @keyframes slide-in {
   0% {
     transform: translateX(-100%);
@@ -100,28 +67,5 @@
   100% {
     transform: translateX(0);
     opacity: 1;
-  }
-}
-
-@keyframes slide-out {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-}
-
-@keyframes gradient-anim {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
   }
 }

@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <>
       {/* Mobile Header Bar */}
-      <header className="sm:hidden p-2 text-zinc-900 sticky top-0 z-50 bg-amber-300 flex justify-between items-center">
+      <header className="sm:hidden p-2 sticky top-0 z-50 bg-amber-300 flex justify-between items-center">
         <Link href="/" aria-label="Home">
           <Image
             src={hh}
@@ -23,7 +23,6 @@ export default function Header() {
           Humor Hub!
         </h1>
 
-        {/* Client Nav handles hamburger + mobile menu */}
         <Nav isMobile />
       </header>
 

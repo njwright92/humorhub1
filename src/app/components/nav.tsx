@@ -200,13 +200,12 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
       <>
         <button
           onClick={toggleMenu}
-          className="text-zinc-950 cursor-pointer hover:scale-105 transition-transform"
+          className="text-zinc-950 hover:scale-105 transition-transform"
           aria-label="Toggle menu"
         >
           <HamburgerIcon />
         </button>
 
-        {/* Mobile Fullscreen Menu */}
         {isMenuOpen && (
           <MobileMenu
             closeMenu={closeMenu}
@@ -232,29 +231,29 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
   if (isDesktop) {
     return (
       <>
-        <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 left-0 top-0 z-50 shadow-lg backdrop-blur-sm">
-          <div className="flex flex-col items-center justify-center space-y-6 mt-4 w-full mx-auto text-zinc-900">
+        <div className="hidden sm:flex flex-col items-center justify-between h-full p-2 w-15 fixed bg-amber-300/90 inset-y-0 left-0 z-50 shadow-lg backdrop-blur-sm">
+          <div className="flex flex-col items-center space-y-6 mt-4 text-zinc-900">
             {/* Logo */}
             <Link
               href="/"
               aria-label="Home"
-              className="group relative transform transition-transform hover:scale-110 text-zinc-900"
+              className="group relative hover:scale-110 transition-transform"
             >
               <Image
                 src={hh}
                 alt="Humor Hub Logo"
                 width={50}
                 height={50}
-                className="rounded-full cursor-pointer border-2 border-zinc-900 mx-auto shadow-lg"
+                className="rounded-full border-2 border-zinc-900 shadow-lg"
                 priority
               />
-              <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg">
+              <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-zinc-950 text-amber-300 text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none font-bold whitespace-nowrap z-50 shadow-lg transition-opacity">
                 Home
               </span>
             </Link>
 
             {/* Search */}
-            <div className="h-8 w-8 transform transition-transform hover:scale-110 mx-auto cursor-pointer relative z-50">
+            <div className="h-8 w-8 hover:scale-110 transition-transform relative z-50">
               <SearchBar
                 isUserSignedIn={isUserSignedIn}
                 setIsAuthModalOpen={setIsAuthModalOpen}
@@ -286,10 +285,10 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
           </div>
 
           {/* Hamburger for full menu */}
-          <div className="mt-auto mb-4 flex flex-col items-center gap-3">
+          <div className="mb-4">
             <button
               onClick={toggleMenu}
-              className="text-zinc-950 hover:text-zinc-700 transform transition-transform hover:scale-110"
+              className="text-zinc-950 hover:text-zinc-700 hover:scale-110 transition-all"
               aria-label="Open full menu"
             >
               <HamburgerIcon />
@@ -297,7 +296,6 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
           </div>
         </div>
 
-        {/* Desktop Menu Overlay */}
         {isMenuOpen && (
           <MobileMenu
             closeMenu={closeMenu}
@@ -337,10 +335,10 @@ const MobileMenu = memo(function MobileMenu({
   handleProtectedRoute,
 }: MobileMenuProps) {
   return (
-    <div className="fixed inset-0 w-full h-full bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-sm animate-slide-in">
+    <div className="fixed inset-0 bg-zinc-900/95 text-zinc-200 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-sm animate-slide-in">
       <button
         onClick={closeMenu}
-        className="self-end cursor-pointer mb-2 p-2 hover:text-amber-300 transition-colors"
+        className="self-end p-2 hover:text-amber-300 transition-colors"
         aria-label="Close menu"
       >
         <CloseIcon />
@@ -388,7 +386,7 @@ const MobileMenu = memo(function MobileMenu({
 // ============ MENU HELPERS ============
 
 const menuItemClass =
-  "flex flex-col items-center p-3 cursor-pointer text-2xl no-underline transition-transform duration-300 bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 w-full text-zinc-200";
+  "flex items-center justify-center p-3 text-2xl bg-zinc-800 rounded-lg shadow-lg hover:bg-zinc-700 hover:scale-105 transition-all w-full text-zinc-200";
 
 function MenuLink({
   href,

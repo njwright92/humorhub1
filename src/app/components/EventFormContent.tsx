@@ -179,6 +179,9 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="event-form-title"
     >
       <div
         className="relative w-full max-w-md max-h-[90vh] flex flex-col"
@@ -186,12 +189,12 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 text-zinc-500 hover:text-red-600 transition-colors"
-          aria-label="Close Modal"
+          type="button"
+          className="absolute top-4 right-4 z-10 text-zinc-500 hover:text-red-600 transition-colors"
+          aria-label="Close modal"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8"
+            className="size-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -211,74 +214,103 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           className="w-full overflow-auto bg-zinc-200 p-6 rounded-lg shadow-2xl border-2 border-zinc-900"
         >
           {formErrors && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm font-bold">
+            <div
+              role="alert"
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm font-bold"
+            >
               {formErrors}
             </div>
           )}
 
-          <h1 className="text-3xl font-bold text-center text-zinc-900 mb-2 font-heading">
+          <h1
+            id="event-form-title"
+            className="text-3xl font-bold text-center text-zinc-900 mb-2 font-heading"
+          >
             Event Form
           </h1>
 
-          <p className="text-red-600 text-center mb-4 text-sm font-semibold">
+          <p
+            className="text-red-600 text-center mb-4 text-sm font-semibold"
+            aria-hidden="true"
+          >
             * Indicates required fields
           </p>
 
+          {/* Event Name */}
           <label
-            htmlFor="eventName"
+            htmlFor="event-name"
             className="block text-zinc-900 font-bold mb-1"
           >
-            Event Name *
+            Event Name <span aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           <input
             type="text"
-            id="eventName"
+            id="event-name"
             name="name"
             value={event.name}
             onChange={handleChange}
-            className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
+            aria-required="true"
             autoComplete="off"
             placeholder="e.g., The Comedy Store Open Mic"
           />
 
+          {/* Location */}
           <label
-            htmlFor="location"
+            htmlFor="event-location"
             className="block text-zinc-900 font-bold mb-1"
           >
-            Location (Full Address) *
+            Location (Full Address) <span aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           <input
             type="text"
-            id="location"
+            id="event-location"
             name="location"
             value={event.location}
             onChange={handleChange}
-            className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
+            aria-required="true"
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
             autoComplete="off"
           />
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          {/* Recurring & Festival Options */}
+          <fieldset className="grid grid-cols-2 gap-4 mb-4">
+            <legend className="sr-only">Event options</legend>
+
             <div className="bg-zinc-100 p-2 rounded-lg text-center border border-zinc-300">
-              <h6 className="text-zinc-900 font-bold text-sm">Recurring?</h6>
-              <div className="flex justify-center gap-4 mt-2">
-                <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
+              <span
+                className="text-zinc-900 font-bold text-sm"
+                id="recurring-label"
+              >
+                Recurring?
+              </span>
+              <div
+                className="flex justify-center gap-4 mt-2"
+                role="radiogroup"
+                aria-labelledby="recurring-label"
+              >
+                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="isRecurring"
                     checked={event.isRecurring === true}
                     onChange={() => handleCheckboxChange("isRecurring", true)}
-                    className="accent-green-600 w-4 h-4"
+                    className="accent-green-600 size-4"
                   />
                   Yes
                 </label>
-                <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
+                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="isRecurring"
                     checked={event.isRecurring === false}
                     onChange={() => handleCheckboxChange("isRecurring", false)}
-                    className="accent-red-500 w-4 h-4"
+                    className="accent-red-500 size-4"
                   />
                   No
                 </label>
@@ -286,94 +318,113 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             </div>
 
             <div className="bg-zinc-100 p-2 rounded-lg text-center border border-zinc-300">
-              <h6 className="text-zinc-900 font-bold text-sm">Festival?</h6>
-              <div className="flex justify-center gap-4 mt-2">
-                <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
+              <span
+                className="text-zinc-900 font-bold text-sm"
+                id="festival-label"
+              >
+                Festival?
+              </span>
+              <div
+                className="flex justify-center gap-4 mt-2"
+                role="radiogroup"
+                aria-labelledby="festival-label"
+              >
+                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="isFestival"
                     checked={event.isFestival === true}
                     onChange={() => handleCheckboxChange("isFestival", true)}
-                    className="accent-green-600 w-4 h-4"
+                    className="accent-green-600 size-4"
                   />
                   Yes
                 </label>
-                <label className="flex items-center gap-1 cursor-pointer text-zinc-800 text-sm font-medium">
+                <label className="flex items-center gap-1 text-zinc-800 text-sm font-medium">
                   <input
-                    type="checkbox"
+                    type="radio"
+                    name="isFestival"
                     checked={event.isFestival === false}
                     onChange={() => handleCheckboxChange("isFestival", false)}
-                    className="accent-red-500 w-4 h-4"
+                    className="accent-red-500 size-4"
                   />
                   No
                 </label>
               </div>
             </div>
-          </div>
+          </fieldset>
 
+          {/* Details */}
           <label
-            htmlFor="details"
+            htmlFor="event-details"
             className="block text-zinc-900 font-bold mb-1"
           >
-            Details *
+            Details <span aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           {event.isRecurring && (
-            <p className="text-xs text-red-600 font-bold mb-1">
+            <p className="text-xs text-red-600 font-bold mb-1" role="note">
               * Please include Frequency (e.g. Weekly)
             </p>
           )}
           <textarea
-            id="details"
+            id="event-details"
             name="details"
             value={event.details}
             onChange={handleChange}
             required
+            aria-required="true"
             autoComplete="off"
             rows={4}
-            className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-4 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600 resize-y"
+            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600 resize-y"
             placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
           />
 
-          <label htmlFor="date" className="block text-zinc-900 font-bold mb-1">
-            Date *
-          </label>
-          <div className="mb-4 relative w-full">
-            <input
-              id="date"
-              type="date"
-              required
-              value={event.date ? event.date.toISOString().split("T")[0] : ""}
-              onChange={(e) => {
-                const dateStr = e.target.value;
-                setEvent({
-                  ...event,
-                  date: dateStr ? new Date(dateStr + "T12:00:00") : null,
-                });
-              }}
-              className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600 cursor-pointer"
-            />
-          </div>
-
+          {/* Date */}
           <label
-            htmlFor="email"
+            htmlFor="event-date"
+            className="block text-zinc-900 font-bold mb-1"
+          >
+            Date <span aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
+          </label>
+          <input
+            id="event-date"
+            type="date"
+            required
+            aria-required="true"
+            value={event.date ? event.date.toISOString().split("T")[0] : ""}
+            onChange={(e) => {
+              const dateStr = e.target.value;
+              setEvent({
+                ...event,
+                date: dateStr ? new Date(dateStr + "T12:00:00") : null,
+              });
+            }}
+            className="w-full p-2 mb-4 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
+          />
+
+          {/* Email */}
+          <label
+            htmlFor="event-email"
             className="block text-zinc-900 font-bold mb-1 text-sm"
           >
-            Email (Optional for Verification):
+            Email (Optional for Verification)
           </label>
           <input
             type="email"
-            id="email"
+            id="event-email"
             name="email"
             value={event.email || ""}
             onChange={handleChange}
-            className="text-zinc-900 border-2 border-zinc-400 rounded-lg p-2 w-full mb-6 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="w-full p-2 mb-6 text-zinc-900 border-2 border-zinc-400 rounded-lg focus:border-green-600 focus:ring-2 focus:ring-green-600"
             placeholder="yourname@example.com"
             autoComplete="email"
           />
 
           <button
             type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-zinc-950 font-bold py-3 rounded-lg shadow-lg transform transition hover:scale-[1.02] cursor-pointer"
             disabled={isSubmitting}
+            className="w-full py-3 bg-green-600 hover:bg-green-700 text-zinc-950 font-bold rounded-lg shadow-lg hover:scale-[1.02] transition-transform disabled:opacity-50"
           >
             {isSubmitting ? "Submitting..." : "Submit Event"}
           </button>

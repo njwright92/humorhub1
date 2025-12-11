@@ -91,7 +91,6 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
   const [isSignIn, setIsSignIn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Reset form when modal closes
   const handleClose = useCallback(() => {
     setEmail("");
     setPassword("");
@@ -122,7 +121,6 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
 
       setIsLoading(true);
       try {
-        // Dynamic imports - only load Firebase when actually submitting
         const [
           { getAuth },
           { createUserWithEmailAndPassword, signInWithEmailAndPassword },
@@ -174,7 +172,6 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
   const handleGoogleSignIn = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Dynamic imports - only load when user clicks Google button
       const [{ getAuth }, { GoogleAuthProvider, signInWithPopup }] =
         await Promise.all([
           import("../../../firebase.config"),
@@ -200,83 +197,101 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
 
   const toggleMode = useCallback(() => {
     setIsSignIn((prev) => !prev);
-    setConfirmPassword(""); // Clear confirm password when switching
+    setConfirmPassword("");
   }, []);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-opacity-75 z-50 flex items-center justify-center backdrop-blur">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="auth-modal-title"
+    >
       <div className="bg-zinc-300 p-6 rounded-lg shadow-lg max-w-sm w-full relative">
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 text-zinc-900 hover:text-zinc-950 transition-colors p-2"
-          aria-label="Close Modal"
+          className="absolute top-2 right-2 p-2 text-zinc-900 hover:text-zinc-950 transition-colors"
+          aria-label="Close modal"
           disabled={isLoading}
+          type="button"
         >
           <CloseIcon />
         </button>
 
-        <h2 className="text-2xl font-bold text-center mb-4 text-zinc-900">
+        <h2
+          id="auth-modal-title"
+          className="text-2xl font-bold text-center mb-4 text-zinc-900"
+        >
           {isSignIn ? "Sign In" : "Sign Up"}
         </h2>
 
-        <form onSubmit={handleAuth} className="space-y-3">
+        <form onSubmit={handleAuth} className="space-y-3" noValidate>
           <div>
-            <label htmlFor="email" className="block text-sm text-zinc-900">
+            <label
+              htmlFor="auth-email"
+              className="block text-sm text-zinc-900 mb-1"
+            >
               Email
             </label>
             <input
               type="email"
-              id="email"
+              id="auth-email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="bg-zinc-100 w-full p-2 rounded-lg"
+              placeholder="you@example.com"
+              className="w-full p-2 bg-zinc-100 rounded-lg"
               autoComplete="email"
               disabled={isLoading}
               required
+              aria-required="true"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm text-zinc-900">
+            <label
+              htmlFor="auth-password"
+              className="block text-sm text-zinc-900 mb-1"
+            >
               Password
             </label>
             <input
               type="password"
-              id="password"
+              id="auth-password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="bg-zinc-100 w-full p-2 rounded-lg"
+              placeholder="••••••••"
+              className="w-full p-2 bg-zinc-100 rounded-lg"
               autoComplete={isSignIn ? "current-password" : "new-password"}
               disabled={isLoading}
               required
+              aria-required="true"
             />
           </div>
 
           {!isSignIn && (
             <div>
               <label
-                htmlFor="confirmPassword"
-                className="block text-sm text-zinc-900"
+                htmlFor="auth-confirm-password"
+                className="block text-sm text-zinc-900 mb-1"
               >
                 Confirm Password
               </label>
               <input
                 type="password"
-                id="confirmPassword"
+                id="auth-confirm-password"
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm Password"
-                className="w-full bg-zinc-100 p-2 rounded-lg"
+                placeholder="••••••••"
+                className="w-full p-2 bg-zinc-100 rounded-lg"
                 autoComplete="new-password"
                 disabled={isLoading}
                 required
+                aria-required="true"
               />
             </div>
           )}
@@ -284,7 +299,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-2 text-zinc-100 font-medium rounded-lg shadow-lg transition-colors mt-2 disabled:opacity-50 cursor-pointer ${
+            className={`w-full py-2 mt-2 font-semibold text-zinc-100 rounded-lg shadow-lg transition-colors disabled:opacity-50 ${
               isSignIn
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-green-600 hover:bg-green-700"
@@ -298,16 +313,19 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
             <button
               type="button"
               onClick={toggleMode}
-              className="text-blue-600 underline cursor-pointer font-medium"
               disabled={isLoading}
+              className="text-blue-600 underline font-medium"
             >
               {isSignIn ? "Sign Up" : "Sign In"}
             </button>
           </p>
         </form>
 
-        <div className="my-2 flex items-center">
-          <p className="mx-auto text-zinc-900 text-sm">OR</p>
+        <div
+          className="my-3 text-center text-sm text-zinc-900"
+          aria-hidden="true"
+        >
+          OR
         </div>
 
         <SocialSignInButton

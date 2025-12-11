@@ -16,7 +16,7 @@ export default function Footer() {
       aria-labelledby="footer-heading"
       id="footer"
     >
-      <div className="mx-auto w-full max-w-screen-2xl p-4 py-6 lg:py-8">
+      <div className="mx-auto max-w-screen-2xl p-4 py-6 lg:py-8">
         <h2 id="footer-heading" className="sr-only">
           Footer
         </h2>
@@ -26,7 +26,7 @@ export default function Footer() {
           Humor Hub - The Hub of Humor!
         </div>
 
-        <p className="text-md md:text-xl mb-8 text-center text-zinc-400 max-w-2xl mx-auto font-normal font-sans">
+        <p className="md:text-xl mb-8 text-center text-zinc-400 max-w-2xl mx-auto">
           Connecting comics and fans with events, tools, and more. Join the fun!
         </p>
 
@@ -40,11 +40,11 @@ export default function Footer() {
             <Image
               src={hh}
               alt="Humor Hub Logo"
-              width={120}
-              height={120}
-              className="rounded-full shadow-xl transition-transform transform group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-800 group-hover:border-amber-300 object-contain"
+              width={100}
+              height={100}
+              className="rounded-full shadow-xl group-hover:scale-110 group-hover:rotate-3 border-4 border-zinc-800 group-hover:border-amber-300 object-contain transition-transform"
               loading="lazy"
-              quality={75}
+              quality={70}
             />
           </Link>
 
@@ -52,10 +52,10 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3 md:w-3/4 md:pr-10">
             {/* Column 1 */}
             <div>
-              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider text-nowrap font-heading">
+              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider whitespace-nowrap font-heading">
                 Get to Know Us
               </h3>
-              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium font-sans">
+              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium">
                 <li>
                   <Link
                     href="/about"
@@ -77,10 +77,10 @@ export default function Footer() {
 
             {/* Column 2 */}
             <div>
-              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider text-nowrap font-heading">
+              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider whitespace-nowrap font-heading">
                 Stay Connected
               </h3>
-              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium font-sans">
+              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium">
                 <li>
                   <a
                     href="https://twitter.com/naterbug321"
@@ -126,34 +126,36 @@ export default function Footer() {
 
             {/* Column 3 */}
             <div>
-              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider text-nowrap font-heading">
+              <h3 className="mb-4 md:mb-6 text-lg md:text-xl font-extrabold text-zinc-200 uppercase tracking-wider whitespace-nowrap font-heading">
                 Legal Info
               </h3>
-              <div className="text-zinc-400 flex flex-col space-y-3 md:space-y-4 font-medium font-sans">
-                <Link
-                  href="/userAgreement"
-                  className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                >
-                  User Agreement
-                </Link>
-                <Link
-                  href="/privacyPolicy"
-                  className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
-                >
-                  Privacy Policy
-                </Link>
-              </div>
+              <ul className="text-zinc-400 space-y-3 md:space-y-4 font-medium">
+                <li>
+                  <Link
+                    href="/userAgreement"
+                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
+                  >
+                    User Agreement
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/privacyPolicy"
+                    className="hover:text-amber-300 hover:underline transition-colors md:text-lg"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-10 pt-4 flex flex-col sm:flex-row-reverse items-center justify-between w-full gap-4 sm:gap-0 border-t border-zinc-950">
-          <div className="flex items-center gap-4">
-            <ScrollToTop />
-          </div>
+        <div className="mt-10 pt-4 flex flex-col sm:flex-row-reverse items-center justify-between gap-4 sm:gap-0 border-t border-zinc-950">
+          <ScrollToTop />
 
-          <span className="text-xs md:text-sm text-zinc-400 font-mono text-left">
+          <span className="text-xs md:text-sm text-zinc-400 font-mono">
             © {currentYear} Humor Hub™. All rights reserved.
           </span>
         </div>

@@ -60,7 +60,7 @@ export default function NewsButton({ children, className }: Props) {
         onClick={handleClick}
         className={
           className ||
-          "bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg transform transition-transform hover:scale-105 hover:outline hover:outline-white w-80 text-center self-center md:self-end cursor-pointer"
+          "bg-amber-300 text-white px-2 py-1 rounded-lg shadow-lg font-semibold text-lg hover:scale-105 hover:outline hover:outline-white w-80 text-center self-center md:self-end transition-transform"
         }
       >
         {children || "Check It Out"}

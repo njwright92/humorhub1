@@ -101,7 +101,7 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
   // Skeleton loader while Google Maps API loads
   if (!apiIsLoaded) {
     return (
-      <div className="h-full w-full bg-zinc-800 animate-pulse flex items-center justify-center text-zinc-500">
+      <div className="h-full w-full bg-zinc-800 animate-pulse flex items-center justify-center text-zinc-300">
         <span className="font-semibold">Loading Map...</span>
       </div>
     );
@@ -114,7 +114,7 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
       mapId="ac1223"
       disableDefaultUI={false}
       clickableIcons={false}
-      className="h-full w-full"
+      className="size-full"
       onClick={handleMapClick}
     >
       <MapHandler place={{ lat, lng }} zoom={zoom} />
@@ -123,12 +123,11 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
         const eventLat = Number(event.lat);
         const eventLng = Number(event.lng);
 
-        // Safety check for markers
         if (isNaN(eventLat) || isNaN(eventLng)) return null;
 
         return (
           <AdvancedMarker
-            key={`${event.id || event.name}-${index}`}
+            key={event.id || `${event.name}-${index}`}
             position={{ lat: eventLat, lng: eventLng }}
             onClick={() => handleMarkerClick(event)}
             title={event.name}
@@ -148,11 +147,16 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
           maxWidth={250}
           pixelOffset={[0, -30]}
         >
-          <div className="p-2 text-center text-zinc-800">
+          <article className="p-2 text-center text-zinc-800">
             <h2 className="font-bold text-lg mb-1">{selectedEvent.name}</h2>
-            <p className="text-sm mb-1">📍 {selectedEvent.location}</p>
+            <p className="text-sm mb-1">
+              <span aria-hidden="true">📍</span>
+              <span className="sr-only">Location:</span>{" "}
+              {selectedEvent.location}
+            </p>
             <p className="text-sm text-zinc-600 mb-2">
-              📅 {selectedEvent.date}
+              <span aria-hidden="true">📅</span>
+              <span className="sr-only">Date:</span> {selectedEvent.date}
             </p>
             {selectedEvent.details && (
               <div
@@ -160,7 +164,7 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
                 dangerouslySetInnerHTML={{ __html: selectedEvent.details }}
               />
             )}
-          </div>
+          </article>
         </InfoWindow>
       )}
     </Map>
@@ -169,16 +173,19 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
 
 InnerMap.displayName = "InnerMap";
 
-// Main export component
 export default function GoogleMap(props: GoogleMapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-  // Handle missing API key gracefully
   if (!apiKey) {
     return (
-      <div className="h-full w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800 flex items-center justify-center min-h-[400px]">
+      <div
+        className="size-full min-h-100 rounded-lg shadow-lg overflow-hidden bg-zinc-800 flex items-center justify-center"
+        role="alert"
+      >
         <div className="text-center text-zinc-400 p-4">
-          <p className="text-lg font-semibold mb-2">⚠️ Map Unavailable</p>
+          <p className="text-lg font-semibold mb-2">
+            <span aria-hidden="true">⚠️</span> Map Unavailable
+          </p>
           <p className="text-sm">Google Maps API key is not configured.</p>
         </div>
       </div>
@@ -186,10 +193,7 @@ export default function GoogleMap(props: GoogleMapProps) {
   }
 
   return (
-    <div
-      className="h-full w-full rounded-lg shadow-lg overflow-hidden bg-zinc-800 relative"
-      style={{ minHeight: "400px" }}
-    >
+    <div className="size-full min-h-100 rounded-lg shadow-lg overflow-hidden bg-zinc-800 relative">
       <APIProvider apiKey={apiKey}>
         <InnerMap {...props} />
       </APIProvider>

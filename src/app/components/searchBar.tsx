@@ -227,7 +227,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
       {!isInputVisible && (
         <button
           onClick={handleToggleInput}
-          className="flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 text-zinc-900 rounded-full transition-colors p-1 cursor-pointer"
+          className="flex items-center justify-center bg-zinc-200 hover:bg-zinc-300 text-zinc-900 rounded-full p-1 transition-colors"
           aria-label="Toggle search"
         >
           <SearchIcon />
@@ -235,7 +235,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
       )}
 
       {isInputVisible && (
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-70 sm:w-80 z-50">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 sm:left-full sm:translate-x-0 sm:ml-4 w-70 sm:w-80 z-50">
           <form
             onSubmit={handleSearch}
             className="flex flex-col items-center rounded-lg bg-zinc-200 shadow-2xl p-2 border border-zinc-400"
@@ -246,7 +246,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               placeholder="Search city, page, or keyword..."
               value={searchTerm}
               onChange={handleInputChange}
-              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full outline-none border-2 border-transparent focus:border-amber-300 transition-colors placeholder:text-zinc-500"
+              className="p-2 text-zinc-950 rounded-lg bg-zinc-100 w-full border-2 border-transparent focus:border-amber-300 transition-colors placeholder:text-zinc-500"
               autoComplete="off"
             />
 
@@ -254,13 +254,13 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               <button
                 type="button"
                 onClick={closeSearchBar}
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-300 hover:bg-zinc-400 transition-colors cursor-pointer"
+                className="flex-1 py-2 text-sm font-semibold text-zinc-900 rounded-lg bg-zinc-300 hover:bg-zinc-400 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-2 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="flex-1 py-2 text-sm font-semibold text-zinc-100 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors"
               >
                 Search
               </button>
@@ -271,7 +271,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                 {suggestions.map((sug, idx) => (
                   <li
                     key={`${sug.type}-${sug.label}-${idx}`}
-                    className="p-2 cursor-pointer hover:bg-zinc-300 text-zinc-900 text-sm flex justify-between items-center transition-colors"
+                    className="p-2 hover:bg-zinc-300 text-zinc-900 text-sm flex justify-between items-center transition-colors"
                     onMouseDown={(e) => {
                       e.preventDefault();
                       handleSelectSuggestion(sug);

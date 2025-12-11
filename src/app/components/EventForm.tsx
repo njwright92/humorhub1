@@ -24,13 +24,13 @@ export default function EventForm() {
   return (
     <>
       <button
-        className="bg-green-600 hover:bg-green-700 text-zinc-950 px-2 py-1 rounded-lg shadow-lg transform transition-transform hover:scale-105 font-bold text-lg tracking-wide cursor-pointer"
+        type="button"
         onClick={handleOpen}
+        className="px-2 py-1 bg-green-600 hover:bg-green-700 text-zinc-950 font-bold text-lg rounded-lg shadow-lg hover:scale-105 transition-transform tracking-wide"
       >
         Add Your Event
       </button>
 
-      {/* Only mount the heavy component when open */}
       {isOpen && <EventFormContent onClose={handleClose} />}
     </>
   );

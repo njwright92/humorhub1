@@ -33,8 +33,17 @@ export function extractCityFromLocation(location: string): string {
 
 export const SelectArrow = () => (
   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-zinc-400">
-    <svg className="fill-current h-4 w-4" viewBox="0 0 20 20">
-      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+    <svg
+      className="size-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
     </svg>
   </div>
 );
