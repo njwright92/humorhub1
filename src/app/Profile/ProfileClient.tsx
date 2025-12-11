@@ -7,20 +7,8 @@ import { useRouter } from "next/navigation";
 import { useToast } from "../components/ToastContext";
 import type { Auth, User } from "firebase/auth";
 import type { FirebaseStorage } from "firebase/storage";
+import type { Event } from "@/app/lib/types";
 
-type SavedEvent = {
-  id: string;
-  date: string;
-  name: string;
-  isRecurring?: boolean;
-  location: string;
-  details: string;
-  festival?: boolean;
-  isMusic?: boolean;
-  savedAt?: string;
-};
-
-// Shared button styles
 const btnBase =
   "w-full rounded-lg py-2 text-sm font-semibold text-zinc-100 shadow-lg transition";
 const btnEdit = `${btnBase} bg-green-900 hover:bg-green-700`;
@@ -29,8 +17,6 @@ const btnSignOut = `${btnBase} bg-red-900 hover:bg-red-700`;
 export default function ProfileClient() {
   const { showToast } = useToast();
   const router = useRouter();
-
-  // Profile state
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [name, setName] = useState("");
@@ -44,7 +30,7 @@ export default function ProfileClient() {
   const [isEventsLoading, setIsEventsLoading] = useState(true);
 
   // Events state
-  const [savedEvents, setSavedEvents] = useState<SavedEvent[]>([]);
+  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   // Refs

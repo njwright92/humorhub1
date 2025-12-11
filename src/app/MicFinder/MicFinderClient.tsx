@@ -101,7 +101,7 @@ const EventCard = memo(function EventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="mb-4 border-b-2 border-zinc-600 p-2 text-left text-zinc-200">
+    <article className="mb-4 items-center rounded-lg border border-zinc-600 p-2 text-zinc-200 shadow-lg">
       <h3 className="text-lg font-semibold text-amber-300">{event.name}</h3>
       <p className="mb-1 text-sm">
         <span aria-hidden="true">📅 </span>
@@ -141,8 +141,8 @@ const VirtualEventCard = memo(function VirtualEventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="my-2 mb-4 flex h-auto flex-col border-b border-zinc-600 bg-zinc-800/20 p-2 text-left text-zinc-200">
-      <h3 className="text-lg font-bold text-amber-300 sm:text-xl">
+    <article className="my-2 mb-4 flex h-auto flex-col rounded-lg border-b border-zinc-600 bg-zinc-800/20 p-2 text-center text-zinc-200 shadow-lg">
+      <h3 className="text-lg font-bold text-amber-300 md:text-xl">
         {event.name}
       </h3>
       <p className="mb-1 text-sm">
@@ -737,7 +737,7 @@ export default function MicFinderClient({
         ) : (
           <div
             ref={parentRef}
-            className="scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 mt-4 h-96 w-full overflow-y-auto rounded-lg border border-zinc-700 contain-strict sm:h-[500px] md:h-[600px]"
+            className="scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 mt-4 h-96 w-full overflow-y-auto rounded-lg border border-zinc-600 contain-strict sm:h-[500px] md:h-[600px]"
             role="feed"
             aria-label={`${sortedEventsByCity.length} events`}
           >

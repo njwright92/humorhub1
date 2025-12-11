@@ -1,10 +1,7 @@
+import type { LatLng } from "@/app/lib/types";
+
 const GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-
-export interface LatLng {
-  lat: number;
-  lng: number;
-}
 
 export interface CityAndState {
   city: string | null;
