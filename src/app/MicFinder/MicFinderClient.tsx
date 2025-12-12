@@ -66,7 +66,7 @@ const dropdownInputClass =
   "w-full border-b bg-zinc-100 px-3 py-2 text-zinc-900 outline-none";
 
 const saveButtonClass =
-  "mt-2 mb-2 self-center rounded-lg bg-amber-300 px-3 py-1.5 text-base font-semibold text-zinc-950 shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
+  "mt-2 mb-2 self-center rounded-lg bg-amber-300 px-3 py-1.5 text-base font-bold text-zinc-100 shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
 
 // Tab configuration
 const TABS = [
@@ -552,7 +552,7 @@ export default function MicFinderClient({
       {/* Map */}
       <section
         aria-label="Event Map"
-        className="relative mt-6 mb-6 h-80 w-full rounded-lg border-2 border-amber-300 bg-zinc-800 shadow-lg sm:h-96 md:h-[400px]"
+        className="relative mt-6 mb-6 h-80 w-full rounded-lg border-2 border-amber-300 bg-zinc-800 shadow-lg sm:h-96 md:h-100"
       >
         <button
           type="button"
@@ -562,7 +562,7 @@ export default function MicFinderClient({
           onFocus={handleMapHover}
           className={`absolute z-10 rounded-lg px-4 py-2 font-bold shadow-lg transition-transform ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-base text-zinc-950 hover:scale-105 sm:text-lg"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-base text-zinc-100 hover:scale-105 sm:text-lg"
               : "top-4 right-4 border border-zinc-700 bg-zinc-900 text-sm text-zinc-200 hover:bg-zinc-950"
           }`}
         >
@@ -637,6 +637,7 @@ export default function MicFinderClient({
       {/* Tabs */}
       <nav
         aria-label="Event type filter"
+        role="tablist"
         className="mt-4 flex flex-wrap justify-center gap-2"
       >
         {TABS.map((tab) => (
@@ -656,7 +657,6 @@ export default function MicFinderClient({
           </button>
         ))}
       </nav>
-
       {/* All Cities Section */}
       <section
         aria-labelledby="all-events-heading"

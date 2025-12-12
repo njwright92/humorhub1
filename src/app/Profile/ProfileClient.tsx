@@ -460,7 +460,7 @@ export default function ProfileClient() {
                   <article className="group relative flex flex-col justify-between gap-4 rounded-lg border border-zinc-700 bg-zinc-900 p-5 text-left transition-all hover:border-amber-300 hover:shadow-lg sm:flex-row">
                     <div className="flex-1">
                       <header className="mb-1 flex flex-wrap items-center gap-2">
-                        <h3 className="font-heading text-lg font-bold text-amber-300 transition-colors group-hover:text-amber-200">
+                        <h3 className="font-heading text-lg font-bold text-zinc-200 transition-colors group-hover:text-amber-300">
                           {event.name}
                         </h3>
                         {event.festival && (
@@ -492,10 +492,13 @@ export default function ProfileClient() {
                         />
                       )}
                     </div>
-                    <footer className="flex min-w-[100px] items-end justify-between gap-2 sm:flex-col">
+                    <footer className="flex min-w-25 items-end justify-between gap-2 sm:flex-col">
                       <Link
-                        href={`/MicFinder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
+                        href={`/MicFinder?city=${encodeURIComponent(
+                          event.location.split(",")[1]?.trim() || ""
+                        )}`}
                         className="text-sm text-zinc-300 underline transition-colors hover:text-amber-300"
+                        aria-label={`Find ${event.name} in ${event.location} on map`}
                       >
                         Find on Map
                       </Link>

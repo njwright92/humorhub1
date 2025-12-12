@@ -175,10 +175,7 @@ export default function MicFinderPage() {
       <main className="flex min-h-screen flex-col p-2 text-center text-zinc-200 md:ml-20">
         <header className="animate-fade-in flex flex-col items-center">
           {/* Alert Banner */}
-          <aside
-            role="alert"
-            className="mx-auto mb-3 max-w-2xl rounded-lg border border-red-400 bg-zinc-200 px-2 py-1.5 text-center text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm"
-          >
+          <aside className="mx-auto mb-3 max-w-2xl rounded-lg border border-red-400 bg-zinc-200 px-2 py-1.5 text-center text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm">
             <p>
               <strong>
                 <span aria-hidden="true">📢 </span>Note:{" "}

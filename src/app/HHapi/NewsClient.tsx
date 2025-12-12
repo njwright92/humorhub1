@@ -41,6 +41,7 @@ const labelClass =
   "mb-2 text-xs font-bold uppercase tracking-wider text-amber-300";
 
 // Memoized Article Card
+// Memoized Article Card
 const ArticleCard = memo(function ArticleCard({
   article,
   priority,
@@ -69,7 +70,7 @@ const ArticleCard = memo(function ArticleCard({
             📰
           </div>
         )}
-        <span className="absolute top-0 right-0 rounded-bl-lg bg-amber-300 px-3 py-1 text-xs font-bold text-zinc-950">
+        <span className="absolute top-0 right-0 rounded-bl-lg bg-amber-300 px-3 py-1 text-sm font-bold text-zinc-100 drop-shadow-lg">
           {article.source || "News"}
         </span>
       </figure>
@@ -85,13 +86,13 @@ const ArticleCard = memo(function ArticleCard({
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Read full story: ${article.title}`}
           className="inline-flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 py-2.5 text-sm font-semibold text-zinc-300 transition-all hover:border-amber-300 hover:bg-amber-300 hover:text-zinc-950"
         >
           Read Full Story
           <span className="ml-1" aria-hidden="true">
             →
           </span>
-          <span className="sr-only"> (opens in new tab)</span>
         </a>
       </div>
     </article>

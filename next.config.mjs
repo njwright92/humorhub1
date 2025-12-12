@@ -4,9 +4,8 @@
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
-
   transpilePackages: ["@tanstack/react-virtual", "firebase"],
-
+  productionBrowserSourceMaps: true,
   compiler: {
     removeConsole: true,
   },
