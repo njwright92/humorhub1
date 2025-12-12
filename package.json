@@ -6,14 +6,13 @@
     ">0.2%, defaults, fully supports es6-module"
   ],
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "npx eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "preview": "next build && npm run format && npm run lint && next start",
-    "typecheck": "tsc --noEmit"
+    "preview": "next build && npm run format && npm run lint && next start"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -42,6 +41,6 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "next lint --fix",
-    "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,mdx,html,yml,yaml}": "prettier --write"
+    "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,mdx,html,yml,yaml,css}": "prettier --write"
   }
 }
