@@ -66,7 +66,7 @@ const dropdownInputClass =
   "w-full border-b bg-zinc-100 px-3 py-2 text-zinc-900 outline-none";
 
 const saveButtonClass =
-  "mt-2 mb-2 self-center rounded-lg bg-amber-300 px-3 py-1.5 text-base font-bold text-zinc-100 shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
+  "mt-2 mb-2 self-center rounded-lg bg-amber-300 px-3 py-1.5 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
 
 // Tab configuration
 const TABS = [
@@ -562,7 +562,7 @@ export default function MicFinderClient({
           onFocus={handleMapHover}
           className={`absolute z-10 rounded-lg px-4 py-2 font-bold shadow-lg transition-transform ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-base text-zinc-100 hover:scale-105 sm:text-lg"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-base text-white hover:scale-105 sm:text-lg"
               : "top-4 right-4 border border-zinc-700 bg-zinc-900 text-sm text-zinc-200 hover:bg-zinc-950"
           }`}
         >
@@ -649,7 +649,7 @@ export default function MicFinderClient({
             onClick={() => setSelectedTab(tab.id)}
             className={`rounded-xl px-3 py-2 text-sm font-bold shadow-lg transition-transform sm:text-base ${
               selectedTab === tab.id
-                ? `${tab.activeClass} text-zinc-100 ring-2 ring-zinc-200`
+                ? `${tab.activeClass} text-white ring-2 ring-zinc-200`
                 : tab.inactiveClass
             }`}
           >

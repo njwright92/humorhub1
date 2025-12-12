@@ -339,7 +339,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               </button>
               <button
                 type="submit"
-                className="flex-1 rounded-lg bg-zinc-900 py-2 text-sm font-semibold text-zinc-100 transition-colors hover:bg-zinc-800"
+                className="flex-1 rounded-lg bg-blue-900 py-2 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
               >
                 Search
               </button>

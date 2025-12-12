@@ -30,7 +30,12 @@ const FEATURES = [
       "Venue managers can list events in seconds. The wider our database, the more stage time for everyone—whether you're testing 5 minutes or headlining.",
     link: "/MicFinder",
     linkText: "Find a Mic",
-    color: "blue",
+    // Amber theme
+    titleBaseClass: "text-amber-300",
+    titleHoverClass: "group-hover:text-amber-400",
+    borderHoverClass: "hover:border-amber-500/50",
+    shadowHoverClass: "hover:shadow-amber-900/20",
+    linkTextClass: "text-amber-300 hover:text-amber-200",
   },
   {
     emoji: "📰",
@@ -41,7 +46,12 @@ const FEATURES = [
       "Perfect for writing topical jokes, finding current-event callbacks, or discovering that unexpected angle for your next routine.",
     link: "/HHapi",
     linkText: "Read News",
-    color: "amber",
+    // Blue theme
+    titleBaseClass: "text-blue-400",
+    titleHoverClass: "group-hover:text-blue-500",
+    borderHoverClass: "hover:border-blue-500/50",
+    shadowHoverClass: "hover:shadow-blue-900/20",
+    linkTextClass: "text-blue-400 hover:text-blue-300",
   },
 ] as const;
 
@@ -52,10 +62,10 @@ export default function AboutPage() {
       <main className="flex min-h-screen flex-col items-center p-4 text-center text-zinc-200 md:ml-24">
         {/* Hero */}
         <header className="animate-fade-in mx-auto mt-6 mb-8 max-w-4xl sm:mt-10 sm:mb-4">
-          <h1 className="font-heading mb-2 text-2xl font-bold tracking-tight sm:mb-4 sm:text-4xl md:text-5xl">
+          <h1 className="font-heading mb-2 text-2xl font-bold tracking-tight text-amber-300 sm:mb-4 sm:text-4xl md:text-5xl">
             Built for Comics
           </h1>
-          <p className="font-heading mb-6 text-lg font-bold tracking-wide text-amber-300 sm:mb-10 sm:text-xl md:text-2xl">
+          <p className="font-heading mb-6 text-lg font-bold tracking-wide text-zinc-200 sm:mb-10 sm:text-xl md:text-2xl">
             By a Comic
           </p>
           <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg md:text-xl">
@@ -77,7 +87,7 @@ export default function AboutPage() {
           {FEATURES.map((feature) => (
             <article
               key={feature.title}
-              className={`group rounded-xl border border-zinc-700 bg-zinc-800/50 p-4 text-left backdrop-blur-sm transition-all hover:-translate-y-1 sm:p-6 md:p-8 hover:border-${feature.color}-500/50 hover:shadow-2xl hover:shadow-${feature.color}-900/20`}
+              className={`group rounded-xl border border-zinc-700 bg-zinc-800/50 p-4 text-left backdrop-blur-sm transition-all hover:-translate-y-1 sm:p-6 md:p-8 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
             >
               <span
                 className="mb-3 block text-3xl sm:mb-4 sm:text-4xl"
@@ -86,7 +96,7 @@ export default function AboutPage() {
                 {feature.emoji}
               </span>
               <h3
-                className={`font-heading mb-2 text-xl font-bold transition-colors sm:mb-3 sm:text-2xl group-hover:text-${feature.color}-400`}
+                className={`font-heading mb-2 text-xl font-bold transition-colors sm:mb-3 sm:text-2xl ${feature.titleBaseClass} ${feature.titleHoverClass}`}
               >
                 {feature.title}
               </h3>
@@ -98,7 +108,7 @@ export default function AboutPage() {
               </p>
               <Link
                 href={feature.link}
-                className={`mt-4 inline-flex items-center gap-1 text-sm font-bold text-${feature.color}-400 transition-colors group-hover:underline hover:text-${feature.color}-300 sm:mt-6`}
+                className={`mt-4 inline-flex items-center gap-1 text-sm font-bold transition-colors group-hover:underline sm:mt-6 ${feature.linkTextClass}`}
               >
                 {feature.linkText}
                 <span aria-hidden="true">→</span>
@@ -121,13 +131,13 @@ export default function AboutPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
             <Link
               href="/MicFinder"
-              className="rounded-lg bg-amber-300 px-6 py-2.5 font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-amber-400 sm:px-8 sm:py-3"
+              className="rounded-lg bg-amber-300 px-6 py-2.5 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-400 sm:px-8 sm:py-3"
             >
               Find Events
             </Link>
             <Link
               href="/"
-              className="rounded-lg bg-zinc-700 px-6 py-2.5 font-bold text-zinc-100 shadow-lg transition-transform hover:scale-105 hover:bg-zinc-600 sm:px-8 sm:py-3"
+              className="rounded-lg bg-zinc-700 px-6 py-2.5 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-zinc-600 sm:px-8 sm:py-3"
             >
               Back Home
             </Link>

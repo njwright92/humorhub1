@@ -299,7 +299,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className={`mt-2 w-full rounded-lg py-2 font-semibold text-zinc-100 shadow-lg transition-colors disabled:opacity-50 ${
+            className={`mt-2 w-full rounded-lg py-2 font-semibold text-white shadow-lg transition-colors disabled:opacity-50 ${
               isSignIn
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-green-600 hover:bg-green-700"

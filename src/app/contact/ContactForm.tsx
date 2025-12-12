@@ -11,7 +11,7 @@ type ContactFormState = {
 
 // Shared styles
 const inputClass =
-  "w-full rounded-lg border-2 border-zinc-600 bg-zinc-900 px-4 py-3 text-zinc-100 placeholder:text-zinc-500 transition-all focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50";
+  "w-full rounded-lg shadow-lg border-2 border-zinc-300 bg-zinc-900 px-4 py-3 text-white placeholder:text-zinc-500 transition-all focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50";
 
 const labelClass =
   "mb-2 text-xs font-bold uppercase tracking-wider text-amber-300";
@@ -163,7 +163,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-amber-300 px-8 py-3 text-base font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-amber-400 disabled:scale-100 disabled:bg-zinc-600 disabled:text-zinc-400 sm:w-auto sm:text-lg"
+            className="w-full rounded-lg bg-amber-300 px-8 py-3 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-400 disabled:scale-100 disabled:bg-zinc-600 disabled:text-zinc-400 sm:w-auto sm:text-lg"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>

@@ -35,7 +35,7 @@ const formatText = (text: string) =>
 
 // Shared styles
 const selectClass =
-  "w-full appearance-none rounded-lg border-2 border-zinc-600 bg-zinc-900 px-4 py-3 text-zinc-100 transition-all hover:border-zinc-500 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 disabled:opacity-70";
+  "w-full appearance-none rounded-lg border-2 border-zinc-600 bg-zinc-900 px-4 py-3 text-white transition-all hover:border-zinc-500 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50 disabled:opacity-70";
 
 const labelClass =
   "mb-2 text-xs font-bold uppercase tracking-wider text-amber-300";
@@ -70,13 +70,13 @@ const ArticleCard = memo(function ArticleCard({
             📰
           </div>
         )}
-        <span className="absolute top-0 right-0 rounded-bl-lg bg-amber-300 px-3 py-1 text-sm font-bold text-zinc-100 drop-shadow-lg">
+        <span className="absolute top-0 right-0 rounded-bl-lg bg-amber-300 px-3 py-1 text-sm font-bold text-white drop-shadow-lg">
           {article.source || "News"}
         </span>
       </figure>
 
       <div className="flex grow flex-col p-5">
-        <h2 className="font-heading mb-3 line-clamp-3 text-lg leading-tight font-bold text-zinc-100 transition-colors group-hover:text-amber-300">
+        <h2 className="font-heading mb-3 line-clamp-3 text-lg leading-tight font-bold text-white transition-colors group-hover:text-amber-300">
           {article.title}
         </h2>
         <p className="mb-6 line-clamp-3 grow text-sm text-zinc-400">

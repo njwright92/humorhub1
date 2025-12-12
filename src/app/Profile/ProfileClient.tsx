@@ -10,7 +10,7 @@ import type { FirebaseStorage } from "firebase/storage";
 import type { Event } from "@/app/lib/types";
 
 const btnBase =
-  "w-full rounded-lg py-2 text-sm font-semibold text-zinc-100 shadow-lg transition";
+  "w-full rounded-lg py-2 text-sm font-semibold text-white shadow-lg transition";
 const btnEdit = `${btnBase} bg-green-900 hover:bg-green-700`;
 const btnSignOut = `${btnBase} bg-red-900 hover:bg-red-700`;
 
@@ -319,9 +319,7 @@ export default function ProfileClient() {
                   htmlFor="profilePicture"
                   className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <span className="text-xs font-bold text-zinc-100">
-                    Change
-                  </span>
+                  <span className="text-xs font-bold text-white">Change</span>
                   <input
                     id="profilePicture"
                     type="file"
@@ -372,14 +370,14 @@ export default function ProfileClient() {
                 <div className="flex gap-2 pt-2">
                   <button
                     type="submit"
-                    className="flex-1 rounded-lg bg-blue-900 py-2 text-sm font-bold text-zinc-100 shadow-md transition hover:bg-blue-700"
+                    className="flex-1 rounded-lg bg-blue-900 py-2 text-sm font-bold text-white shadow-md transition hover:bg-blue-700"
                   >
                     Save
                   </button>
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="flex-1 rounded-lg bg-red-900 py-2 text-sm font-bold text-zinc-100 shadow-md transition hover:bg-red-700"
+                    className="flex-1 rounded-lg bg-red-900 py-2 text-sm font-bold text-white shadow-md transition hover:bg-red-700"
                   >
                     Cancel
                   </button>
@@ -420,10 +418,10 @@ export default function ProfileClient() {
 
       {/* Saved Events */}
       <section aria-labelledby="events-heading" className="lg:col-span-2">
-        <div className="min-h-[500px] rounded-lg border border-zinc-700 bg-zinc-800/80 p-6 shadow-xl backdrop-blur-sm">
+        <div className="min-h-125 rounded-lg border border-zinc-700 bg-zinc-800/80 p-6 shadow-xl backdrop-blur-sm">
           <h2
             id="events-heading"
-            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-zinc-100 lg:justify-start"
+            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-white lg:justify-start"
           >
             <span aria-hidden="true">🎟️</span> Saved Events
             {!isEventsLoading && (

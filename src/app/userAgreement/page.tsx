@@ -97,7 +97,7 @@ export default function UserAgreementPage() {
           <div className="mt-10 border-t border-zinc-300 pt-6 text-center">
             <Link
               href="/"
-              className="inline-block rounded-lg bg-zinc-900 px-6 py-3 font-bold text-zinc-100 shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
+              className="inline-block rounded-lg bg-zinc-700 px-6 py-3 font-bold text-white shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
             >
               Return Home
             </Link>
