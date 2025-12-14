@@ -29,7 +29,6 @@ const EventForm = dynamic(() => import("@/app/components/EventForm"), {
       Loading...
     </span>
   ),
-  ssr: false,
 });
 
 const MemoizedEventForm = memo(EventForm);
@@ -40,7 +39,6 @@ const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
       Loading Map...
     </div>
   ),
-  ssr: false,
 });
 
 declare global {

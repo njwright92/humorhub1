@@ -6,6 +6,9 @@ const nextConfig = {
   compress: true,
   transpilePackages: ["@tanstack/react-virtual", "firebase"],
   productionBrowserSourceMaps: true,
+  compiler: {
+    removeConsole: true,
+  },
   experimental: {
     optimizePackageImports: [
       "firebase",
@@ -16,7 +19,6 @@ const nextConfig = {
       "@tanstack/react-virtual",
     ],
   },
-
   images: {
     minimumCacheTTL: 31536000,
     deviceSizes: [308, 640, 750, 828, 1080, 1200, 1920],
@@ -29,7 +31,6 @@ const nextConfig = {
       { protocol: "https", hostname: "**" },
     ],
   },
-
   async headers() {
     return [
       {
@@ -41,7 +42,6 @@ const nextConfig = {
           },
         ],
       },
-
       {
         source: "/_next/image/:path*",
         headers: [
@@ -51,7 +51,6 @@ const nextConfig = {
           },
         ],
       },
-
       {
         source: "/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf)",
         headers: [
@@ -61,7 +60,6 @@ const nextConfig = {
           },
         ],
       },
-
       {
         source: "/:path*",
         headers: [
@@ -76,7 +74,6 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
-
       {
         source: "/api/:path*",
         headers: [

@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 
 // Dynamically load the heavy form only when needed
 const EventFormContent = dynamic(() => import("./EventFormContent"), {
-  ssr: false,
   loading: () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
       <div className="animate-pulse rounded-lg bg-zinc-800 p-4 font-bold text-zinc-200 shadow-xl">

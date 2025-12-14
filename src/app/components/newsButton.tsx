@@ -6,7 +6,6 @@ import { useToast } from "./ToastContext";
 import dynamic from "next/dynamic";
 
 const AuthModal = dynamic(() => import("./authModal"), {
-  ssr: false,
   loading: () => null,
 });
 

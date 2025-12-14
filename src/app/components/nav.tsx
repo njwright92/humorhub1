@@ -7,27 +7,17 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useToast } from "./ToastContext";
 import hh from "../../app/hh.webp";
-
-// Lazy load icons (small but keeps initial bundle tiny)
-const MicFinderIcon = dynamic(() => import("../icons/MicFinderIcon"), {
-  ssr: false,
-});
-const NewsIcon = dynamic(() => import("../icons/NewsIcon"), { ssr: false });
-const ContactIcon = dynamic(() => import("../icons/ContactIcon"), {
-  ssr: false,
-});
-const AboutIcon = dynamic(() => import("../icons/AboutIcon"), { ssr: false });
-const UserIconComponent = dynamic(() => import("../icons/UserIconComponent"), {
-  ssr: false,
-});
+import MicFinderIcon from "../icons/MicFinderIcon";
+import NewsIcon from "../icons/NewsIcon";
+import ContactIcon from "../icons/ContactIcon";
+import AboutIcon from "../icons/AboutIcon";
+import UserIconComponent from "../icons/UserIconComponent";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
-  ssr: false,
   loading: () => <div className="size-8 rounded-full bg-zinc-700/50" />,
 });
 
 const AuthModal = dynamic(() => import("./authModal"), {
-  ssr: false,
   loading: () => null,
 });
 
