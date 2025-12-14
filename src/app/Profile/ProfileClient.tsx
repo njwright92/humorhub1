@@ -238,7 +238,7 @@ export default function ProfileClient() {
       >
         <div className="w-full max-w-md animate-pulse space-y-4">
           <div className="mx-auto h-8 w-1/2 rounded bg-stone-700" />
-          <div className="mx-auto size-36 rounded-full bg-stone-700" />
+          <div className="mx-auto size-36 rounded bg-stone-700" />
           <div className="mx-auto h-4 w-3/4 rounded bg-stone-700" />
           <div className="mx-auto h-4 w-1/2 rounded bg-stone-700" />
         </div>
@@ -251,7 +251,7 @@ export default function ProfileClient() {
   if (!userRef.current) {
     return (
       <div className="mt-10 flex flex-1 flex-col items-center justify-center">
-        <section className="max-w-md rounded-xl border border-stone-700 bg-stone-800 p-8 text-center">
+        <section className="max-w-md rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center">
           <span className="mb-4 block text-6xl" aria-hidden="true">
             🔐
           </span>
@@ -263,7 +263,7 @@ export default function ProfileClient() {
           </p>
           <Link
             href="/MicFinder"
-            className="inline-block rounded-xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
+            className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
           >
             Go to MicFinder
           </Link>
@@ -278,7 +278,7 @@ export default function ProfileClient() {
       <aside className="lg:col-span-1">
         <section
           aria-labelledby="profile-heading"
-          className="sticky top-24 rounded-xl border border-stone-300 bg-zinc-200 p-4 text-stone-900 shadow-lg"
+          className="sticky top-24 rounded-2xl border border-stone-300 bg-zinc-200 p-4 text-stone-900 shadow-lg"
         >
           <h2 id="profile-heading" className="sr-only">
             Your Profile
@@ -343,7 +343,7 @@ export default function ProfileClient() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     /* CHANGED: bg-zinc-200 -> bg-white (So we can see the input) */
-                    className="w-full rounded-xl border border-stone-300 bg-white p-2 text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
+                    className="w-full rounded-2xl border border-stone-300 bg-white p-2 text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     placeholder="Stage Name"
                     required
                   />
@@ -359,7 +359,7 @@ export default function ProfileClient() {
                     id="bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full resize-none rounded-xl border border-stone-300 bg-white p-2 text-sm text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
+                    className="w-full resize-none rounded-2xl border border-stone-300 bg-white p-2 text-sm text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     rows={4}
                     placeholder="Tell us a bit about yourself..."
                   />
@@ -368,7 +368,7 @@ export default function ProfileClient() {
                 <div className="flex gap-3 pt-2">
                   <button
                     type="submit"
-                    className="flex-1 rounded-xl bg-amber-700 py-2 text-sm font-bold text-white shadow-md transition hover:scale-105 hover:bg-amber-800"
+                    className="flex-1 rounded-2xl bg-amber-700 py-2 text-sm font-bold text-white shadow-lg transition hover:scale-105 hover:bg-amber-800"
                   >
                     Save Changes
                   </button>
@@ -376,7 +376,7 @@ export default function ProfileClient() {
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="flex-1 rounded-xl border border-stone-300 bg-transparent py-2 text-sm font-bold text-stone-600 transition hover:bg-stone-300 hover:text-stone-900"
+                    className="flex-1 rounded-2xl border border-stone-300 bg-transparent py-2 text-sm font-bold text-stone-600 transition hover:bg-stone-300 hover:text-stone-900"
                   >
                     Cancel
                   </button>
@@ -398,7 +398,7 @@ export default function ProfileClient() {
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="w-full rounded-xl bg-stone-900 py-2.5 text-sm font-bold text-zinc-200 shadow-md transition hover:scale-105 hover:bg-stone-800"
+                    className="w-full rounded-2xl bg-stone-900 py-2.5 text-sm font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
                   >
                     Edit Profile
                   </button>
@@ -406,7 +406,7 @@ export default function ProfileClient() {
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="w-1/2 rounded-xl border-2 border-red-300 bg-red-100 py-2 text-sm font-bold text-red-700 transition-all duration-200 hover:border-red-400 hover:bg-red-200 hover:text-red-900 hover:shadow-sm"
+                    className="w-1/2 rounded-2xl border-2 border-red-300 bg-red-100 py-2 text-sm font-bold text-red-700 transition-all duration-200 hover:border-red-400 hover:bg-red-200 hover:text-red-900 hover:shadow-lg"
                   >
                     Sign Out
                   </button>
@@ -419,7 +419,7 @@ export default function ProfileClient() {
 
       {/* Saved Events */}
       <section aria-labelledby="events-heading" className="lg:col-span-2">
-        <div className="min-h-125 rounded-xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-sm">
+        <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-sm">
           <h2
             id="events-heading"
             className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-zinc-200 lg:justify-start"
@@ -442,7 +442,7 @@ export default function ProfileClient() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="animate-pulse rounded-xl border border-stone-700 bg-stone-900 p-5"
+                  className="animate-pulse rounded-2xl border border-stone-700 bg-stone-900 p-5"
                 >
                   <div className="mb-3 h-5 w-1/2 rounded bg-stone-700" />
                   <div className="mb-2 h-4 w-3/4 rounded bg-stone-700" />
@@ -456,7 +456,7 @@ export default function ProfileClient() {
             <ul className="space-y-4">
               {savedEvents.map((event) => (
                 <li key={event.id}>
-                  <article className="group relative flex flex-col justify-between gap-4 rounded-xl border border-stone-700 bg-stone-900 p-5 text-left transition-all hover:border-amber-700 hover:shadow-lg sm:flex-row">
+                  <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 bg-stone-900 p-5 text-left transition-all hover:border-amber-700 hover:shadow-lg sm:flex-row">
                     <div className="flex-1">
                       <header className="mb-1 flex flex-wrap items-center gap-2">
                         <h3 className="font-heading text-lg font-bold text-amber-700 transition-colors group-hover:text-amber-700">
@@ -505,7 +505,7 @@ export default function ProfileClient() {
                         type="button"
                         onClick={() => handleDeleteEvent(event.id, event.name)}
                         disabled={isDeleting === event.id}
-                        className={`rounded-xl border px-3 py-1 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                        className={`rounded-2xl border px-3 py-1 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
                           isDeleting === event.id
                             ? "border-stone-600 bg-stone-700 text-stone-500"
                             : "border-red-500 text-red-400 hover:border-red-400 hover:bg-red-900/50 hover:text-red-100"
@@ -520,7 +520,7 @@ export default function ProfileClient() {
               ))}
             </ul>
           ) : (
-            <div className="flex h-64 flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-700 text-center text-stone-500">
+            <div className="flex h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-700 text-center text-stone-500">
               <span className="mb-2 text-4xl" aria-hidden="true">
                 📭
               </span>
@@ -530,7 +530,7 @@ export default function ProfileClient() {
               <p className="mb-4 text-sm">Go find some mics to hit!</p>
               <Link
                 href="/MicFinder"
-                className="rounded-xl bg-amber-700 px-4 py-2 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
+                className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
               >
                 Go to MicFinder
               </Link>

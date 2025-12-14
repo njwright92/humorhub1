@@ -17,11 +17,11 @@ export default function PrivacyPolicyPage() {
     <>
       <Header />
       <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 p-4 text-center text-zinc-200 md:ml-24">
-        <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:text-5xl md:text-6xl">
+        <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-5xl md:text-6xl">
           Privacy Policy
         </h1>
 
-        <section className="mx-auto max-w-4xl rounded-xl border border-zinc-300 bg-zinc-200 p-8 text-left text-zinc-800 shadow-2xl">
+        <section className="mx-auto max-w-4xl rounded-2xl border border-zinc-300 bg-zinc-200 p-8 text-left text-zinc-800 shadow-lg">
           <p className="mb-6 border-b border-zinc-300 pb-4 text-sm text-zinc-600">
             <strong>Last Updated:</strong> November 2025
           </p>
@@ -114,10 +114,10 @@ export default function PrivacyPolicyPage() {
             </article>
           </div>
 
-          <div className="mt-10 border-t border-zinc-300 pt-6 text-center">
+          <div className="mt-10 border-t border-stone-300 pt-6 text-center">
             <Link
               href="/"
-              className="inline-block rounded-xl bg-zinc-700 px-6 py-3 font-bold text-white shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
+              className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-800"
             >
               Return Home
             </Link>

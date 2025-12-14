@@ -35,7 +35,7 @@ const formatText = (text: string) =>
 
 // Shared styles
 const selectClass =
-  "w-full appearance-none rounded-xl border-2 border-stone-600 bg-stone-900 px-4 py-3 text-zinc-200 transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
+  "w-full appearance-none rounded-2xl border-2 border-stone-600 bg-stone-900 px-4 py-3 text-zinc-200 transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
 
 const labelClass =
   "mb-2 text-xs font-bold uppercase tracking-wider text-amber-700";
@@ -50,7 +50,7 @@ const ArticleCard = memo(function ArticleCard({
   priority: boolean;
 }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-2xl hover:shadow-amber-900/20">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-lg hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full overflow-hidden bg-stone-900">
         {article.image_url ? (
           <Image
@@ -70,7 +70,7 @@ const ArticleCard = memo(function ArticleCard({
             📰
           </div>
         )}
-        <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold text-zinc-200 drop-shadow-lg">
+        <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold text-zinc-200 text-shadow-sm">
           {article.source || "News"}
         </span>
       </figure>
@@ -87,7 +87,7 @@ const ArticleCard = memo(function ArticleCard({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Read full story: ${article.title}`}
-          className="inline-flex items-center justify-center rounded-xl border border-stone-700 bg-stone-900 py-2.5 text-sm font-semibold text-stone-300 transition-all hover:border-amber-700 hover:bg-amber-700 hover:text-stone-900"
+          className="inline-flex items-center justify-center rounded-2xl border border-stone-700 bg-stone-900 py-2.5 text-sm font-semibold text-stone-300 transition-all hover:border-amber-700 hover:bg-amber-700 hover:text-stone-900"
         >
           Read Full Story
           <span className="ml-1" aria-hidden="true">
@@ -156,7 +156,7 @@ export default function NewsClient() {
         <div
           role="alert"
           aria-live="assertive"
-          className="mx-auto mb-8 max-w-2xl rounded-xl border border-red-500/50 bg-red-900 p-4 text-center"
+          className="mx-auto mb-8 max-w-2xl rounded-2xl border border-red-500/50 bg-red-900 p-4 text-center"
         >
           <p className="font-semibold text-red-200">{error}</p>
           <button
@@ -173,7 +173,7 @@ export default function NewsClient() {
       <form
         aria-labelledby="filters-heading"
         onSubmit={(e) => e.preventDefault()}
-        className="mx-auto mb-12 w-full max-w-4xl rounded-xl border-2 border-amber-700 bg-stone-800/80 p-6 shadow-lg shadow-amber-900/10 backdrop-blur-sm"
+        className="mx-auto mb-12 w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-6 shadow-lg shadow-amber-900/10 backdrop-blur-sm"
       >
         <fieldset disabled={isPending}>
           <legend id="filters-heading" className="sr-only">
@@ -226,7 +226,7 @@ export default function NewsClient() {
             <button
               type="reset"
               onClick={resetNews}
-              className="h-11.5 rounded-xl border-2 border-stone-600 bg-stone-700 font-bold text-zinc-200 shadow-md transition-all hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
+              className="h-11.5 rounded-2xl border-2 border-stone-600 bg-stone-700 font-bold text-zinc-200 shadow-lg transition-all hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
             >
               Reset Filters
             </button>

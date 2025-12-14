@@ -27,7 +27,7 @@ const EventPin = memo(({ color }: { color: string }) => (
       width="28"
       height="28"
       viewBox="0 0 32 32"
-      style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.3))" }}
+      style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.4))" }}
     >
       <circle
         cx="16"
@@ -37,23 +37,19 @@ const EventPin = memo(({ color }: { color: string }) => (
         stroke="#fff"
         strokeWidth="4"
       />
-      <circle cx="16" cy="16" r="4" fill="#fff" />
+      <circle cx="16" cy="16" r="4" fill="#f0eee9" />
     </svg>
   </div>
 ));
 
 EventPin.displayName = "EventPin";
 
-// Map controller component with safety checks
 const MapHandler = memo(
   ({ place, zoom }: { place: { lat: number; lng: number }; zoom: number }) => {
     const map = useMap();
 
     useEffect(() => {
-      // Check if map instance exists
       if (!map) return;
-
-      // Safety check: Ensure lat/lng are valid numbers before panning
       if (
         !place ||
         typeof place.lat !== "number" ||
@@ -74,14 +70,14 @@ const MapHandler = memo(
 
 MapHandler.displayName = "MapHandler";
 
-// Helper function to get pin color based on event type
+// 2. Updated Color Logic to match your Tabs
 const getPinColor = (event: Event): string => {
-  if (event.festival) return "#a21caf"; // Purple for festivals
-  if (event.isMusic) return "#2563eb"; // Blue for music
-  return "#22c55e"; // Green for comedy mics
+  if (event.festival) return "#7e22ce";
+  if (event.isMusic) return "#15803d";
+  return "#bb4d00";
 };
 
-// Inner map component (uses hooks that require APIProvider context)
+// Inner map component
 const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
   const apiIsLoaded = useApiIsLoaded();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -98,15 +94,14 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
     setSelectedEvent(null);
   }, []);
 
-  // Skeleton loader while Google Maps API loads
+  // Loading State -> Stone-800
   if (!apiIsLoaded) {
     return (
-      <div className="flex h-full w-full animate-pulse items-center justify-center bg-zinc-800 text-zinc-300">
+      <div className="flex h-full w-full animate-pulse items-center justify-center bg-stone-800 text-stone-400">
         <span className="font-semibold">Loading Map...</span>
       </div>
     );
   }
-
   return (
     <Map
       defaultCenter={{ lat, lng }}

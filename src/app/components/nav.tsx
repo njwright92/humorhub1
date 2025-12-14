@@ -404,7 +404,7 @@ const MobileMenu = memo(function MobileMenu({
 // ============ MENU HELPERS ============
 
 const menuItemClass =
-  "flex items-center justify-center rounded-xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-700";
+  "flex items-center justify-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-700";
 
 function MenuLink({
   href,

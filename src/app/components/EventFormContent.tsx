@@ -211,7 +211,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="w-full overflow-auto rounded-xl border-2 border-stone-900 bg-zinc-200 p-6 shadow-2xl"
+          className="w-full overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-6 shadow-lg"
         >
           {formErrors && (
             <div
@@ -250,7 +250,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             name="name"
             value={event.name}
             onChange={handleChange}
-            className="mb-4 w-full rounded-xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
             aria-required="true"
             autoComplete="off"
@@ -271,7 +271,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             name="location"
             value={event.location}
             onChange={handleChange}
-            className="mb-4 w-full rounded-xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
             aria-required="true"
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
@@ -282,7 +282,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           <fieldset className="mb-4 grid grid-cols-2 gap-4">
             <legend className="sr-only">Event options</legend>
 
-            <div className="rounded-xl border border-stone-300 bg-zinc-200 p-2 text-center">
+            <div className="rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-center">
               <span
                 className="text-sm font-bold text-stone-900"
                 id="recurring-label"
@@ -317,7 +317,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
               </div>
             </div>
 
-            <div className="rounded-xl border border-stone-300 bg-zinc-200 p-2 text-center">
+            <div className="rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-center">
               <span
                 className="text-sm font-bold text-stone-900"
                 id="festival-label"
@@ -375,7 +375,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             aria-required="true"
             autoComplete="off"
             rows={4}
-            className="mb-4 w-full resize-y rounded-xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full resize-y rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
           />
 
@@ -400,7 +400,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
                 date: dateStr ? new Date(dateStr + "T12:00:00") : null,
               });
             }}
-            className="mb-4 w-full rounded-xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
           />
 
           {/* Email */}
@@ -416,7 +416,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             name="email"
             value={event.email || ""}
             onChange={handleChange}
-            className="mb-6 w-full rounded-xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
+            className="mb-6 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             placeholder="yourname@example.com"
             autoComplete="email"
           />
@@ -424,7 +424,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl bg-green-600 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-[1.02] hover:bg-green-700 disabled:opacity-50"
+            className="w-full rounded-2xl bg-green-600 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-[1.02] hover:bg-green-700 disabled:opacity-50"
           >
             {isSubmitting ? "Submitting..." : "Submit Event"}
           </button>

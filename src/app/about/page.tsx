@@ -87,7 +87,7 @@ export default function AboutPage() {
           {FEATURES.map((feature) => (
             <article
               key={feature.title}
-              className={`group rounded-xl border border-stone-700 bg-stone-800/50 p-4 text-left backdrop-blur-sm transition-all hover:-translate-y-1 sm:p-6 md:p-8 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
+              className={`group rounded-2xl border border-stone-700 bg-stone-800/50 p-4 text-left backdrop-blur-sm transition-all hover:-translate-y-1 sm:p-6 md:p-8 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
             >
               <span
                 className="mb-3 block text-3xl sm:mb-4 sm:text-4xl"
@@ -131,13 +131,13 @@ export default function AboutPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
             <Link
               href="/MicFinder"
-              className="rounded-xl bg-amber-700 px-6 py-2.5 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 sm:px-8 sm:py-3"
+              className="rounded-2xl bg-amber-700 px-6 py-2.5 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 sm:px-8 sm:py-3"
             >
               Find Events
             </Link>
             <Link
               href="/"
-              className="rounded-xl bg-stone-700 px-6 py-2.5 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-600 sm:px-8 sm:py-3"
+              className="rounded-2xl bg-stone-700 px-6 py-2.5 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-600 sm:px-8 sm:py-3"
             >
               Back Home
             </Link>

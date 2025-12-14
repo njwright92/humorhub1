@@ -305,7 +305,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
             role="search"
             onSubmit={handleSearch}
             /* CHANGED: Border Zinc -> Stone, Shadow logic stays */
-            className="flex flex-col rounded-xl border border-stone-300 bg-zinc-200 p-2 shadow-2xl"
+            className="flex flex-col rounded-2xl border border-stone-300 bg-zinc-200 p-2 shadow-lg"
           >
             <label htmlFor="search-input" className="sr-only">
               Search city, page, or keyword
@@ -319,7 +319,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
               /* CHANGED: bg-white for input contrast, Text Stone-900, Placeholder Stone-400 */
-              className="w-full rounded-xl border-2 border-transparent bg-white p-2 text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-700"
+              className="w-full rounded-2xl border-2 border-transparent bg-white p-2 text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-700"
               autoComplete="off"
               aria-autocomplete="list"
               aria-controls={listboxId}
@@ -333,14 +333,14 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                 type="button"
                 onClick={closeSearchBar}
                 /* CHANGED: Cancel button to warm Stone-200 */
-                className="flex-1 rounded-xl bg-stone-300 py-2 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-400"
+                className="flex-1 rounded-2xl bg-stone-300 py-2 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-400"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 /* CHANGED: Search button to Brand Amber-700 (No more Blue) */
-                className="flex-1 rounded-xl bg-amber-700 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+                className="flex-1 rounded-2xl bg-amber-700 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
               >
                 Search
               </button>

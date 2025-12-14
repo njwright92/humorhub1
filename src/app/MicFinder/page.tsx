@@ -30,13 +30,13 @@ function MicFinderSkeleton() {
       aria-label="Loading MicFinder"
       className="flex min-h-screen animate-pulse flex-col p-2 text-center md:ml-20"
     >
-      <div className="mb-6 h-16 rounded-xl bg-zinc-700" />
-      <div className="mx-auto mb-4 h-12 w-3/4 rounded-xl bg-zinc-700" />
-      <div className="mx-auto mb-8 h-8 w-1/2 rounded-xl bg-zinc-700" />
-      <div className="mb-6 h-64 rounded-xl bg-zinc-700" />
+      <div className="mb-6 h-16 rounded-2xl bg-zinc-700" />
+      <div className="mx-auto mb-4 h-12 w-3/4 rounded-2xl bg-zinc-700" />
+      <div className="mx-auto mb-8 h-8 w-1/2 rounded-2xl bg-zinc-700" />
+      <div className="mb-6 h-64 rounded-2xl bg-zinc-700" />
       <div className="space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-32 rounded-xl bg-zinc-700" />
+          <div key={i} className="h-32 rounded-2xl bg-zinc-700" />
         ))}
       </div>
       <span className="sr-only">Loading MicFinder content...</span>
@@ -175,7 +175,7 @@ export default function MicFinderPage() {
       <main className="flex min-h-screen flex-col p-2 text-center text-zinc-200 md:ml-20">
         <header className="animate-fade-in flex flex-col items-center">
           {/* Alert Banner */}
-          <aside className="mx-auto mb-3 max-w-2xl rounded-xl border border-red-700 bg-zinc-200 px-2 py-1.5 text-center text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm">
+          <aside className="mx-auto mb-3 max-w-2xl rounded-2xl border border-red-700 bg-zinc-200 px-2 py-1.5 text-center text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm">
             <p>
               <strong>
                 <span aria-hidden="true">📢 </span>Note:{" "}
@@ -191,10 +191,10 @@ export default function MicFinderPage() {
             </p>
           </aside>
 
-          <h1 className="font-heading mt-4 mb-2 text-3xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:mt-6 sm:mb-4 sm:text-4xl md:text-5xl lg:text-6xl">
+          <h1 className="font-heading mt-4 mb-2 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mt-6 sm:mb-4 sm:text-4xl md:text-5xl lg:text-6xl">
             Mic Finder
           </h1>
-          <p className="font-heading mb-3 text-lg font-bold drop-shadow-lg sm:mb-4 sm:text-xl md:text-2xl lg:text-3xl">
+          <p className="font-heading mb-3 text-lg font-bold text-shadow-sm sm:mb-4 sm:text-xl md:text-2xl lg:text-3xl">
             Discover Mics and Festivals Near You!
           </p>
           <p className="mx-auto mb-4 max-w-2xl text-sm text-stone-300 sm:mb-6 sm:text-base md:text-lg">

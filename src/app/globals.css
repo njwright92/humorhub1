@@ -21,9 +21,7 @@
     color: var(--color-zinc-200);
     font-family: var(--font-body);
     --shadow-lg:
-      0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-    --spacing-4_5: 1.125rem;
-    --radius-soft: 1rem;
+      0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
   }
 
   h1,

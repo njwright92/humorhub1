@@ -45,7 +45,7 @@ export default function Footer() {
           Site Footer
         </h2>
 
-        <h3 className="font-heading mb-4 text-center text-2xl font-extrabold tracking-wide text-zinc-200 drop-shadow-2xl md:text-4xl">
+        <h3 className="font-heading mb-4 text-center text-2xl font-extrabold tracking-wide text-zinc-200 text-shadow-sm md:text-4xl">
           Humor Hub
         </h3>
 

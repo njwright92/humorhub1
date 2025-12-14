@@ -10,7 +10,7 @@ import Footer from "./components/footer";
 const EventForm = dynamic(() => import("./components/EventForm"), {
   loading: () => (
     <button
-      className="cursor-wait rounded-xl bg-green-600 px-2 py-1 text-lg font-bold tracking-wide text-zinc-950 opacity-80 shadow-lg"
+      className="cursor-wait rounded-2xl bg-green-600 px-2 py-1 text-lg font-bold tracking-wide text-zinc-950 opacity-80 shadow-lg"
       aria-busy="true"
       aria-label="Loading event form"
     >
@@ -22,7 +22,7 @@ const EventForm = dynamic(() => import("./components/EventForm"), {
 const NewsButton = dynamic(() => import("./components/newsButton"), {
   loading: () => (
     <button
-      className="w-80 cursor-wait self-center rounded-xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white opacity-80 shadow-lg md:self-end"
+      className="w-80 cursor-wait self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white opacity-80 shadow-lg md:self-end"
       aria-busy="true"
       aria-label="Loading news button"
     >
@@ -69,17 +69,17 @@ export default function Home() {
         {/* Mic Finder Section */}
         <section
           aria-labelledby="micfinder-heading"
-          className="mx-auto my-10 w-full grow rounded-xl p-2 shadow-lg"
+          className="mx-auto my-10 w-full grow rounded-2xl bg-stone-900/70 p-2 shadow-lg"
         >
           <h2
             id="micfinder-heading"
-            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:mb-10 sm:text-5xl md:text-6xl"
+            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mb-10 sm:text-5xl md:text-6xl"
           >
             Mic Finder!
           </h2>
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
             <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-start md:text-left">
-              <p className="max-w-lg text-sm leading-relaxed drop-shadow-lg sm:text-base lg:text-lg">
+              <p className="max-w-lg text-sm leading-relaxed text-shadow-sm sm:text-base lg:text-lg">
                 Looking for your next Mic?
                 <br />
                 <strong className="text-amber-700">MicFinder</strong> connects
@@ -91,7 +91,7 @@ export default function Home() {
 
               <Link
                 href="/MicFinder"
-                className="w-80 rounded-xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white"
+                className="w-80 rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white"
               >
                 Find Your Mic!
               </Link>
@@ -115,17 +115,17 @@ export default function Home() {
         {/* Hub News Section */}
         <section
           aria-labelledby="news-heading"
-          className="mx-auto my-10 w-full grow rounded-xl p-2 shadow-lg"
+          className="mx-auto my-10 w-full grow rounded-2xl bg-stone-900/70 p-2 shadow-lg"
         >
           <h2
             id="news-heading"
-            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:mb-10 sm:text-5xl md:text-6xl"
+            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mb-10 sm:text-5xl md:text-6xl"
           >
             Hub News!
           </h2>
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row-reverse">
             <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-end md:text-right">
-              <p className="max-w-lg text-sm leading-relaxed drop-shadow-lg sm:text-base md:text-lg">
+              <p className="max-w-lg text-sm leading-relaxed text-shadow-sm sm:text-base md:text-lg">
                 Your Source for{" "}
                 <strong className="text-amber-700">Fresh Headlines!</strong>
                 <br />
@@ -145,7 +145,7 @@ export default function Home() {
                   width={140}
                   height={140}
                   sizes="140px"
-                  className="rounded-full border-2 border-zinc-700 object-contain shadow-2xl transition-transform group-hover:scale-105 group-hover:rotate-3"
+                  className="rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3"
                   loading="lazy"
                 />
               </NewsButton>

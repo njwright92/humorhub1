@@ -75,7 +75,7 @@ const SocialSignInButton = memo(function SocialSignInButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="flex w-full items-center justify-center rounded-xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-200 disabled:opacity-50"
+      className="flex w-full items-center justify-center rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-200 disabled:opacity-50"
     >
       <span className="mr-3">{icon}</span>
       <span className="whitespace-nowrap">{label}</span>
@@ -209,7 +209,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
       aria-modal="true"
       aria-labelledby="auth-modal-title"
     >
-      <div className="relative w-full max-w-sm rounded-xl bg-stone-300 p-6 shadow-lg">
+      <div className="relative w-full max-w-sm rounded-2xl bg-stone-300 p-6 shadow-lg">
         <button
           onClick={handleClose}
           className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-900"
@@ -242,7 +242,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-xl bg-zinc-200 p-2 text-left"
+              className="w-full rounded-2xl bg-zinc-200 p-2 text-left"
               autoComplete="email"
               disabled={isLoading}
               required
@@ -264,7 +264,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl bg-zinc-200 p-2 text-left"
+              className="w-full rounded-2xl bg-zinc-200 p-2 text-left"
               autoComplete={isSignIn ? "current-password" : "new-password"}
               disabled={isLoading}
               required
@@ -287,7 +287,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl bg-zinc-200 p-2"
+                className="w-full rounded-2xl bg-zinc-200 p-2"
                 autoComplete="new-password"
                 disabled={isLoading}
                 required
@@ -299,7 +299,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className={`mt-2 w-full rounded-xl py-2 font-semibold text-white shadow-lg transition-colors disabled:opacity-50 ${
+            className={`mt-2 w-full rounded-2xl py-2 font-semibold text-white shadow-lg transition-colors disabled:opacity-50 ${
               isSignIn
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-green-600 hover:bg-green-700"
