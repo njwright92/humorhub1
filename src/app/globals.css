@@ -30,7 +30,7 @@
     background-image: linear-gradient(
       to bottom,
       var(--color-zinc-900) 0%,
-      #27272a 80%
+      #2e2c28 80%
     );
     color: var(--color-zinc-200);
     font-family: var(--font-body);
