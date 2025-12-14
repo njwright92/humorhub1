@@ -66,7 +66,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
   const [cities, setCities] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
 
-  // ============ CALLBACKS FIRST (before useEffects that use them) ============
+  // ============ CALLBACKS ============
 
   const closeSearchBar = useCallback(() => {
     setSearchTerm("");
@@ -116,8 +116,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
 
     return results;
   }, [searchTerm, cities]);
-
-  // ============ MORE CALLBACKS (that depend on suggestions) ============
 
   const handleSelectSuggestion = useCallback(
     (suggestion: Suggestion) => {
@@ -224,9 +222,8 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
     [suggestions, activeIndex, handleSelectSuggestion]
   );
 
-  // ============ EFFECTS (after all callbacks they depend on) ============
+  // ============ EFFECTS ============
 
-  // Fetch cities only when search opens
   useEffect(() => {
     if (!isInputVisible || cities.length > 0) return;
 
@@ -259,7 +256,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
     };
   }, [isInputVisible, cities.length]);
 
-  // Handle escape key and click outside
   useEffect(() => {
     if (!isInputVisible) return;
 
@@ -293,7 +289,8 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
         <button
           type="button"
           onClick={handleToggleInput}
-          className="flex items-center justify-center rounded-full bg-zinc-200 p-1 text-zinc-900 transition-colors hover:bg-zinc-300"
+          /* CHANGED: Match Cloud Dancer bg, Stone icon */
+          className="flex items-center justify-center rounded-full bg-zinc-200 p-1 text-stone-900 transition-colors hover:bg-white"
           aria-label="Open search"
           aria-expanded={isInputVisible}
           aria-controls={searchId}
@@ -307,7 +304,8 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
             id={searchId}
             role="search"
             onSubmit={handleSearch}
-            className="flex flex-col rounded-lg border border-zinc-400 bg-zinc-200 p-2 shadow-2xl"
+            /* CHANGED: Border Zinc -> Stone, Shadow logic stays */
+            className="flex flex-col rounded-xl border border-stone-300 bg-zinc-200 p-2 shadow-2xl"
           >
             <label htmlFor="search-input" className="sr-only">
               Search city, page, or keyword
@@ -320,7 +318,8 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full rounded-lg border-2 border-transparent bg-zinc-100 p-2 text-zinc-950 transition-colors placeholder:text-zinc-500 focus:border-amber-300"
+              /* CHANGED: bg-white for input contrast, Text Stone-900, Placeholder Stone-400 */
+              className="w-full rounded-xl border-2 border-transparent bg-white p-2 text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-700"
               autoComplete="off"
               aria-autocomplete="list"
               aria-controls={listboxId}
@@ -333,13 +332,15 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               <button
                 type="button"
                 onClick={closeSearchBar}
-                className="flex-1 rounded-lg bg-zinc-300 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-400"
+                /* CHANGED: Cancel button to warm Stone-200 */
+                className="flex-1 rounded-xl bg-stone-300 py-2 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-400"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 rounded-lg bg-blue-900 py-2 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+                /* CHANGED: Search button to Brand Amber-700 (No more Blue) */
+                className="flex-1 rounded-xl bg-amber-700 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
               >
                 Search
               </button>
@@ -350,7 +351,8 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                 id={listboxId}
                 role="listbox"
                 aria-label="Search suggestions"
-                className="mt-2 max-h-60 w-full divide-y divide-zinc-300 overflow-y-auto border-t border-zinc-300"
+                /* CHANGED: Dividers to Stone-300 */
+                className="mt-2 max-h-60 w-full divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
               >
                 {suggestions.map((sug, idx) => (
                   <li
@@ -358,8 +360,11 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                     id={`suggestion-${idx}`}
                     role="option"
                     aria-selected={idx === activeIndex}
-                    className={`flex cursor-pointer items-center justify-between p-2 text-sm text-zinc-900 transition-colors ${
-                      idx === activeIndex ? "bg-amber-100" : "hover:bg-zinc-300"
+                    /* CHANGED: Hover to Stone-300, Active to Amber-100, Text to Stone */
+                    className={`flex cursor-pointer items-center justify-between p-2 text-sm text-stone-900 transition-colors ${
+                      idx === activeIndex
+                        ? "bg-amber-100"
+                        : "hover:bg-stone-300"
                     }`}
                     onMouseDown={(e) => {
                       e.preventDefault();
@@ -368,7 +373,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                     onMouseEnter={() => setActiveIndex(idx)}
                   >
                     <span className="font-medium">{sug.label}</span>
-                    <span className="text-xs font-bold tracking-wider text-zinc-600 uppercase">
+                    <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">
                       {sug.type}
                     </span>
                   </li>

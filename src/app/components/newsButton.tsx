@@ -15,7 +15,7 @@ interface NewsButtonProps {
 }
 
 const defaultClassName =
-  "w-80 self-center rounded-lg bg-amber-300 px-2 py-1 text-center text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:self-end";
+  "w-80 self-center rounded-xl bg-amber-700 px-2 py-1 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:self-end";
 
 export default function NewsButton({ children, className }: NewsButtonProps) {
   const { showToast } = useToast();

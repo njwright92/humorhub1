@@ -25,7 +25,7 @@ import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 // Dynamic imports
 const EventForm = dynamic(() => import("@/app/components/EventForm"), {
   loading: () => (
-    <span className="rounded-lg bg-zinc-700 px-2 py-1 text-lg font-bold text-zinc-400 opacity-50">
+    <span className="rounded-xl bg-stone-700 px-2 py-1 text-lg font-bold text-stone-300 opacity-50">
       Loading...
     </span>
   ),
@@ -35,7 +35,7 @@ const MemoizedEventForm = memo(EventForm);
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
-    <div className="flex size-full items-center justify-center text-zinc-400">
+    <div className="flex size-full items-center justify-center text-stone-300">
       Loading Map...
     </div>
   ),
@@ -55,16 +55,16 @@ interface MicFinderClientProps {
 
 // Shared styles
 const dropdownBtnClass =
-  "flex h-full w-full items-center justify-center rounded-lg border-2 border-zinc-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-zinc-900 shadow-lg outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50";
+  "flex h-full w-full items-center justify-center rounded-xl border-2 border-stone-5000 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-lg outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
 const dropdownContainerClass =
-  "absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-zinc-300 bg-zinc-100 shadow-lg";
+  "absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-stone-300 bg-zinc-200 shadow-lg";
 
 const dropdownInputClass =
-  "w-full border-b bg-zinc-100 px-3 py-2 text-zinc-900 outline-none";
+  "w-full border-b bg-zinc-200 px-3 py-2 text-stone-900 outline-none";
 
 const saveButtonClass =
-  "mt-2 mb-2 self-center rounded-lg bg-amber-300 px-3 py-1.5 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
+  "mt-2 mb-2 self-center rounded-xl bg-amber-700 px-3 py-1.5 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
 
 // Tab configuration
 const TABS = [
@@ -99,8 +99,8 @@ const EventCard = memo(function EventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="mb-4 items-center rounded-lg border border-zinc-600 p-2 text-zinc-200 shadow-lg">
-      <h3 className="text-lg font-semibold text-amber-300">{event.name}</h3>
+    <article className="mb-4 items-center rounded-xl border border-stone-600 p-2 text-zinc-200 shadow-lg">
+      <h3 className="text-lg font-semibold text-amber-700">{event.name}</h3>
       <p className="mb-1 text-sm">
         <span aria-hidden="true">📅 </span>
         <span className="sr-only">Date: </span>
@@ -139,8 +139,8 @@ const VirtualEventCard = memo(function VirtualEventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="my-2 mb-4 flex h-auto flex-col rounded-lg border-b border-zinc-600 bg-zinc-800/20 p-2 text-center text-zinc-200 shadow-lg">
-      <h3 className="text-lg font-bold text-amber-300 md:text-xl">
+    <article className="my-2 mb-4 flex h-auto flex-col rounded-xl border-b border-stone-600 bg-stone-800/20 p-2 text-center text-zinc-200 shadow-lg">
+      <h3 className="text-lg font-bold text-amber-700 md:text-xl">
         {event.name}
       </h3>
       <p className="mb-1 text-sm">
@@ -464,7 +464,7 @@ export default function MicFinderClient({
         <MemoizedEventForm />
       </div>
 
-      <p className="mt-2 mb-4 text-center text-sm font-semibold text-zinc-400 sm:text-base">
+      <p className="mt-2 mb-4 text-center text-sm font-semibold text-stone-400 sm:text-base">
         Find your next show or night out. Pick a city and date!
       </p>
 
@@ -510,7 +510,7 @@ export default function MicFinderClient({
                     fetchUserLocation();
                     setIsFirstDropdownOpen(false);
                   }}
-                  className="flex cursor-pointer items-center justify-center gap-2 border-b border-zinc-200 bg-amber-100 px-4 py-3 text-center font-bold text-zinc-900 hover:bg-amber-300"
+                  className="flex cursor-pointer items-center justify-center gap-2 border-b border-zinc-200 bg-amber-100 px-4 py-3 text-center font-bold text-stone-900 hover:bg-amber-700"
                 >
                   <span aria-hidden="true">📍</span> Use My Location
                 </li>
@@ -520,7 +520,7 @@ export default function MicFinderClient({
                     role="option"
                     aria-selected={selectedCity === city}
                     onClick={() => handleCitySelect(city)}
-                    className="cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-zinc-900 last:border-0 hover:bg-amber-100"
+                    className="cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
                   >
                     {city}
                   </li>
@@ -550,7 +550,7 @@ export default function MicFinderClient({
       {/* Map */}
       <section
         aria-label="Event Map"
-        className="relative mt-6 mb-6 h-80 w-full rounded-lg border-2 border-amber-300 bg-zinc-800 shadow-lg sm:h-96 md:h-100"
+        className="relative mt-6 mb-6 h-80 w-full rounded-xl border-2 border-amber-700 bg-stone-800 shadow-lg sm:h-96 md:h-100"
       >
         <button
           type="button"
@@ -558,10 +558,10 @@ export default function MicFinderClient({
           onMouseEnter={handleMapHover}
           onTouchStart={handleMapHover}
           onFocus={handleMapHover}
-          className={`absolute z-10 rounded-lg px-4 py-2 font-bold shadow-lg transition-transform ${
+          className={`absolute z-10 rounded-xl px-4 py-2 font-bold shadow-lg transition-transform ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-300 text-base text-white hover:scale-105 sm:text-lg"
-              : "top-4 right-4 border border-zinc-700 bg-zinc-900 text-sm text-zinc-200 hover:bg-zinc-950"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-white hover:scale-105 sm:text-lg"
+              : "top-4 right-4 border border-stone-700 bg-stone-900 text-sm text-zinc-200 hover:bg-stone-900"
           }`}
         >
           {isMapVisible ? "Hide Map" : "Show Map"}
@@ -584,22 +584,22 @@ export default function MicFinderClient({
         )}
 
         {!isMapVisible && (
-          <div className="absolute inset-0 bg-zinc-800" aria-hidden="true" />
+          <div className="absolute inset-0 bg-stone-800" aria-hidden="true" />
         )}
       </section>
 
-      <p className="my-4 text-center text-sm text-zinc-400 italic sm:my-6 sm:text-base md:text-lg">
+      <p className="my-4 text-center text-sm text-stone-400 italic sm:my-6 sm:text-base md:text-lg">
         Scroll through events to find your next Mic or Festival!
       </p>
 
       {/* Results */}
       <section
         aria-labelledby="results-heading"
-        className="mt-6 mb-10 w-full rounded-lg shadow-lg sm:mt-10"
+        className="mt-6 mb-10 w-full rounded-xl shadow-lg sm:mt-10"
       >
         <h2
           id="results-heading"
-          className="font-heading mb-4 rounded-lg border-b-4 border-amber-300 pb-2 text-center text-2xl shadow-lg sm:mb-6 sm:text-3xl"
+          className="font-heading mb-4 rounded-xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:mb-6 sm:text-3xl"
         >
           {selectedTab === "Mics"
             ? "Comedy Mics"
@@ -625,7 +625,7 @@ export default function MicFinderClient({
             ))}
           </ul>
         ) : (
-          <p className="py-4 text-center text-zinc-400">
+          <p className="py-4 text-center text-stone-400">
             No {selectedTab.toLowerCase()} found for {selectedCity} on{" "}
             {selectedDate.toLocaleDateString()}.
           </p>
@@ -658,7 +658,7 @@ export default function MicFinderClient({
       {/* All Cities Section */}
       <section
         aria-labelledby="all-events-heading"
-        className="my-8 w-full rounded-lg p-2 shadow-lg sm:my-10"
+        className="my-8 w-full rounded-xl p-2 shadow-lg sm:my-10"
       >
         <div className="relative z-10 mt-2 flex flex-col items-center justify-center">
           <div className="relative w-full max-w-xs">
@@ -677,13 +677,13 @@ export default function MicFinderClient({
             </button>
 
             {isSecondDropdownOpen && (
-              <div className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-100 shadow-lg">
+              <div className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-xl border border-stone-300 bg-zinc-200 shadow-lg">
                 <input
                   type="text"
                   placeholder="Search for a city..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-zinc-900 outline-none"
+                  className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-none"
                   autoFocus
                   aria-label="Search filter cities"
                 />
@@ -692,7 +692,7 @@ export default function MicFinderClient({
                     role="option"
                     aria-selected={filterCity === "All Cities"}
                     onClick={() => handleCityFilterChange("All Cities")}
-                    className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-zinc-900 hover:bg-zinc-300 ${
+                    className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 hover:bg-stone-300 ${
                       filterCity === "All Cities"
                         ? "bg-zinc-200 font-semibold"
                         : ""
@@ -706,7 +706,7 @@ export default function MicFinderClient({
                       role="option"
                       aria-selected={filterCity === city}
                       onClick={() => handleCityFilterChange(city)}
-                      className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-zinc-900 last:border-0 hover:bg-zinc-300 ${
+                      className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-stone-300 ${
                         filterCity === city ? "bg-zinc-200 font-semibold" : ""
                       }`}
                     >
@@ -721,7 +721,7 @@ export default function MicFinderClient({
 
         <h2
           id="all-events-heading"
-          className="font-heading mt-4 rounded-lg border-b-4 border-amber-300 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
+          className="font-heading mt-4 rounded-xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
         >
           {filterCity === "All Cities"
             ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
@@ -729,13 +729,13 @@ export default function MicFinderClient({
         </h2>
 
         {sortedEventsByCity.length === 0 ? (
-          <p className="py-4 text-center text-zinc-400">
+          <p className="py-4 text-center text-stone-400">
             No events found for {filterCity}.
           </p>
         ) : (
           <div
             ref={parentRef}
-            className="scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-zinc-800 mt-4 h-96 w-full overflow-y-auto rounded-lg border border-zinc-600 contain-strict sm:h-[500px] md:h-[600px]"
+            className="scrollbar-thin scrollbar-thumb-amber-700 scrollbar-track-stone-800 mt-4 h-96 w-full overflow-y-auto rounded-xl border border-stone-600 contain-strict sm:h-125 md:h-150"
             role="feed"
             aria-label={`${sortedEventsByCity.length} events`}
           >

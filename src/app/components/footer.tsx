@@ -9,7 +9,7 @@ const ScrollToTop = dynamic(() => import("./ScrollToTop"), {
 
 // Shared link styles
 const linkClass =
-  "transition-colors hover:text-amber-300 hover:underline md:text-lg";
+  "transition-colors hover:text-amber-700 hover:underline md:text-lg";
 
 // External link with accessibility
 function ExternalLink({
@@ -37,7 +37,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="border-t border-zinc-500 bg-zinc-900 md:ml-20"
+      className="border-t border-stone-500 bg-stone-900 md:ml-20"
       aria-labelledby="footer-heading"
     >
       <div className="mx-auto max-w-screen-2xl p-4 py-6 lg:py-8">
@@ -45,12 +45,12 @@ export default function Footer() {
           Site Footer
         </h2>
 
-        <p className="font-heading mb-2 text-center text-2xl font-extrabold tracking-wide text-zinc-200 md:text-4xl">
-          Humor Hub - The Hub of Humor!
-        </p>
+        <h3 className="font-heading mb-4 text-center text-2xl font-extrabold tracking-wide text-zinc-200 drop-shadow-2xl md:text-4xl">
+          Humor Hub
+        </h3>
 
-        <p className="mx-auto mb-8 max-w-2xl text-center text-zinc-400 md:text-xl">
-          Connecting comics and fans with events, tools, and more. Join the fun!
+        <p className="text-md mx-auto mb-6 max-w-2xl text-center text-stone-300 md:text-lg">
+          The Hub of Humor, Connecting comics and fans globally. Join the fun!
         </p>
 
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
@@ -65,7 +65,7 @@ export default function Footer() {
               alt=""
               width={100}
               height={100}
-              className="rounded-full border-4 border-zinc-800 object-contain shadow-xl transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:border-amber-300"
+              className="rounded-full border-2 border-stone-800 object-contain shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:border-amber-700"
               loading="lazy"
               quality={70}
             />
@@ -77,11 +77,11 @@ export default function Footer() {
             <nav aria-labelledby="about-nav">
               <h3
                 id="about-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-zinc-200 uppercase md:mb-6 md:text-xl"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-700 uppercase md:mb-6 md:text-xl"
               >
                 Get to Know Us
               </h3>
-              <ul className="space-y-3 font-medium text-zinc-400 md:space-y-4">
+              <ul className="space-y-3 font-medium text-stone-400 md:space-y-4">
                 <li>
                   <Link href="/about" className={linkClass}>
                     About Humor Hub
@@ -99,11 +99,11 @@ export default function Footer() {
             <nav aria-labelledby="social-nav">
               <h3
                 id="social-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-zinc-200 uppercase md:mb-6 md:text-xl"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-700 uppercase md:mb-6 md:text-xl"
               >
                 Stay Connected
               </h3>
-              <ul className="space-y-3 font-medium text-zinc-400 md:space-y-4">
+              <ul className="space-y-3 font-medium text-stone-400 md:space-y-4">
                 <li>
                   <ExternalLink href="https://twitter.com/naterbug321">
                     X (Twitter)
@@ -131,11 +131,11 @@ export default function Footer() {
             <nav aria-labelledby="legal-nav">
               <h3
                 id="legal-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-zinc-200 uppercase md:mb-6 md:text-xl"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-700 uppercase md:mb-6 md:text-xl"
               >
                 Legal Info
               </h3>
-              <ul className="space-y-3 font-medium text-zinc-400 md:space-y-4">
+              <ul className="space-y-3 font-medium text-stone-400 md:space-y-4">
                 <li>
                   <Link href="/userAgreement" className={linkClass}>
                     User Agreement
@@ -152,10 +152,10 @@ export default function Footer() {
         </div>
 
         {/* Copyright Bar */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-zinc-950 pt-4 sm:flex-row-reverse sm:gap-0">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-stone-900 sm:flex-row-reverse sm:gap-0">
           <ScrollToTop />
 
-          <small className="font-mono text-xs text-zinc-400 md:text-sm">
+          <small className="font-mono text-xs text-stone-400 md:text-sm">
             © {currentYear} Humor Hub™. All rights reserved.
           </small>
         </div>

@@ -25,10 +25,10 @@ export default function NewsPage() {
       <Header />
       <main className="flex min-h-screen flex-col p-4 text-center text-zinc-200 md:ml-20">
         <header className="flex flex-col items-center">
-          <h1 className="font-heading animate-fade-in mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-4xl lg:text-5xl">
+          <h1 className="font-heading animate-fade-in mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:text-4xl lg:text-5xl">
             Hub News
           </h1>
-          <p className="mb-4 max-w-2xl text-lg text-zinc-300">
+          <p className="mb-4 max-w-2xl text-lg text-stone-300">
             Curated stories from around the world. Stay informed with the latest
             updates.
           </p>

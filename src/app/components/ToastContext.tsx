@@ -82,7 +82,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           className="animate-fade-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
         >
           <div
-            className={`text-whiteshadow-xl flex items-center gap-2 rounded-lg px-4 py-3 font-semibold whitespace-nowrap sm:px-6 ${TOAST_STYLES[toast.type]}`}
+            className={`text-whiteshadow-lg flex items-center gap-2 rounded-xl px-4 py-3 font-semibold whitespace-nowrap sm:px-6 ${TOAST_STYLES[toast.type]}`}
           >
             <span aria-hidden="true">{TOAST_ICONS[toast.type]}</span>
             <span>{toast.msg}</span>

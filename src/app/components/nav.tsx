@@ -14,7 +14,7 @@ import AboutIcon from "../icons/AboutIcon";
 import UserIconComponent from "../icons/UserIconComponent";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
-  loading: () => <div className="size-8 rounded-full bg-zinc-700/50" />,
+  loading: () => <div className="size-8 rounded-full bg-stone-900/50" />,
 });
 
 const AuthModal = dynamic(() => import("./authModal"), {
@@ -64,7 +64,7 @@ const CloseIcon = memo(function CloseIcon() {
 // ============ MEMOIZED SUB-COMPONENTS ============
 
 const tooltipClass =
-  "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded bg-zinc-950 px-2 py-1 text-sm font-bold text-amber-300 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
+  "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded bg-stone-900 px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
 
 const NavLink = memo(function NavLink({
   href,
@@ -78,7 +78,7 @@ const NavLink = memo(function NavLink({
   onClick?: () => void;
 }) {
   const className =
-    "group relative transition-transform hover:scale-110 hover:text-zinc-700";
+    "group relative transition-transform hover:scale-110 hover:text-stone-700";
 
   const content = (
     <>
@@ -197,7 +197,7 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
         <button
           type="button"
           onClick={toggleMenu}
-          className="text-zinc-950 transition-transform hover:scale-105"
+          className="text-stone-900 transition-transform hover:scale-105"
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
         >
@@ -231,9 +231,9 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
       <>
         <nav
           aria-label="Main navigation"
-          className="fixed inset-y-0 left-0 z-50 hidden w-16 flex-col items-center justify-between bg-amber-300/90 p-2 shadow-lg backdrop-blur-sm sm:flex"
+          className="fixed inset-y-0 left-0 z-50 hidden w-16 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg backdrop-blur-sm sm:flex"
         >
-          <div className="mt-4 flex flex-col items-center space-y-6 text-zinc-900">
+          <div className="mt-4 flex flex-col items-center space-y-6 text-stone-900">
             <Link
               href="/"
               aria-label="Home"
@@ -244,7 +244,7 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
                 alt=""
                 width={50}
                 height={50}
-                className="rounded-full border-2 border-zinc-900 shadow-lg"
+                className="rounded-full border-2 border-stone-900 shadow-lg"
                 priority
               />
               <span className={tooltipClass}>Home</span>
@@ -283,7 +283,7 @@ export default function Nav({ isMobile, isDesktop }: NavProps) {
           <button
             type="button"
             onClick={toggleMenu}
-            className="mb-4 text-zinc-950 transition-transform hover:scale-110 hover:text-zinc-700"
+            className="mb-4 text-stone-900 transition-transform hover:scale-110 hover:text-stone-700"
             aria-label="Open full menu"
             aria-expanded={isMenuOpen}
           >
@@ -348,12 +348,12 @@ const MobileMenu = memo(function MobileMenu({
       role="dialog"
       aria-modal="true"
       aria-label="Navigation menu"
-      className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 bg-zinc-900/95 p-4 text-zinc-200 backdrop-blur-sm"
+      className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 bg-stone-900/80 p-4 text-zinc-200 backdrop-blur-sm"
     >
       <button
         type="button"
         onClick={closeMenu}
-        className="self-end p-2 text-zinc-200 transition-colors hover:text-amber-300"
+        className="self-end p-2 text-zinc-200 transition-colors hover:text-amber-700"
         aria-label="Close menu"
       >
         <CloseIcon />
@@ -365,7 +365,7 @@ const MobileMenu = memo(function MobileMenu({
           alt=""
           width={50}
           height={50}
-          className="rounded-full border-2 border-zinc-900 shadow-lg"
+          className="rounded-full border-2 border-stone-900 shadow-lg"
           priority
         />
       </Link>
@@ -404,7 +404,7 @@ const MobileMenu = memo(function MobileMenu({
 // ============ MENU HELPERS ============
 
 const menuItemClass =
-  "flex items-center justify-center rounded-lg bg-zinc-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-zinc-700";
+  "flex items-center justify-center rounded-xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-700";
 
 function MenuLink({
   href,

@@ -6,8 +6,8 @@ import dynamic from "next/dynamic";
 // Dynamically load the heavy form only when needed
 const EventFormContent = dynamic(() => import("./EventFormContent"), {
   loading: () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-      <div className="animate-pulse rounded-lg bg-zinc-800 p-4 font-bold text-zinc-200 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/70 p-4 backdrop-blur-sm">
+      <div className="animate-pulse rounded-xl bg-stone-800 p-4 font-bold text-zinc-200 shadow-lg">
         Loading Form...
       </div>
     </div>
@@ -25,11 +25,10 @@ export default function EventForm() {
       <button
         type="button"
         onClick={handleOpen}
-        className="rounded-lg bg-green-600 px-2 py-1 text-lg font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-green-700"
+        className="rounded-xl border-2 border-amber-700 bg-transparent px-4 py-2 text-lg font-bold text-zinc-200 shadow-lg hover:scale-105 hover:bg-amber-700 hover:text-white"
       >
         Add Your Event
       </button>
-
       {isOpen && <EventFormContent onClose={handleClose} />}
     </>
   );

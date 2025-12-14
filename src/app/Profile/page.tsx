@@ -35,10 +35,10 @@ export default function ProfilePage() {
       <Header />
       <main className="flex min-h-screen flex-col p-2 text-center text-zinc-200 md:ml-20">
         <header className="animate-fade-in mt-10 mb-8 flex flex-col items-center">
-          <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-5xl md:text-6xl">
+          <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:text-5xl md:text-6xl">
             Profile
           </h1>
-          <p className="mt-2 text-sm text-zinc-300 md:text-base">
+          <p className="mt-2 text-sm text-stone-300 md:text-base">
             Manage your personal schedule
           </p>
         </header>

@@ -2,7 +2,7 @@ export default function Loading() {
   return (
     <output role="status" className="flex items-center gap-3">
       <svg
-        className="size-8 animate-spin text-amber-300"
+        className="size-8 animate-spin text-amber-700"
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden="true"
@@ -22,7 +22,7 @@ export default function Loading() {
           strokeLinecap="round"
         />
       </svg>
-      <span className="text-2xl font-bold text-amber-300">Loading...</span>
+      <span className="text-2xl font-bold text-amber-700">Loading...</span>
     </output>
   );
 }

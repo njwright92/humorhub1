@@ -2,18 +2,7 @@
 
 @theme {
   /* --- Brand Color Overrides --- */
-  --color-zinc-900: #2e2c28;
-  --color-zinc-200: #f0efeb;
-  --color-zinc-100: #f0efeb;
-  --color-amber-300: #b35a30;
-
-  /* --- Layout --- */
-  --spacing-4_5: 1.125rem;
-  --radius-soft: 1rem;
-
-  /* --- Shadows --- */
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --color-zinc-200: #f0eee9;
 
   /* --- Animation --- */
   --animate-slide-in: slide-in 0.3s forwards;
@@ -28,13 +17,13 @@
 
 @layer base {
   body {
-    background-image: linear-gradient(
-      to bottom,
-      var(--color-zinc-900) 0%,
-      #2e2c28 80%
-    );
+    background: var(--color-stone-900);
     color: var(--color-zinc-200);
     font-family: var(--font-body);
+    --shadow-lg:
+      0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    --spacing-4_5: 1.125rem;
+    --radius-soft: 1rem;
   }
 
   h1,
@@ -52,7 +41,7 @@
   }
 
   option {
-    color: rgb(22, 22, 22);
+    color: var(--color-stone-900);
   }
 
   option[value=""][disabled] {

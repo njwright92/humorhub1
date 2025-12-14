@@ -9,11 +9,6 @@ import type { Auth, User } from "firebase/auth";
 import type { FirebaseStorage } from "firebase/storage";
 import type { Event } from "@/app/lib/types";
 
-const btnBase =
-  "w-full rounded-lg py-2 text-sm font-semibold text-white shadow-lg transition";
-const btnEdit = `${btnBase} bg-green-900 hover:bg-green-700`;
-const btnSignOut = `${btnBase} bg-red-900 hover:bg-red-700`;
-
 export default function ProfileClient() {
   const { showToast } = useToast();
   const router = useRouter();
@@ -242,10 +237,10 @@ export default function ProfileClient() {
         aria-label="Loading profile"
       >
         <div className="w-full max-w-md animate-pulse space-y-4">
-          <div className="mx-auto h-8 w-1/2 rounded bg-zinc-700" />
-          <div className="mx-auto size-36 rounded-full bg-zinc-700" />
-          <div className="mx-auto h-4 w-3/4 rounded bg-zinc-700" />
-          <div className="mx-auto h-4 w-1/2 rounded bg-zinc-700" />
+          <div className="mx-auto h-8 w-1/2 rounded bg-stone-700" />
+          <div className="mx-auto size-36 rounded-full bg-stone-700" />
+          <div className="mx-auto h-4 w-3/4 rounded bg-stone-700" />
+          <div className="mx-auto h-4 w-1/2 rounded bg-stone-700" />
         </div>
         <p className="sr-only">Loading Profile...</p>
       </div>
@@ -256,19 +251,19 @@ export default function ProfileClient() {
   if (!userRef.current) {
     return (
       <div className="mt-10 flex flex-1 flex-col items-center justify-center">
-        <section className="max-w-md rounded-lg border border-zinc-700 bg-zinc-800 p-8 text-center">
+        <section className="max-w-md rounded-xl border border-stone-700 bg-stone-800 p-8 text-center">
           <span className="mb-4 block text-6xl" aria-hidden="true">
             🔐
           </span>
-          <h2 className="font-heading mb-4 text-2xl font-bold text-amber-300">
+          <h2 className="font-heading mb-4 text-2xl font-bold text-amber-700">
             Sign In Required
           </h2>
-          <p className="mb-6 text-zinc-400">
+          <p className="mb-6 text-stone-400">
             Please sign in to view your profile and saved events.
           </p>
           <Link
             href="/MicFinder"
-            className="inline-block rounded-lg bg-amber-300 px-6 py-3 font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-amber-400"
+            className="inline-block rounded-xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
           >
             Go to MicFinder
           </Link>
@@ -283,7 +278,7 @@ export default function ProfileClient() {
       <aside className="lg:col-span-1">
         <section
           aria-labelledby="profile-heading"
-          className="sticky top-24 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-zinc-900 shadow-lg"
+          className="sticky top-24 rounded-xl border border-stone-300 bg-zinc-200 p-4 text-stone-900 shadow-lg"
         >
           <h2 id="profile-heading" className="sr-only">
             Your Profile
@@ -296,7 +291,7 @@ export default function ProfileClient() {
               </p>
             )}
 
-            <figure className="group relative mx-auto mb-4 size-36 overflow-hidden rounded-full border-4 border-zinc-900 bg-zinc-300 shadow-lg">
+            <figure className="group relative mx-auto mb-4 size-36 overflow-hidden rounded-full border-4 border-stone-900 bg-stone-300 shadow-lg">
               {profileImageObjectURL || profileImageUrl ? (
                 <Image
                   src={profileImageObjectURL || profileImageUrl}
@@ -307,7 +302,7 @@ export default function ProfileClient() {
                 />
               ) : (
                 <div
-                  className="flex size-full items-center justify-center text-4xl text-zinc-500"
+                  className="flex size-full items-center justify-center text-4xl text-stone-500"
                   aria-hidden="true"
                 >
                   🎤
@@ -319,7 +314,9 @@ export default function ProfileClient() {
                   htmlFor="profilePicture"
                   className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <span className="text-xs font-bold text-white">Change</span>
+                  <span className="text-xs font-bold text-zinc-200">
+                    Change
+                  </span>
                   <input
                     id="profilePicture"
                     type="file"
@@ -336,7 +333,7 @@ export default function ProfileClient() {
                 <div>
                   <label
                     htmlFor="display-name"
-                    className="mb-1 block text-sm font-bold uppercase"
+                    className="mb-1 block text-sm font-bold text-stone-700 uppercase"
                   >
                     Display Name
                   </label>
@@ -345,16 +342,16 @@ export default function ProfileClient() {
                     id="display-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-lg border border-zinc-400 bg-zinc-100 p-2 focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50"
+                    /* CHANGED: bg-zinc-200 -> bg-white (So we can see the input) */
+                    className="w-full rounded-xl border border-stone-300 bg-white p-2 text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     placeholder="Stage Name"
                     required
-                    aria-required="true"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="bio"
-                    className="mb-1 block text-sm font-bold uppercase"
+                    className="mb-1 block text-sm font-bold text-stone-700 uppercase"
                   >
                     Personal Note / Bio
                   </label>
@@ -362,22 +359,24 @@ export default function ProfileClient() {
                     id="bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full resize-none rounded-lg border border-zinc-400 bg-zinc-100 p-2 text-sm focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50"
+                    className="w-full resize-none rounded-xl border border-stone-300 bg-white p-2 text-sm text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     rows={4}
                     placeholder="Tell us a bit about yourself..."
                   />
                 </div>
-                <div className="flex gap-2 pt-2">
+
+                <div className="flex gap-3 pt-2">
                   <button
                     type="submit"
-                    className="flex-1 rounded-lg bg-blue-900 py-2 text-sm font-bold text-white shadow-md transition hover:bg-blue-700"
+                    className="flex-1 rounded-xl bg-amber-700 py-2 text-sm font-bold text-white shadow-md transition hover:scale-105 hover:bg-amber-800"
                   >
-                    Save
+                    Save Changes
                   </button>
+
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="flex-1 rounded-lg bg-red-900 py-2 text-sm font-bold text-white shadow-md transition hover:bg-red-700"
+                    className="flex-1 rounded-xl border border-stone-300 bg-transparent py-2 text-sm font-bold text-stone-600 transition hover:bg-stone-300 hover:text-stone-900"
                   >
                     Cancel
                   </button>
@@ -386,26 +385,28 @@ export default function ProfileClient() {
             ) : (
               <div className="w-full text-center">
                 {bio ? (
-                  <blockquote className="mb-6 border-t border-zinc-400 pt-4 text-zinc-800 italic">
+                  <blockquote className="mb-6 border-t border-stone-300 pt-4 text-stone-800 italic">
                     &ldquo;{bio}&rdquo;
                   </blockquote>
                 ) : (
-                  <p className="mt-2 mb-6 text-sm text-zinc-500 italic">
+                  <p className="mt-2 mb-6 text-sm text-stone-500 italic">
                     No bio set.
                   </p>
                 )}
+
                 <div className="space-y-3">
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className={btnEdit}
+                    className="w-full rounded-xl bg-stone-900 py-2.5 text-sm font-bold text-zinc-200 shadow-md transition hover:scale-105 hover:bg-stone-800"
                   >
                     Edit Profile
                   </button>
+
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className={btnSignOut}
+                    className="w-1/2 rounded-xl border-2 border-red-300 bg-red-100 py-2 text-sm font-bold text-red-700 transition-all duration-200 hover:border-red-400 hover:bg-red-200 hover:text-red-900 hover:shadow-sm"
                   >
                     Sign Out
                   </button>
@@ -418,14 +419,14 @@ export default function ProfileClient() {
 
       {/* Saved Events */}
       <section aria-labelledby="events-heading" className="lg:col-span-2">
-        <div className="min-h-125 rounded-lg border border-zinc-700 bg-zinc-800/80 p-6 shadow-xl backdrop-blur-sm">
+        <div className="min-h-125 rounded-xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-sm">
           <h2
             id="events-heading"
-            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-white lg:justify-start"
+            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-zinc-200 lg:justify-start"
           >
             <span aria-hidden="true">🎟️</span> Saved Events
             {!isEventsLoading && (
-              <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs text-zinc-300">
+              <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs text-zinc-200">
                 <span className="sr-only">Total: </span>
                 {savedEvents.length}
               </span>
@@ -441,12 +442,12 @@ export default function ProfileClient() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="animate-pulse rounded-lg border border-zinc-700 bg-zinc-900 p-5"
+                  className="animate-pulse rounded-xl border border-stone-700 bg-stone-900 p-5"
                 >
-                  <div className="mb-3 h-5 w-1/2 rounded bg-zinc-700" />
-                  <div className="mb-2 h-4 w-3/4 rounded bg-zinc-700" />
-                  <div className="mb-3 h-4 w-1/4 rounded bg-zinc-700" />
-                  <div className="h-3 w-full rounded bg-zinc-700" />
+                  <div className="mb-3 h-5 w-1/2 rounded bg-stone-700" />
+                  <div className="mb-2 h-4 w-3/4 rounded bg-stone-700" />
+                  <div className="mb-3 h-4 w-1/4 rounded bg-stone-700" />
+                  <div className="h-3 w-full rounded bg-stone-700" />
                 </div>
               ))}
               <p className="sr-only">Loading saved events...</p>
@@ -455,10 +456,10 @@ export default function ProfileClient() {
             <ul className="space-y-4">
               {savedEvents.map((event) => (
                 <li key={event.id}>
-                  <article className="group relative flex flex-col justify-between gap-4 rounded-lg border border-zinc-700 bg-zinc-900 p-5 text-left transition-all hover:border-amber-300 hover:shadow-lg sm:flex-row">
+                  <article className="group relative flex flex-col justify-between gap-4 rounded-xl border border-stone-700 bg-stone-900 p-5 text-left transition-all hover:border-amber-700 hover:shadow-lg sm:flex-row">
                     <div className="flex-1">
                       <header className="mb-1 flex flex-wrap items-center gap-2">
-                        <h3 className="font-heading text-lg font-bold text-zinc-200 transition-colors group-hover:text-amber-300">
+                        <h3 className="font-heading text-lg font-bold text-amber-700 transition-colors group-hover:text-amber-700">
                           {event.name}
                         </h3>
                         {event.festival && (
@@ -472,12 +473,12 @@ export default function ProfileClient() {
                           </span>
                         )}
                       </header>
-                      <p className="mb-1 flex items-center gap-1 text-sm text-zinc-300">
+                      <p className="mb-1 flex items-center gap-1 text-sm text-zinc-200">
                         <span aria-hidden="true">📍</span>
                         <span className="sr-only">Location:</span>
                         {event.location}
                       </p>
-                      <p className="mb-3 flex items-center gap-1 text-xs text-zinc-300">
+                      <p className="mb-3 flex items-center gap-1 text-xs text-zinc-200">
                         <span aria-hidden="true">📅</span>
                         <span className="sr-only">Date:</span>
                         {event.date}
@@ -485,7 +486,7 @@ export default function ProfileClient() {
                       </p>
                       {event.details && (
                         <div
-                          className="line-clamp-2 text-sm text-zinc-300 transition-all duration-300 group-hover:line-clamp-none"
+                          className="line-clamp-2 text-sm text-zinc-200 transition-all duration-300 group-hover:line-clamp-none"
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
                       )}
@@ -495,7 +496,7 @@ export default function ProfileClient() {
                         href={`/MicFinder?city=${encodeURIComponent(
                           event.location.split(",")[1]?.trim() || ""
                         )}`}
-                        className="text-sm text-zinc-300 underline transition-colors hover:text-amber-300"
+                        className="text-sm text-zinc-200 underline transition-colors hover:text-amber-700"
                         aria-label={`Find ${event.name} in ${event.location} on map`}
                       >
                         Find on Map
@@ -504,9 +505,9 @@ export default function ProfileClient() {
                         type="button"
                         onClick={() => handleDeleteEvent(event.id, event.name)}
                         disabled={isDeleting === event.id}
-                        className={`rounded-lg border px-3 py-1 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                        className={`rounded-xl border px-3 py-1 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
                           isDeleting === event.id
-                            ? "border-zinc-600 bg-zinc-700 text-zinc-500"
+                            ? "border-stone-600 bg-stone-700 text-stone-500"
                             : "border-red-500 text-red-400 hover:border-red-400 hover:bg-red-900/50 hover:text-red-100"
                         }`}
                         aria-label={`Remove ${event.name}`}
@@ -519,7 +520,7 @@ export default function ProfileClient() {
               ))}
             </ul>
           ) : (
-            <div className="flex h-64 flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 text-center text-zinc-500">
+            <div className="flex h-64 flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-700 text-center text-stone-500">
               <span className="mb-2 text-4xl" aria-hidden="true">
                 📭
               </span>
@@ -529,7 +530,7 @@ export default function ProfileClient() {
               <p className="mb-4 text-sm">Go find some mics to hit!</p>
               <Link
                 href="/MicFinder"
-                className="rounded-lg bg-amber-300 px-4 py-2 font-bold text-zinc-950 shadow-lg transition-transform hover:scale-105 hover:bg-amber-400"
+                className="rounded-xl bg-amber-700 px-4 py-2 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
               >
                 Go to MicFinder
               </Link>

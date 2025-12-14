@@ -11,10 +11,10 @@ type ContactFormState = {
 
 // Shared styles
 const inputClass =
-  "w-full rounded-lg shadow-lg border-2 border-zinc-300 bg-zinc-900 px-4 py-3 text-white placeholder:text-zinc-500 transition-all focus:border-amber-300 focus:ring-2 focus:ring-amber-300/50";
+  "w-full rounded-xl shadow-lg border-2 border-stone-500 bg-stone-900 px-4 py-3 text-zinc-200 placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
 const labelClass =
-  "mb-2 text-xs font-bold uppercase tracking-wider text-amber-300";
+  "mb-2 text-xs font-bold uppercase tracking-wider text-amber-700";
 
 export default function ContactForm() {
   const [formState, setFormState] = useState<ContactFormState>({
@@ -70,7 +70,7 @@ export default function ContactForm() {
     <div className="animate-fade-in mx-auto w-full max-w-4xl">
       <section
         aria-labelledby="contact-form-heading"
-        className="rounded-xl border-2 border-amber-300/20 bg-zinc-800/80 p-4 shadow-2xl shadow-amber-900/10 backdrop-blur-sm sm:p-6 md:p-8"
+        className="rounded-xl border-2 border-amber-700 bg-stone-800/80 p-4 shadow-2xl shadow-amber-700 backdrop-blur-sm sm:p-6 md:p-8"
       >
         <h2 id="contact-form-heading" className="sr-only">
           Contact Form
@@ -80,7 +80,7 @@ export default function ContactForm() {
         {submitStatus === "success" && (
           <div
             role="alert"
-            className="animate-slide-in mb-6 rounded-lg border border-green-500/50 bg-green-900/30 px-4 py-3 text-center font-semibold text-green-200"
+            className="animate-slide-in mb-6 rounded-xl border border-green-500/50 bg-green-900/30 px-4 py-3 text-center font-semibold text-green-200"
           >
             <span aria-hidden="true">✓ </span>
             Message sent successfully! We&#39;ll get back to you soon.
@@ -89,7 +89,7 @@ export default function ContactForm() {
         {submitStatus === "error" && (
           <div
             role="alert"
-            className="animate-slide-in mb-6 rounded-lg border border-red-500/50 bg-red-900/30 px-4 py-3 text-center font-semibold text-red-200"
+            className="animate-slide-in mb-6 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center font-semibold text-red-200"
           >
             <span aria-hidden="true">✗ </span>
             Something went wrong. Please try again later.
@@ -163,7 +163,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-amber-300 px-8 py-3 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-400 disabled:scale-100 disabled:bg-zinc-600 disabled:text-zinc-400 sm:w-auto sm:text-lg"
+            className="w-full rounded-xl bg-amber-700 px-8 py-3 text-base font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto sm:text-lg"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>
@@ -173,7 +173,7 @@ export default function ContactForm() {
       <nav className="mt-6 text-center sm:mt-8">
         <Link
           href="/"
-          className="text-sm font-medium text-amber-300 transition-colors hover:text-amber-200 hover:underline"
+          className="text-sm font-medium text-amber-700 transition-colors hover:text-amber-600 hover:underline"
         >
           <span aria-hidden="true">← </span>
           Back to Home

@@ -10,7 +10,7 @@ import Footer from "./components/footer";
 const EventForm = dynamic(() => import("./components/EventForm"), {
   loading: () => (
     <button
-      className="cursor-wait rounded-lg bg-green-600 px-2 py-1 text-lg font-bold tracking-wide text-zinc-950 opacity-80 shadow-lg"
+      className="cursor-wait rounded-xl bg-green-600 px-2 py-1 text-lg font-bold tracking-wide text-zinc-950 opacity-80 shadow-lg"
       aria-busy="true"
       aria-label="Loading event form"
     >
@@ -22,7 +22,7 @@ const EventForm = dynamic(() => import("./components/EventForm"), {
 const NewsButton = dynamic(() => import("./components/newsButton"), {
   loading: () => (
     <button
-      className="w-80 cursor-wait self-center rounded-lg bg-amber-300 px-2 py-1 text-center text-lg font-semibold text-white opacity-80 shadow-lg md:self-end"
+      className="w-80 cursor-wait self-center rounded-xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white opacity-80 shadow-lg md:self-end"
       aria-busy="true"
       aria-label="Loading news button"
     >
@@ -69,11 +69,11 @@ export default function Home() {
         {/* Mic Finder Section */}
         <section
           aria-labelledby="micfinder-heading"
-          className="mx-auto my-10 w-full grow rounded-lg p-2 shadow-lg"
+          className="mx-auto my-10 w-full grow rounded-xl p-2 shadow-lg"
         >
           <h2
             id="micfinder-heading"
-            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:mb-10 sm:text-5xl md:text-6xl"
+            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:mb-10 sm:text-5xl md:text-6xl"
           >
             Mic Finder!
           </h2>
@@ -82,7 +82,7 @@ export default function Home() {
               <p className="max-w-lg text-sm leading-relaxed drop-shadow-lg sm:text-base lg:text-lg">
                 Looking for your next Mic?
                 <br />
-                <strong className="text-amber-300">MicFinder</strong> connects
+                <strong className="text-amber-700">MicFinder</strong> connects
                 comics and all artists with open mics worldwide! Explore 1,000s
                 of listings and get on stage!
               </p>
@@ -91,7 +91,7 @@ export default function Home() {
 
               <Link
                 href="/MicFinder"
-                className="w-80 rounded-lg bg-amber-300 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white"
+                className="w-80 rounded-xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white"
               >
                 Find Your Mic!
               </Link>
@@ -115,11 +115,11 @@ export default function Home() {
         {/* Hub News Section */}
         <section
           aria-labelledby="news-heading"
-          className="mx-auto my-10 w-full grow rounded-lg p-2 shadow-lg"
+          className="mx-auto my-10 w-full grow rounded-xl p-2 shadow-lg"
         >
           <h2
             id="news-heading"
-            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:mb-10 sm:text-5xl md:text-6xl"
+            className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:mb-10 sm:text-5xl md:text-6xl"
           >
             Hub News!
           </h2>
@@ -127,7 +127,7 @@ export default function Home() {
             <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-end md:text-right">
               <p className="max-w-lg text-sm leading-relaxed drop-shadow-lg sm:text-base md:text-lg">
                 Your Source for{" "}
-                <strong className="text-amber-300">Fresh Headlines!</strong>
+                <strong className="text-amber-700">Fresh Headlines!</strong>
                 <br />
                 Looking for something topical?
                 <br />

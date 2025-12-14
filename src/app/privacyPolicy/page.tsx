@@ -16,8 +16,8 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <Header />
-      <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 p-4 text-center text-zinc-200 md:ml-24">
-        <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-300 drop-shadow-xl sm:text-5xl md:text-6xl">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 p-4 text-center text-zinc-200 md:ml-24">
+        <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 drop-shadow-lg sm:text-5xl md:text-6xl">
           Privacy Policy
         </h1>
 
@@ -28,7 +28,7 @@ export default function PrivacyPolicyPage() {
 
           <div className="space-y-8">
             <article>
-              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
+              <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 1. Introduction
               </h2>
               <p className="leading-relaxed">
@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
+              <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 2. Information We Collect
               </h2>
               <p className="mb-2">
@@ -63,7 +63,7 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
+              <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 3. Third-Party Services
               </h2>
               <p className="leading-relaxed">
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
+              <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 4. Data Security
               </h2>
               <p className="leading-relaxed">
@@ -98,7 +98,7 @@ export default function PrivacyPolicyPage() {
             </article>
 
             <article>
-              <h2 className="font-heading mb-2 text-xl font-bold text-zinc-900">
+              <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 5. Contact
               </h2>
               <p>
@@ -117,7 +117,7 @@ export default function PrivacyPolicyPage() {
           <div className="mt-10 border-t border-zinc-300 pt-6 text-center">
             <Link
               href="/"
-              className="inline-block rounded-lg bg-zinc-700 px-6 py-3 font-bold text-white shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
+              className="inline-block rounded-xl bg-zinc-700 px-6 py-3 font-bold text-white shadow-md transition-transform hover:scale-105 hover:bg-zinc-800"
             >
               Return Home
             </Link>
