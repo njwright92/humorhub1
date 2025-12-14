@@ -25,6 +25,7 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
     deviceSizes: [308, 640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 180, 256, 384],
+    qualities: [70, 75],
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "thehumorhub.com" },
@@ -35,7 +36,6 @@ const nextConfig = {
 
   async headers() {
     return [
-      // 👇 Static assets - immutable cache
       {
         source: "/_next/static/:path*",
         headers: [
@@ -46,7 +46,6 @@ const nextConfig = {
         ],
       },
 
-      // 👇 Images with stale-while-revalidate
       {
         source: "/_next/image/:path*",
         headers: [
@@ -57,7 +56,6 @@ const nextConfig = {
         ],
       },
 
-      // 👇 Other static files
       {
         source: "/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf)",
         headers: [
@@ -68,7 +66,6 @@ const nextConfig = {
         ],
       },
 
-      // 👇 HTML pages - shorter cache with revalidation
       {
         source: "/:path*",
         headers: [

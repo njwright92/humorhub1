@@ -3,12 +3,12 @@
 @theme {
   /* --- Brand Color Overrides --- */
   --color-zinc-900: #2e2c28;
-  --color-zinc-200: #f4f4f5;
+  --color-zinc-200: #f0efeb;
   --color-amber-300: #b35a30;
 
   /* --- Layout --- */
   --spacing-4_5: 1.125rem;
-  --radius-soft: 0.635rem;
+  --radius-soft: 1rem;
 
   /* --- Shadows --- */
   --shadow-lg:
