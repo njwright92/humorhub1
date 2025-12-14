@@ -6,10 +6,6 @@ const nextConfig = {
   compress: true,
   transpilePackages: ["@tanstack/react-virtual", "firebase"],
   productionBrowserSourceMaps: true,
-  compiler: {
-    removeConsole: true,
-  },
-
   experimental: {
     optimizePackageImports: [
       "firebase",
