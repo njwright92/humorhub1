@@ -108,7 +108,7 @@ export default function AboutPage() {
               </p>
               <Link
                 href={feature.link}
-                className={`mt-4 inline-flex items-center gap-1 text-sm font-bold transition-colors group-hover:underline sm:mt-6 ${feature.linkTextClass}`}
+                className={`mt-4 inline-flex items-center gap-1 font-bold tracking-wide transition-colors group-hover:underline sm:mt-6 ${feature.linkTextClass}`}
               >
                 {feature.linkText}
                 <span aria-hidden="true">→</span>
@@ -131,13 +131,13 @@ export default function AboutPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
             <Link
               href="/MicFinder"
-              className="rounded-2xl bg-amber-700 px-6 py-2.5 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 sm:px-8 sm:py-3"
+              className="rounded-2xl bg-amber-700 px-6 py-2.5 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 sm:px-8 sm:py-3"
             >
               Find Events
             </Link>
             <Link
               href="/"
-              className="rounded-2xl bg-stone-700 px-6 py-2.5 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-600 sm:px-8 sm:py-3"
+              className="rounded-2xl bg-stone-700 px-6 py-2.5 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-stone-600 sm:px-8 sm:py-3"
             >
               Back Home
             </Link>

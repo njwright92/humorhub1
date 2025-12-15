@@ -12,7 +12,7 @@ const inputClass =
   "w-full rounded-2xl shadow-lg border-2 border-stone-500 bg-stone-900 px-4 py-3 text-zinc-200 placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
 const labelClass =
-  "mb-2 text-xs font-bold uppercase tracking-wider text-amber-700";
+  "mb-2 text-xs font-bold uppercase tracking-wider text-zinc-200";
 
 export default function ContactForm() {
   const [formState, setFormState] = useState<ContactFormState>({
