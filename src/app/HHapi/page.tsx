@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import NewsClient from "./NewsClient";
-import Header from "@/app/components/header";
-import Footer from "@/app/components/footer";
 
 export const metadata: Metadata = {
   title: "Hub News - Latest Comedy & World Stories | Humor Hub",
@@ -22,7 +20,6 @@ export const metadata: Metadata = {
 export default function NewsPage() {
   return (
     <>
-      <Header />
       <main className="flex min-h-screen flex-col p-4 text-center text-zinc-200 md:ml-20">
         <header className="flex flex-col items-center">
           <h1 className="font-heading animate-fade-in mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
@@ -33,10 +30,8 @@ export default function NewsPage() {
             updates.
           </p>
         </header>
-
         <NewsClient />
       </main>
-      <Footer />
     </>
   );
 }

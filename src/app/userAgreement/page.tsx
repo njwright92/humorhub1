@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Header from "../components/header";
-import Footer from "../components/footer";
 
 export const metadata: Metadata = {
   title: "User Agreement | Humor Hub",
@@ -15,7 +13,6 @@ export const metadata: Metadata = {
 export default function UserAgreementPage() {
   return (
     <>
-      <Header />
       <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 p-4 text-center text-zinc-200 md:ml-24">
         <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-5xl md:text-6xl">
           User Agreement
@@ -104,7 +101,6 @@ export default function UserAgreementPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

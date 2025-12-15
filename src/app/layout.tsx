@@ -4,6 +4,8 @@ import Script from "next/script";
 import { Comic_Neue } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "./components/ToastContext";
+import Header from "./components/header";
+import Footer from "./components/footer";
 
 const comicNeue = Comic_Neue({
   weight: ["300", "400", "700"],
@@ -68,9 +70,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${comicNeue.variable} bg-stone-900 text-zinc-200 antialiased`}
       >
+        <ToastProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ToastProvider>
         <Script
           id="gtm"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -79,7 +86,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KVJSFKV8');`,
           }}
         />
-        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

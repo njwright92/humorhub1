@@ -1,24 +1,24 @@
-/**
- * @type {import('next').NextConfig}
- */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
-  transpilePackages: ["@tanstack/react-virtual", "firebase"],
-  productionBrowserSourceMaps: true,
+  transpilePackages: ["@tanstack/react-virtual"],
   compiler: {
     removeConsole: true,
   },
+
   experimental: {
     optimizePackageImports: [
-      "firebase",
       "firebase/app",
       "firebase/auth",
       "firebase/firestore",
+      "firebase/storage",
       "@emailjs/browser",
       "@tanstack/react-virtual",
+      "@vis.gl/react-google-maps",
     ],
   },
+
   images: {
     minimumCacheTTL: 31536000,
     deviceSizes: [308, 640, 750, 828, 1080, 1200, 1920],

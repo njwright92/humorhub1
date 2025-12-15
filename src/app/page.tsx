@@ -4,16 +4,10 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
 import news from "../app/news1.webp";
-import Header from "./components/header";
-import Footer from "./components/footer";
 
 const EventForm = dynamic(() => import("./components/EventForm"), {
   loading: () => (
-    <button
-      className="cursor-wait rounded-2xl bg-green-600 px-2 py-1 text-lg font-bold tracking-wide text-zinc-950 opacity-80 shadow-lg"
-      aria-busy="true"
-      aria-label="Loading event form"
-    >
+    <button aria-busy="true" aria-label="Loading event form">
       Add Your Event
     </button>
   ),
@@ -60,7 +54,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <Header />
       <main className="flex min-h-screen flex-col p-4 text-center text-zinc-200 md:ml-20">
         <h1 className="font-heading animate-fade-in mb-6 hidden text-7xl font-bold tracking-wide md:block">
           Humor Hub!
@@ -151,7 +144,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

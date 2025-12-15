@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
-import Header from "@/app/components/header";
-import Footer from "@/app/components/footer";
 
 export const metadata: Metadata = {
   title: "Contact Us | Humor Hub",
@@ -21,7 +19,6 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <Header />
       <main className="flex min-h-screen flex-col items-center justify-center p-4 text-center text-zinc-200 md:ml-20">
         <header className="animate-fade-in mb-8 w-full max-w-4xl">
           <h1 className="font-heading mb-2 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl md:text-5xl lg:text-6xl">
@@ -31,10 +28,8 @@ export default function ContactPage() {
             Questions, feedback, or support? We&#39;re here to help.
           </p>
         </header>
-
         <ContactForm />
       </main>
-      <Footer />
     </>
   );
 }

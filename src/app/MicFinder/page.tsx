@@ -3,8 +3,6 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { fetchMicFinderData } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
-import Header from "@/app/components/header";
-import Footer from "@/app/components/footer";
 
 export const metadata: Metadata = {
   title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
@@ -171,7 +169,6 @@ export default function MicFinderPage() {
   return (
     <>
       <StructuredData />
-      <Header />
       <main className="flex min-h-screen flex-col p-2 text-center text-zinc-200 md:ml-20">
         <header className="animate-fade-in flex flex-col items-center">
           {/* Alert Banner */}
@@ -207,7 +204,6 @@ export default function MicFinderPage() {
           <MicFinderContent />
         </Suspense>
       </main>
-      <Footer />
     </>
   );
 }

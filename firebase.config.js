@@ -10,21 +10,27 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// 1. Initialize App (This is lightweight, safe to do immediately)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-// 2. Create singleton holders
 let _auth = null;
 let _db = null;
 let _storage = null;
 
-// 3. Export Async Getters
-// These only download the code when you actually call them!
-
 export const getAuth = async () => {
   if (_auth) return _auth;
-  const { getAuth: firebaseGetAuth } = await import("firebase/auth");
-  _auth = firebaseGetAuth(app);
+
+  const {
+    initializeAuth,
+    browserLocalPersistence,
+    browserPopupRedirectResolver,
+    indexedDBLocalPersistence,
+  } = await import("firebase/auth");
+
+  _auth = initializeAuth(app, {
+    persistence: [indexedDBLocalPersistence, browserLocalPersistence],
+    popupRedirectResolver: browserPopupRedirectResolver,
+  });
+
   return _auth;
 };
 

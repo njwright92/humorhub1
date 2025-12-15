@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Header from "../components/header";
-import Footer from "../components/footer";
 
 export const metadata: Metadata = {
   title: "About Humor Hub | Mission & Tools",
@@ -19,7 +17,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Feature card data
 const FEATURES = [
   {
     emoji: "🎤",
@@ -58,7 +55,6 @@ const FEATURES = [
 export default function AboutPage() {
   return (
     <>
-      <Header />
       <main className="flex min-h-screen flex-col items-center p-4 text-center text-zinc-200 md:ml-24">
         {/* Hero */}
         <header className="animate-fade-in mx-auto mt-6 mb-8 max-w-4xl sm:mt-10 sm:mb-4">
@@ -144,7 +140,6 @@ export default function AboutPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }
