@@ -68,7 +68,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body
-        className={`${comicNeue.variable} bg-stone-900 text-zinc-200 antialiased`}
+        className={`${comicNeue.variable} font-body bg-stone-900 text-zinc-200 antialiased`}
       >
         <ToastProvider>
           <Header />
