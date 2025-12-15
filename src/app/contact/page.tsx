@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center p-4 text-center text-zinc-200 md:ml-20">
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 text-center md:ml-20">
         <header className="animate-fade-in mb-8 w-full max-w-4xl">
           <h1 className="font-heading mb-2 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl md:text-5xl lg:text-6xl">
             Contact Us

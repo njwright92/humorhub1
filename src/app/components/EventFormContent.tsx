@@ -177,7 +177,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
       onClick={onClose}
       role="dialog"
       aria-modal="true"

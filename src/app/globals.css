@@ -13,26 +13,22 @@
     "Segoe Print", cursive;
   --font-body:
     "Century Gothic", "CenturyGothic", "AppleGothic", "Segoe UI", sans-serif;
+
+  /* --- Shadows --- */
+  --shadow-lg:
+    0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }
 
 @layer base {
-  body {
-    background: var(--color-stone-900);
-    color: var(--color-zinc-200);
-    font-family: var(--font-body);
-    --shadow-lg:
-      0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-heading);
-  }
-
   select,
   select:required:invalid {
     color: var(--color-zinc-200);

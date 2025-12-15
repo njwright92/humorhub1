@@ -312,11 +312,9 @@ export default function ProfileClient() {
               {isEditing && (
                 <label
                   htmlFor="profilePicture"
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute inset-0 flex cursor-pointer items-center justify-center bg-stone-900/50 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <span className="text-xs font-bold text-zinc-200">
-                    Change
-                  </span>
+                  <span className="text-xs font-bold">Change</span>
                   <input
                     id="profilePicture"
                     type="file"
@@ -397,7 +395,7 @@ export default function ProfileClient() {
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="w-full rounded-2xl bg-stone-900 py-2.5 font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
+                    className="w-full rounded-2xl bg-stone-900/90 py-2.5 font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
                   >
                     Edit Profile
                   </button>
@@ -418,14 +416,14 @@ export default function ProfileClient() {
 
       {/* Saved Events */}
       <section aria-labelledby="events-heading" className="lg:col-span-2">
-        <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-sm">
+        <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-md">
           <h2
             id="events-heading"
-            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold text-zinc-200 lg:justify-start"
+            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold lg:justify-start"
           >
             <span aria-hidden="true">🎟️</span> Saved Events
             {!isEventsLoading && (
-              <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs text-zinc-200">
+              <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs">
                 <span className="sr-only">Total: </span>
                 {savedEvents.length}
               </span>
@@ -441,7 +439,7 @@ export default function ProfileClient() {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="animate-pulse rounded-2xl border border-stone-700 bg-stone-900 p-5"
+                  className="animate-pulse rounded-2xl border border-stone-700 p-5"
                 >
                   <div className="mb-3 h-5 w-1/2 rounded bg-stone-700" />
                   <div className="mb-2 h-4 w-3/4 rounded bg-stone-700" />
@@ -455,7 +453,7 @@ export default function ProfileClient() {
             <ul className="space-y-4">
               {savedEvents.map((event) => (
                 <li key={event.id}>
-                  <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 bg-stone-900 p-5 text-left transition-all hover:border-amber-700 hover:shadow-lg sm:flex-row">
+                  <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-5 text-left transition-all hover:border-amber-700 hover:shadow-lg sm:flex-row">
                     <div className="flex-1">
                       <header className="mb-1 flex flex-wrap items-center gap-2">
                         <h3 className="font-heading text-lg font-bold text-amber-700 transition-colors group-hover:text-amber-700">
@@ -472,12 +470,12 @@ export default function ProfileClient() {
                           </span>
                         )}
                       </header>
-                      <p className="mb-1 flex items-center gap-1 text-sm text-zinc-200">
+                      <p className="mb-1 flex items-center gap-1 text-sm">
                         <span aria-hidden="true">📍</span>
                         <span className="sr-only">Location:</span>
                         {event.location}
                       </p>
-                      <p className="mb-3 flex items-center gap-1 text-xs text-zinc-200">
+                      <p className="mb-3 flex items-center gap-1 text-xs">
                         <span aria-hidden="true">📅</span>
                         <span className="sr-only">Date:</span>
                         {event.date}
@@ -485,7 +483,7 @@ export default function ProfileClient() {
                       </p>
                       {event.details && (
                         <div
-                          className="line-clamp-2 text-sm text-zinc-200 transition-all duration-300 group-hover:line-clamp-none"
+                          className="line-clamp-2 text-sm transition-all duration-300 group-hover:line-clamp-none"
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
                       )}
@@ -495,7 +493,7 @@ export default function ProfileClient() {
                         href={`/MicFinder?city=${encodeURIComponent(
                           event.location.split(",")[1]?.trim() || ""
                         )}`}
-                        className="text-sm text-zinc-200 underline transition-colors hover:text-amber-700"
+                        className="text-sm underline transition-colors hover:text-amber-700"
                         aria-label={`Find ${event.name} in ${event.location} on map`}
                       >
                         Find on Map

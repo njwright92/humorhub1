@@ -9,10 +9,9 @@ type ContactFormState = {
 
 // Shared styles
 const inputClass =
-  "w-full rounded-2xl shadow-lg border-2 border-stone-500 bg-stone-900 px-4 py-3 text-zinc-200 placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "w-full rounded-2xl shadow-lg border-2 border-stone-500  px-4 py-3  placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
-const labelClass =
-  "mb-2 text-xs font-bold uppercase tracking-wider text-zinc-200";
+const labelClass = "mb-2 text-xs font-bold uppercase tracking-wider ";
 
 export default function ContactForm() {
   const [formState, setFormState] = useState<ContactFormState>({
@@ -68,7 +67,7 @@ export default function ContactForm() {
     <div className="animate-fade-in mx-auto w-full max-w-4xl">
       <section
         aria-labelledby="contact-form-heading"
-        className="rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-4 shadow-lg shadow-amber-700 backdrop-blur-sm sm:p-6 md:p-8"
+        className="rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-4 shadow-lg shadow-amber-700 backdrop-blur-md sm:p-6 md:p-8"
       >
         <h2 id="contact-form-heading" className="sr-only">
           Contact Form
@@ -161,7 +160,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl bg-amber-700 px-8 py-3 text-base font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto sm:text-lg"
+            className="w-full rounded-2xl bg-amber-700 px-8 py-3 text-base font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto sm:text-lg"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>

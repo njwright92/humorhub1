@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-stone-900 p-4 text-center text-zinc-200 md:ml-24">
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 text-center md:ml-24">
         <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-5xl md:text-6xl">
           Privacy Policy
         </h1>
@@ -114,7 +114,7 @@ export default function PrivacyPolicyPage() {
           <div className="mt-10 border-t border-stone-300 pt-6 text-center">
             <Link
               href="/"
-              className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-800"
+              className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold shadow-lg transition-transform hover:scale-105 hover:bg-stone-800"
             >
               Return Home
             </Link>

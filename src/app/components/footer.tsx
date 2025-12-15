@@ -37,7 +37,7 @@ export default function Footer() {
 
   return (
     <footer
-      className="border-t border-stone-500 bg-stone-900 md:ml-20"
+      className="border-t border-stone-500 md:ml-20"
       aria-labelledby="footer-heading"
     >
       <div className="mx-auto max-w-screen-2xl p-4 py-6 lg:py-8">
@@ -45,7 +45,7 @@ export default function Footer() {
           Site Footer
         </h2>
 
-        <h3 className="font-heading mb-4 text-center text-2xl font-extrabold tracking-wide text-zinc-200 text-shadow-sm md:text-4xl">
+        <h3 className="font-heading mb-4 text-center text-2xl font-extrabold tracking-wide text-shadow-sm md:text-4xl">
           Humor Hub
         </h3>
 

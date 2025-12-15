@@ -204,7 +204,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/75 backdrop-blur"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"

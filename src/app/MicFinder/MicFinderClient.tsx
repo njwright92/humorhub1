@@ -22,12 +22,11 @@ import {
 } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
-// Dynamic imports
-const EventForm = dynamic(() => import("@/app/components/EventForm"), {
+const EventForm = dynamic(() => import("../components/EventForm"), {
   loading: () => (
-    <span className="rounded-2xl bg-stone-700 px-2 py-1 text-lg font-bold text-stone-300 opacity-50">
-      Loading...
-    </span>
+    <button aria-busy="true" aria-label="Loading event form">
+      Add Your Event
+    </button>
   ),
 });
 
@@ -101,7 +100,7 @@ const EventCard = memo(function EventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="mb-4 flex flex-col items-center rounded-2xl border border-stone-600 bg-stone-900/80 p-2 text-center text-zinc-200 shadow-lg">
+    <article className="mb-4 flex flex-col items-center rounded-2xl border border-stone-600 p-2 text-center shadow-lg">
       <h3 className="text-lg font-bold text-amber-600 md:text-xl">
         {event.name}
       </h3>
@@ -536,7 +535,7 @@ export default function MicFinderClient({
           className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-lg transition-transform ${
             !isMapVisible
               ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-white hover:scale-105 sm:text-lg"
-              : "top-4 right-4 border border-stone-700 bg-stone-900 text-sm text-zinc-200 hover:bg-stone-900"
+              : "hover: top-4 right-4 border border-stone-700 text-sm"
           }`}
         >
           {isMapVisible ? "Hide Map" : "Show Map"}

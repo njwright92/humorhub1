@@ -12,7 +12,7 @@
     "lint": "npx eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "preview": "next build && npm run format && npm run format:check && npm run lint && next start"
+    "preview": "npm run format && npm run format:check && npm run lint && next build && next start"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

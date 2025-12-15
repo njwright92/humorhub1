@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <main className="flex min-h-screen flex-col p-4 text-center text-zinc-200 md:ml-20">
+      <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
         <h1 className="font-heading animate-fade-in mb-6 hidden text-7xl font-bold tracking-wide md:block">
           Humor Hub!
         </h1>
@@ -62,7 +62,7 @@ export default function Home() {
         {/* Mic Finder Section */}
         <section
           aria-labelledby="micfinder-heading"
-          className="mx-auto my-10 w-full grow rounded-2xl bg-stone-900/70 p-2 shadow-lg"
+          className="mx-auto my-10 w-full grow rounded-2xl p-2 shadow-lg"
         >
           <h2
             id="micfinder-heading"
@@ -107,7 +107,7 @@ export default function Home() {
         {/* Hub News Section */}
         <section
           aria-labelledby="news-heading"
-          className="mx-auto my-10 w-full grow rounded-2xl bg-stone-900/70 p-2 shadow-lg"
+          className="mx-auto my-10 w-full grow rounded-2xl p-2 shadow-lg"
         >
           <h2
             id="news-heading"
