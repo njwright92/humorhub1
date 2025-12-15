@@ -72,26 +72,27 @@ const TABS = [
     id: "Mics",
     label: "Comedy Mics",
     activeClass: "bg-amber-700",
-    inactiveClass: "bg-amber-100 text-amber-600 hover:bg-amber-200",
+    inactiveClass:
+      "bg-amber-100 text-amber-800 hover:bg-amber-200 font-bold tracking-wide",
   },
   {
     id: "Festivals",
     label: "Festivals",
     activeClass: "bg-purple-700",
-    inactiveClass: "bg-purple-100 text-purple-600 hover:bg-purple-200",
+    inactiveClass:
+      "bg-purple-100 text-purple-800 hover:bg-purple-200 font-bold tracking-wide",
   },
   {
     id: "Other",
     label: "Music/All Arts",
     activeClass: "bg-green-700",
-    inactiveClass: "bg-green-100 text-green-600 hover:bg-green-200",
+    inactiveClass:
+      "bg-green-100 text-green-800 hover:bg-green-200 font-bold tracking-wide",
   },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
-// Memoized Event Card
-// Unified Memoized Event Card
 const EventCard = memo(function EventCard({
   event,
   onSave,
@@ -100,8 +101,8 @@ const EventCard = memo(function EventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="mb-4 flex flex-col items-center rounded-2xl border border-stone-600 bg-stone-800/20 p-3 text-center text-zinc-200 shadow-lg transition-colors hover:bg-stone-800/40">
-      <h3 className="text-lg font-bold text-amber-700 md:text-xl">
+    <article className="mb-4 flex flex-col items-center rounded-2xl border border-stone-600 bg-stone-900/80 p-2 text-center text-zinc-200 shadow-lg">
+      <h3 className="text-lg font-bold text-amber-600 md:text-xl">
         {event.name}
       </h3>
 
@@ -544,7 +545,7 @@ export default function MicFinderClient({
         {hasMapInit && (
           <div
             className={`size-full transition-opacity duration-100 ${
-              isMapVisible ? "opacity-100" : "pointer-events-none opacity-0"
+              isMapVisible ? "visible opacity-100" : "invisible opacity-0"
             }`}
             aria-hidden={!isMapVisible}
           >

@@ -38,10 +38,8 @@ const selectClass =
   "w-full appearance-none rounded-2xl border-2 border-stone-600 bg-stone-900 px-4 py-3 text-zinc-200 transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
 
 const labelClass =
-  "mb-2 text-xs font-bold uppercase tracking-wider text-amber-700";
+  "mb-2 text-sm font-bold uppercase tracking-wider text-zinc-200";
 
-// Memoized Article Card
-// Memoized Article Card
 const ArticleCard = memo(function ArticleCard({
   article,
   priority,

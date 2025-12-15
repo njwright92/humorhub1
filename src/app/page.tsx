@@ -82,9 +82,8 @@ export default function Home() {
               <p className="max-w-lg text-sm leading-relaxed text-shadow-sm sm:text-base lg:text-lg">
                 Looking for your next Mic?
                 <br />
-                <strong className="text-amber-700">MicFinder</strong> connects
-                comics and all artists with open mics worldwide! Explore 1,000s
-                of listings and get on stage!
+                MicFinder connects comics and all artists with open mics
+                worldwide! Explore 1,000s of listings and get on stage!
               </p>
 
               <EventForm />
@@ -126,8 +125,7 @@ export default function Home() {
           <div className="flex flex-col items-center justify-between gap-8 md:flex-row-reverse">
             <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-end md:text-right">
               <p className="max-w-lg text-sm leading-relaxed text-shadow-sm sm:text-base md:text-lg">
-                Your Source for{" "}
-                <strong className="text-amber-700">Fresh Headlines!</strong>
+                Your Source for Fresh Headlines!
                 <br />
                 Looking for something topical?
                 <br />

@@ -77,7 +77,7 @@ export default function Footer() {
             <nav aria-labelledby="about-nav">
               <h3
                 id="about-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-700 uppercase md:mb-6 md:text-xl"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-600 uppercase md:mb-6 md:text-xl"
               >
                 Get to Know Us
               </h3>
@@ -99,7 +99,7 @@ export default function Footer() {
             <nav aria-labelledby="social-nav">
               <h3
                 id="social-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-700 uppercase md:mb-6 md:text-xl"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-600 uppercase md:mb-6 md:text-xl"
               >
                 Stay Connected
               </h3>
@@ -131,7 +131,7 @@ export default function Footer() {
             <nav aria-labelledby="legal-nav">
               <h3
                 id="legal-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-700 uppercase md:mb-6 md:text-xl"
+                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-600 uppercase md:mb-6 md:text-xl"
               >
                 Legal Info
               </h3>

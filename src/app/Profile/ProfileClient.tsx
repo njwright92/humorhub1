@@ -302,7 +302,7 @@ export default function ProfileClient() {
                 />
               ) : (
                 <div
-                  className="flex size-full items-center justify-center text-4xl text-stone-500"
+                  className="text-4x flex size-full items-center justify-center"
                   aria-hidden="true"
                 >
                   🎤
@@ -333,7 +333,7 @@ export default function ProfileClient() {
                 <div>
                   <label
                     htmlFor="display-name"
-                    className="mb-1 block text-sm font-bold text-stone-700 uppercase"
+                    className="mb-1 block text-sm font-bold text-stone-800 uppercase"
                   >
                     Display Name
                   </label>
@@ -342,7 +342,6 @@ export default function ProfileClient() {
                     id="display-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    /* CHANGED: bg-zinc-200 -> bg-white (So we can see the input) */
                     className="w-full rounded-2xl border border-stone-300 bg-white p-2 text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     placeholder="Stage Name"
                     required
@@ -351,7 +350,7 @@ export default function ProfileClient() {
                 <div>
                   <label
                     htmlFor="bio"
-                    className="mb-1 block text-sm font-bold text-stone-700 uppercase"
+                    className="mb-1 block text-sm font-bold text-stone-800 uppercase"
                   >
                     Personal Note / Bio
                   </label>
@@ -385,11 +384,11 @@ export default function ProfileClient() {
             ) : (
               <div className="w-full text-center">
                 {bio ? (
-                  <blockquote className="mb-6 border-t border-stone-300 pt-4 text-stone-800 italic">
+                  <blockquote className="mb-6 border-t border-stone-300 pt-4 text-stone-800">
                     &ldquo;{bio}&rdquo;
                   </blockquote>
                 ) : (
-                  <p className="mt-2 mb-6 text-sm text-stone-500 italic">
+                  <p className="mt-2 mb-6 text-sm tracking-wide text-stone-800">
                     No bio set.
                   </p>
                 )}
@@ -398,7 +397,7 @@ export default function ProfileClient() {
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="w-full rounded-2xl bg-stone-900 py-2.5 text-sm font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
+                    className="w-full rounded-2xl bg-stone-900 py-2.5 font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
                   >
                     Edit Profile
                   </button>
@@ -406,7 +405,7 @@ export default function ProfileClient() {
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="w-1/2 rounded-2xl border-2 border-red-300 bg-red-100 py-2 text-sm font-bold text-red-700 transition-all duration-200 hover:border-red-400 hover:bg-red-200 hover:text-red-900 hover:shadow-lg"
+                    className="w-1/2 rounded-2xl border-2 border-red-300 bg-red-100 py-2 font-bold text-red-700 shadow-lg transition-all duration-200 hover:border-red-400 hover:bg-red-200 hover:text-red-900"
                   >
                     Sign Out
                   </button>
@@ -520,17 +519,17 @@ export default function ProfileClient() {
               ))}
             </ul>
           ) : (
-            <div className="flex h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-700 text-center text-stone-500">
+            <div className="flex h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-700 text-center text-stone-400">
               <span className="mb-2 text-4xl" aria-hidden="true">
                 📭
               </span>
               <p className="font-heading text-lg font-semibold">
                 No events saved yet
               </p>
-              <p className="mb-4 text-sm">Go find some mics to hit!</p>
+              <p className="text-md mb-4">Go find some mics to hit!</p>
               <Link
                 href="/MicFinder"
-                className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
+                className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
               >
                 Go to MicFinder
               </Link>
