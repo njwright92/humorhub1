@@ -55,7 +55,7 @@ interface MicFinderClientProps {
 
 // Shared styles
 const dropdownBtnClass =
-  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-5000 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-lg outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-lg outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
 const dropdownContainerClass =
   "absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-lg";
@@ -91,6 +91,7 @@ const TABS = [
 type TabId = (typeof TABS)[number]["id"];
 
 // Memoized Event Card
+// Unified Memoized Event Card
 const EventCard = memo(function EventCard({
   event,
   onSave,
@@ -99,67 +100,35 @@ const EventCard = memo(function EventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="mb-4 items-center rounded-2xl border border-stone-600 p-2 text-zinc-200 shadow-lg">
-      <h3 className="text-lg font-semibold text-amber-700">{event.name}</h3>
-      <p className="mb-1 text-sm">
-        <span aria-hidden="true">📅 </span>
-        <span className="sr-only">Date: </span>
-        {event.date}
-      </p>
-      <p className="mb-1 text-sm">
-        <span aria-hidden="true">📍 </span>
-        <span className="sr-only">Location: </span>
-        {event.location}
-      </p>
-      <div className="mb-2 text-sm">
-        <span className="font-bold">
-          <span aria-hidden="true">ℹ️ </span>
-          Details:
-        </span>
-        <div dangerouslySetInnerHTML={{ __html: event.details }} />
-      </div>
-      <button
-        type="button"
-        onClick={() => onSave(event)}
-        className={saveButtonClass}
-        aria-label={`Save ${event.name}`}
-      >
-        Save Event
-      </button>
-    </article>
-  );
-});
-
-// Memoized Virtual Event Card
-const VirtualEventCard = memo(function VirtualEventCard({
-  event,
-  onSave,
-}: {
-  event: Event;
-  onSave: (event: Event) => void;
-}) {
-  return (
-    <article className="my-2 mb-4 flex h-auto flex-col rounded-2xl border-b border-stone-600 bg-stone-800/20 p-2 text-center text-zinc-200 shadow-lg">
+    <article className="mb-4 flex flex-col items-center rounded-2xl border border-stone-600 bg-stone-800/20 p-3 text-center text-zinc-200 shadow-lg transition-colors hover:bg-stone-800/40">
       <h3 className="text-lg font-bold text-amber-700 md:text-xl">
         {event.name}
       </h3>
-      <p className="mb-1 text-sm">
-        <span aria-hidden="true">📅 </span>
-        <span className="sr-only">Date: </span>
-        {event.date}
-      </p>
-      <p className="mb-1 text-sm">
-        <span aria-hidden="true">📍 </span>
-        <span className="sr-only">Location: </span>
-        {event.location}
-      </p>
-      <div className="mt-2 text-sm">
-        <span className="font-bold">
+
+      <div className="my-2 flex flex-col gap-1">
+        <p className="text-sm">
+          <span aria-hidden="true">📅 </span>
+          <span className="sr-only">Date: </span>
+          {event.date}
+        </p>
+        <p className="text-sm">
+          <span aria-hidden="true">📍 </span>
+          <span className="sr-only">Location: </span>
+          {event.location}
+        </p>
+      </div>
+
+      <div className="mt-2 w-full px-2 text-sm">
+        <span className="mb-1 block font-bold">
           <span aria-hidden="true">ℹ️ </span>
           Details:
         </span>
-        <div dangerouslySetInnerHTML={{ __html: event.details }} />
+        <div
+          className="wrap-break-word [&_a]:text-blue-400"
+          dangerouslySetInnerHTML={{ __html: event.details }}
+        />
       </div>
+
       <button
         type="button"
         onClick={() => onSave(event)}
@@ -490,10 +459,15 @@ export default function MicFinderClient({
           >
             {selectedCity || "Select a City"}
           </button>
-
           {isFirstDropdownOpen && (
             <div className={dropdownContainerClass}>
+              <label htmlFor="city-select" className="sr-only">
+                Search available cities
+              </label>
               <input
+                id="city-select"
+                name="city-select"
+                autoComplete="off"
                 type="text"
                 placeholder="Search city..."
                 value={searchTerm}
@@ -678,7 +652,13 @@ export default function MicFinderClient({
 
             {isSecondDropdownOpen && (
               <div className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-2xl border border-stone-300 bg-zinc-200 shadow-lg">
+                <label htmlFor="filter-city-input" className="sr-only">
+                  Search city filter
+                </label>
                 <input
+                  id="filter-city-input"
+                  name="filter-city-input"
+                  autoComplete="off"
                   type="text"
                   placeholder="Search for a city..."
                   value={searchTerm}
@@ -753,7 +733,7 @@ export default function MicFinderClient({
                     className="absolute top-0 left-0 w-full"
                     style={{ transform: `translateY(${virtualItem.start}px)` }}
                   >
-                    <VirtualEventCard event={event} onSave={handleEventSave} />
+                    <EventCard event={event} onSave={handleEventSave} />
                   </div>
                 );
               })}

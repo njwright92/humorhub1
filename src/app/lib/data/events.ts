@@ -5,26 +5,16 @@ import { getServerDb } from "../firebase-admin";
 export type MicFinderDataWithCities = MicFinderData & {
   cities: string[];
 };
-
-// Featured city appears first in dropdown
 const FEATURED_CITY = "Spokane WA";
 
-/**
- * Fetches all MicFinder data (events + cities) from Firestore.
- * Results are cached per request using React's cache().
- */
 export const fetchMicFinderData = cache(
   async (): Promise<MicFinderDataWithCities> => {
     try {
       const db = getServerDb();
-
-      // Parallel fetch for better performance
       const [eventsSnap, citiesSnap] = await Promise.all([
         db.collection("userEvents").get(),
         db.collection("cities").get(),
       ]);
-
-      // Map events
       const events: Event[] = eventsSnap.docs.map((doc) => {
         const data = doc.data();
         const googleTimestamp = data.googleTimestamp;
@@ -47,7 +37,6 @@ export const fetchMicFinderData = cache(
         };
       });
 
-      // Map cities and coordinates
       const cityCoordinates: CityCoordinates = {};
       const cities: string[] = [];
 
@@ -61,8 +50,6 @@ export const fetchMicFinderData = cache(
           cities.push(city);
         }
       }
-
-      // Sort alphabetically, but featured city first
       cities.sort((a, b) => {
         if (a === FEATURED_CITY) return -1;
         if (b === FEATURED_CITY) return 1;
