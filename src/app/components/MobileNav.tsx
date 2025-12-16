@@ -8,7 +8,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = dynamic<MobileMenuProps>(() => import("./MobileMenu"), {
-  loading: () => <div className="size-8 animate-pulse rounded-full" />,
+  loading: () => <div className="size-8 rounded-full" />,
 });
 
 const HamburgerIcon = memo(function HamburgerIcon() {
@@ -36,7 +36,7 @@ export default function MobileNav() {
       <button
         type="button"
         onClick={() => setIsMenuOpen(true)}
-        className="flex items-center justify-center p-2"
+        className="flex items-center justify-center"
         aria-label="Open menu"
       >
         <HamburgerIcon />
