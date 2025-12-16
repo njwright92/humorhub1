@@ -365,7 +365,7 @@ const MobileMenu = memo(function MobileMenu({
           alt=""
           width={50}
           height={50}
-          className="rounded-full border-2 border-stone-900 shadow-lg"
+          className="rounded-full border-2 border-stone-700 shadow-lg"
           priority
         />
       </Link>
@@ -404,7 +404,7 @@ const MobileMenu = memo(function MobileMenu({
 // ============ MENU HELPERS ============
 
 const menuItemClass =
-  "flex items-center justify-center rounded-2xl p-3 text-2xl  shadow-lg transition-transform hover:scale-105 hover:bg-stone-800";
+  "flex items-center justify-center rounded-2xl p-2 text-2xl shadow-lg transition-transform hover:scale-105 hover:bg-stone-700 bg-stone-800";
 
 function MenuLink({
   href,
