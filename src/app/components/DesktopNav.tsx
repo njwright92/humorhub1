@@ -15,16 +15,15 @@ import UserIconComponent from "../icons/UserIconComponent";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
   loading: () => (
-    <div className="size-8 animate-pulse rounded-full bg-zinc-200" />
+    <div className="size-10 animate-pulse rounded-full bg-zinc-200" />
   ),
 });
 
 const AuthModal = dynamic(() => import("./authModal"));
 
 const tooltipClass =
-  "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
+  "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
 
-// 1. Define Props for NavLink
 interface NavLinkProps {
   href?: string;
   label: string;
@@ -64,7 +63,6 @@ const NavLink = memo(function NavLink({
   );
 });
 
-// 2. Define minimal type for Auth to avoid 'any'
 interface MinimalAuth {
   currentUser: unknown;
 }
@@ -72,10 +70,7 @@ interface MinimalAuth {
 export default function DesktopNav() {
   const { showToast } = useToast();
   const router = useRouter();
-
-  // 3. Apply the type here
   const authRef = useRef<MinimalAuth | null>(null);
-
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
@@ -119,7 +114,7 @@ export default function DesktopNav() {
 
   return (
     <>
-      <nav className="fixed inset-y-0 left-0 z-50 hidden w-16 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg backdrop-blur-md sm:flex">
+      <nav className="fixed inset-y-0 left-0 z-50 hidden w-18 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg sm:flex">
         <div className="mt-4 flex flex-col items-center space-y-6 text-stone-900">
           <Link
             href="/"
@@ -127,9 +122,9 @@ export default function DesktopNav() {
           >
             <Image
               src={hh}
-              alt=""
-              width={50}
-              height={50}
+              alt="humor hub logo"
+              width={80}
+              height={80}
               className="rounded-full border-2 border-stone-900 shadow-lg"
               priority
             />

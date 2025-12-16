@@ -9,7 +9,7 @@ import { useToast } from "./ToastContext";
 import hh from "../../app/hh.webp";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
-  loading: () => <div className="size-8 animate-pulse rounded-full" />,
+  loading: () => <div className="size-10 animate-pulse rounded-full" />,
 });
 
 const AuthModal = dynamic(() => import("./authModal"));
@@ -88,9 +88,9 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
 
   return (
     <div className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-md">
-      <button onClick={closeMenu} className="self-end p-2 text-zinc-200">
+      <button onClick={closeMenu} className="self-end p-2 text-stone-900">
         <svg
-          className="size-9"
+          className="size-10"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -104,8 +104,8 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
         <Image
           src={hh}
           alt=""
-          width={50}
-          height={50}
+          width={70}
+          height={70}
           className="rounded-full border-2 border-stone-900 shadow-lg"
           priority
         />
@@ -114,6 +114,7 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
       <SearchBar
         isUserSignedIn={isUserSignedIn}
         setIsAuthModalOpen={setIsAuthModalOpen}
+        onNavigate={closeMenu}
       />
 
       <nav className="mt-2 flex w-full max-w-xs flex-col gap-4">

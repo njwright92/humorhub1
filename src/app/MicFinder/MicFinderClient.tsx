@@ -524,7 +524,7 @@ export default function MicFinderClient({
       {/* Map */}
       <section
         aria-label="Event Map"
-        className="relative mt-6 mb-6 h-80 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg sm:h-96 md:h-100"
+        className="relative mt-6 mb-6 h-100 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg"
       >
         <button
           type="button"
@@ -534,8 +534,8 @@ export default function MicFinderClient({
           onFocus={handleMapHover}
           className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-lg transition-transform ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-white hover:scale-105 sm:text-lg"
-              : "hover: top-4 right-4 border border-stone-700 text-sm"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-amber-700 text-base text-white shadow-lg hover:scale-105 sm:text-lg"
+              : "bottom-4 left-4 rounded-2xl bg-stone-900 text-sm shadow-lg hover:scale-105"
           }`}
         >
           {isMapVisible ? "Hide Map" : "Show Map"}

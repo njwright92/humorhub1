@@ -4,7 +4,7 @@ import hh from "../../app/hh.webp";
 import dynamic from "next/dynamic";
 
 const ScrollToTop = dynamic(() => import("./ScrollToTop"), {
-  loading: () => <div className="size-10" aria-hidden="true" />,
+  loading: () => <div className="size-8" aria-hidden="true" />,
 });
 
 // Shared link styles

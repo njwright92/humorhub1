@@ -190,11 +190,11 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 right-4 z-10 text-stone-500 transition-colors hover:text-red-600"
+          className="absolute top-4 right-4 z-10 text-stone-900"
           aria-label="Close modal"
         >
           <svg
-            className="size-8"
+            className="size-10"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

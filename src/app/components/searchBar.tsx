@@ -7,6 +7,7 @@ import { useToast } from "./ToastContext";
 interface SearchBarProps {
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
+  onNavigate?: () => void;
 }
 
 interface PageSuggestion {
@@ -40,7 +41,7 @@ const KEYWORDS_TO_MICFINDER = new Set([
 const SearchIcon = memo(function SearchIcon() {
   return (
     <svg
-      className="size-8"
+      className="size-10"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -55,18 +56,19 @@ const SearchIcon = memo(function SearchIcon() {
   );
 });
 
-function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
+function SearchBar({
+  isUserSignedIn,
+  setIsAuthModalOpen,
+  onNavigate,
+}: SearchBarProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
   const [cities, setCities] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(-1);
-
-  // ============ CALLBACKS ============
 
   const closeSearchBar = useCallback(() => {
     setSearchTerm("");
@@ -74,16 +76,21 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
     setActiveIndex(-1);
   }, []);
 
+  const navigateTo = useCallback(
+    (path: string) => {
+      router.push(path);
+      onNavigate?.();
+      closeSearchBar();
+    },
+    [router, onNavigate, closeSearchBar]
+  );
+
   const handleToggleInput = useCallback(() => {
     setInputVisible((prev) => {
-      if (!prev) {
-        setTimeout(() => inputRef.current?.focus(), 50);
-      }
+      if (!prev) setTimeout(() => inputRef.current?.focus(), 50);
       return !prev;
     });
   }, []);
-
-  // ============ MEMOS ============
 
   const suggestions = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
@@ -120,8 +127,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
   const handleSelectSuggestion = useCallback(
     (suggestion: Suggestion) => {
       if (suggestion.type === "city" && suggestion.city) {
-        router.push(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
-        closeSearchBar();
+        navigateTo(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
         return;
       }
 
@@ -141,11 +147,10 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
           return;
         }
 
-        router.push(route);
-        closeSearchBar();
+        navigateTo(route);
       }
     },
-    [router, closeSearchBar, setIsAuthModalOpen, isUserSignedIn, showToast]
+    [navigateTo, closeSearchBar, setIsAuthModalOpen, isUserSignedIn, showToast]
   );
 
   const handleSearch = useCallback(
@@ -171,8 +176,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
         city.toLowerCase().includes(normalized)
       );
       if (matchingCity) {
-        router.push(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
-        closeSearchBar();
+        navigateTo(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
         return;
       }
 
@@ -188,7 +192,7 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
       cities,
       activeIndex,
       handleSelectSuggestion,
-      router,
+      navigateTo,
       closeSearchBar,
       showToast,
     ]
@@ -221,8 +225,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
     },
     [suggestions, activeIndex, handleSelectSuggestion]
   );
-
-  // ============ EFFECTS ============
 
   useEffect(() => {
     if (!isInputVisible || cities.length > 0) return;
@@ -278,8 +280,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
     };
   }, [isInputVisible, closeSearchBar]);
 
-  // ============ RENDER ============
-
   const searchId = "site-search";
   const listboxId = "search-suggestions";
 
@@ -289,7 +289,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
         <button
           type="button"
           onClick={handleToggleInput}
-          /* CHANGED: Match Cloud Dancer bg, Stone icon */
           className="flex items-center justify-center rounded-full bg-zinc-200 p-1 text-stone-900 transition-colors hover:bg-white"
           aria-label="Open search"
           aria-expanded={isInputVisible}
@@ -304,7 +303,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
             id={searchId}
             role="search"
             onSubmit={handleSearch}
-            /* CHANGED: Border Zinc -> Stone, Shadow logic stays */
             className="flex flex-col rounded-2xl border border-stone-300 bg-zinc-200 p-2 shadow-lg"
           >
             <label htmlFor="search-input" className="sr-only">
@@ -318,7 +316,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
-              /* CHANGED: bg-white for input contrast, Text Stone-900, Placeholder Stone-400 */
               className="w-full rounded-2xl border-2 border-transparent bg-white p-2 text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-700"
               autoComplete="off"
               aria-autocomplete="list"
@@ -332,14 +329,12 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
               <button
                 type="button"
                 onClick={closeSearchBar}
-                /* CHANGED: Cancel button to warm Stone-200 */
                 className="flex-1 rounded-2xl bg-stone-300 py-2 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-400"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                /* CHANGED: Search button to Brand Amber-700 (No more Blue) */
                 className="flex-1 rounded-2xl bg-amber-700 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
               >
                 Search
@@ -351,7 +346,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                 id={listboxId}
                 role="listbox"
                 aria-label="Search suggestions"
-                /* CHANGED: Dividers to Stone-300 */
                 className="mt-2 max-h-60 w-full divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
               >
                 {suggestions.map((sug, idx) => (
@@ -360,7 +354,6 @@ function SearchBar({ isUserSignedIn, setIsAuthModalOpen }: SearchBarProps) {
                     id={`suggestion-${idx}`}
                     role="option"
                     aria-selected={idx === activeIndex}
-                    /* CHANGED: Hover to Stone-300, Active to Amber-100, Text to Stone */
                     className={`flex cursor-pointer items-center justify-between p-2 text-sm text-stone-900 transition-colors ${
                       idx === activeIndex
                         ? "bg-amber-100"

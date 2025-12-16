@@ -8,7 +8,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = dynamic<MobileMenuProps>(() => import("./MobileMenu"), {
-  loading: () => <div className="size-8 rounded-full" />,
+  loading: () => <div className="size-10r ounded-full" />,
 });
 
 const HamburgerIcon = memo(function HamburgerIcon() {
@@ -21,7 +21,7 @@ const HamburgerIcon = memo(function HamburgerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="size-8 text-stone-900"
+      className="size-8 text-stone-900 text-shadow-md"
     >
       <path d="M3 12h18M3 6h18M3 18h18" />
     </svg>

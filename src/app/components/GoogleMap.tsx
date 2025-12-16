@@ -174,7 +174,7 @@ export default function GoogleMap(props: GoogleMapProps) {
   if (!apiKey) {
     return (
       <div
-        className="flex size-full min-h-100 items-center justify-center overflow-hidden rounded-xl bg-zinc-800 shadow-lg"
+        className="flex size-full min-h-100 items-center justify-center overflow-hidden rounded-2xl bg-zinc-800 shadow-lg"
         role="alert"
       >
         <div className="p-4 text-center text-zinc-400">
@@ -188,7 +188,7 @@ export default function GoogleMap(props: GoogleMapProps) {
   }
 
   return (
-    <div className="relative size-full min-h-100 overflow-hidden rounded-xl bg-zinc-800 shadow-lg">
+    <div className="relative size-full min-h-100 overflow-hidden rounded-2xl bg-zinc-800 shadow-lg">
       <APIProvider apiKey={apiKey}>
         <InnerMap {...props} />
       </APIProvider>
