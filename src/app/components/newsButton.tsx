@@ -29,7 +29,7 @@ export default function NewsButton({ children, className }: NewsButtonProps) {
     );
 
     if (hasAuthData) {
-      router.push("/HHapi");
+      router.push("/News");
       return;
     }
 
@@ -39,7 +39,7 @@ export default function NewsButton({ children, className }: NewsButtonProps) {
       const auth = await getAuth();
 
       if (auth.currentUser) {
-        router.push("/HHapi");
+        router.push("/News");
       } else {
         showToast("Please sign in to view News.", "info");
         setIsAuthModalOpen(true);
@@ -54,7 +54,7 @@ export default function NewsButton({ children, className }: NewsButtonProps) {
 
   const handleLoginSuccess = useCallback(() => {
     setIsAuthModalOpen(false);
-    router.push("/HHapi");
+    router.push("/News");
   }, [router]);
 
   return (

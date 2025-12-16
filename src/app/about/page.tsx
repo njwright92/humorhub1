@@ -41,7 +41,7 @@ const FEATURES = [
       "Your daily inspiration feed. Curated headlines across Business, Entertainment, Tech, and Politics—updated every hour.",
     detail:
       "Perfect for writing topical jokes, finding current-event callbacks, or discovering that unexpected angle for your next routine.",
-    link: "/HHapi",
+    link: "/News",
     linkText: "Read News",
     // Blue theme
     titleBaseClass: "text-blue-400",

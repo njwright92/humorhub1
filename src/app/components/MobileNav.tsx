@@ -21,7 +21,7 @@ const HamburgerIcon = memo(function HamburgerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="size-8 text-stone-900 text-shadow-md"
+      className="size-8 text-stone-900"
     >
       <path d="M3 12h18M3 6h18M3 18h18" />
     </svg>

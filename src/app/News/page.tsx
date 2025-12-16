@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   description:
     "Get the latest jokes, events, and comedy news along with top stories from around the world with Humor Hub.",
   alternates: {
-    canonical: "https://www.thehumorhub.com/HHapi",
+    canonical: "https://www.thehumorhub.com/News",
   },
   openGraph: {
     title: "Hub News - Latest Comedy & World Stories",
     description: "Curated news and stories for the comedy community.",
-    url: "https://www.thehumorhub.com/HHapi",
+    url: "https://www.thehumorhub.com/News",
     siteName: "Humor Hub",
     type: "website",
   },

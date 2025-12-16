@@ -11,7 +11,7 @@ const STATIC_ROUTES: Array<{
 }> = [
   { path: "", priority: 1.0, changeFrequency: "weekly" },
   { path: "/MicFinder", priority: 0.9, changeFrequency: "daily" },
-  { path: "/HHapi", priority: 0.8, changeFrequency: "daily" },
+  { path: "/News", priority: 0.8, changeFrequency: "daily" },
   { path: "/Profile", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.5, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },

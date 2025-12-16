@@ -25,7 +25,7 @@ type Suggestion = {
 
 const PAGES: PageSuggestion[] = [
   { label: "Mic Finder", route: "/MicFinder" },
-  { label: "News", route: "/HHapi", requiresAuth: true },
+  { label: "News", route: "/News", requiresAuth: true },
   { label: "Contact", route: "/contact" },
   { label: "About", route: "/about" },
   { label: "Profile", route: "/Profile", requiresAuth: true },
@@ -285,18 +285,18 @@ function SearchBar({
 
   return (
     <search className="relative">
-      {!isInputVisible ? (
-        <button
-          type="button"
-          onClick={handleToggleInput}
-          className="flex items-center justify-center rounded-full bg-zinc-200 p-1 text-stone-900 transition-colors hover:bg-white"
-          aria-label="Open search"
-          aria-expanded={isInputVisible}
-          aria-controls={searchId}
-        >
-          <SearchIcon />
-        </button>
-      ) : (
+      <button
+        type="button"
+        onClick={handleToggleInput}
+        className="flex cursor-pointer items-center justify-center rounded-full bg-zinc-200 p-1 text-stone-900 transition-transform hover:scale-110"
+        aria-label="Open search"
+        aria-expanded={isInputVisible}
+        aria-controls={searchId}
+      >
+        <SearchIcon />
+      </button>
+
+      {isInputVisible && (
         <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
           <form
             ref={formRef}

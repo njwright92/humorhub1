@@ -14,9 +14,7 @@ import AboutIcon from "../icons/AboutIcon";
 import UserIconComponent from "../icons/UserIconComponent";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
-  loading: () => (
-    <div className="size-10 animate-pulse rounded-full bg-zinc-200" />
-  ),
+  loading: () => <div className="size-10 animate-pulse rounded-full" />,
 });
 
 const AuthModal = dynamic(() => import("./authModal"));
@@ -38,7 +36,7 @@ const NavLink = memo(function NavLink({
   onClick,
 }: NavLinkProps) {
   const className =
-    "group relative transition-transform hover:scale-110 hover:text-stone-700";
+    "group relative transition-transform hover:scale-110 hover:text-stone-700 cursor-pointer";
   const content = (
     <>
       {icon}
@@ -143,7 +141,7 @@ export default function DesktopNav() {
           <NavLink
             label="News"
             icon={<NewsIcon />}
-            onClick={() => handleProtectedRoute("/HHapi", "News")}
+            onClick={() => handleProtectedRoute("/News", "News")}
           />
           <NavLink
             label="Profile"

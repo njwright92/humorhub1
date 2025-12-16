@@ -87,7 +87,7 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
   }, [closeMenu]);
 
   return (
-    <div className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-md">
+    <div className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-lg">
       <button onClick={closeMenu} className="self-end p-2 text-stone-900">
         <svg
           className="size-10"
@@ -122,7 +122,7 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
           Mic Finder
         </Link>
         <button
-          onClick={() => handleProtectedRoute("/HHapi", "News")}
+          onClick={() => handleProtectedRoute("/News", "News")}
           className={menuItemClass}
         >
           News
