@@ -17,12 +17,10 @@ export default function PrivacyPolicyPage() {
         <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-5xl md:text-6xl">
           Privacy Policy
         </h1>
-
         <section className="mx-auto max-w-4xl rounded-2xl border border-zinc-300 bg-zinc-200 p-8 text-left text-zinc-800 shadow-lg">
           <p className="mb-6 border-b border-zinc-300 pb-4 text-sm text-zinc-600">
             <strong>Last Updated:</strong> November 2025
           </p>
-
           <div className="space-y-8">
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
@@ -35,7 +33,6 @@ export default function PrivacyPolicyPage() {
                 browse events.
               </p>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 2. Information We Collect
@@ -58,7 +55,6 @@ export default function PrivacyPolicyPage() {
                 </li>
               </ul>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 3. Third-Party Services
@@ -81,7 +77,6 @@ export default function PrivacyPolicyPage() {
                 </li>
               </ul>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 4. Data Security
@@ -93,7 +88,6 @@ export default function PrivacyPolicyPage() {
                 personal data, we cannot guarantee its absolute security.
               </p>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 5. Contact
@@ -110,7 +104,6 @@ export default function PrivacyPolicyPage() {
               </p>
             </article>
           </div>
-
           <div className="mt-10 border-t border-stone-300 pt-6 text-center">
             <Link
               href="/"

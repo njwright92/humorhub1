@@ -17,12 +17,10 @@ export default function UserAgreementPage() {
         <h1 className="font-heading mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-5xl md:text-6xl">
           User Agreement
         </h1>
-
         <section className="mx-auto max-w-4xl rounded-2xl border border-stone-300 bg-zinc-200 p-6 text-left text-stone-900 shadow-lg">
           <p className="mb-6 border-b border-zinc-300 pb-4 text-sm text-zinc-600">
             <strong>Last Updated:</strong> November 2025
           </p>
-
           <div className="space-y-8">
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
@@ -33,7 +31,6 @@ export default function UserAgreementPage() {
                 not agree, please discontinue use of the platform immediately.
               </p>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 2. Open Source & License
@@ -50,7 +47,6 @@ export default function UserAgreementPage() {
                 </li>
               </ul>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 3. User Responsibilities
@@ -62,7 +58,6 @@ export default function UserAgreementPage() {
                 remove content that violates these standards.
               </p>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 4. Disclaimer & Liability
@@ -73,7 +68,6 @@ export default function UserAgreementPage() {
                 arising from the use or inability to use this platform.
               </p>
             </article>
-
             <article>
               <h2 className="font-heading mb-2 text-xl font-bold text-stone-900">
                 5. Contact
@@ -90,7 +84,6 @@ export default function UserAgreementPage() {
               </p>
             </article>
           </div>
-
           <div className="mt-10 border-t border-stone-300 pt-6 text-center">
             <Link
               href="/"

@@ -27,7 +27,6 @@ const FEATURES = [
       "Venue managers can list events in seconds. The wider our database, the more stage time for everyone—whether you're testing 5 minutes or headlining.",
     link: "/MicFinder",
     linkText: "Find a Mic",
-    // Amber theme
     titleBaseClass: "text-amber-700",
     titleHoverClass: "group-hover:text-amber-600",
     borderHoverClass: "hover:border-amber-600/50",
@@ -43,7 +42,6 @@ const FEATURES = [
       "Perfect for writing topical jokes, finding current-event callbacks, or discovering that unexpected angle for your next routine.",
     link: "/News",
     linkText: "Read News",
-    // Blue theme
     titleBaseClass: "text-blue-400",
     titleHoverClass: "group-hover:text-blue-500",
     borderHoverClass: "hover:border-blue-500/50",

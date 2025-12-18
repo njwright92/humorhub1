@@ -33,10 +33,8 @@ const SUBCATEGORIES = [
 const formatText = (text: string) =>
   text.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-// Shared styles
 const selectClass =
   "w-full appearance-none rounded-2xl border-2 border-stone-600  px-4 py-3  transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
-
 const labelClass = "mb-2 text-sm font-bold uppercase tracking-wider ";
 
 const ArticleCard = memo(function ArticleCard({
@@ -71,7 +69,6 @@ const ArticleCard = memo(function ArticleCard({
           {article.source || "News"}
         </span>
       </figure>
-
       <div className="flex grow flex-col p-5">
         <h2 className="font-heading mb-3 line-clamp-3 text-lg leading-tight font-bold transition-colors group-hover:text-amber-700">
           {article.title}
@@ -104,11 +101,9 @@ export default function NewsClient() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
-
   const fetchNews = useCallback(async (cat: Category, sub: string) => {
     setIsLoading(true);
     setError("");
-
     try {
       const response = await fetch(
         `/api/news?category=${cat}&subcategory=${sub}`
@@ -117,7 +112,6 @@ export default function NewsClient() {
 
       const json = await response.json();
       if (json.error) throw new Error(json.error);
-
       setArticles(json.data || []);
     } catch {
       setError("Unable to load the latest headlines. Please try again.");
@@ -134,21 +128,17 @@ export default function NewsClient() {
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     startTransition(() => setSelectedCategory(e.target.value as Category));
   };
-
   const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     startTransition(() => setSelectedSubcategory(e.target.value));
   };
-
   const resetNews = () => {
     startTransition(() => {
       setSelectedCategory("all_news");
       setSelectedSubcategory("general");
     });
   };
-
   return (
     <>
-      {/* Error Alert */}
       {error && (
         <div
           role="alert"
@@ -165,7 +155,6 @@ export default function NewsClient() {
           </button>
         </div>
       )}
-
       {/* Filters */}
       <form
         aria-labelledby="filters-heading"
@@ -176,7 +165,6 @@ export default function NewsClient() {
           <legend id="filters-heading" className="sr-only">
             Filter News
           </legend>
-
           <div className="grid items-end gap-6 text-left md:grid-cols-3">
             <div className="flex flex-col">
               <label htmlFor="news-category" className={labelClass}>
@@ -198,7 +186,6 @@ export default function NewsClient() {
                 <SelectArrow />
               </div>
             </div>
-
             <div className="flex flex-col">
               <label htmlFor="news-subcategory" className={labelClass}>
                 Topic
@@ -219,7 +206,6 @@ export default function NewsClient() {
                 <SelectArrow />
               </div>
             </div>
-
             <button
               type="reset"
               onClick={resetNews}
@@ -230,7 +216,6 @@ export default function NewsClient() {
           </div>
         </fieldset>
       </form>
-
       {/* Results */}
       <section
         aria-labelledby="results-heading"
@@ -240,7 +225,6 @@ export default function NewsClient() {
         <h2 id="results-heading" className="sr-only">
           News Articles
         </h2>
-
         {isLoading ? (
           <div
             className="flex justify-center pt-20"

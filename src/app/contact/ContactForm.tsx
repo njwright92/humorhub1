@@ -7,11 +7,9 @@ type ContactFormState = {
   message: string;
 };
 
-// Shared styles
 const inputClass =
   "w-full rounded-2xl shadow-lg border-2 border-stone-500  px-4 py-3  placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
-
-const labelClass = "mb-2 text-xs font-bold uppercase tracking-wider ";
+const labelClass = "mb-2 text-sm uppercase tracking-wide";
 
 export default function ContactForm() {
   const [formState, setFormState] = useState<ContactFormState>({
@@ -35,14 +33,10 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
-
     setIsSubmitting(true);
     setSubmitStatus(null);
-
     try {
-      // Lazy load EmailJS only when submitting
       const emailjs = await import("@emailjs/browser");
-
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
@@ -53,7 +47,6 @@ export default function ContactForm() {
         },
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
-
       setSubmitStatus("success");
       setFormState({ name: "", email: "", message: "" });
     } catch {
@@ -72,7 +65,6 @@ export default function ContactForm() {
         <h2 id="contact-form-heading" className="sr-only">
           Contact Form
         </h2>
-
         {/* Status Messages */}
         {submitStatus === "success" && (
           <div
@@ -92,7 +84,6 @@ export default function ContactForm() {
             Something went wrong. Please try again later.
           </div>
         )}
-
         <form
           onSubmit={handleSubmit}
           className="space-y-4 text-left sm:space-y-6"
@@ -117,7 +108,6 @@ export default function ContactForm() {
                 className={inputClass}
               />
             </div>
-
             <div className="flex flex-col">
               <label htmlFor="contact-email" className={labelClass}>
                 Email <span className="sr-only">(required)</span>
@@ -136,7 +126,6 @@ export default function ContactForm() {
               />
             </div>
           </div>
-
           {/* Message */}
           <div className="flex flex-col">
             <label htmlFor="contact-message" className={labelClass}>
@@ -155,7 +144,6 @@ export default function ContactForm() {
               className={`${inputClass} resize-none`}
             />
           </div>
-
           {/* Submit */}
           <button
             type="submit"
