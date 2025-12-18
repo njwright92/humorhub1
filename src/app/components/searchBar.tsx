@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
 const formatCityForUrl = (cityString: string) => {
-  return cityString.toLowerCase().trim().replace(/\s+/g, "-"); // Replace spaces with dashes
+  return cityString.toLowerCase().trim().replace(/\s+/g, "-");
 };
 
 interface SearchBarProps {
@@ -21,7 +21,7 @@ interface PageSuggestion {
 }
 
 type Suggestion = {
-  type: "page" | "city";
+  type: "page" | "city" | "action";
   label: string;
   page?: PageSuggestion;
   city?: string;
@@ -42,7 +42,6 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-// A cleaner, slightly thinner modern search icon
 const SearchIcon = memo(function SearchIcon({
   className,
 }: {
@@ -101,112 +100,91 @@ function SearchBar({
     });
   }, []);
 
-  const suggestions = useMemo(() => {
-    const normalized = searchTerm.trim().toLowerCase();
-    if (!normalized || normalized.length < 2) return [];
+  const suggestions = useMemo<Suggestion[]>(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (q.length < 2) return [];
 
     const results: Suggestion[] = [];
 
-    if (["login", "sign in", "sign up"].includes(normalized)) {
-      results.push({ type: "page", label: "Login / Sign Up" });
+    if (q === "login" || q === "sign in" || q === "sign up") {
+      results.push({ type: "action", label: "Login / Sign Up" });
     }
 
-    if (KEYWORDS_TO_MICFINDER.has(normalized)) {
+    if (KEYWORDS_TO_MICFINDER.has(q)) {
       results.push({ type: "page", label: "Mic Finder", page: PAGES[0] });
     }
 
     for (const page of PAGES) {
-      if (page.label.toLowerCase().includes(normalized)) {
+      if (page.label.toLowerCase().includes(q)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
-    let count = 0;
+    let shown = 0;
     for (const city of cities) {
-      if (count >= 5) break;
-      if (city.toLowerCase().includes(normalized)) {
+      if (shown === 5) break;
+      if (city.toLowerCase().includes(q)) {
         results.push({ type: "city", label: city, city });
-        count++;
+        shown++;
       }
     }
 
     return results;
   }, [searchTerm, cities]);
 
-  const handleSelectSuggestion = useCallback(
-    (suggestion: Suggestion) => {
-      if (suggestion.type === "city" && suggestion.city) {
-        // CHANGED: Use the formatter here
-        navigateTo(`/MicFinder?city=${formatCityForUrl(suggestion.city)}`);
-        return;
-      }
-
-      if (suggestion.label === "Login / Sign Up") {
+  const executeSuggestion = useCallback(
+    (s: Suggestion) => {
+      if (s.type === "action") {
         setIsAuthModalOpen(true);
         closeSearchBar();
         return;
       }
 
-      if (suggestion.page) {
-        const { route, requiresAuth, label } = suggestion.page;
+      if (s.type === "city" && s.city) {
+        navigateTo(`/MicFinder?city=${formatCityForUrl(s.city)}`);
+        return;
+      }
 
-        if (requiresAuth && !isUserSignedIn) {
-          showToast(`Please sign in to access ${label}`, "info");
+      if (s.page) {
+        if (s.page.requiresAuth && !isUserSignedIn) {
+          showToast(`Please sign in to access ${s.page.label}`, "info");
           setIsAuthModalOpen(true);
           closeSearchBar();
           return;
         }
 
-        navigateTo(route);
+        navigateTo(s.page.route);
       }
     },
-    [navigateTo, closeSearchBar, setIsAuthModalOpen, isUserSignedIn, showToast]
+    [navigateTo, isUserSignedIn, setIsAuthModalOpen, showToast, closeSearchBar]
   );
 
+  const resolveSuggestion = useCallback((): Suggestion | null => {
+    if (activeIndex >= 0) return suggestions[activeIndex] ?? null;
+
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return null;
+
+    const exact = suggestions.find((s) => s.label.toLowerCase() === q);
+    if (exact) return exact;
+
+    const city = cities.find((c) => c.toLowerCase().includes(q));
+    return city ? { type: "city", label: city, city } : null;
+  }, [activeIndex, suggestions, searchTerm, cities]);
+
   const handleSearch = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const normalized = searchTerm.trim().toLowerCase();
-      if (!normalized) return;
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-      if (activeIndex >= 0 && suggestions[activeIndex]) {
-        handleSelectSuggestion(suggestions[activeIndex]);
-        return;
-      }
-
-      const exactMatch = suggestions.find(
-        (s) => s.label.toLowerCase() === normalized
-      );
-      if (exactMatch) {
-        handleSelectSuggestion(exactMatch);
-        return;
-      }
-
-      const matchingCity = cities.find((city) =>
-        city.toLowerCase().includes(normalized)
-      );
-      if (matchingCity) {
-        // CHANGED: Use the formatter here
-        navigateTo(`/MicFinder?city=${formatCityForUrl(matchingCity)}`);
-        return;
-      }
-
-      if (suggestions.length === 0) {
+      const suggestion = resolveSuggestion();
+      if (suggestion) {
+        executeSuggestion(suggestion);
+      } else {
         showToast("No results found.", "info");
+        closeSearchBar();
       }
-
-      closeSearchBar();
     },
-    [
-      searchTerm,
-      suggestions,
-      cities,
-      activeIndex,
-      handleSelectSuggestion,
-      navigateTo,
-      closeSearchBar,
-      showToast,
-    ]
+    [resolveSuggestion, executeSuggestion, showToast, closeSearchBar]
   );
 
   const handleKeyDown = useCallback(
@@ -229,12 +207,12 @@ function SearchBar({
         case "Enter":
           if (activeIndex >= 0) {
             e.preventDefault();
-            handleSelectSuggestion(suggestions[activeIndex]);
+            executeSuggestion(suggestions[activeIndex]);
           }
           break;
       }
     },
-    [suggestions, activeIndex, handleSelectSuggestion]
+    [suggestions, activeIndex, executeSuggestion]
   );
 
   useEffect(() => {
@@ -269,7 +247,6 @@ function SearchBar({
     };
   }, [isInputVisible, cities.length]);
 
-  // Click outside listener
   useEffect(() => {
     if (!isInputVisible) return;
 
@@ -307,7 +284,6 @@ function SearchBar({
       >
         <SearchIcon />
       </button>
-
       {isInputVisible && (
         <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
           <form
@@ -315,7 +291,7 @@ function SearchBar({
             id={searchId}
             role="search"
             onSubmit={handleSearch}
-            className="flex flex-col rounded-2xl border border-stone-400 bg-zinc-200 p-4"
+            className="relative flex flex-col gap-3 rounded-2xl border border-stone-400 bg-zinc-200 p-4"
           >
             <label htmlFor="search-input" className="sr-only">
               Search city, page, or keyword
@@ -328,7 +304,7 @@ function SearchBar({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full rounded-2xl border-2 border-stone-400 bg-zinc-200 p-2 text-stone-900 shadow-lg placeholder:text-stone-400"
+              className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
               autoComplete="off"
               aria-autocomplete="list"
               aria-controls={listboxId}
@@ -336,22 +312,20 @@ function SearchBar({
                 activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
               }
             />
-
             <button
               type="submit"
-              className="mt-2 w-1/2 flex-1 rounded-2xl bg-amber-700 py-1 text-base font-semibold text-white shadow-lg transition-colors hover:bg-amber-800"
+              className="mx-auto w-32 cursor-pointer rounded-2xl bg-amber-700 py-1 text-base font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-800"
             >
               Search
             </button>
-
             <button
               type="button"
               onClick={closeSearchBar}
-              className="absolute top-0 right-0 flex cursor-pointer text-stone-800 hover:scale-110"
+              className="absolute top-0 right-0 cursor-pointer rounded-full p-1 text-stone-900 transition hover:scale-110"
             >
               <span className="sr-only">Close</span>
               <svg
-                className="size-6"
+                className="size-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
@@ -359,7 +333,6 @@ function SearchBar({
                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
               </svg>
             </button>
-
             {suggestions.length > 0 && (
               <ul
                 id={listboxId}
@@ -380,7 +353,7 @@ function SearchBar({
                     }`}
                     onMouseDown={(e) => {
                       e.preventDefault();
-                      handleSelectSuggestion(sug);
+                      executeSuggestion(sug);
                     }}
                     onMouseEnter={() => setActiveIndex(idx)}
                   >
