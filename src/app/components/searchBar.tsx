@@ -4,6 +4,10 @@ import { useState, useMemo, useRef, useCallback, useEffect, memo } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
+const formatCityForUrl = (cityString: string) => {
+  return cityString.toLowerCase().trim().replace(/\s+/g, "-"); // Replace spaces with dashes
+};
+
 interface SearchBarProps {
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
@@ -38,14 +42,19 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-const SearchIcon = memo(function SearchIcon() {
+// A cleaner, slightly thinner modern search icon
+const SearchIcon = memo(function SearchIcon({
+  className,
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      className="size-10"
+      className={className || "size-10"}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="3"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -127,7 +136,8 @@ function SearchBar({
   const handleSelectSuggestion = useCallback(
     (suggestion: Suggestion) => {
       if (suggestion.type === "city" && suggestion.city) {
-        navigateTo(`/MicFinder?city=${encodeURIComponent(suggestion.city)}`);
+        // CHANGED: Use the formatter here
+        navigateTo(`/MicFinder?city=${formatCityForUrl(suggestion.city)}`);
         return;
       }
 
@@ -176,12 +186,13 @@ function SearchBar({
         city.toLowerCase().includes(normalized)
       );
       if (matchingCity) {
-        navigateTo(`/MicFinder?city=${encodeURIComponent(matchingCity)}`);
+        // CHANGED: Use the formatter here
+        navigateTo(`/MicFinder?city=${formatCityForUrl(matchingCity)}`);
         return;
       }
 
       if (suggestions.length === 0) {
-        showToast("No results found. We've noted your search!", "info");
+        showToast("No results found.", "info");
       }
 
       closeSearchBar();
@@ -258,6 +269,7 @@ function SearchBar({
     };
   }, [isInputVisible, cities.length]);
 
+  // Click outside listener
   useEffect(() => {
     if (!isInputVisible) return;
 
@@ -288,7 +300,7 @@ function SearchBar({
       <button
         type="button"
         onClick={handleToggleInput}
-        className="flex cursor-pointer items-center justify-center rounded-full bg-zinc-200 p-1 text-stone-900 transition-transform hover:scale-110"
+        className="flex cursor-pointer text-zinc-200 hover:scale-110 sm:text-stone-900"
         aria-label="Open search"
         aria-expanded={isInputVisible}
         aria-controls={searchId}
@@ -297,13 +309,13 @@ function SearchBar({
       </button>
 
       {isInputVisible && (
-        <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
+        <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
           <form
             ref={formRef}
             id={searchId}
             role="search"
             onSubmit={handleSearch}
-            className="flex flex-col rounded-2xl border border-stone-300 bg-zinc-200 p-2 shadow-lg"
+            className="flex flex-col rounded-2xl border border-stone-400 bg-zinc-200 p-4"
           >
             <label htmlFor="search-input" className="sr-only">
               Search city, page, or keyword
@@ -316,7 +328,7 @@ function SearchBar({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full rounded-2xl border-2 border-transparent bg-white p-2 text-stone-900 transition-colors placeholder:text-stone-400 focus:border-amber-700"
+              className="w-full rounded-2xl border-2 border-stone-400 bg-zinc-200 p-2 text-stone-900 shadow-lg placeholder:text-stone-400"
               autoComplete="off"
               aria-autocomplete="list"
               aria-controls={listboxId}
@@ -325,28 +337,35 @@ function SearchBar({
               }
             />
 
-            <div className="mt-2 flex gap-2">
-              <button
-                type="button"
-                onClick={closeSearchBar}
-                className="flex-1 rounded-2xl bg-stone-300 py-2 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-400"
+            <button
+              type="submit"
+              className="mt-2 w-1/2 flex-1 rounded-2xl bg-amber-700 py-1 text-base font-semibold text-white shadow-lg transition-colors hover:bg-amber-800"
+            >
+              Search
+            </button>
+
+            <button
+              type="button"
+              onClick={closeSearchBar}
+              className="absolute top-0 right-0 flex cursor-pointer text-stone-800 hover:scale-110"
+            >
+              <span className="sr-only">Close</span>
+              <svg
+                className="size-6"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex-1 rounded-2xl bg-amber-700 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
-              >
-                Search
-              </button>
-            </div>
+                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+              </svg>
+            </button>
 
             {suggestions.length > 0 && (
               <ul
                 id={listboxId}
                 role="listbox"
                 aria-label="Search suggestions"
-                className="mt-2 max-h-60 w-full divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
+                className="mt-4 max-h-60 w-full divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
               >
                 {suggestions.map((sug, idx) => (
                   <li
@@ -366,7 +385,7 @@ function SearchBar({
                     onMouseEnter={() => setActiveIndex(idx)}
                   >
                     <span className="font-medium">{sug.label}</span>
-                    <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">
+                    <span className="text-xs font-bold tracking-wider text-stone-500">
                       {sug.type}
                     </span>
                   </li>
