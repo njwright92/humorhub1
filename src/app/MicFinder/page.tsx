@@ -4,22 +4,51 @@ import Link from "next/link";
 import { fetchMicFinderData } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
 
-export const metadata: Metadata = {
-  title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
-  description:
-    "Discover the best comedy open mics near you. Search by city, view our interactive map, and join the community. The ultimate directory for stand-up comedians.",
-  alternates: {
-    canonical: "https://www.thehumorhub.com/MicFinder",
-  },
-  openGraph: {
-    title: "MicFinder - Find Comedy Open Mics in the USA and Worldwide",
+interface Props {
+  searchParams: Promise<{ city?: string }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { city } = await searchParams;
+
+  const baseUrl = "https://www.thehumorhub.com/MicFinder";
+  const canonical = city
+    ? `${baseUrl}?city=${encodeURIComponent(city)}`
+    : baseUrl;
+
+  if (city) {
+    return {
+      title: `Open Mics in ${city} | Mic Finder | Humor Hub`,
+      description: `Find comedy open mics in ${city}. Discover local stand-up comedy events, open mic nights, and festivals near you.`,
+      alternates: { canonical },
+      openGraph: {
+        title: `Open Mics in ${city} | Humor Hub`,
+        description: `Search stand-up comedy open mics in ${city}. Join the comedy community!`,
+        url: canonical,
+        siteName: "Humor Hub",
+        type: "website",
+      },
+    };
+  }
+
+  return {
+    title:
+      "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
     description:
-      "Search 1,000's of stand-up comedy, music, and all-arts open mics by city or date on our interactive map. Add your event and connect with the comedy community.",
-    url: "https://www.thehumorhub.com/MicFinder",
-    siteName: "Humor Hub",
-    type: "website",
-  },
-};
+      "Discover the best comedy open mics near you. Search by city, view our interactive map, and join the community. The ultimate directory for stand-up comedians.",
+    alternates: { canonical },
+    openGraph: {
+      title: "MicFinder - Find Comedy Open Mics in the USA and Worldwide",
+      description:
+        "Search 1,000's of stand-up comedy, music, and all-arts open mics by city or date on our interactive map. Add your event and connect with the comedy community.",
+      url: canonical,
+      siteName: "Humor Hub",
+      type: "website",
+    },
+  };
+}
 
 function MicFinderSkeleton() {
   return (

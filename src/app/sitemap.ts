@@ -9,7 +9,7 @@ const STATIC_ROUTES: Array<{
   priority: number;
   changeFrequency: "daily" | "weekly" | "monthly";
 }> = [
-  { path: "", priority: 1.0, changeFrequency: "weekly" },
+  { path: "", priority: 1.0, changeFrequency: "daily" },
   { path: "/MicFinder", priority: 0.9, changeFrequency: "daily" },
   { path: "/News", priority: 0.8, changeFrequency: "daily" },
   { path: "/Profile", priority: 0.6, changeFrequency: "monthly" },
