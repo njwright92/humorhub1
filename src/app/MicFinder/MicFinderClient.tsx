@@ -30,8 +30,6 @@ const EventForm = dynamic(() => import("../components/EventForm"), {
   ),
 });
 
-const MemoizedEventForm = memo(EventForm);
-
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
     <div className="flex size-full items-center justify-center text-stone-300">
@@ -60,7 +58,7 @@ const dropdownContainerClass =
   "absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-lg";
 
 const dropdownInputClass =
-  "w-full border-b bg-zinc-200 px-3 py-2 text-stone-900 outline-none";
+  "w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-none";
 
 const saveButtonClass =
   "mt-2 mb-2 self-center rounded-2xl bg-amber-700 px-3 py-1.5 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg";
@@ -148,11 +146,6 @@ export default function MicFinderClient({
 }: MicFinderClientProps) {
   const { showToast } = useToast();
 
-  // Static data (won't change)
-  const events = initialEvents;
-  const cityCoordinates = initialCityCoordinates;
-  const allAvailableCities = initialCities;
-
   // State
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDate, setSelectedDate] = useState(() => new Date());
@@ -235,7 +228,7 @@ export default function MicFinderClient({
         let closestCity: string | null = null;
         let minDistance = Infinity;
 
-        for (const [city, coords] of Object.entries(cityCoordinates)) {
+        for (const [city, coords] of Object.entries(initialCityCoordinates)) {
           const dist = getDistanceFromLatLonInKm(
             latitude,
             longitude,
@@ -259,7 +252,7 @@ export default function MicFinderClient({
       },
       () => showToast("Location access denied", "error")
     );
-  }, [cityCoordinates, showToast]);
+  }, [initialCityCoordinates, showToast]);
 
   const handleCitySelect = useCallback((city: string) => {
     const normalized = normalizeCityName(city);
@@ -332,10 +325,10 @@ export default function MicFinderClient({
 
   // Memoized data
   const dropdownCities = useMemo(() => {
-    if (!debouncedSearchTerm) return allAvailableCities;
+    if (!debouncedSearchTerm) return initialCities;
     const term = debouncedSearchTerm.toLowerCase();
-    return allAvailableCities.filter((c) => c.toLowerCase().includes(term));
-  }, [allAvailableCities, debouncedSearchTerm]);
+    return initialCities.filter((c) => c.toLowerCase().includes(term));
+  }, [initialCities, debouncedSearchTerm]);
 
   const isTabMatch = useCallback(
     (event: Event) => {
@@ -347,13 +340,16 @@ export default function MicFinderClient({
   );
 
   const eventsForMap = useMemo(() => {
-    if (selectedTab === "Mics") return events;
-    if (selectedTab === "Festivals") return events.filter((e) => e.festival);
-    return events.filter((e) => e.isMusic);
-  }, [events, selectedTab]);
+    if (selectedTab === "Mics") return initialEvents;
+    if (selectedTab === "Festivals")
+      return initialEvents.filter((e) => e.festival);
+    return initialEvents.filter((e) => e.isMusic);
+  }, [initialEvents, selectedTab]);
 
   const mapConfig = useMemo(() => {
-    const cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
+    const cityCoords = selectedCity
+      ? initialCityCoordinates[selectedCity]
+      : null;
     return cityCoords
       ? { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM }
       : {
@@ -361,7 +357,7 @@ export default function MicFinderClient({
           lng: DEFAULT_US_CENTER.lng,
           zoom: DEFAULT_ZOOM,
         };
-  }, [selectedCity, cityCoordinates]);
+  }, [selectedCity, initialCityCoordinates]);
 
   const filteredEventsForView = useMemo(() => {
     const dateCheck = new Date(selectedDate);
@@ -369,7 +365,7 @@ export default function MicFinderClient({
     const term = debouncedSearchTerm.toLowerCase();
     const city = selectedCity.toLowerCase();
 
-    return events.filter((e) => {
+    return initialEvents.filter((e) => {
       if (!isTabMatch(e)) return false;
 
       const matchesCity = !city || e.location.toLowerCase().includes(city);
@@ -391,10 +387,16 @@ export default function MicFinderClient({
 
       return matchesCity && matchesDate && matchesSearch;
     });
-  }, [events, selectedCity, selectedDate, debouncedSearchTerm, isTabMatch]);
+  }, [
+    initialEvents,
+    selectedCity,
+    selectedDate,
+    debouncedSearchTerm,
+    isTabMatch,
+  ]);
 
   const sortedEventsByCity = useMemo(() => {
-    let list = events.filter(isTabMatch);
+    let list = initialEvents.filter(isTabMatch);
     if (filterCity !== "All Cities") {
       list = list.filter(
         (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity
@@ -406,7 +408,7 @@ export default function MicFinderClient({
       if (aClub !== bClub) return aClub ? -1 : 1;
       return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
     });
-  }, [events, filterCity, isTabMatch]);
+  }, [initialEvents, filterCity, isTabMatch]);
 
   const rowVirtualizer = useVirtualizer({
     count: sortedEventsByCity.length,
@@ -430,7 +432,7 @@ export default function MicFinderClient({
     <>
       {/* Event Form */}
       <div className="mb-4 flex h-14 w-full items-center justify-center sm:h-16">
-        <MemoizedEventForm />
+        <EventForm />
       </div>
 
       <p className="mt-2 mb-4 text-center text-sm font-semibold text-stone-400 sm:text-base">
@@ -438,9 +440,9 @@ export default function MicFinderClient({
       </p>
 
       {/* Inputs */}
-      <div className="relative z-20 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
+      <div className="relative z-10 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
         {/* City Dropdown */}
-        <div className="relative min-h-12 w-full max-w-xs">
+        <div className="w-full max-w-xs">
           <label id="city-select-label" className="sr-only">
             Select a City
           </label>
@@ -505,7 +507,7 @@ export default function MicFinderClient({
         </div>
 
         {/* Date Picker */}
-        <div className="relative w-full max-w-xs">
+        <div className="w-full max-w-xs">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
@@ -532,10 +534,10 @@ export default function MicFinderClient({
           onMouseEnter={handleMapHover}
           onTouchStart={handleMapHover}
           onFocus={handleMapHover}
-          className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-lg transition-transform ${
+          className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-amber-700 text-base text-white shadow-lg hover:scale-105 sm:text-lg"
-              : "bottom-4 left-4 rounded-2xl bg-stone-900 text-sm shadow-lg hover:scale-105"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-white sm:text-lg"
+              : "bottom-4 left-4 bg-stone-900 text-sm"
           }`}
         >
           {isMapVisible ? "Hide Map" : "Show Map"}
@@ -555,10 +557,6 @@ export default function MicFinderClient({
               events={eventsForMap}
             />
           </div>
-        )}
-
-        {!isMapVisible && (
-          <div className="absolute inset-0 bg-stone-800" aria-hidden="true" />
         )}
       </section>
 
@@ -632,76 +630,74 @@ export default function MicFinderClient({
       {/* All Cities Section */}
       <section
         aria-labelledby="all-events-heading"
-        className="my-8 w-full rounded-2xl p-2 shadow-lg sm:my-10"
+        className="relative z-10 my-8 flex w-full flex-col items-center rounded-2xl p-2 shadow-lg sm:my-10"
       >
-        <div className="relative z-10 mt-2 flex flex-col items-center justify-center">
-          <div className="relative w-full max-w-xs">
-            <button
-              type="button"
-              aria-label="Filter by City"
-              aria-haspopup="listbox"
-              aria-expanded={isSecondDropdownOpen}
-              onClick={() => {
-                setIsSecondDropdownOpen(!isSecondDropdownOpen);
-                setIsFirstDropdownOpen(false);
-              }}
-              className={`${dropdownBtnClass} font-bold`}
-            >
-              {filterCity}
-            </button>
+        <div className="relative w-full max-w-xs">
+          <button
+            type="button"
+            aria-label="Filter by City"
+            aria-haspopup="listbox"
+            aria-expanded={isSecondDropdownOpen}
+            onClick={() => {
+              setIsSecondDropdownOpen(!isSecondDropdownOpen);
+              setIsFirstDropdownOpen(false);
+            }}
+            className={`${dropdownBtnClass} font-bold`}
+          >
+            {filterCity}
+          </button>
 
-            {isSecondDropdownOpen && (
-              <div className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-2xl border border-stone-300 bg-zinc-200 shadow-lg">
-                <label htmlFor="filter-city-input" className="sr-only">
-                  Search city filter
-                </label>
-                <input
-                  id="filter-city-input"
-                  name="filter-city-input"
-                  autoComplete="off"
-                  type="text"
-                  placeholder="Search for a city..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-none"
-                  autoFocus
-                  aria-label="Search filter cities"
-                />
-                <ul className="max-h-48 overflow-y-auto" role="listbox">
+          {isSecondDropdownOpen && (
+            <div className={dropdownContainerClass}>
+              <label htmlFor="filter-city-input" className="sr-only">
+                Search city filter
+              </label>
+              <input
+                id="filter-city-input"
+                name="filter-city-input"
+                autoComplete="off"
+                type="text"
+                placeholder="Search for a city..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={dropdownInputClass}
+                autoFocus
+                aria-label="Search filter cities"
+              />
+              <ul className="max-h-48 overflow-y-auto" role="listbox">
+                <li
+                  role="option"
+                  aria-selected={filterCity === "All Cities"}
+                  onClick={() => handleCityFilterChange("All Cities")}
+                  className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 hover:bg-stone-300 ${
+                    filterCity === "All Cities"
+                      ? "bg-zinc-200 font-semibold"
+                      : ""
+                  }`}
+                >
+                  All Cities
+                </li>
+                {dropdownCities.map((city) => (
                   <li
+                    key={city}
                     role="option"
-                    aria-selected={filterCity === "All Cities"}
-                    onClick={() => handleCityFilterChange("All Cities")}
-                    className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 hover:bg-stone-300 ${
-                      filterCity === "All Cities"
-                        ? "bg-zinc-200 font-semibold"
-                        : ""
+                    aria-selected={filterCity === city}
+                    onClick={() => handleCityFilterChange(city)}
+                    className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-stone-300 ${
+                      filterCity === city ? "bg-zinc-200 font-semibold" : ""
                     }`}
                   >
-                    All Cities
+                    {city}
                   </li>
-                  {dropdownCities.map((city) => (
-                    <li
-                      key={city}
-                      role="option"
-                      aria-selected={filterCity === city}
-                      onClick={() => handleCityFilterChange(city)}
-                      className={`cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-stone-300 ${
-                        filterCity === city ? "bg-zinc-200 font-semibold" : ""
-                      }`}
-                    >
-                      {city}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <h2
           id="all-events-heading"
-          className="font-heading mt-4 rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
+          className="font-heading mt-4 w-full rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
         >
           {filterCity === "All Cities"
             ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
