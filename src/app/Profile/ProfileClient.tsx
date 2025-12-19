@@ -278,7 +278,7 @@ export default function ProfileClient() {
       <aside className="lg:col-span-1">
         <section
           aria-labelledby="profile-heading"
-          className="sticky top-24 rounded-2xl border border-stone-300 bg-zinc-200 p-4 text-stone-900 shadow-lg"
+          className="sticky top-24 rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-stone-900 shadow-lg"
         >
           <h2 id="profile-heading" className="sr-only">
             Your Profile
@@ -298,15 +298,15 @@ export default function ProfileClient() {
                   alt={`${name || "User"}'s profile picture`}
                   fill
                   className="object-cover"
-                  priority
+                  fetchPriority="high"
                 />
               ) : (
-                <div
-                  className="text-4x flex size-full items-center justify-center"
+                <span
+                  className="flex size-full items-center justify-center"
                   aria-hidden="true"
                 >
                   🎤
-                </div>
+                </span>
               )}
 
               {isEditing && (
@@ -419,7 +419,7 @@ export default function ProfileClient() {
         <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-md">
           <h2
             id="events-heading"
-            className="font-heading mb-6 flex items-center justify-center gap-2 text-2xl font-bold lg:justify-start"
+            className="font-heading mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start md:text-2xl"
           >
             <span aria-hidden="true">🎟️</span> Saved Events
             {!isEventsLoading && (
@@ -453,41 +453,39 @@ export default function ProfileClient() {
             <ul className="space-y-4">
               {savedEvents.map((event) => (
                 <li key={event.id}>
-                  <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-5 text-left transition-all hover:border-amber-700 hover:shadow-lg sm:flex-row">
-                    <div className="flex-1">
-                      <header className="mb-1 flex flex-wrap items-center gap-2">
-                        <h3 className="font-heading text-lg font-bold text-amber-700 transition-colors group-hover:text-amber-700">
-                          {event.name}
-                        </h3>
-                        {event.festival && (
-                          <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
-                            Festival
-                          </span>
-                        )}
-                        {event.isMusic && (
-                          <span className="rounded bg-blue-900 px-2 py-0.5 text-[10px] font-bold text-blue-200 uppercase">
-                            Music
-                          </span>
-                        )}
-                      </header>
-                      <p className="mb-1 flex items-center gap-1 text-sm">
-                        <span aria-hidden="true">📍</span>
-                        <span className="sr-only">Location:</span>
-                        {event.location}
-                      </p>
-                      <p className="mb-3 flex items-center gap-1 text-xs">
-                        <span aria-hidden="true">📅</span>
-                        <span className="sr-only">Date:</span>
-                        {event.date}
-                        {event.isRecurring && " (Recurring)"}
-                      </p>
-                      {event.details && (
-                        <div
-                          className="line-clamp-2 text-sm transition-all duration-300 group-hover:line-clamp-none"
-                          dangerouslySetInnerHTML={{ __html: event.details }}
-                        />
+                  <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-4 text-left shadow-lg hover:border-amber-700 sm:flex-row">
+                    <header className="mb-1 flex flex-wrap items-center gap-2">
+                      <h3 className="font-heading text-lg font-bold text-amber-700">
+                        {event.name}
+                      </h3>
+                      {event.festival && (
+                        <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
+                          Festival
+                        </span>
                       )}
-                    </div>
+                      {event.isMusic && (
+                        <span className="rounded bg-blue-900 px-2 py-0.5 text-[10px] font-bold text-blue-200 uppercase">
+                          Music
+                        </span>
+                      )}
+                    </header>
+                    <p className="mb-1 flex items-center gap-1 text-sm">
+                      <span aria-hidden="true">📍</span>
+                      <span className="sr-only">Location:</span>
+                      {event.location}
+                    </p>
+                    <p className="mb-3 flex items-center gap-1 text-xs">
+                      <span aria-hidden="true">📅</span>
+                      <span className="sr-only">Date:</span>
+                      {event.date}
+                      {event.isRecurring && " (Recurring)"}
+                    </p>
+                    {event.details && (
+                      <div
+                        className="line-clamp-2 text-sm transition-all duration-300 group-hover:line-clamp-none"
+                        dangerouslySetInnerHTML={{ __html: event.details }}
+                      />
+                    )}
                     <footer className="flex min-w-25 items-end justify-between gap-2 sm:flex-col">
                       <Link
                         href={`/MicFinder?city=${encodeURIComponent(
