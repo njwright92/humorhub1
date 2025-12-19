@@ -255,19 +255,19 @@ export default function MicFinderClient({
   }, [initialCityCoordinates, showToast]);
 
   const handleCitySelect = useCallback((city: string) => {
+    setIsFirstDropdownOpen(false);
     const normalized = normalizeCityName(city);
     setSelectedCity(normalized);
     setFilterCity(normalized);
     setSearchTerm(normalized);
-    setIsFirstDropdownOpen(false);
   }, []);
 
   const handleCityFilterChange = useCallback((city: string) => {
+    setIsSecondDropdownOpen(false);
     const normalized = city === "All Cities" ? "" : normalizeCityName(city);
     setFilterCity(city);
     setSelectedCity(normalized);
     setSearchTerm(normalized);
-    setIsSecondDropdownOpen(false);
   }, []);
 
   const handleEventSave = useCallback(
