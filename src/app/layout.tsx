@@ -59,13 +59,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <link
-          rel="dns-prefetch"
-          href="https://humorhub-73ff9.firebaseapp.com"
-        />
-        <link rel="dns-prefetch" href="https://apis.google.com" />
-        <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://humorhub-73ff9.firebaseapp.com" />
+        <link rel="preconnect" href="https://apis.google.com" />
+        <link rel="preconnect" href="https://firestore.googleapis.com" />
       </head>
       <body
         className={`${comicNeue.variable} font-body bg-stone-900 text-zinc-200 antialiased`}

@@ -28,15 +28,15 @@ export function useToast() {
 
 // Toast styling by type
 const TOAST_STYLES: Record<ToastType, string> = {
-  success: "bg-green-600",
-  error: "bg-red-600",
-  info: "bg-blue-600",
+  success: "bg-green-700",
+  error: "bg-red-700",
+  info: "bg-blue-700",
 };
 
 const TOAST_ICONS: Record<ToastType, string> = {
   success: "✓",
   error: "✗",
-  info: "ℹ",
+  info: "ⓘ",
 };
 
 const TOAST_DURATION = 3000;
@@ -47,7 +47,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -57,7 +56,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const showToast = useCallback((msg: string, type: ToastType) => {
-    // Clear existing timeout to prevent stale dismissals
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -82,7 +80,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           className="animate-fade-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
         >
           <div
-            className={`text-whiteshadow-lg flex items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap sm:px-6 ${TOAST_STYLES[toast.type]}`}
+            className={`flex items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-lg sm:px-6 ${TOAST_STYLES[toast.type]}`}
           >
             <span aria-hidden="true">{TOAST_ICONS[toast.type]}</span>
             <span>{toast.msg}</span>

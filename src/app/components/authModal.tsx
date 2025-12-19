@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, memo } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "./ToastContext";
 
 type AuthModalProps = {
@@ -18,7 +18,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-const GoogleIcon = memo(function GoogleIcon() {
+function GoogleIcon() {
   return (
     <svg height="20" width="20" viewBox="0 0 20 20" focusable="false">
       <path
@@ -39,12 +39,12 @@ const GoogleIcon = memo(function GoogleIcon() {
       />
     </svg>
   );
-});
+}
 
-const CloseIcon = memo(function CloseIcon() {
+function CloseIcon() {
   return (
     <svg
-      className="h-6 w-6"
+      className="size-6"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
@@ -56,7 +56,7 @@ const CloseIcon = memo(function CloseIcon() {
       />
     </svg>
   );
-});
+}
 
 interface SocialButtonProps {
   onClick: () => void;
@@ -65,7 +65,7 @@ interface SocialButtonProps {
   disabled?: boolean;
 }
 
-const SocialSignInButton = memo(function SocialSignInButton({
+function SocialSignInButton({
   onClick,
   icon,
   label,
@@ -75,15 +75,19 @@ const SocialSignInButton = memo(function SocialSignInButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="flex w-full items-center justify-center rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-200 disabled:opacity-50"
+      className="flex w-full items-center justify-center rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-300 disabled:opacity-50"
     >
       <span className="mr-3">{icon}</span>
       <span className="whitespace-nowrap">{label}</span>
     </button>
   );
-});
+}
 
-function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
+export default function AuthModal({
+  isOpen,
+  onClose,
+  onLoginSuccess,
+}: AuthModalProps) {
   const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -212,7 +216,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
       <div className="relative w-full max-w-sm rounded-2xl bg-stone-300 p-6 shadow-lg">
         <button
           onClick={handleClose}
-          className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-900"
+          className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-700"
           aria-label="Close modal"
           disabled={isLoading}
           type="button"
@@ -276,7 +280,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
             <div>
               <label
                 htmlFor="auth-confirm-password"
-                className="mb-1 block text-left text-sm text-stone-900"
+                className="mb-1 block text-sm text-stone-900"
               >
                 Confirm Password
               </label>
@@ -338,5 +342,3 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
     </div>
   );
 }
-
-export default memo(AuthModal);

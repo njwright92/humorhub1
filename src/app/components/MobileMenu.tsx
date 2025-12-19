@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, memo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -25,7 +25,7 @@ interface MinimalAuth {
   currentUser: unknown;
 }
 
-const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
+export default function MobileMenu({ closeMenu }: MobileMenuProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const authRef = useRef<MinimalAuth | null>(null);
@@ -88,7 +88,11 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
 
   return (
     <div className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-lg">
-      <button onClick={closeMenu} className="self-end p-2 text-stone-900">
+      <button
+        onClick={closeMenu}
+        className="self-end p-2 text-stone-900"
+        aria-label="Close menu"
+      >
         <svg
           className="size-10"
           viewBox="0 0 24 24"
@@ -150,6 +154,4 @@ const MobileMenu = memo(function MobileMenu({ closeMenu }: MobileMenuProps) {
       )}
     </div>
   );
-});
-
-export default MobileMenu;
+}

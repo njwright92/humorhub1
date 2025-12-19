@@ -50,7 +50,7 @@ export default function Home() {
       {/* Mic Finder Section */}
       <section
         aria-labelledby="micfinder-heading"
-        className="mx-auto my-10 w-full grow rounded-2xl p-2 shadow-lg"
+        className="mx-auto my-8 w-full grow rounded-2xl p-2 shadow-lg"
       >
         <h2
           id="micfinder-heading"
@@ -84,6 +84,7 @@ export default function Home() {
                 width={140}
                 height={140}
                 className="rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3"
+                priority
                 fetchPriority="high"
               />
             </Link>
@@ -94,7 +95,7 @@ export default function Home() {
       {/* Hub News Section */}
       <section
         aria-labelledby="news-heading"
-        className="mx-auto my-10 w-full grow rounded-2xl p-2 shadow-lg"
+        className="mx-auto my-8 w-full grow rounded-2xl p-2 shadow-lg"
       >
         <h2
           id="news-heading"
@@ -123,7 +124,6 @@ export default function Home() {
                 width={140}
                 height={140}
                 className="rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3"
-                loading="lazy"
                 quality={70}
               />
             </NewsButton>

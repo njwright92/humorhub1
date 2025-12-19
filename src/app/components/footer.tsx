@@ -7,11 +7,11 @@ const ScrollToTop = dynamic(() => import("./ScrollToTop"), {
   loading: () => <div className="size-8" aria-hidden="true" />,
 });
 
-// Shared link styles
 const linkClass =
   "transition-colors hover:text-amber-700 hover:underline md:text-lg";
 
-// External link with accessibility
+const CURRENT_YEAR = new Date().getFullYear();
+
 function ExternalLink({
   href,
   children,
@@ -33,8 +33,6 @@ function ExternalLink({
 }
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer
       className="border-t border-stone-500 md:ml-20"
@@ -63,10 +61,9 @@ export default function Footer() {
             <Image
               src={hh}
               alt=""
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               className="rounded-full border-2 border-stone-800 object-contain shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:border-amber-700"
-              loading="lazy"
               quality={70}
             />
           </Link>
@@ -156,7 +153,7 @@ export default function Footer() {
           <ScrollToTop />
 
           <small className="font-mono text-xs text-stone-400 md:text-sm">
-            © {currentYear} Humor Hub™. All rights reserved.
+            © {CURRENT_YEAR} Humor Hub™. All rights reserved.
           </small>
         </div>
       </div>

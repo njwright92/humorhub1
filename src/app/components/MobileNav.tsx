@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, memo } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 
 interface MobileMenuProps {
@@ -8,10 +8,10 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = dynamic<MobileMenuProps>(() => import("./MobileMenu"), {
-  loading: () => <div className="size-10r ounded-full" />,
+  loading: () => <div className="size-10 rounded-full" />,
 });
 
-const HamburgerIcon = memo(function HamburgerIcon() {
+function HamburgerIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@ const HamburgerIcon = memo(function HamburgerIcon() {
       <path d="M3 12h18M3 6h18M3 18h18" />
     </svg>
   );
-});
+}
 
 export default function MobileNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

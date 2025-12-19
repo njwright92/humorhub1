@@ -12,19 +12,21 @@ import type { Event } from "@/app/lib/types";
 export default function ProfileClient() {
   const { showToast } = useToast();
   const router = useRouter();
+
+  // Form State
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+
+  // Edit State
   const [originalName, setOriginalName] = useState("");
   const [originalBio, setOriginalBio] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Loading states
+  // Loading / Data State
   const [isLoading, setIsLoading] = useState(true);
   const [isEventsLoading, setIsEventsLoading] = useState(true);
-
-  // Events state
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
@@ -228,6 +230,9 @@ export default function ProfileClient() {
     [showToast]
   );
 
+  // Computed image source
+  const imageSrc = profileImageObjectURL || profileImageUrl;
+
   // Loading State
   if (isLoading) {
     return (
@@ -291,18 +296,20 @@ export default function ProfileClient() {
               </p>
             )}
 
-            <figure className="group relative mx-auto mb-4 size-36 overflow-hidden rounded-full border-4 border-stone-900 bg-stone-300 shadow-lg">
-              {profileImageObjectURL || profileImageUrl ? (
+            <figure className="group relative mx-auto mb-4 size-32 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300 shadow-lg">
+              {imageSrc ? (
                 <Image
-                  src={profileImageObjectURL || profileImageUrl}
+                  src={imageSrc}
                   alt={`${name || "User"}'s profile picture`}
                   fill
                   className="object-cover"
+                  priority
                   fetchPriority="high"
+                  quality={70}
                 />
               ) : (
                 <span
-                  className="flex size-full items-center justify-center"
+                  className="flex size-full items-center justify-center text-4xl"
                   aria-hidden="true"
                 >
                   🎤
@@ -314,7 +321,7 @@ export default function ProfileClient() {
                   htmlFor="profilePicture"
                   className="absolute inset-0 flex cursor-pointer items-center justify-center bg-stone-900/50 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <span className="text-xs font-bold">Change</span>
+                  <span className="text-xs font-bold text-white">Change</span>
                   <input
                     id="profilePicture"
                     type="file"
@@ -454,38 +461,41 @@ export default function ProfileClient() {
               {savedEvents.map((event) => (
                 <li key={event.id}>
                   <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-4 text-left shadow-lg hover:border-amber-700 sm:flex-row">
-                    <header className="mb-1 flex flex-wrap items-center gap-2">
-                      <h3 className="font-heading text-lg font-bold text-amber-700">
-                        {event.name}
-                      </h3>
-                      {event.festival && (
-                        <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
-                          Festival
-                        </span>
+                    <div className="flex-1">
+                      <header className="mb-1 flex flex-wrap items-center gap-2">
+                        <h3 className="font-heading text-lg font-bold text-amber-700">
+                          {event.name}
+                        </h3>
+                        {event.festival && (
+                          <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
+                            Festival
+                          </span>
+                        )}
+                        {event.isMusic && (
+                          <span className="rounded bg-blue-900 px-2 py-0.5 text-[10px] font-bold text-blue-200 uppercase">
+                            Music
+                          </span>
+                        )}
+                      </header>
+                      <p className="mb-1 flex items-center gap-1 text-sm">
+                        <span aria-hidden="true">📍</span>
+                        <span className="sr-only">Location:</span>
+                        {event.location}
+                      </p>
+                      <p className="mb-3 flex items-center gap-1 text-xs">
+                        <span aria-hidden="true">📅</span>
+                        <span className="sr-only">Date:</span>
+                        {event.date}
+                        {event.isRecurring && " (Recurring)"}
+                      </p>
+                      {event.details && (
+                        <div
+                          className="line-clamp-2 text-sm transition-all duration-300 group-hover:line-clamp-none"
+                          dangerouslySetInnerHTML={{ __html: event.details }}
+                        />
                       )}
-                      {event.isMusic && (
-                        <span className="rounded bg-blue-900 px-2 py-0.5 text-[10px] font-bold text-blue-200 uppercase">
-                          Music
-                        </span>
-                      )}
-                    </header>
-                    <p className="mb-1 flex items-center gap-1 text-sm">
-                      <span aria-hidden="true">📍</span>
-                      <span className="sr-only">Location:</span>
-                      {event.location}
-                    </p>
-                    <p className="mb-3 flex items-center gap-1 text-xs">
-                      <span aria-hidden="true">📅</span>
-                      <span className="sr-only">Date:</span>
-                      {event.date}
-                      {event.isRecurring && " (Recurring)"}
-                    </p>
-                    {event.details && (
-                      <div
-                        className="line-clamp-2 text-sm transition-all duration-300 group-hover:line-clamp-none"
-                        dangerouslySetInnerHTML={{ __html: event.details }}
-                      />
-                    )}
+                    </div>
+
                     <footer className="flex min-w-25 items-end justify-between gap-2 sm:flex-col">
                       <Link
                         href={`/MicFinder?city=${encodeURIComponent(

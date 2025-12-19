@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback, useEffect, memo } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
-const formatCityForUrl = (cityString: string) => {
-  return cityString.toLowerCase().trim().replace(/\s+/g, "-");
-};
+const SEARCH_ID = "site-search";
+const LISTBOX_ID = "search-suggestions";
 
 interface SearchBarProps {
   isUserSignedIn: boolean;
@@ -42,11 +41,7 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-const SearchIcon = memo(function SearchIcon({
-  className,
-}: {
-  className?: string;
-}) {
+function SearchIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className || "size-10"}
@@ -62,9 +57,9 @@ const SearchIcon = memo(function SearchIcon({
       <path d="m21 21-4.35-4.35" />
     </svg>
   );
-});
+}
 
-function SearchBar({
+export default function SearchBar({
   isUserSignedIn,
   setIsAuthModalOpen,
   onNavigate,
@@ -141,7 +136,7 @@ function SearchBar({
       }
 
       if (s.type === "city" && s.city) {
-        navigateTo(`/MicFinder?city=${formatCityForUrl(s.city)}`);
+        navigateTo(`/MicFinder?city=${s.city}`);
         return;
       }
 
@@ -152,7 +147,6 @@ function SearchBar({
           closeSearchBar();
           return;
         }
-
         navigateTo(s.page.route);
       }
     },
@@ -269,9 +263,6 @@ function SearchBar({
     };
   }, [isInputVisible, closeSearchBar]);
 
-  const searchId = "site-search";
-  const listboxId = "search-suggestions";
-
   return (
     <search className="relative">
       <button
@@ -280,15 +271,16 @@ function SearchBar({
         className="flex cursor-pointer text-zinc-200 hover:scale-110 sm:text-stone-900"
         aria-label="Open search"
         aria-expanded={isInputVisible}
-        aria-controls={searchId}
+        aria-controls={SEARCH_ID}
       >
         <SearchIcon />
       </button>
+
       {isInputVisible && (
         <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
           <form
             ref={formRef}
-            id={searchId}
+            id={SEARCH_ID}
             role="search"
             onSubmit={handleSearch}
             className="relative flex flex-col gap-3 rounded-2xl border border-stone-400 bg-zinc-200 p-4"
@@ -307,23 +299,25 @@ function SearchBar({
               className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
               autoComplete="off"
               aria-autocomplete="list"
-              aria-controls={listboxId}
+              aria-controls={LISTBOX_ID}
               aria-activedescendant={
                 activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
               }
             />
+
             <button
               type="submit"
               className="mx-auto w-32 cursor-pointer rounded-2xl bg-amber-700 py-1 text-base font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-800"
             >
               Search
             </button>
+
             <button
               type="button"
               onClick={closeSearchBar}
               className="absolute top-0 right-0 cursor-pointer rounded-full p-1 text-stone-900 transition hover:scale-110"
+              aria-label="Close search"
             >
-              <span className="sr-only">Close</span>
               <svg
                 className="size-5"
                 viewBox="0 0 20 20"
@@ -333,9 +327,10 @@ function SearchBar({
                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
               </svg>
             </button>
+
             {suggestions.length > 0 && (
               <ul
-                id={listboxId}
+                id={LISTBOX_ID}
                 role="listbox"
                 aria-label="Search suggestions"
                 className="mt-4 max-h-60 w-full divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
@@ -371,5 +366,3 @@ function SearchBar({
     </search>
   );
 }
-
-export default memo(SearchBar);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useTransition, memo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Loading from "../components/loading";
 import { SelectArrow } from "../lib/utils";
@@ -34,32 +34,35 @@ const formatText = (text: string) =>
   text.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const selectClass =
-  "w-full appearance-none rounded-2xl border-2 border-stone-600  px-4 py-3  transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
-const labelClass = "mb-2 text-sm font-bold uppercase tracking-wider ";
+  "w-full appearance-none rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
+const labelClass = "mb-2 text-sm font-bold uppercase tracking-wider";
 
-const ArticleCard = memo(function ArticleCard({
+function ArticleCard({
   article,
   priority,
 }: {
   article: Article;
   priority: boolean;
 }) {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-lg hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full overflow-hidden">
-        {article.image_url ? (
+        {article.image_url && !imgError ? (
           <Image
             src={article.image_url}
-            alt=""
+            alt="news img"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             priority={priority}
-            loading={priority ? "eager" : "lazy"}
+            quality={70}
+            onError={() => setImgError(true)}
           />
         ) : (
           <div
-            className="flex h-full items-center justify-center text-4xl text-stone-600"
+            className="flex h-full items-center justify-center bg-stone-800"
             aria-hidden="true"
           >
             📰
@@ -91,7 +94,7 @@ const ArticleCard = memo(function ArticleCard({
       </div>
     </article>
   );
-});
+}
 
 export default function NewsClient() {
   const [selectedCategory, setSelectedCategory] =
@@ -100,7 +103,7 @@ export default function NewsClient() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isPending, startTransition] = useTransition();
+
   const fetchNews = useCallback(async (cat: Category, sub: string) => {
     setIsLoading(true);
     setError("");
@@ -126,17 +129,18 @@ export default function NewsClient() {
   }, [selectedCategory, selectedSubcategory, fetchNews]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    startTransition(() => setSelectedCategory(e.target.value as Category));
+    setSelectedCategory(e.target.value as Category);
   };
+
   const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    startTransition(() => setSelectedSubcategory(e.target.value));
+    setSelectedSubcategory(e.target.value);
   };
+
   const resetNews = () => {
-    startTransition(() => {
-      setSelectedCategory("all_news");
-      setSelectedSubcategory("general");
-    });
+    setSelectedCategory("all_news");
+    setSelectedSubcategory("general");
   };
+
   return (
     <>
       {error && (
@@ -161,7 +165,7 @@ export default function NewsClient() {
         onSubmit={(e) => e.preventDefault()}
         className="mx-auto mb-12 w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-6 shadow-lg shadow-amber-900/10 backdrop-blur-md"
       >
-        <fieldset disabled={isPending}>
+        <fieldset disabled={isLoading}>
           <legend id="filters-heading" className="sr-only">
             Filter News
           </legend>
@@ -216,6 +220,7 @@ export default function NewsClient() {
           </div>
         </fieldset>
       </form>
+
       {/* Results */}
       <section
         aria-labelledby="results-heading"

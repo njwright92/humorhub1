@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  compress: true,
+  compress: false,
   transpilePackages: ["@tanstack/react-virtual"],
   compiler: {
-    removeConsole: true,
+    removeConsole: process.env.NODE_ENV === "production",
   },
 
   experimental: {
@@ -22,15 +22,12 @@ const nextConfig = {
   images: {
     minimumCacheTTL: 31536000,
     deviceSizes: [308, 640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 180, 256, 384],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
     qualities: [70, 75],
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      { protocol: "https", hostname: "thehumorhub.com" },
-      { protocol: "https", hostname: "firebasestorage.googleapis.com" },
-      { protocol: "https", hostname: "**" },
-    ],
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
+
   async headers() {
     return [
       {
@@ -43,7 +40,7 @@ const nextConfig = {
         ],
       },
       {
-        source: "/_next/image/:path*",
+        source: "/_next/image",
         headers: [
           {
             key: "Cache-Control",
@@ -52,16 +49,19 @@ const nextConfig = {
         ],
       },
       {
-        source: "/:all*(svg|jpg|jpeg|png|gif|webp|avif|ico|woff|woff2|ttf|otf)",
+        source: "/api/:path*",
         headers: [
+          { key: "Cache-Control", value: "no-store, max-age=0" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,OPTIONS" },
           {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
           },
         ],
       },
       {
-        source: "/:path*",
+        source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
         headers: [
           {
             key: "Cache-Control",
@@ -72,18 +72,6 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-        ],
-      },
-      {
-        source: "/api/:path*",
-        headers: [
-          { key: "Cache-Control", value: "no-store, must-revalidate" },
-          { key: "Access-Control-Allow-Origin", value: "*" },
-          { key: "Access-Control-Allow-Methods", value: "GET,POST,OPTIONS" },
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "Content-Type, Authorization",
-          },
         ],
       },
     ];

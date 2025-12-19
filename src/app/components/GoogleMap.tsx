@@ -9,8 +9,6 @@ import {
   useMap,
   useApiIsLoaded,
 } from "@vis.gl/react-google-maps";
-
-// Import shared type from lib
 import type { Event } from "../lib/types";
 
 interface GoogleMapProps {
@@ -20,65 +18,59 @@ interface GoogleMapProps {
   events: Event[];
 }
 
-// Memoized pin component for better performance with many markers
-const EventPin = memo(({ color }: { color: string }) => (
-  <div className="cursor-pointer transition-transform hover:scale-110">
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 32 32"
-      style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.4))" }}
-    >
-      <circle
-        cx="16"
-        cy="16"
-        r="12"
-        fill={color}
-        stroke="#fff"
-        strokeWidth="4"
-      />
-      <circle cx="16" cy="16" r="4" fill="#f0eee9" />
-    </svg>
-  </div>
-));
+function EventPin({ color }: { color: string }) {
+  return (
+    <div className="cursor-pointer transition-transform hover:scale-110">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 32 32"
+        style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.4))" }}
+      >
+        <circle
+          cx="16"
+          cy="16"
+          r="12"
+          fill={color}
+          stroke="#fff"
+          strokeWidth="4"
+        />
+        <circle cx="16" cy="16" r="4" fill="#f0eee9" />
+      </svg>
+    </div>
+  );
+}
 
-EventPin.displayName = "EventPin";
+function MapHandler({
+  place,
+  zoom,
+}: {
+  place: { lat: number; lng: number };
+  zoom: number;
+}) {
+  const map = useMap();
 
-const MapHandler = memo(
-  ({ place, zoom }: { place: { lat: number; lng: number }; zoom: number }) => {
-    const map = useMap();
+  useEffect(() => {
+    if (!map || !place || isNaN(place.lat) || isNaN(place.lng)) return;
+    map.panTo(place);
+    map.setZoom(zoom);
+  }, [map, place, zoom]);
 
-    useEffect(() => {
-      if (!map) return;
-      if (
-        !place ||
-        typeof place.lat !== "number" ||
-        typeof place.lng !== "number" ||
-        isNaN(place.lat) ||
-        isNaN(place.lng)
-      ) {
-        return;
-      }
+  return null;
+}
 
-      map.panTo(place);
-      map.setZoom(zoom);
-    }, [map, place, zoom]);
-
-    return null;
-  }
-);
-
-MapHandler.displayName = "MapHandler";
-
-// 2. Updated Color Logic to match your Tabs
 const getPinColor = (event: Event): string => {
   if (event.festival) return "#7e22ce";
   if (event.isMusic) return "#15803d";
   return "#bb4d00";
 };
 
-// Inner map component
-const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
+const InnerMap = memo(function InnerMap({
+  lat,
+  lng,
+  zoom = 12,
+  events,
+}: GoogleMapProps) {
   const apiIsLoaded = useApiIsLoaded();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -94,14 +86,14 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
     setSelectedEvent(null);
   }, []);
 
-  // Loading State -> Stone-800
   if (!apiIsLoaded) {
     return (
-      <div className="flex h-full w-full animate-pulse items-center justify-center bg-stone-800 text-stone-400">
+      <div className="flex size-full animate-pulse items-center justify-center bg-stone-800 text-stone-400">
         <span className="font-semibold">Loading Map...</span>
       </div>
     );
   }
+
   return (
     <Map
       defaultCenter={{ lat, lng }}
@@ -165,8 +157,6 @@ const InnerMap = memo(({ lat, lng, zoom = 12, events }: GoogleMapProps) => {
     </Map>
   );
 });
-
-InnerMap.displayName = "InnerMap";
 
 export default function GoogleMap(props: GoogleMapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, memo } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -29,12 +29,7 @@ interface NavLinkProps {
   onClick?: () => void;
 }
 
-const NavLink = memo(function NavLink({
-  href,
-  label,
-  icon,
-  onClick,
-}: NavLinkProps) {
+function NavLink({ href, label, icon, onClick }: NavLinkProps) {
   const className =
     "group relative transition-transform hover:scale-110 hover:text-stone-700 cursor-pointer";
   const content = (
@@ -43,12 +38,15 @@ const NavLink = memo(function NavLink({
       <span className={tooltipClass}>{label}</span>
     </>
   );
-  if (href)
+
+  if (href) {
     return (
       <Link href={href} aria-label={label} className={className}>
         {content}
       </Link>
     );
+  }
+
   return (
     <button
       type="button"
@@ -59,7 +57,7 @@ const NavLink = memo(function NavLink({
       {content}
     </button>
   );
-});
+}
 
 interface MinimalAuth {
   currentUser: unknown;
@@ -76,8 +74,9 @@ export default function DesktopNav() {
   useEffect(() => {
     if (
       Object.keys(localStorage).some((k) => k.startsWith("firebase:authUser:"))
-    )
+    ) {
       setIsUserSignedIn(true);
+    }
 
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
@@ -86,6 +85,7 @@ export default function DesktopNav() {
       authRef.current = auth;
       onAuthStateChanged(auth, (user) => setIsUserSignedIn(!!user));
     };
+
     if ("requestIdleCallback" in window) requestIdleCallback(initAuth);
     else setTimeout(initAuth, 100);
   }, []);
@@ -100,8 +100,9 @@ export default function DesktopNav() {
 
   const handleProtectedRoute = useCallback(
     (path: string, label: string) => {
-      if (isUserSignedIn || authRef.current?.currentUser) router.push(path);
-      else {
+      if (isUserSignedIn || authRef.current?.currentUser) {
+        router.push(path);
+      } else {
         showToast(`Please sign in to view ${label}`, "info");
         setPendingRedirect(path);
         setIsAuthModalOpen(true);
@@ -111,47 +112,46 @@ export default function DesktopNav() {
   );
 
   return (
-    <>
-      <nav className="fixed inset-y-0 left-0 z-50 hidden w-18 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg sm:flex">
-        <div className="mt-4 flex flex-col items-center space-y-6 text-stone-900">
-          <Link
-            href="/"
-            className="group relative transition-transform hover:scale-110"
-          >
-            <Image
-              src={hh}
-              alt="humor hub logo"
-              width={80}
-              height={80}
-              className="rounded-full border-2 border-stone-900 shadow-lg"
-              priority
-            />
-            <span className={tooltipClass}>Home</span>
-          </Link>
-          <SearchBar
-            isUserSignedIn={isUserSignedIn}
-            setIsAuthModalOpen={setIsAuthModalOpen}
+    <nav className="fixed inset-y-0 left-0 z-50 hidden w-18 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg sm:flex">
+      <div className="mt-4 flex flex-col items-center space-y-6 text-stone-900">
+        <Link
+          href="/"
+          className="group relative transition-transform hover:scale-110"
+        >
+          <Image
+            src={hh}
+            alt="Humor Hub Logo"
+            width={80}
+            height={80}
+            className="rounded-full border-2 border-stone-900 shadow-lg"
+            priority
           />
+          <span className={tooltipClass}>Home</span>
+        </Link>
 
-          <NavLink
-            href="/MicFinder"
-            label="Mic Finder"
-            icon={<MicFinderIcon />}
-          />
-          <NavLink
-            label="News"
-            icon={<NewsIcon />}
-            onClick={() => handleProtectedRoute("/News", "News")}
-          />
-          <NavLink
-            label="Profile"
-            icon={<UserIconComponent />}
-            onClick={() => handleProtectedRoute("/Profile", "Profile")}
-          />
-          <NavLink href="/contact" label="Contact Us" icon={<ContactIcon />} />
-          <NavLink href="/about" label="About" icon={<AboutIcon />} />
-        </div>
-      </nav>
+        <SearchBar
+          isUserSignedIn={isUserSignedIn}
+          setIsAuthModalOpen={setIsAuthModalOpen}
+        />
+
+        <NavLink
+          href="/MicFinder"
+          label="Mic Finder"
+          icon={<MicFinderIcon />}
+        />
+        <NavLink
+          label="News"
+          icon={<NewsIcon />}
+          onClick={() => handleProtectedRoute("/News", "News")}
+        />
+        <NavLink
+          label="Profile"
+          icon={<UserIconComponent />}
+          onClick={() => handleProtectedRoute("/Profile", "Profile")}
+        />
+        <NavLink href="/contact" label="Contact Us" icon={<ContactIcon />} />
+        <NavLink href="/about" label="About" icon={<AboutIcon />} />
+      </div>
       {isAuthModalOpen && (
         <AuthModal
           isOpen={isAuthModalOpen}
@@ -159,6 +159,6 @@ export default function DesktopNav() {
           onLoginSuccess={() => setIsUserSignedIn(true)}
         />
       )}
-    </>
+    </nav>
   );
 }
