@@ -19,18 +19,9 @@ let _storage = null;
 export const getAuth = async () => {
   if (_auth) return _auth;
 
-  const {
-    initializeAuth,
-    browserLocalPersistence,
-    browserPopupRedirectResolver,
-    indexedDBLocalPersistence,
-  } = await import("firebase/auth");
+  const { getAuth: firebaseGetAuth } = await import("firebase/auth");
 
-  _auth = initializeAuth(app, {
-    persistence: [indexedDBLocalPersistence, browserLocalPersistence],
-    popupRedirectResolver: browserPopupRedirectResolver,
-  });
-
+  _auth = firebaseGetAuth(app);
   return _auth;
 };
 
