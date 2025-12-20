@@ -14,7 +14,7 @@ export default function EventForm() {
       <button
         type="button"
         onClick={handleOpen}
-        className="rounded-2xl border-2 border-amber-700 bg-transparent px-4 py-2 text-lg font-bold shadow-lg hover:scale-105 hover:bg-amber-700 hover:text-white"
+        className="rounded-2xl border-2 border-amber-700 bg-transparent px-3 py-2 text-lg font-bold shadow-lg hover:scale-105 hover:bg-amber-700 hover:text-white"
       >
         Add Your Event
       </button>

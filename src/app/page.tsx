@@ -58,13 +58,13 @@ export default function Home() {
       >
         <h2
           id="micfinder-heading"
-          className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mb-10 sm:text-5xl md:text-6xl"
+          className="font-heading mt-10 mb-8 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mb-10 sm:text-4xl md:text-5xl"
         >
           Mic Finder!
         </h2>
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
           <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-start md:text-left">
-            <p className="max-w-lg text-sm leading-relaxed text-shadow-sm sm:text-base lg:text-lg">
+            <p className="text-sm leading-relaxed md:text-lg">
               Looking for your next Mic?
               <br />
               MicFinder connects comics and all artists with open mics
@@ -75,7 +75,7 @@ export default function Home() {
 
             <Link
               href="/MicFinder"
-              className="w-80 rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white"
+              className="w-60 rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80"
             >
               Find Your Mic!
             </Link>
@@ -101,17 +101,16 @@ export default function Home() {
       >
         <h2
           id="news-heading"
-          className="font-heading mt-10 mb-8 text-4xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mb-10 sm:text-5xl md:text-6xl"
+          className="font-heading mt-10 mb-8 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mb-10 sm:text-4xl md:text-5xl"
         >
           Hub News!
         </h2>
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row-reverse">
           <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-end md:text-right">
-            <p className="max-w-lg text-sm leading-relaxed text-shadow-sm sm:text-base md:text-lg">
+            <p className="text-sm leading-relaxed md:text-lg">
               Your Source for Fresh Headlines!
               <br />
-              Looking for something topical?
-              <br />
+              Looking for something topical?{" "}
               <span className="mt-2 block">
                 Check out the Hub News for the latest updates!
               </span>
