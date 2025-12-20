@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  compress: false,
+  compress: true,
   transpilePackages: ["@tanstack/react-virtual"],
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",

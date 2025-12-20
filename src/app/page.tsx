@@ -86,6 +86,8 @@ export default function Home() {
                 src={micFinder}
                 alt="Mic Finder - Find open mics near you"
                 className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
+                width={100}
+                height={100}
                 priority
                 fetchPriority="high"
               />
@@ -123,6 +125,8 @@ export default function Home() {
                 src={news}
                 alt="Hub News - Latest comedy headlines"
                 className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-44 md:w-44"
+                width={100}
+                height={100}
                 quality={70}
               />
             </NewsButton>
