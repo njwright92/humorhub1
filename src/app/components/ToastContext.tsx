@@ -74,10 +74,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
       {toast && (
         <div
-          role="alert"
+          role="status"
           aria-live="polite"
           aria-atomic="true"
-          className="animate-fade-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
+          className="animate-slide-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
         >
           <div
             className={`flex items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-lg sm:px-6 ${TOAST_STYLES[toast.type]}`}

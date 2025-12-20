@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -21,35 +21,36 @@ interface MobileMenuProps {
   closeMenu: () => void;
 }
 
-interface MinimalAuth {
-  currentUser: unknown;
-}
-
 export default function MobileMenu({ closeMenu }: MobileMenuProps) {
   const { showToast } = useToast();
   const router = useRouter();
-  const authRef = useRef<MinimalAuth | null>(null);
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
   useEffect(() => {
-    if (
-      Object.keys(localStorage).some((k) => k.startsWith("firebase:authUser:"))
-    ) {
-      setIsUserSignedIn(true);
-    }
+    let mounted = true;
+    let unsubscribe: undefined | (() => void);
 
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
+
       const auth = await getAuth();
-      authRef.current = auth;
-      onAuthStateChanged(auth, (user) => setIsUserSignedIn(!!user));
+
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (mounted) setIsUserSignedIn(!!user);
+      });
     };
 
     if ("requestIdleCallback" in window) requestIdleCallback(initAuth);
     else setTimeout(initAuth, 100);
+
+    return () => {
+      mounted = false;
+      unsubscribe?.();
+    };
   }, []);
 
   useEffect(() => {
@@ -62,24 +63,28 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
 
   const handleProtectedRoute = useCallback(
     (path: string, label: string) => {
-      if (isUserSignedIn || authRef.current?.currentUser) {
+      if (isUserSignedIn) {
         closeMenu();
         router.push(path);
-      } else {
-        showToast(`Please sign in to view ${label}`, "info");
-        setPendingRedirect(path);
-        setIsAuthModalOpen(true);
+        return;
       }
+
+      showToast(`Please sign in to view ${label}`, "info");
+      setPendingRedirect(path);
+      setIsAuthModalOpen(true);
     },
     [isUserSignedIn, router, showToast, closeMenu]
   );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeMenu();
     };
+
     document.addEventListener("keydown", handleEscape);
+
     return () => {
       document.body.style.overflow = "";
       document.removeEventListener("keydown", handleEscape);
@@ -92,6 +97,7 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
         onClick={closeMenu}
         className="self-end p-2 text-stone-900"
         aria-label="Close menu"
+        type="button"
       >
         <svg
           className="size-10"
@@ -104,10 +110,10 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
         </svg>
       </button>
 
-      <Link href="/" onClick={closeMenu}>
+      <Link href="/" onClick={closeMenu} aria-label="Humor Hub Home">
         <Image
           src={hh}
-          alt=""
+          alt="Humor Hub Logo"
           width={70}
           height={70}
           className="rounded-full border-2 border-stone-900 shadow-lg"
@@ -125,21 +131,27 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
         <Link href="/MicFinder" className={menuItemClass} onClick={closeMenu}>
           Mic Finder
         </Link>
+
         <button
+          type="button"
           onClick={() => handleProtectedRoute("/News", "News")}
           className={menuItemClass}
         >
           News
         </button>
+
         <button
+          type="button"
           onClick={() => handleProtectedRoute("/Profile", "Profile")}
           className={menuItemClass}
         >
           Profile
         </button>
+
         <Link href="/contact" className={menuItemClass} onClick={closeMenu}>
           Contact Us
         </Link>
+
         <Link href="/about" className={menuItemClass} onClick={closeMenu}>
           About
         </Link>

@@ -21,28 +21,27 @@ export default function NewsButton({ children, className }: NewsButtonProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   const handleClick = useCallback(async () => {
-    const hasAuthData = Object.keys(localStorage).some((key) =>
-      key.startsWith("firebase:authUser:")
-    );
-    if (hasAuthData) {
-      router.push("/News");
-      return;
-    }
     try {
       const { getAuth } = await import("../../../firebase.config");
       const auth = await getAuth();
+
       if (auth.currentUser) {
         router.push("/News");
-      } else {
-        showToast("Please sign in to view News.", "info");
-        setIsAuthModalOpen(true);
+        return;
       }
-    } catch {
+
+      showToast("Please sign in to view News.", "info");
+      setIsAuthModalOpen(true);
+    } catch (err) {
+      console.error("Auth init error:", err);
       setIsAuthModalOpen(true);
     }
   }, [router, showToast]);
+
   const handleClose = useCallback(() => setIsAuthModalOpen(false), []);
+
   const handleLoginSuccess = useCallback(() => {
     setIsAuthModalOpen(false);
     router.push("/News");
@@ -53,15 +52,20 @@ export default function NewsButton({ children, className }: NewsButtonProps) {
       <button
         type="button"
         onClick={handleClick}
-        className={className || defaultClassName}
+        className={className ?? defaultClassName}
+        aria-haspopup="dialog"
+        aria-expanded={isAuthModalOpen}
       >
         {children ?? "Check It Out"}
       </button>
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={handleClose}
-        onLoginSuccess={handleLoginSuccess}
-      />
+
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={handleClose}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      )}
     </>
   );
 }

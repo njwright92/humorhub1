@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ interface NavLinkProps {
 
 function NavLink({ href, label, icon, onClick }: NavLinkProps) {
   const className =
-    "group relative transition-transform hover:scale-110 hover:text-stone-700 cursor-pointer";
+    "group relative cursor-pointer transition-transform hover:scale-110 hover:text-stone-700";
   const content = (
     <>
       {icon}
@@ -59,35 +59,36 @@ function NavLink({ href, label, icon, onClick }: NavLinkProps) {
   );
 }
 
-interface MinimalAuth {
-  currentUser: unknown;
-}
-
 export default function DesktopNav() {
   const { showToast } = useToast();
   const router = useRouter();
-  const authRef = useRef<MinimalAuth | null>(null);
+
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
   useEffect(() => {
-    if (
-      Object.keys(localStorage).some((k) => k.startsWith("firebase:authUser:"))
-    ) {
-      setIsUserSignedIn(true);
-    }
+    let mounted = true;
+    let unsubscribe: undefined | (() => void);
 
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
+
       const auth = await getAuth();
-      authRef.current = auth;
-      onAuthStateChanged(auth, (user) => setIsUserSignedIn(!!user));
+
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (mounted) setIsUserSignedIn(!!user);
+      });
     };
 
     if ("requestIdleCallback" in window) requestIdleCallback(initAuth);
     else setTimeout(initAuth, 100);
+
+    return () => {
+      mounted = false;
+      unsubscribe?.();
+    };
   }, []);
 
   useEffect(() => {
@@ -100,22 +101,24 @@ export default function DesktopNav() {
 
   const handleProtectedRoute = useCallback(
     (path: string, label: string) => {
-      if (isUserSignedIn || authRef.current?.currentUser) {
+      if (isUserSignedIn) {
         router.push(path);
-      } else {
-        showToast(`Please sign in to view ${label}`, "info");
-        setPendingRedirect(path);
-        setIsAuthModalOpen(true);
+        return;
       }
+
+      showToast(`Please sign in to view ${label}`, "info");
+      setPendingRedirect(path);
+      setIsAuthModalOpen(true);
     },
     [isUserSignedIn, router, showToast]
   );
 
   return (
-    <nav className="fixed inset-y-0 left-0 z-50 hidden w-18 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg sm:flex">
+    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg sm:flex">
       <div className="mt-4 flex flex-col items-center space-y-6 text-stone-900">
         <Link
           href="/"
+          aria-label="Home"
           className="group relative transition-transform hover:scale-110"
         >
           <Image
@@ -139,19 +142,23 @@ export default function DesktopNav() {
           label="Mic Finder"
           icon={<MicFinderIcon />}
         />
+
         <NavLink
           label="News"
           icon={<NewsIcon />}
           onClick={() => handleProtectedRoute("/News", "News")}
         />
+
         <NavLink
           label="Profile"
           icon={<UserIconComponent />}
           onClick={() => handleProtectedRoute("/Profile", "Profile")}
         />
+
         <NavLink href="/contact" label="Contact Us" icon={<ContactIcon />} />
         <NavLink href="/about" label="About" icon={<AboutIcon />} />
       </div>
+
       {isAuthModalOpen && (
         <AuthModal
           isOpen={isAuthModalOpen}

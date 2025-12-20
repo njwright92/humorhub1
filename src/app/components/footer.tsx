@@ -1,11 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import hh from "../../app/hh.webp";
-import dynamic from "next/dynamic";
-
-const ScrollToTop = dynamic(() => import("./ScrollToTop"), {
-  loading: () => <div className="size-8" aria-hidden="true" />,
-});
+import ScrollToTop from "./ScrollToTop";
 
 const linkClass =
   "transition-colors hover:text-amber-700 hover:underline md:text-lg";

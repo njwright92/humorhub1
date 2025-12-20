@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scrollbar-gutter: stable;
+}
+
 @theme {
   /* --- Brand Color Overrides --- */
   --color-zinc-200: #f0eee9;

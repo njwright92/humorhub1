@@ -31,7 +31,7 @@
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
     "eslint": "^9.39.1",
-    "eslint-config-next": "^16.1.00",
+    "eslint-config-next": "^16.1.0",
     "lint-staged": "^16.2.7",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
@@ -40,7 +40,7 @@
     "typescript": "^5.8.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs}": "next lint --fix",
+    "*.{js,jsx,ts,tsx,mjs,cjs}": "npx eslint --fix",
     "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,mdx,html,yml,yaml,css}": "prettier --write"
   }
 }

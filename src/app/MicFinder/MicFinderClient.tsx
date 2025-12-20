@@ -24,17 +24,21 @@ import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
 const EventForm = dynamic(() => import("../components/EventForm"), {
   loading: () => (
-    <button aria-busy="true" aria-label="Loading event form">
-      Add Your Event
-    </button>
+    <span
+      aria-busy="true"
+      aria-live="polite"
+      className="w-80 rounded-2xl px-2 py-1 text-lg font-semibold text-zinc-200"
+    >
+      Loading…
+    </span>
   ),
 });
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
-    <div className="flex size-full items-center justify-center text-stone-300">
+    <span className="flex size-full items-center justify-center text-stone-300">
       Loading Map...
-    </div>
+    </span>
   ),
 });
 

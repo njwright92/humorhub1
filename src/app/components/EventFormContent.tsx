@@ -22,7 +22,7 @@ interface EventFormContentProps {
   onClose: () => void;
 }
 
-const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
+export default function EventFormContent({ onClose }: EventFormContentProps) {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [event, setEvent] = useState<EventData>({
@@ -54,15 +54,10 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
     (currentEvent: EventData, lat?: number, lng?: number): EventData => {
       const id = crypto.randomUUID();
       const timestamp = currentEvent.date
-        ? new Date(currentEvent.date).toISOString()
+        ? currentEvent.date.toISOString()
         : "";
-      return {
-        ...currentEvent,
-        id,
-        timestamp,
-        lat,
-        lng,
-      };
+
+      return { ...currentEvent, id, timestamp, lat, lng };
     },
     []
   );
@@ -72,7 +67,6 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
       e.preventDefault();
       if (isSubmitting) return;
 
-      // --- Validation ---
       const missingFields: string[] = [];
       if (!event.name.trim()) missingFields.push("Event Name");
       if (!event.location.trim()) missingFields.push("Location");
@@ -88,17 +82,24 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
       setIsSubmitting(true);
 
       try {
-        let lat, lng;
         let finalEventData: EventData;
         let collectionName = "events";
 
-        // --- Geocoding ---
         try {
-          const response = await getLatLng(event.location);
-          if (response && "lat" in response && "lng" in response) {
-            lat = response.lat;
-            lng = response.lng;
-            finalEventData = prepareEventData(event, lat, lng);
+          const coords = await getLatLng(event.location);
+          const coordsObj = coords as { lat?: unknown; lng?: unknown };
+
+          if (
+            coords &&
+            typeof coords === "object" &&
+            typeof coordsObj.lat === "number" &&
+            typeof coordsObj.lng === "number"
+          ) {
+            finalEventData = prepareEventData(
+              event,
+              coordsObj.lat,
+              coordsObj.lng
+            );
           } else {
             throw new Error("Invalid coordinates");
           }
@@ -108,22 +109,26 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
           collectionName = "events_manual_review";
         }
 
-        // --- Submit to Server API ---
         const response = await fetch("/api/events/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             eventData: finalEventData,
-            collectionName: collectionName,
+            collectionName,
           }),
         });
 
-        const result = await response.json();
+        const result: unknown = await response.json();
 
-        if (result.success) {
-          // --- Lazy Load EmailJS ---
+        if (
+          typeof result === "object" &&
+          result !== null &&
+          "success" in result &&
+          (result as { success: unknown }).success === true
+        ) {
           try {
             const emailjs = (await import("@emailjs/browser")).default;
+
             await emailjs.send(
               process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID as string,
               process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID as string,
@@ -131,7 +136,7 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
                 name: finalEventData.name,
                 location: finalEventData.location,
                 date: finalEventData.date
-                  ? new Date(finalEventData.date).toLocaleDateString()
+                  ? finalEventData.date.toLocaleDateString()
                   : "N/A",
                 details: finalEventData.details,
                 isRecurring: finalEventData.isRecurring ? "Yes" : "No",
@@ -146,10 +151,11 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
 
           showToast("Event submitted successfully!", "success");
           resetForm();
-          onClose(); // Use prop to close
-        } else {
-          throw new Error(result.error);
+          onClose();
+          return;
         }
+
+        showToast("Submission failed. Please try again.", "error");
       } catch (submitError) {
         showToast("Submission failed. Please try again.", "error");
         console.error("Submission Error:", submitError);
@@ -199,6 +205,8 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
+            aria-hidden="true"
+            focusable="false"
           >
             <path
               strokeLinecap="round"
@@ -236,7 +244,6 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             * Indicates required fields
           </p>
 
-          {/* Event Name */}
           <label
             htmlFor="event-name"
             className="mb-1 block font-bold text-stone-900"
@@ -252,12 +259,10 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             onChange={handleChange}
             className="mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
-            aria-required="true"
             autoComplete="off"
             placeholder="e.g., The Comedy Store Open Mic"
           />
 
-          {/* Location */}
           <label
             htmlFor="event-location"
             className="mb-1 block font-bold text-stone-900"
@@ -273,12 +278,10 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             onChange={handleChange}
             className="mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             required
-            aria-required="true"
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
             autoComplete="off"
           />
 
-          {/* Recurring & Festival Options */}
           <fieldset className="mb-4 grid grid-cols-2 gap-4">
             <legend className="sr-only">Event options</legend>
 
@@ -353,7 +356,6 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             </div>
           </fieldset>
 
-          {/* Details */}
           <label
             htmlFor="event-details"
             className="mb-1 block font-bold text-stone-900"
@@ -372,14 +374,12 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             value={event.details}
             onChange={handleChange}
             required
-            aria-required="true"
             autoComplete="off"
             rows={4}
             className="mb-4 w-full resize-y rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
             placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
           />
 
-          {/* Date */}
           <label
             htmlFor="event-date"
             className="mb-1 block font-bold text-stone-900"
@@ -391,19 +391,17 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
             id="event-date"
             type="date"
             required
-            aria-required="true"
             value={event.date ? event.date.toISOString().split("T")[0] : ""}
             onChange={(e) => {
               const dateStr = e.target.value;
-              setEvent({
-                ...event,
-                date: dateStr ? new Date(dateStr + "T12:00:00") : null,
-              });
+              setEvent((prev) => ({
+                ...prev,
+                date: dateStr ? new Date(`${dateStr}T12:00:00`) : null,
+              }));
             }}
             className="mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600"
           />
 
-          {/* Email */}
           <label
             htmlFor="event-email"
             className="mb-1 block text-sm font-bold text-stone-900"
@@ -432,6 +430,4 @@ const EventFormContent: React.FC<EventFormContentProps> = ({ onClose }) => {
       </div>
     </div>
   );
-};
-
-export default EventFormContent;
+}

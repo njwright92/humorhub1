@@ -7,9 +7,13 @@ import news from "../app/news1.webp";
 
 const EventForm = dynamic(() => import("./components/EventForm"), {
   loading: () => (
-    <button aria-busy="true" aria-label="Loading event form">
-      Add Your Event
-    </button>
+    <span
+      aria-busy="true"
+      aria-live="polite"
+      className="inline-block w-80 rounded-2xl px-2 py-1 text-lg font-semibold text-zinc-200"
+    >
+      Loading…
+    </span>
   ),
 });
 const NewsButton = dynamic(() => import("./components/newsButton"));
@@ -43,7 +47,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
-      <h1 className="font-heading animate-fade-in mb-6 hidden text-7xl font-bold tracking-wide md:block">
+      <h1 className="font-heading animate-slide-in mb-6 hidden text-6xl font-bold tracking-wide md:block">
         Humor Hub!
       </h1>
 
@@ -81,9 +85,7 @@ export default function Home() {
               <Image
                 src={micFinder}
                 alt="Mic Finder - Find open mics near you"
-                width={140}
-                height={140}
-                className="rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3"
+                className="h-36 w-36 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 sm:h-44 sm:w-44"
                 priority
                 fetchPriority="high"
               />
@@ -121,9 +123,7 @@ export default function Home() {
               <Image
                 src={news}
                 alt="Hub News - Latest comedy headlines"
-                width={140}
-                height={140}
-                className="rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3"
+                className="h-36 w-36 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 sm:h-44 sm:w-44"
                 quality={70}
               />
             </NewsButton>

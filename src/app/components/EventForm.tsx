@@ -1,15 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import dynamic from "next/dynamic";
-
-const EventFormContent = dynamic(() => import("./EventFormContent"), {
-  loading: () => (
-    <div className="sr-only animate-pulse rounded-2xl bg-stone-800 px-4 py-2 font-bold shadow-lg">
-      Loading...
-    </div>
-  ),
-});
+import EventFormContent from "./EventFormContent";
 
 export default function EventForm() {
   const [isOpen, setIsOpen] = useState(false);

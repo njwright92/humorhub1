@@ -9,14 +9,28 @@ type AuthModalProps = {
   onLoginSuccess?: () => void;
 };
 
-type AuthError = {
-  code: string;
-  message: string;
-};
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+function getAuthErrorInfo(err: unknown): { code?: string; message: string } {
+  if (typeof err === "object" && err !== null) {
+    const maybeCode =
+      "code" in err ? (err as { code?: unknown }).code : undefined;
+    const maybeMessage =
+      "message" in err ? (err as { message?: unknown }).message : undefined;
+
+    return {
+      code: typeof maybeCode === "string" ? maybeCode : undefined,
+      message:
+        typeof maybeMessage === "string"
+          ? maybeMessage
+          : "Authentication failed.",
+    };
+  }
+
+  return { message: "Authentication failed." };
+}
 
 function GoogleIcon() {
   return (
@@ -48,6 +62,8 @@ function CloseIcon() {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
     >
       <path
         fillRule="evenodd"
@@ -73,6 +89,7 @@ function SocialSignInButton({
 }: SocialButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       className="flex w-full items-center justify-center rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-300 disabled:opacity-50"
@@ -146,17 +163,18 @@ export default function AuthModal({
         onLoginSuccess?.();
         handleClose();
       } catch (error) {
-        const authError = error as AuthError;
-        if (authError.code === "auth/email-already-in-use") {
+        const { code } = getAuthErrorInfo(error);
+
+        if (code === "auth/email-already-in-use") {
           showToast("Email already in use. Try signing in.", "error");
         } else if (
-          authError.code === "auth/wrong-password" ||
-          authError.code === "auth/user-not-found" ||
-          authError.code === "auth/invalid-credential"
+          code === "auth/wrong-password" ||
+          code === "auth/user-not-found" ||
+          code === "auth/invalid-credential"
         ) {
           showToast("Invalid email or password.", "error");
         } else {
-          showToast(authError.message, "error");
+          showToast("Authentication failed. Please try again.", "error");
         }
       } finally {
         setIsLoading(false);
@@ -184,14 +202,16 @@ export default function AuthModal({
 
       const auth = await getAuth();
       await signInWithPopup(auth, new GoogleAuthProvider());
+
       showToast("Google sign-in successful!", "success");
       onLoginSuccess?.();
       handleClose();
     } catch (error) {
-      const authError = error as AuthError;
-      if (authError.code === "auth/popup-blocked") {
+      const { code } = getAuthErrorInfo(error);
+
+      if (code === "auth/popup-blocked") {
         showToast("Popup blocked. Please allow popups.", "error");
-      } else if (authError.code !== "auth/popup-closed-by-user") {
+      } else if (code !== "auth/popup-closed-by-user") {
         showToast("Google sign-in failed.", "error");
       }
     } finally {
@@ -250,7 +270,6 @@ export default function AuthModal({
               autoComplete="email"
               disabled={isLoading}
               required
-              aria-required="true"
             />
           </div>
 
@@ -272,7 +291,6 @@ export default function AuthModal({
               autoComplete={isSignIn ? "current-password" : "new-password"}
               disabled={isLoading}
               required
-              aria-required="true"
             />
           </div>
 
@@ -295,7 +313,6 @@ export default function AuthModal({
                 autoComplete="new-password"
                 disabled={isLoading}
                 required
-                aria-required="true"
               />
             </div>
           )}

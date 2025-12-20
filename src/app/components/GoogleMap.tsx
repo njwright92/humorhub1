@@ -26,6 +26,8 @@ function EventPin({ color }: { color: string }) {
         height="28"
         viewBox="0 0 32 32"
         style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.4))" }}
+        aria-hidden="true"
+        focusable="false"
       >
         <circle
           cx="16"
@@ -51,7 +53,7 @@ function MapHandler({
   const map = useMap();
 
   useEffect(() => {
-    if (!map || !place || isNaN(place.lat) || isNaN(place.lng)) return;
+    if (!map || Number.isNaN(place.lat) || Number.isNaN(place.lng)) return;
     map.panTo(place);
     map.setZoom(zoom);
   }, [map, place, zoom]);
@@ -65,6 +67,8 @@ const getPinColor = (event: Event): string => {
   return "#bb4d00";
 };
 
+type SelectedEvent = Event & { lat: number; lng: number };
+
 const InnerMap = memo(function InnerMap({
   lat,
   lng,
@@ -72,14 +76,20 @@ const InnerMap = memo(function InnerMap({
   events,
 }: GoogleMapProps) {
   const apiIsLoaded = useApiIsLoaded();
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<SelectedEvent | null>(
+    null
+  );
 
   const handleMapClick = useCallback(() => {
     setSelectedEvent(null);
   }, []);
 
   const handleMarkerClick = useCallback((event: Event) => {
-    setSelectedEvent(event);
+    const eventLat = Number(event.lat);
+    const eventLng = Number(event.lng);
+    if (Number.isNaN(eventLat) || Number.isNaN(eventLng)) return;
+
+    setSelectedEvent({ ...event, lat: eventLat, lng: eventLng });
   }, []);
 
   const handleInfoWindowClose = useCallback(() => {
@@ -110,11 +120,11 @@ const InnerMap = memo(function InnerMap({
         const eventLat = Number(event.lat);
         const eventLng = Number(event.lng);
 
-        if (isNaN(eventLat) || isNaN(eventLng)) return null;
+        if (Number.isNaN(eventLat) || Number.isNaN(eventLng)) return null;
 
         return (
           <AdvancedMarker
-            key={event.id || `${event.name}-${index}`}
+            key={event.id ?? `${event.name}-${eventLat}-${eventLng}-${index}`}
             position={{ lat: eventLat, lng: eventLng }}
             onClick={() => handleMarkerClick(event)}
             title={event.name}
@@ -126,30 +136,29 @@ const InnerMap = memo(function InnerMap({
 
       {selectedEvent && (
         <InfoWindow
-          position={{
-            lat: Number(selectedEvent.lat),
-            lng: Number(selectedEvent.lng),
-          }}
+          position={{ lat: selectedEvent.lat, lng: selectedEvent.lng }}
           onCloseClick={handleInfoWindowClose}
           maxWidth={250}
           pixelOffset={[0, -30]}
         >
           <article className="p-2 text-center text-zinc-800">
             <h2 className="mb-1 text-lg font-bold">{selectedEvent.name}</h2>
+
             <p className="mb-1 text-sm">
               <span aria-hidden="true">📍</span>
               <span className="sr-only">Location:</span>{" "}
               {selectedEvent.location}
             </p>
+
             <p className="mb-2 text-sm text-zinc-600">
               <span aria-hidden="true">📅</span>
               <span className="sr-only">Date:</span> {selectedEvent.date}
             </p>
+
             {selectedEvent.details && (
-              <div
-                className="mt-2 text-left text-sm"
-                dangerouslySetInnerHTML={{ __html: selectedEvent.details }}
-              />
+              <p className="mt-2 text-left text-sm whitespace-pre-wrap">
+                {selectedEvent.details}
+              </p>
             )}
           </article>
         </InfoWindow>

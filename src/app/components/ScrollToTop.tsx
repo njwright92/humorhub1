@@ -1,10 +1,15 @@
 "use client";
 
+const scrollToTop = () => {
+  const el = document.scrollingElement ?? document.documentElement;
+  el.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 export default function ScrollToTop() {
   return (
     <button
       type="button"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={scrollToTop}
       aria-label="Scroll back to top"
       className="flex size-8 items-center justify-center rounded-full border border-amber-700 text-amber-700 shadow-lg transition-transform hover:scale-110 md:size-12"
     >

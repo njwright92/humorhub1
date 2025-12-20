@@ -4,7 +4,8 @@ import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 
-const SEARCH_ID = "site-search";
+const INPUT_ID = "search-input";
+const POPOVER_ID = "site-search-popover";
 const LISTBOX_ID = "search-suggestions";
 
 interface SearchBarProps {
@@ -52,6 +53,7 @@ function SearchIcon({ className }: { className?: string }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      focusable="false"
     >
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.35-4.35" />
@@ -66,8 +68,10 @@ export default function SearchBar({
 }: SearchBarProps) {
   const { showToast } = useToast();
   const router = useRouter();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isInputVisible, setInputVisible] = useState(false);
   const [cities, setCities] = useState<string[]>([]);
@@ -90,8 +94,9 @@ export default function SearchBar({
 
   const handleToggleInput = useCallback(() => {
     setInputVisible((prev) => {
-      if (!prev) setTimeout(() => inputRef.current?.focus(), 50);
-      return !prev;
+      const next = !prev;
+      if (!prev && next) setTimeout(() => inputRef.current?.focus(), 0);
+      return next;
     });
   }, []);
 
@@ -136,7 +141,7 @@ export default function SearchBar({
       }
 
       if (s.type === "city" && s.city) {
-        navigateTo(`/MicFinder?city=${s.city}`);
+        navigateTo(`/MicFinder?city=${encodeURIComponent(s.city)}`);
         return;
       }
 
@@ -204,11 +209,17 @@ export default function SearchBar({
             executeSuggestion(suggestions[activeIndex]);
           }
           break;
+        case "Escape":
+          // nice UX even without the document listener
+          e.preventDefault();
+          closeSearchBar();
+          break;
       }
     },
-    [suggestions, activeIndex, executeSuggestion]
+    [suggestions, activeIndex, executeSuggestion, closeSearchBar]
   );
 
+  // Fetch cities once, only when the user first opens search
   useEffect(() => {
     if (!isInputVisible || cities.length > 0) return;
 
@@ -218,17 +229,21 @@ export default function SearchBar({
       try {
         const cached = sessionStorage.getItem("hh_cities");
         if (cached) {
-          if (mounted) setCities(JSON.parse(cached));
+          const parsed: unknown = JSON.parse(cached);
+          if (mounted && Array.isArray(parsed)) setCities(parsed as string[]);
           return;
         }
 
         const response = await fetch("/api/cities");
-        if (response.ok) {
-          const data = await response.json();
-          if (mounted && data.cities) {
-            setCities(data.cities);
-            sessionStorage.setItem("hh_cities", JSON.stringify(data.cities));
-          }
+        if (!response.ok) return;
+
+        const data = (await response.json()) as { cities?: unknown };
+        if (mounted && Array.isArray(data.cities)) {
+          const nextCities = data.cities.filter(
+            (c): c is string => typeof c === "string"
+          );
+          setCities(nextCities);
+          sessionStorage.setItem("hh_cities", JSON.stringify(nextCities));
         }
       } catch (err) {
         console.error("Error fetching cities:", err);
@@ -244,24 +259,19 @@ export default function SearchBar({
   useEffect(() => {
     if (!isInputVisible) return;
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeSearchBar();
-    };
-
     const handleClickOutside = (e: MouseEvent) => {
       if (formRef.current && !formRef.current.contains(e.target as Node)) {
         closeSearchBar();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
-      document.removeEventListener("keydown", handleEscape);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isInputVisible, closeSearchBar]);
+
+  const showSuggestions = isInputVisible && suggestions.length > 0;
 
   return (
     <search className="relative">
@@ -271,35 +281,43 @@ export default function SearchBar({
         className="flex cursor-pointer text-zinc-200 hover:scale-110 sm:text-stone-900"
         aria-label="Open search"
         aria-expanded={isInputVisible}
-        aria-controls={SEARCH_ID}
+        aria-controls={POPOVER_ID}
       >
         <SearchIcon />
       </button>
 
       {isInputVisible && (
-        <div className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0">
+        <div
+          id={POPOVER_ID}
+          className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
+        >
           <form
             ref={formRef}
-            id={SEARCH_ID}
             role="search"
             onSubmit={handleSearch}
             className="relative flex flex-col gap-3 rounded-2xl border border-stone-400 bg-zinc-200 p-4"
           >
-            <label htmlFor="search-input" className="sr-only">
+            <label htmlFor={INPUT_ID} className="sr-only">
               Search city, page, or keyword
             </label>
+
             <input
               ref={inputRef}
-              id="search-input"
+              id={INPUT_ID}
               type="search"
               placeholder="Search city, page, or keyword..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setActiveIndex(-1);
+              }}
               onKeyDown={handleKeyDown}
               className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
               autoComplete="off"
+              role="combobox"
+              aria-expanded={showSuggestions}
+              aria-controls={showSuggestions ? LISTBOX_ID : undefined}
               aria-autocomplete="list"
-              aria-controls={LISTBOX_ID}
               aria-activedescendant={
                 activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
               }
@@ -323,6 +341,7 @@ export default function SearchBar({
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
+                focusable="false"
               >
                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
               </svg>
@@ -347,6 +366,7 @@ export default function SearchBar({
                         : "hover:bg-stone-300"
                     }`}
                     onMouseDown={(e) => {
+                      // prevent input blur before we handle the click
                       e.preventDefault();
                       executeSuggestion(sug);
                     }}

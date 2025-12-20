@@ -8,7 +8,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = dynamic<MobileMenuProps>(() => import("./MobileMenu"), {
-  loading: () => <div className="size-10 rounded-full" />,
+  loading: () => <div className="size-10" aria-hidden="true" />,
 });
 
 function HamburgerIcon() {
@@ -21,7 +21,9 @@ function HamburgerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="size-8 text-stone-900"
+      className="h-8 w-8 text-stone-900"
+      aria-hidden="true"
+      focusable="false"
     >
       <path d="M3 12h18M3 6h18M3 18h18" />
     </svg>
@@ -36,11 +38,13 @@ export default function MobileNav() {
       <button
         type="button"
         onClick={() => setIsMenuOpen(true)}
-        className="flex items-center justify-center"
+        className="flex size-10 items-center justify-center"
         aria-label="Open menu"
+        aria-expanded={isMenuOpen}
       >
         <HamburgerIcon />
       </button>
+
       {isMenuOpen && <MobileMenu closeMenu={() => setIsMenuOpen(false)} />}
     </>
   );
