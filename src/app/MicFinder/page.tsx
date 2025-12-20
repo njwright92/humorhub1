@@ -55,11 +55,9 @@ function MicFinderSkeleton() {
     <div
       role="status"
       aria-label="Loading MicFinder"
-      className="flex min-h-screen animate-pulse flex-col p-2 text-center md:ml-20"
+      className="animate-pulse p-2"
     >
       <div className="mb-6 h-16 rounded-2xl bg-zinc-700" />
-      <div className="mx-auto mb-4 h-12 w-3/4 rounded-2xl bg-zinc-700" />
-      <div className="mx-auto mb-8 h-8 w-1/2 rounded-2xl bg-zinc-700" />
       <div className="mb-6 h-64 rounded-2xl bg-zinc-700" />
       <div className="space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
@@ -197,7 +195,7 @@ export default function MicFinderPage() {
   return (
     <main className="flex min-h-screen flex-col p-2 text-center md:ml-20">
       <StructuredData />
-      <header className="animate-fade-in flex flex-col items-center">
+      <header className="flex flex-col items-center">
         {/* Alert Banner */}
         <aside className="mx-auto mb-3 max-w-2xl rounded-2xl border border-red-700 bg-zinc-200 px-2 py-1.5 text-center text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm">
           <p>

@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
-      <h1 className="font-heading animate-slide-in mb-6 hidden text-6xl font-bold tracking-wide md:block">
+      <h1 className="font-heading mt-18 mb-6 hidden text-6xl font-bold tracking-wide md:block">
         Humor Hub!
       </h1>
 
