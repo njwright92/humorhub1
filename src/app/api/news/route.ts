@@ -29,19 +29,25 @@ export async function GET(request: Request) {
 
   try {
     const res = await fetch(`${endpoint}?${params}`, {
-      next: { revalidate: 3600 },
+      cache: "no-store",
     });
 
     if (!res.ok) throw new Error(`External API error: ${res.status}`);
 
-    const { data } = await res.json();
+    const { data } = (await res.json()) as {
+      data: Array<{ title?: string; description?: string }>;
+    };
 
-    return NextResponse.json({
-      data: data.filter(
-        (a: { title?: string; description?: string }) =>
-          a.title && a.description
-      ),
-    });
+    return NextResponse.json(
+      {
+        data: data.filter((a) => a.title && a.description),
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      }
+    );
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch news" },
