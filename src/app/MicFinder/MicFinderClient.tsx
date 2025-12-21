@@ -198,14 +198,13 @@ export default function MicFinderClient({
       const { onAuthStateChanged } = await import("firebase/auth");
       const auth = await getAuth();
       authRef.current = auth;
-      unsubscribe = onAuthStateChanged(auth, (user) =>
-        setIsUserSignedIn(!!user)
-      );
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        setIsUserSignedIn(Boolean(user));
+      });
     };
 
-    const timer = setTimeout(initAuth, 500);
+    initAuth();
     return () => {
-      clearTimeout(timer);
       unsubscribe?.();
     };
   }, []);
@@ -258,21 +257,21 @@ export default function MicFinderClient({
     );
   }, [initialCityCoordinates, showToast]);
 
-  const handleCitySelect = useCallback((city: string) => {
+  const handleCitySelect = (city: string) => {
     setIsFirstDropdownOpen(false);
     const normalized = normalizeCityName(city);
     setSelectedCity(normalized);
     setFilterCity(normalized);
     setSearchTerm(normalized);
-  }, []);
+  };
 
-  const handleCityFilterChange = useCallback((city: string) => {
+  const handleCityFilterChange = (city: string) => {
     setIsSecondDropdownOpen(false);
     const normalized = city === "All Cities" ? "" : normalizeCityName(city);
     setFilterCity(city);
     setSelectedCity(normalized);
     setSearchTerm(normalized);
-  }, []);
+  };
 
   const handleEventSave = useCallback(
     async (event: Event) => {
@@ -309,18 +308,15 @@ export default function MicFinderClient({
     [isUserSignedIn, sendDataLayerEvent, showToast]
   );
 
-  const handleDateChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.value) return;
-      const [year, month, day] = e.target.value.split("-").map(Number);
-      setSelectedDate(new Date(year, month - 1, day));
-    },
-    []
-  );
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.value) return;
+    const [year, month, day] = e.target.value.split("-").map(Number);
+    setSelectedDate(new Date(year, month - 1, day));
+  };
 
   const handleMapHover = useCallback(() => {
-    if (!hasMapInit) setHasMapInit(true);
-  }, [hasMapInit]);
+    setHasMapInit(true);
+  }, []);
 
   const toggleMapVisibility = useCallback(() => {
     if (!hasMapInit) setHasMapInit(true);
@@ -434,7 +430,6 @@ export default function MicFinderClient({
 
   return (
     <>
-      {/* Event Form */}
       <div className="mb-4 flex h-14 w-full items-center justify-center sm:h-16">
         <EventForm />
       </div>
