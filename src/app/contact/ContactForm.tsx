@@ -57,7 +57,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="animate-fade-in mx-auto w-full max-w-4xl">
+    <div className="animate-slide-in mx-auto w-full max-w-4xl">
       <section
         aria-labelledby="contact-form-heading"
         className="rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-4 shadow-lg shadow-amber-700 backdrop-blur-md sm:p-6 md:p-8"

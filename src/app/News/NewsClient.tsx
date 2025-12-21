@@ -31,7 +31,7 @@ const SUBCATEGORIES = [
 ] as const;
 
 const formatText = (text: string) =>
-  text.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const selectClass =
   "w-full appearance-none rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
@@ -52,12 +52,13 @@ function ArticleCard({
         {article.image_url && !imgError ? (
           <Image
             src={article.image_url}
-            alt="news img"
+            alt={article.title}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="100vw"
+            className="object-cover group-hover:scale-105"
             priority={priority}
-            quality={70}
+            fetchPriority="high"
+            quality={65}
             onError={() => setImgError(true)}
           />
         ) : (
@@ -109,7 +110,8 @@ export default function NewsClient() {
     setError("");
     try {
       const response = await fetch(
-        `/api/news?category=${cat}&subcategory=${sub}`
+        `/api/news?category=${cat}&subcategory=${sub}}`,
+        { cache: "no-store" }
       );
       if (!response.ok) throw new Error("Failed to fetch");
 
@@ -159,7 +161,7 @@ export default function NewsClient() {
           </button>
         </div>
       )}
-      {/* Filters */}
+
       <form
         aria-labelledby="filters-heading"
         onSubmit={(e) => e.preventDefault()}
@@ -190,6 +192,7 @@ export default function NewsClient() {
                 <SelectArrow />
               </div>
             </div>
+
             <div className="flex flex-col">
               <label htmlFor="news-subcategory" className={labelClass}>
                 Topic
@@ -210,6 +213,7 @@ export default function NewsClient() {
                 <SelectArrow />
               </div>
             </div>
+
             <button
               type="reset"
               onClick={resetNews}
@@ -221,7 +225,6 @@ export default function NewsClient() {
         </fieldset>
       </form>
 
-      {/* Results */}
       <section
         aria-labelledby="results-heading"
         aria-busy={isLoading}
@@ -230,6 +233,7 @@ export default function NewsClient() {
         <h2 id="results-heading" className="sr-only">
           News Articles
         </h2>
+
         {isLoading ? (
           <div
             className="flex justify-center pt-20"

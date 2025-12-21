@@ -54,19 +54,18 @@ export default function AboutPage() {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 text-center md:ml-24">
       {/* Hero */}
-      <header className="animate-fade-in mx-auto mt-6 mb-8 max-w-4xl sm:mt-10 sm:mb-4">
-        <h1 className="font-heading mb-2 text-2xl font-bold tracking-tight text-amber-700 sm:mb-4 sm:text-4xl md:text-5xl">
+      <header className="animate-slide-in mx-auto mt-6 mb-8 max-w-4xl sm:mt-10 sm:mb-4">
+        <h1 className="font-heading mb-2 text-2xl font-bold tracking-tight text-amber-700 sm:mb-4 md:text-4xl lg:text-5xl">
           Built for Comics
         </h1>
-        <p className="font-heading mb-6 text-lg font-bold tracking-wide sm:mb-10 sm:text-xl md:text-2xl">
+        <p className="font-heading mb-6 text-lg font-bold tracking-wide sm:mb-10 md:text-xl lg:text-2xl">
           By a Comic
         </p>
-        <p className="mx-auto max-w-2xl text-base leading-relaxed text-stone-300 sm:text-lg md:text-xl">
+        <p className="mx-auto leading-relaxed text-stone-300 md:text-lg">
           Humor Hub was created to solve the two biggest problems every working
           comedian faces: finding the next gig and finding the next joke.
         </p>
       </header>
-
       {/* Features */}
       <section
         aria-labelledby="features-heading"

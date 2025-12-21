@@ -278,7 +278,7 @@ export default function ProfileClient() {
   }
 
   return (
-    <div className="animate-fade-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
+    <div className="animate-slide-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
       {/* Profile Card */}
       <aside className="lg:col-span-1">
         <section
