@@ -34,8 +34,8 @@ const formatText = (text: string) =>
   text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const selectClass =
-  "w-full appearance-none rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all hover:border-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70";
-const labelClass = "mb-2 text-sm font-bold uppercase tracking-wider";
+  "w-full appearance-none rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70 cursor-pointer";
+const labelClass = "mb-2 text-xs sm:text-sm font-bold uppercase tracking-wide";
 
 function ArticleCard({
   article,
@@ -109,15 +109,16 @@ export default function NewsClient() {
     setIsLoading(true);
     setError("");
     try {
-      const response = await fetch(
-        `/api/news?category=${cat}&subcategory=${sub}}`,
-        { cache: "no-store" }
-      );
-      if (!response.ok) throw new Error("Failed to fetch");
+      const qs = new URLSearchParams({ category: cat, subcategory: sub });
+      const response = await fetch(`/api/news?${qs.toString()}`, {
+        cache: "no-store",
+      });
 
+      if (!response.ok) throw new Error("Failed to fetch");
       const json = await response.json();
+
       if (json.error) throw new Error(json.error);
-      setArticles(json.data || []);
+      setArticles(json.data ?? []);
     } catch {
       setError("Unable to load the latest headlines. Please try again.");
       setArticles([]);

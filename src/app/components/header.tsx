@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import hh from "../../app/hh.webp";
-import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
+
+const DesktopNav = dynamic(() => import("./DesktopNav"), {});
 
 export default function Header() {
   return (

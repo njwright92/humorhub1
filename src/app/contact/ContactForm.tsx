@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 type ContactFormState = {
   name: string;
   email: string;
@@ -9,7 +9,7 @@ type ContactFormState = {
 
 const inputClass =
   "w-full rounded-2xl shadow-lg border-2 border-stone-500  px-4 py-3  placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
-const labelClass = "mb-2 text-sm uppercase tracking-wide";
+const labelClass = "mb-2 text-xs md:text-sm uppercase mt-2";
 
 export default function ContactForm() {
   const [formState, setFormState] = useState<ContactFormState>({
@@ -22,13 +22,12 @@ export default function ContactForm() {
     null
   );
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setFormState((prev) => ({ ...prev, [name]: value }));
-    },
-    []
-  );
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,14 +36,16 @@ export default function ContactForm() {
     setSubmitStatus(null);
     try {
       const emailjs = await import("@emailjs/browser");
+      const payload = {
+        name: formState.name,
+        email: formState.email,
+        message: formState.message,
+      };
+
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
-        {
-          name: formState.name,
-          email: formState.email,
-          message: formState.message,
-        },
+        payload,
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
       setSubmitStatus("success");
@@ -101,7 +102,6 @@ export default function ContactForm() {
                 name="name"
                 placeholder="Your Name"
                 required
-                aria-required="true"
                 autoComplete="name"
                 value={formState.name}
                 onChange={handleInputChange}
@@ -118,7 +118,6 @@ export default function ContactForm() {
                 name="email"
                 placeholder="you@example.com"
                 required
-                aria-required="true"
                 autoComplete="email"
                 value={formState.email}
                 onChange={handleInputChange}
@@ -136,7 +135,6 @@ export default function ContactForm() {
               name="message"
               placeholder="How can we help you?"
               required
-              aria-required="true"
               rows={5}
               autoComplete="off"
               value={formState.message}
@@ -150,7 +148,7 @@ export default function ContactForm() {
             disabled={isSubmitting}
             className="w-full rounded-2xl bg-amber-700 px-8 py-3 text-base font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto sm:text-lg"
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? "Sending…" : "Send Message"}
           </button>
         </form>
       </section>
