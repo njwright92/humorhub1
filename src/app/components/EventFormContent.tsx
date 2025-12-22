@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, type ChangeEvent, type FormEvent } from "react";
-import { getLatLng } from "../utils/geocode";
+// 1. REMOVED: import { getLatLng } from "../utils/geocode";
 import { useToast } from "./ToastContext";
 
 interface EventData {
@@ -50,17 +50,14 @@ export default function EventFormContent({ onClose }: EventFormContentProps) {
     setFormErrors("");
   }, []);
 
-  const prepareEventData = useCallback(
-    (currentEvent: EventData, lat?: number, lng?: number): EventData => {
-      const id = crypto.randomUUID();
-      const timestamp = currentEvent.date
-        ? currentEvent.date.toISOString()
-        : "";
+  // 2. UPDATED: No longer accepts lat/lng args, just prepares the ID and timestamp
+  const prepareEventData = useCallback((currentEvent: EventData): EventData => {
+    const id = crypto.randomUUID();
+    const timestamp = currentEvent.date ? currentEvent.date.toISOString() : "";
 
-      return { ...currentEvent, id, timestamp, lat, lng };
-    },
-    []
-  );
+    // We do NOT add lat/lng here anymore. The server does that.
+    return { ...currentEvent, id, timestamp };
+  }, []);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
@@ -82,39 +79,15 @@ export default function EventFormContent({ onClose }: EventFormContentProps) {
       setIsSubmitting(true);
 
       try {
-        let finalEventData: EventData;
-        let collectionName = "events";
+        // 3. SIMPLIFIED: Just prepare data, no geocoding here
+        const finalEventData = prepareEventData(event);
 
-        try {
-          const coords = await getLatLng(event.location);
-          const coordsObj = coords as { lat?: unknown; lng?: unknown };
-
-          if (
-            coords &&
-            typeof coords === "object" &&
-            typeof coordsObj.lat === "number" &&
-            typeof coordsObj.lng === "number"
-          ) {
-            finalEventData = prepareEventData(
-              event,
-              coordsObj.lat,
-              coordsObj.lng
-            );
-          } else {
-            throw new Error("Invalid coordinates");
-          }
-        } catch {
-          console.warn("Geocoding failed, sending to manual review.");
-          finalEventData = prepareEventData(event);
-          collectionName = "events_manual_review";
-        }
-
+        // 4. UPDATED: Send only eventData. Server determines collectionName.
         const response = await fetch("/api/events/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             eventData: finalEventData,
-            collectionName,
           }),
         });
 
