@@ -9,10 +9,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "npx eslint .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "preview": "npm run format && npm run format:check && npm run lint && next build && next start"
+    "preview": "npm run format && next build && next start"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -40,7 +40,7 @@
     "typescript": "^5.8.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs}": "npx eslint --fix",
-    "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,mdx,html,yml,yaml,css}": "prettier --write"
+    "*.{js,jsx,ts,tsx,mjs,cjs}": "eslint --fix",
+    "*.{json,css,md,mdx,html}": "prettier --write"
   }
 }
