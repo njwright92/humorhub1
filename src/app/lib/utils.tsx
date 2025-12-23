@@ -5,14 +5,16 @@ export function getDistanceFromLatLonInKm(
   lon2: number
 ): number {
   const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
   const a =
     Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 export function normalizeCityName(name: string): string {
@@ -30,20 +32,3 @@ export function parseEventDate(dateStr: string): Date | undefined {
 export function extractCityFromLocation(location: string): string {
   return location.split(",")[1]?.trim() || "";
 }
-
-export const SelectArrow = () => (
-  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-400">
-    <svg
-      className="size-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  </div>
-);

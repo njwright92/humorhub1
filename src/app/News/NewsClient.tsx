@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Loading from "../components/loading";
-import { SelectArrow } from "../lib/utils";
 
 type Category = "top_stories" | "all_news";
 
@@ -34,7 +33,7 @@ const formatText = (text: string) =>
   text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const selectClass =
-  "w-full appearance-none rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70 cursor-pointer";
+  "w-full rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70 cursor-pointer";
 const labelClass = "mb-2 text-xs sm:text-sm font-bold uppercase tracking-wide";
 
 function ArticleCard({
@@ -177,42 +176,36 @@ export default function NewsClient() {
               <label htmlFor="news-category" className={labelClass}>
                 Feed Type
               </label>
-              <div className="relative">
-                <select
-                  id="news-category"
-                  value={selectedCategory}
-                  onChange={handleCategoryChange}
-                  className={selectClass}
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {formatText(cat)}
-                    </option>
-                  ))}
-                </select>
-                <SelectArrow />
-              </div>
+              <select
+                id="news-category"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className={selectClass}
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {formatText(cat)}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="flex flex-col">
               <label htmlFor="news-subcategory" className={labelClass}>
                 Topic
               </label>
-              <div className="relative">
-                <select
-                  id="news-subcategory"
-                  value={selectedSubcategory}
-                  onChange={handleSubcategoryChange}
-                  className={selectClass}
-                >
-                  {SUBCATEGORIES.map((sub) => (
-                    <option key={sub} value={sub}>
-                      {formatText(sub)}
-                    </option>
-                  ))}
-                </select>
-                <SelectArrow />
-              </div>
+              <select
+                id="news-subcategory"
+                value={selectedSubcategory}
+                onChange={handleSubcategoryChange}
+                className={selectClass}
+              >
+                {SUBCATEGORIES.map((sub) => (
+                  <option key={sub} value={sub}>
+                    {formatText(sub)}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <button
