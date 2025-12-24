@@ -24,7 +24,7 @@ export default function NewsPage() {
         <h1 className="font-heading mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
           Hub News
         </h1>
-        <p className="mb-4 text-stone-300 md:text-lg">
+        <p className="mb-4 text-sm text-stone-300 md:text-lg">
           Curated stories from around the world. Stay informed with the latest
           updates.
         </p>

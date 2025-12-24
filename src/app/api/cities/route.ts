@@ -1,16 +1,28 @@
 import { NextResponse } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
 
-export async function GET() {
+export async function GET(): Promise<Response> {
   try {
     const db = getServerDb();
     const snapshot = await db.collection("cities").get();
 
-    const cities = snapshot.docs.map((doc) => doc.data()?.city).filter(Boolean);
+    const cities: string[] = [];
 
-    return NextResponse.json({ cities });
+    for (const doc of snapshot.docs) {
+      const city = doc.data().city;
+      if (city) cities.push(city);
+    }
+
+    return NextResponse.json(
+      { cities },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=150",
+        },
+      }
+    );
   } catch (error) {
-    console.error("Error fetching cities:", error);
+    console.error("[API] Error fetching cities:", error);
     return NextResponse.json({ cities: [] }, { status: 500 });
   }
 }

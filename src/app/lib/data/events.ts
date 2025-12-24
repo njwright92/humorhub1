@@ -47,10 +47,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
     for (const doc of citiesSnap.docs) {
       const { city, coordinates } = doc.data();
       if (city && coordinates?.lat && coordinates?.lng) {
-        cityCoordinates[city] = {
-          lat: coordinates.lat,
-          lng: coordinates.lng,
-        };
+        cityCoordinates[city] = coordinates;
         cities.push(city);
       }
     }
@@ -71,7 +68,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
 const getCachedMicFinderData = unstable_cache(
   fetchFromFirestore,
   ["mic-finder-data"],
-  { revalidate: 60 }
+  { revalidate: 30 }
 );
 
 export const fetchMicFinderData = cache(getCachedMicFinderData);

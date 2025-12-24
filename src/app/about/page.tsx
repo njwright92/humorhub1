@@ -52,24 +52,21 @@ const FEATURES = [
 
 export default function AboutPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 text-center md:ml-24">
-      {/* Hero */}
-      <header className="animate-slide-in mx-auto mt-6 mb-8 max-w-4xl sm:mt-10 sm:mb-4">
-        <h1 className="font-heading mb-2 text-2xl font-bold tracking-tight text-amber-700 sm:mb-4 md:text-4xl lg:text-5xl">
-          Built for Comics
-        </h1>
-        <p className="font-heading mb-6 text-lg font-bold tracking-wide sm:mb-10 md:text-xl lg:text-2xl">
-          By a Comic
-        </p>
-        <p className="mx-auto leading-relaxed text-stone-300 md:text-lg">
-          Humor Hub was created to solve the two biggest problems every working
-          comedian faces: finding the next gig and finding the next joke.
-        </p>
-      </header>
-      {/* Features */}
+    <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
+      <h1 className="font-heading mt-10 mb-2 text-2xl font-bold text-amber-700 sm:text-4xl lg:text-5xl">
+        Built for Comics
+      </h1>
+      <p className="font-heading mb-6 text-lg font-bold tracking-wide md:text-xl">
+        By a Comic
+      </p>
+      <p className="mx-auto mb-12 max-w-2xl text-sm leading-relaxed text-stone-300 md:text-base">
+        Humor Hub was created to solve the two biggest problems every working
+        comedian faces: finding the next gig and finding the next joke.
+      </p>
+
       <section
         aria-labelledby="features-heading"
-        className="mx-auto mb-12 grid w-full max-w-5xl gap-4 px-2 sm:mb-16 sm:gap-8 md:grid-cols-2"
+        className="animate-slide-in mx-auto mb-12 grid w-full max-w-5xl gap-6 md:grid-cols-2"
       >
         <h2 id="features-heading" className="sr-only">
           Features
@@ -78,28 +75,21 @@ export default function AboutPage() {
         {FEATURES.map((feature) => (
           <article
             key={feature.title}
-            className={`group rounded-2xl border border-stone-700 bg-stone-800/50 p-4 text-left backdrop-blur-md transition-all hover:-translate-y-1 sm:p-6 md:p-8 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
+            className={`group rounded-2xl border border-stone-700 bg-stone-800/50 p-6 text-left transition-all hover:-translate-y-1 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
           >
-            <span
-              className="mb-3 block text-3xl sm:mb-4 sm:text-4xl"
-              aria-hidden="true"
-            >
+            <span className="mb-3 block text-3xl" aria-hidden="true">
               {feature.emoji}
             </span>
             <h3
-              className={`font-heading mb-2 text-xl font-bold transition-colors sm:mb-3 sm:text-2xl ${feature.titleBaseClass} ${feature.titleHoverClass}`}
+              className={`font-heading mb-2 text-xl font-bold transition-colors ${feature.titleBaseClass} ${feature.titleHoverClass}`}
             >
               {feature.title}
             </h3>
-            <p className="mb-3 text-sm leading-relaxed text-stone-300 sm:mb-4 sm:text-base">
-              {feature.description}
-            </p>
-            <p className="text-xs text-stone-400 sm:text-sm">
-              {feature.detail}
-            </p>
+            <p className="mb-3 text-sm text-stone-300">{feature.description}</p>
+            <p className="text-xs text-stone-400">{feature.detail}</p>
             <Link
               href={feature.link}
-              className={`mt-4 inline-flex items-center gap-1 font-bold tracking-wide transition-colors group-hover:underline sm:mt-6 ${feature.linkTextClass}`}
+              className={`mt-4 inline-flex items-center gap-1 font-bold transition-colors group-hover:underline ${feature.linkTextClass}`}
             >
               {feature.linkText}
               <span aria-hidden="true">→</span>
@@ -108,27 +98,26 @@ export default function AboutPage() {
         ))}
       </section>
 
-      {/* CTA */}
       <section
         aria-labelledby="cta-heading"
-        className="mx-auto w-full max-w-2xl border-t border-stone-800 pt-8 sm:pt-12"
+        className="border-t border-stone-800 pt-8"
       >
         <h2
           id="cta-heading"
-          className="font-heading mb-6 text-xl font-bold sm:mb-8 sm:text-2xl"
+          className="font-heading mb-6 text-xl font-bold sm:text-2xl"
         >
           Ready to hit the stage?
         </h2>
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/MicFinder"
-            className="rounded-2xl bg-amber-700 px-6 py-2.5 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 sm:px-8 sm:py-3"
+            className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
           >
             Find Events
           </Link>
           <Link
             href="/"
-            className="rounded-2xl bg-stone-700 px-6 py-2.5 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-stone-600 sm:px-8 sm:py-3"
+            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-stone-600"
           >
             Back Home
           </Link>

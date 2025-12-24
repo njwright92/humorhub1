@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 
 const NEWS_API_TOKEN = process.env.NEWS_API;
 
-export async function GET(request: Request) {
+const TOP_ENDPOINT = "https://api.thenewsapi.com/v1/news/top";
+const ALL_ENDPOINT = "https://api.thenewsapi.com/v1/news/all";
+
+export async function GET(request: Request): Promise<Response> {
   if (!NEWS_API_TOKEN) {
     return NextResponse.json(
       { error: "Server API Token missing" },
@@ -10,14 +13,11 @@ export async function GET(request: Request) {
     );
   }
 
-  const { searchParams } = new URL(request.url);
-  const category = searchParams.get("category") || "all_news";
-  const subcategory = searchParams.get("subcategory") || "general";
+  const url = new URL(request.url);
+  const category = url.searchParams.get("category") ?? "all_news";
+  const subcategory = url.searchParams.get("subcategory") ?? "general";
 
-  const endpoint =
-    category === "top_stories"
-      ? "https://api.thenewsapi.com/v1/news/top"
-      : "https://api.thenewsapi.com/v1/news/all";
+  const endpoint = category === "top_stories" ? TOP_ENDPOINT : ALL_ENDPOINT;
 
   const params = new URLSearchParams({
     api_token: NEWS_API_TOKEN,
@@ -28,27 +28,28 @@ export async function GET(request: Request) {
   });
 
   try {
-    const res = await fetch(`${endpoint}?${params}`, {
-      cache: "no-store",
+    const res = await fetch(`${endpoint}?${params.toString()}`, {
+      next: { revalidate: 30 },
     });
 
-    if (!res.ok) throw new Error(`External API error: ${res.status}`);
+    if (!res.ok) {
+      throw new Error(`News API error: ${res.status}`);
+    }
 
-    const { data } = (await res.json()) as {
-      data: Array<{ title?: string; description?: string }>;
+    const json = (await res.json()) as {
+      data?: Array<{ title?: string; description?: string }>;
     };
 
-    return NextResponse.json(
-      {
-        data: data.filter((a) => a.title && a.description),
-      },
-      {
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
+    const filtered = (json.data ?? []).filter(
+      (item) => item.title && item.description
     );
-  } catch {
+
+    return NextResponse.json(
+      { data: filtered },
+      { headers: { "Cache-Control": "no-store" } }
+    );
+  } catch (error) {
+    console.error("[API/news] Fetch failed:", error);
     return NextResponse.json(
       { error: "Failed to fetch news" },
       { status: 500 }

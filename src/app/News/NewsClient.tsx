@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Loading from "../components/loading";
 
@@ -53,10 +53,9 @@ function ArticleCard({
             src={article.image_url}
             alt={article.title}
             fill
-            sizes="100vw"
+            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover group-hover:scale-105"
             priority={priority}
-            fetchPriority="high"
             quality={65}
             onError={() => setImgError(true)}
           />
@@ -104,19 +103,19 @@ export default function NewsClient() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchNews = useCallback(async (cat: Category, sub: string) => {
+  const fetchNews = async (cat: Category, sub: string) => {
     setIsLoading(true);
     setError("");
+
     try {
       const qs = new URLSearchParams({ category: cat, subcategory: sub });
-      const response = await fetch(`/api/news?${qs.toString()}`, {
-        cache: "no-store",
-      });
+      const response = await fetch(`/api/news?${qs.toString()}`);
 
       if (!response.ok) throw new Error("Failed to fetch");
-      const json = await response.json();
 
+      const json = await response.json();
       if (json.error) throw new Error(json.error);
+
       setArticles(json.data ?? []);
     } catch {
       setError("Unable to load the latest headlines. Please try again.");
@@ -124,11 +123,11 @@ export default function NewsClient() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchNews(selectedCategory, selectedSubcategory);
-  }, [selectedCategory, selectedSubcategory, fetchNews]);
+  }, [selectedCategory, selectedSubcategory]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value as Category);
@@ -171,6 +170,7 @@ export default function NewsClient() {
           <legend id="filters-heading" className="sr-only">
             Filter News
           </legend>
+
           <div className="grid items-end gap-6 text-left md:grid-cols-3">
             <div className="flex flex-col">
               <label htmlFor="news-category" className={labelClass}>
@@ -221,7 +221,6 @@ export default function NewsClient() {
 
       <section
         aria-labelledby="results-heading"
-        aria-busy={isLoading}
         className="min-h-[60vh] w-full"
       >
         <h2 id="results-heading" className="sr-only">

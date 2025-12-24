@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,47 +12,35 @@ import type { Event } from "@/app/lib/types";
 export default function ProfileClient() {
   const { showToast } = useToast();
   const router = useRouter();
-
-  // Form State
-  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-
-  // Edit State
   const [originalName, setOriginalName] = useState("");
   const [originalBio, setOriginalBio] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-
-  // Loading / Data State
   const [isLoading, setIsLoading] = useState(true);
   const [isEventsLoading, setIsEventsLoading] = useState(true);
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
-  // Refs
   const authRef = useRef<Auth | null>(null);
   const storageRef = useRef<FirebaseStorage | null>(null);
   const userRef = useRef<User | null>(null);
-
-  const profileImageObjectURL = useMemo(() => {
-    return profileImage ? URL.createObjectURL(profileImage) : null;
-  }, [profileImage]);
+  const imageUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     return () => {
-      if (profileImageObjectURL) URL.revokeObjectURL(profileImageObjectURL);
+      if (imageUrlRef.current) URL.revokeObjectURL(imageUrlRef.current);
     };
-  }, [profileImageObjectURL]);
+  }, []);
 
   const fetchUserProfile = useCallback(async (user: User) => {
     try {
       const token = await user.getIdToken();
-      const response = await fetch("/api/profile", {
+      const res = await fetch("/api/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      const result = await response.json();
+      const result = await res.json();
       if (result.success) {
         const { name = "", bio = "", profileImageUrl = "" } = result.profile;
         setName(name);
@@ -61,8 +49,8 @@ export default function ProfileClient() {
         setOriginalName(name);
         setOriginalBio(bio);
       }
-    } catch (error) {
-      console.error("Error fetching profile:", error);
+    } catch (err) {
+      console.error("Error fetching profile:", err);
     }
   }, []);
 
@@ -70,14 +58,13 @@ export default function ProfileClient() {
     setIsEventsLoading(true);
     try {
       const token = await user.getIdToken();
-      const response = await fetch("/api/events/saved", {
+      const res = await fetch("/api/events/saved", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      const result = await response.json();
+      const result = await res.json();
       if (result.success) setSavedEvents(result.events || []);
-    } catch (error) {
-      console.error("Error fetching saved events:", error);
+    } catch (err) {
+      console.error("Error fetching saved events:", err);
     } finally {
       setIsEventsLoading(false);
     }
@@ -90,13 +77,11 @@ export default function ProfileClient() {
       const { getAuth, getStorage } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
 
-      const auth = await getAuth();
-      authRef.current = auth;
+      authRef.current = await getAuth();
       storageRef.current = await getStorage();
 
-      unsubscribe = onAuthStateChanged(auth, async (user) => {
+      unsubscribe = onAuthStateChanged(authRef.current, async (user) => {
         userRef.current = user;
-
         if (user) {
           await fetchUserProfile(user);
           setIsLoading(false);
@@ -116,7 +101,7 @@ export default function ProfileClient() {
     return () => unsubscribe?.();
   }, [fetchUserProfile, fetchSavedEvents]);
 
-  const handleSignOut = useCallback(async () => {
+  const handleSignOut = async () => {
     try {
       const { signOut } = await import("firebase/auth");
       if (authRef.current) {
@@ -127,167 +112,138 @@ export default function ProfileClient() {
     } catch {
       showToast("Error signing out", "error");
     }
-  }, [router, showToast]);
+  };
 
-  const handleImageChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      const user = userRef.current;
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const user = userRef.current;
+    if (!file || !user || !storageRef.current) return;
 
-      if (!file || !user || !storageRef.current) return;
+    if (imageUrlRef.current) URL.revokeObjectURL(imageUrlRef.current);
+    imageUrlRef.current = URL.createObjectURL(file);
 
-      setProfileImage(file);
+    try {
+      const { ref, uploadBytes, getDownloadURL } =
+        await import("firebase/storage");
+      const imageRef = ref(storageRef.current, `profileImages/${user.uid}`);
+      await uploadBytes(imageRef, file);
+      const url = await getDownloadURL(imageRef);
+      setProfileImageUrl(url);
+      showToast("Image uploaded!", "success");
+    } catch {
+      showToast("Error uploading image.", "error");
+    }
+  };
 
-      try {
-        const { ref, uploadBytes, getDownloadURL } =
-          await import("firebase/storage");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const user = userRef.current;
+    if (!user) return;
 
-        const imageRef = ref(storageRef.current, `profileImages/${user.uid}`);
-        await uploadBytes(imageRef, file);
-        const url = await getDownloadURL(imageRef);
-        setProfileImageUrl(url);
-        showToast("Image uploaded!", "success");
-      } catch {
-        showToast("Error uploading image.", "error");
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch("/api/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name, bio, profileImageUrl }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setOriginalName(name);
+        setOriginalBio(bio);
+        setIsEditing(false);
+        showToast("Profile saved!", "success");
+      } else {
+        throw new Error(result.error);
       }
-    },
-    [showToast]
-  );
+    } catch {
+      showToast("Error saving profile.", "error");
+    }
+  };
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      const user = userRef.current;
-      if (!user) return;
-
-      try {
-        const token = await user.getIdToken();
-        const response = await fetch("/api/profile", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ name, bio, profileImageUrl }),
-        });
-
-        const result = await response.json();
-        if (result.success) {
-          setOriginalName(name);
-          setOriginalBio(bio);
-          setIsEditing(false);
-          showToast("Profile saved!", "success");
-        } else {
-          throw new Error(result.error);
-        }
-      } catch {
-        showToast("Error saving profile.", "error");
-      }
-    },
-    [name, bio, profileImageUrl, showToast]
-  );
-
-  const handleCancel = useCallback(() => {
+  const handleCancel = () => {
     setName(originalName);
     setBio(originalBio);
     setIsEditing(false);
-  }, [originalName, originalBio]);
+  };
 
-  const handleDeleteEvent = useCallback(
-    async (eventId: string, eventName: string) => {
-      if (!confirm(`Remove "${eventName}" from your saved events?`)) return;
+  const handleDeleteEvent = async (eventId: string, eventName: string) => {
+    if (!confirm(`Remove "${eventName}" from your saved events?`)) return;
+    const user = userRef.current;
+    if (!user) return;
 
-      const user = userRef.current;
-      if (!user) return;
-
-      setIsDeleting(eventId);
-
-      try {
-        const token = await user.getIdToken();
-        const response = await fetch("/api/events/delete", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ eventId }),
-        });
-
-        const result = await response.json();
-        if (result.success) {
-          setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
-          showToast("Event removed!", "success");
-        } else {
-          throw new Error(result.error);
-        }
-      } catch (error) {
-        console.error("Error deleting event:", error);
-        showToast("Error deleting event.", "error");
-      } finally {
-        setIsDeleting(null);
+    setIsDeleting(eventId);
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch("/api/events/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ eventId }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
+        showToast("Event removed!", "success");
+      } else {
+        throw new Error(result.error);
       }
-    },
-    [showToast]
-  );
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      showToast("Error deleting event.", "error");
+    } finally {
+      setIsDeleting(null);
+    }
+  };
 
-  // Computed image source
-  const imageSrc = profileImageObjectURL || profileImageUrl;
+  const imageSrc = imageUrlRef.current || profileImageUrl;
 
-  // Loading State
   if (isLoading) {
     return (
-      <div
-        className="flex flex-1 flex-col items-center justify-center"
-        role="status"
-        aria-label="Loading profile"
-      >
+      <div className="flex flex-1 items-center justify-center" role="status">
         <div className="w-full max-w-md animate-pulse space-y-4">
           <div className="mx-auto h-8 w-1/2 rounded bg-stone-700" />
-          <div className="mx-auto size-36 rounded bg-stone-700" />
+          <div className="mx-auto size-36 rounded-full bg-stone-700" />
           <div className="mx-auto h-4 w-3/4 rounded bg-stone-700" />
           <div className="mx-auto h-4 w-1/2 rounded bg-stone-700" />
         </div>
-        <p className="sr-only">Loading Profile...</p>
+        <span className="sr-only">Loading profile...</span>
       </div>
     );
   }
 
-  // Not Signed In State
   if (!userRef.current) {
     return (
-      <div className="mt-10 flex flex-1 flex-col items-center justify-center">
-        <section className="max-w-md rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center">
-          <span className="mb-4 block text-6xl" aria-hidden="true">
-            🔐
-          </span>
-          <h2 className="font-heading mb-4 text-2xl font-bold text-amber-700">
-            Sign In Required
-          </h2>
-          <p className="mb-6 text-stone-400">
-            Please sign in to view your profile and saved events.
-          </p>
-          <Link
-            href="/MicFinder"
-            className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
-          >
-            Go to MicFinder
-          </Link>
-        </section>
-      </div>
+      <section className="mx-auto mt-10 max-w-md rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center shadow-lg">
+        <span className="mb-4 block text-6xl" aria-hidden="true">
+          🔐
+        </span>
+        <h2 className="font-heading mb-4 text-2xl font-bold text-amber-700">
+          Sign In Required
+        </h2>
+        <p className="mb-6 text-stone-400">
+          Please sign in to view your profile and saved events.
+        </p>
+        <Link
+          href="/MicFinder"
+          className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
+        >
+          Go to MicFinder
+        </Link>
+      </section>
     );
   }
 
   return (
     <div className="animate-slide-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
-      {/* Profile Card */}
       <aside className="lg:col-span-1">
-        <section
-          aria-labelledby="profile-heading"
-          className="sticky top-24 rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-stone-900 shadow-lg"
-        >
-          <h2 id="profile-heading" className="sr-only">
-            Your Profile
-          </h2>
+        <section className="sticky top-24 rounded-2xl border border-stone-300 bg-zinc-200 p-4 text-stone-900 shadow-lg">
+          <h2 className="sr-only">Profile Management</h2>
 
           <div className="flex flex-col items-center">
             {!isEditing && (
@@ -296,7 +252,7 @@ export default function ProfileClient() {
               </p>
             )}
 
-            <figure className="group relative mx-auto mb-4 size-32 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300 shadow-lg">
+            <figure className="group relative mb-4 size-32 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300 shadow-lg">
               {imageSrc ? (
                 <Image
                   src={imageSrc}
@@ -304,7 +260,6 @@ export default function ProfileClient() {
                   fill
                   className="object-cover"
                   priority
-                  fetchPriority="high"
                   quality={70}
                 />
               ) : (
@@ -319,9 +274,11 @@ export default function ProfileClient() {
               {isEditing && (
                 <label
                   htmlFor="profilePicture"
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center bg-stone-900/50 opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute inset-0 flex cursor-pointer items-center justify-center bg-stone-900/50 opacity-50 transition-opacity hover:opacity-100"
                 >
-                  <span className="text-xs font-bold text-white">Change</span>
+                  <span className="text-xs font-bold text-white">
+                    {imageSrc ? "Change" : "Upload"}
+                  </span>
                   <input
                     id="profilePicture"
                     type="file"
@@ -332,13 +289,12 @@ export default function ProfileClient() {
                 </label>
               )}
             </figure>
-
             {isEditing ? (
               <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <div>
                   <label
                     htmlFor="display-name"
-                    className="mb-1 block text-sm font-bold text-stone-800 uppercase"
+                    className="mb-1 block text-sm font-bold uppercase"
                   >
                     Display Name
                   </label>
@@ -347,7 +303,7 @@ export default function ProfileClient() {
                     id="display-name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-2xl border border-stone-300 bg-white p-2 text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
+                    className="w-full rounded-2xl border border-stone-300 bg-white p-2 outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     placeholder="Stage Name"
                     required
                   />
@@ -355,32 +311,30 @@ export default function ProfileClient() {
                 <div>
                   <label
                     htmlFor="bio"
-                    className="mb-1 block text-sm font-bold text-stone-800 uppercase"
+                    className="mb-1 block text-sm font-bold uppercase"
                   >
-                    Personal Note / Bio
+                    Bio
                   </label>
                   <textarea
                     id="bio"
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    className="w-full resize-none rounded-2xl border border-stone-300 bg-white p-2 text-sm text-stone-900 transition-all outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
+                    className="w-full resize-none rounded-2xl border border-stone-300 bg-white p-2 text-sm outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20"
                     rows={4}
-                    placeholder="Tell us a bit about yourself..."
+                    placeholder="Tell us about yourself..."
                   />
                 </div>
-
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3">
                   <button
                     type="submit"
                     className="flex-1 rounded-2xl bg-amber-700 py-2 text-sm font-bold text-white shadow-lg transition hover:scale-105 hover:bg-amber-800"
                   >
-                    Save Changes
+                    Save
                   </button>
-
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="flex-1 rounded-2xl border border-stone-300 bg-transparent py-2 text-sm font-bold text-stone-600 transition hover:bg-stone-300 hover:text-stone-900"
+                    className="flex-1 rounded-2xl border border-stone-300 py-2 text-sm font-bold text-stone-600 transition hover:bg-stone-300"
                   >
                     Cancel
                   </button>
@@ -393,24 +347,21 @@ export default function ProfileClient() {
                     &ldquo;{bio}&rdquo;
                   </blockquote>
                 ) : (
-                  <p className="mt-2 mb-6 text-sm tracking-wide text-stone-800">
-                    No bio set.
-                  </p>
+                  <p className="mb-6 text-sm text-stone-600">No bio set.</p>
                 )}
 
                 <div className="space-y-3">
                   <button
                     type="button"
                     onClick={() => setIsEditing(true)}
-                    className="w-full rounded-2xl bg-stone-900/90 py-2.5 font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
+                    className="w-full rounded-2xl bg-stone-900 py-2.5 font-bold text-zinc-200 shadow-lg transition hover:scale-105 hover:bg-stone-800"
                   >
                     Edit Profile
                   </button>
-
                   <button
                     type="button"
                     onClick={handleSignOut}
-                    className="w-1/2 rounded-2xl border-2 border-red-300 bg-red-100 py-2 font-bold text-red-700 shadow-lg transition-all duration-200 hover:border-red-400 hover:bg-red-200 hover:text-red-900"
+                    className="w-1/2 rounded-2xl border-2 border-red-300 bg-red-100 py-2 font-bold text-red-700 shadow-lg transition hover:bg-red-200"
                   >
                     Sign Out
                   </button>
@@ -421,28 +372,20 @@ export default function ProfileClient() {
         </section>
       </aside>
 
-      {/* Saved Events */}
-      <section aria-labelledby="events-heading" className="lg:col-span-2">
-        <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg backdrop-blur-md">
-          <h2
-            id="events-heading"
-            className="font-heading mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start md:text-2xl"
-          >
-            <span aria-hidden="true">🎟️</span> Saved Events
+      <section className="lg:col-span-2">
+        <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg">
+          <h2 className="font-heading mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start">
+            <span aria-hidden="true">🎟️</span>
+            Saved Events
             {!isEventsLoading && (
               <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs">
-                <span className="sr-only">Total: </span>
                 {savedEvents.length}
               </span>
             )}
           </h2>
 
           {isEventsLoading ? (
-            <div
-              role="status"
-              aria-label="Loading events"
-              className="space-y-4"
-            >
+            <div role="status" className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -450,17 +393,16 @@ export default function ProfileClient() {
                 >
                   <div className="mb-3 h-5 w-1/2 rounded bg-stone-700" />
                   <div className="mb-2 h-4 w-3/4 rounded bg-stone-700" />
-                  <div className="mb-3 h-4 w-1/4 rounded bg-stone-700" />
-                  <div className="h-3 w-full rounded bg-stone-700" />
+                  <div className="h-4 w-1/4 rounded bg-stone-700" />
                 </div>
               ))}
-              <p className="sr-only">Loading saved events...</p>
+              <span className="sr-only">Loading events...</span>
             </div>
           ) : savedEvents.length > 0 ? (
             <ul className="space-y-4">
               {savedEvents.map((event) => (
                 <li key={event.id}>
-                  <article className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-4 text-left shadow-lg hover:border-amber-700 sm:flex-row">
+                  <article className="group flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-4 text-left shadow-lg hover:border-amber-700 sm:flex-row">
                     <div className="flex-1">
                       <header className="mb-1 flex flex-wrap items-center gap-2">
                         <h3 className="font-heading text-lg font-bold text-amber-700">
@@ -477,32 +419,25 @@ export default function ProfileClient() {
                           </span>
                         )}
                       </header>
-                      <p className="mb-1 flex items-center gap-1 text-sm">
-                        <span aria-hidden="true">📍</span>
-                        <span className="sr-only">Location:</span>
-                        {event.location}
+                      <p className="mb-1 text-sm">
+                        <span aria-hidden="true">📍</span> {event.location}
                       </p>
-                      <p className="mb-3 flex items-center gap-1 text-xs">
-                        <span aria-hidden="true">📅</span>
-                        <span className="sr-only">Date:</span>
-                        {event.date}
+                      <p className="mb-3 text-xs">
+                        <span aria-hidden="true">📅</span> {event.date}
                         {event.isRecurring && " (Recurring)"}
                       </p>
                       {event.details && (
                         <div
-                          className="line-clamp-2 text-sm transition-all duration-300 group-hover:line-clamp-none"
+                          className="line-clamp-2 text-sm group-hover:line-clamp-none"
                           dangerouslySetInnerHTML={{ __html: event.details }}
                         />
                       )}
                     </div>
 
-                    <footer className="flex min-w-25 items-end justify-between gap-2 sm:flex-col">
+                    <footer className="flex items-end justify-between gap-2 sm:flex-col">
                       <Link
-                        href={`/MicFinder?city=${encodeURIComponent(
-                          event.location.split(",")[1]?.trim() || ""
-                        )}`}
-                        className="text-sm underline transition-colors hover:text-amber-700"
-                        aria-label={`Find ${event.name} in ${event.location} on map`}
+                        href={`/MicFinder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
+                        className="text-sm underline hover:text-amber-700"
                       >
                         Find on Map
                       </Link>
@@ -510,12 +445,7 @@ export default function ProfileClient() {
                         type="button"
                         onClick={() => handleDeleteEvent(event.id, event.name)}
                         disabled={isDeleting === event.id}
-                        className={`rounded-2xl border px-3 py-1 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                          isDeleting === event.id
-                            ? "border-stone-600 bg-stone-700 text-stone-500"
-                            : "border-red-500 text-red-400 hover:border-red-400 hover:bg-red-900/50 hover:text-red-100"
-                        }`}
-                        aria-label={`Remove ${event.name}`}
+                        className="rounded-2xl border border-red-500 px-3 py-1 text-sm font-semibold text-red-400 transition hover:bg-red-900/50 hover:text-red-100 disabled:opacity-50"
                       >
                         {isDeleting === event.id ? "Removing..." : "Remove"}
                       </button>
@@ -525,14 +455,14 @@ export default function ProfileClient() {
               ))}
             </ul>
           ) : (
-            <div className="flex h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-700 text-center text-stone-400">
+            <div className="flex h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-700 text-stone-400">
               <span className="mb-2 text-4xl" aria-hidden="true">
                 📭
               </span>
               <p className="font-heading text-lg font-semibold">
                 No events saved yet
               </p>
-              <p className="text-md mb-4">Go find some mics to hit!</p>
+              <p className="mb-4">Go find some mics to hit!</p>
               <Link
                 href="/MicFinder"
                 className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
