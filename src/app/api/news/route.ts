@@ -46,7 +46,7 @@ export async function GET(request: Request): Promise<Response> {
 
     return NextResponse.json(
       { data: filtered },
-      { headers: { "Cache-Control": "no-store" } }
+      { headers: { "Cache-Control": "max-age=300" } }
     );
   } catch (error) {
     console.error("[API/news] Fetch failed:", error);

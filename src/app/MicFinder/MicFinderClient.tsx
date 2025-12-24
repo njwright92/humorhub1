@@ -442,7 +442,11 @@ export default function MicFinderClient({
       <div className="relative z-10 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
         {/* City Dropdown */}
         <div className="w-full max-w-xs">
-          <label id="city-select-label" className="sr-only">
+          <label
+            htmlFor="city-select"
+            id="city-select-label"
+            className="sr-only"
+          >
             Select a City
           </label>
           <button

@@ -13,14 +13,7 @@ export async function GET(): Promise<Response> {
       if (city) cities.push(city);
     }
 
-    return NextResponse.json(
-      { cities },
-      {
-        headers: {
-          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=150",
-        },
-      }
-    );
+    return NextResponse.json({ cities });
   } catch (error) {
     console.error("[API] Error fetching cities:", error);
     return NextResponse.json({ cities: [] }, { status: 500 });
