@@ -442,12 +442,11 @@ export default function MicFinderClient({
       <div className="relative z-10 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
         {/* City Dropdown */}
         <div className="w-full max-w-xs">
-          <label htmlFor="city-select" id="city-select" className="sr-only">
+          <label htmlFor="city-search" className="sr-only">
             Select a City
           </label>
           <button
             type="button"
-            aria-labelledby="city-select"
             aria-haspopup="listbox"
             aria-expanded={isFirstDropdownOpen}
             onMouseEnter={handleMapHover}
@@ -462,22 +461,17 @@ export default function MicFinderClient({
           </button>
           {isFirstDropdownOpen && (
             <div className={dropdownContainerClass}>
-              <label htmlFor="city-select" className="sr-only">
-                Search available cities
-              </label>
               <input
-                id="city-select"
-                name="city-select"
-                autoComplete="off"
+                id="city-search"
                 type="text"
                 placeholder="Search city..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={dropdownInputClass}
+                autoComplete="off"
                 autoFocus
-                aria-label="Filter cities"
               />
-              <ul role="listbox">
+              <ul role="listbox" aria-label="Available cities">
                 <li
                   role="option"
                   aria-selected={false}
