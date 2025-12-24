@@ -1,26 +1,20 @@
 "use client";
 
 import { useState } from "react";
-type ContactFormState = {
-  name: string;
-  email: string;
-  message: string;
-};
+import { useToast } from "../components/ToastContext";
 
 const inputClass =
-  "w-full rounded-2xl shadow-lg border-2 border-stone-500  px-4 py-3  placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
-const labelClass = "mb-2 text-xs md:text-sm uppercase mt-2";
+  "w-full rounded-2xl border-2 border-stone-500 px-4 py-3 shadow-lg placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+const labelClass = "mb-2 mt-2 text-xs uppercase md:text-sm";
 
 export default function ContactForm() {
-  const [formState, setFormState] = useState<ContactFormState>({
+  const { showToast } = useToast();
+  const [formState, setFormState] = useState({
     name: "",
     email: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
-    null
-  );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,25 +27,23 @@ export default function ContactForm() {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
-    setSubmitStatus(null);
+
     try {
       const emailjs = await import("@emailjs/browser");
-      const payload = {
-        name: formState.name,
-        email: formState.email,
-        message: formState.message,
-      };
-
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
-        payload,
+        {
+          name: formState.name,
+          email: formState.email,
+          message: formState.message,
+        },
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
-      setSubmitStatus("success");
+      showToast("Message sent! We'll get back to you soon.", "success");
       setFormState({ name: "", email: "", message: "" });
     } catch {
-      setSubmitStatus("error");
+      showToast("Something went wrong. Please try again.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -61,36 +53,16 @@ export default function ContactForm() {
     <div className="animate-slide-in mx-auto w-full max-w-4xl">
       <section
         aria-labelledby="contact-form-heading"
-        className="rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-4 shadow-lg shadow-amber-700 backdrop-blur-md sm:p-6 md:p-8"
+        className="rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-2 shadow-lg shadow-amber-700/20 backdrop-blur-md sm:p-4 md:p-6"
       >
         <h2 id="contact-form-heading" className="sr-only">
           Contact Form
         </h2>
-        {/* Status Messages */}
-        {submitStatus === "success" && (
-          <div
-            role="alert"
-            className="animate-slide-in mb-6 rounded-2xl border border-green-500/50 bg-green-900/30 px-4 py-3 text-center font-semibold text-green-200"
-          >
-            <span aria-hidden="true">✓ </span>
-            Message sent successfully! We&#39;ll get back to you soon.
-          </div>
-        )}
-        {submitStatus === "error" && (
-          <div
-            role="alert"
-            className="animate-slide-in mb-6 rounded-2xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center font-semibold text-red-200"
-          >
-            <span aria-hidden="true">✗ </span>
-            Something went wrong. Please try again later.
-          </div>
-        )}
         <form
           onSubmit={handleSubmit}
           className="space-y-4 text-left sm:space-y-6"
           noValidate
         >
-          {/* Name & Email */}
           <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
             <div className="flex flex-col">
               <label htmlFor="contact-name" className={labelClass}>
@@ -125,7 +97,6 @@ export default function ContactForm() {
               />
             </div>
           </div>
-          {/* Message */}
           <div className="flex flex-col">
             <label htmlFor="contact-message" className={labelClass}>
               Message <span className="sr-only">(required)</span>
@@ -142,11 +113,10 @@ export default function ContactForm() {
               className={`${inputClass} resize-none`}
             />
           </div>
-          {/* Submit */}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-2xl bg-amber-700 px-8 py-3 text-base font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto sm:text-lg"
+            className="w-full rounded-2xl bg-amber-700 px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto"
           >
             {isSubmitting ? "Sending…" : "Send Message"}
           </button>
