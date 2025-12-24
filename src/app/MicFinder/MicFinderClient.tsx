@@ -442,13 +442,11 @@ export default function MicFinderClient({
       <div className="relative z-10 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
         {/* City Dropdown */}
         <div className="w-full max-w-xs">
-          <label htmlFor="city-search" className="sr-only">
-            Select a City
-          </label>
           <button
             type="button"
             aria-haspopup="listbox"
             aria-expanded={isFirstDropdownOpen}
+            aria-label="Select a City"
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
             onClick={() => {
@@ -461,6 +459,9 @@ export default function MicFinderClient({
           </button>
           {isFirstDropdownOpen && (
             <div className={dropdownContainerClass}>
+              <label htmlFor="city-search" className="sr-only">
+                Search cities
+              </label>
               <input
                 id="city-search"
                 type="text"
