@@ -12,34 +12,21 @@ import {
 
 type ToastType = "success" | "error" | "info";
 
-interface ToastContextType {
-  showToast: (message: string, type: ToastType) => void;
-}
-
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+const ToastContext = createContext<
+  { showToast: (message: string, type: ToastType) => void } | undefined
+>(undefined);
 
 export function useToast() {
   const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
-  }
+  if (!context) throw new Error("useToast must be used within a ToastProvider");
   return context;
 }
 
-// Toast styling by type
-const TOAST_STYLES: Record<ToastType, string> = {
-  success: "bg-green-700",
-  error: "bg-red-700",
-  info: "bg-blue-700",
+const TOAST_CONFIG: Record<ToastType, { bg: string; icon: string }> = {
+  success: { bg: "bg-green-700", icon: "✓" },
+  error: { bg: "bg-red-700", icon: "✗" },
+  info: { bg: "bg-blue-700", icon: "ⓘ" },
 };
-
-const TOAST_ICONS: Record<ToastType, string> = {
-  success: "✓",
-  error: "✗",
-  info: "ⓘ",
-};
-
-const TOAST_DURATION = 3000;
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<{ msg: string; type: ToastType } | null>(
@@ -49,29 +36,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
   const showToast = useCallback((msg: string, type: ToastType) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setToast({ msg, type });
-
-    timeoutRef.current = setTimeout(() => {
-      setToast(null);
-      timeoutRef.current = null;
-    }, TOAST_DURATION);
+    timeoutRef.current = setTimeout(() => setToast(null), 3000);
   }, []);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-
       {toast && (
         <div
           role="status"
@@ -80,9 +57,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           className="animate-slide-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
         >
           <div
-            className={`flex items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-lg sm:px-6 ${TOAST_STYLES[toast.type]}`}
+            className={`flex items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-lg ${TOAST_CONFIG[toast.type].bg}`}
           >
-            <span aria-hidden="true">{TOAST_ICONS[toast.type]}</span>
+            <span aria-hidden="true">{TOAST_CONFIG[toast.type].icon}</span>
             <span>{toast.msg}</span>
           </div>
         </div>

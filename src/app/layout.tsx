@@ -62,13 +62,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link
           rel="preconnect"
           href="https://humorhub-73ff9.firebaseapp.com"
-          crossOrigin=""
+          crossOrigin="anonymous"
         />
-        <link rel="preconnect" href="https://apis.google.com" crossOrigin="" />
+        <link
+          rel="preconnect"
+          href="https://apis.google.com"
+          crossOrigin="anonymous"
+        />
         <link
           rel="preconnect"
           href="https://firestore.googleapis.com"
-          crossOrigin=""
+          crossOrigin="anonymous"
         />
       </head>
       <body

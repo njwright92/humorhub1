@@ -258,6 +258,7 @@ export default function ProfileClient() {
                   src={imageSrc}
                   alt={`${name || "User"}'s profile picture`}
                   fill
+                  sizes="128px"
                   className="object-cover"
                   priority
                   quality={70}

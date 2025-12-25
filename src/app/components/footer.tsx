@@ -5,28 +5,15 @@ import ScrollToTop from "./ScrollToTop";
 
 const linkClass =
   "transition-colors hover:text-amber-700 hover:underline md:text-lg";
+const headingClass =
+  "font-heading mb-4 text-lg font-extrabold uppercase tracking-wider whitespace-nowrap text-amber-600 md:mb-6 md:text-xl";
 
-const CURRENT_YEAR = new Date().getFullYear();
-
-function ExternalLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={linkClass}
-    >
-      {children}
-      <span className="sr-only"> (opens in new tab)</span>
-    </a>
-  );
-}
+const SOCIALS = [
+  { href: "https://twitter.com/naterbug321", label: "X (Twitter)" },
+  { href: "https://www.facebook.com/nate_wrigh", label: "Facebook" },
+  { href: "https://www.instagram.com/nate_wright3", label: "Instagram" },
+  { href: "https://github.com/njwright92", label: "GitHub" },
+];
 
 export default function Footer() {
   return (
@@ -43,12 +30,11 @@ export default function Footer() {
           Humor Hub
         </h3>
 
-        <p className="text-md mx-auto mb-6 max-w-2xl text-center text-stone-300 md:text-lg">
+        <p className="mx-auto mb-6 max-w-2xl text-center text-stone-300 md:text-lg">
           The Hub of Humor, Connecting comics and fans globally. Join the fun!
         </p>
 
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
-          {/* Logo */}
           <Link
             href="/"
             aria-label="Humor Hub Home"
@@ -64,14 +50,9 @@ export default function Footer() {
             />
           </Link>
 
-          {/* Navigation Links */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-6 md:w-3/4 md:pr-10">
-            {/* About Nav */}
             <nav aria-labelledby="about-nav">
-              <h3
-                id="about-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-600 uppercase md:mb-6 md:text-xl"
-              >
+              <h3 id="about-nav" className={headingClass}>
                 Get to Know Us
               </h3>
               <ul className="space-y-3 font-medium text-stone-400 md:space-y-4">
@@ -88,44 +69,29 @@ export default function Footer() {
               </ul>
             </nav>
 
-            {/* Social Nav */}
             <nav aria-labelledby="social-nav">
-              <h3
-                id="social-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-600 uppercase md:mb-6 md:text-xl"
-              >
+              <h3 id="social-nav" className={headingClass}>
                 Stay Connected
               </h3>
               <ul className="space-y-3 font-medium text-stone-400 md:space-y-4">
-                <li>
-                  <ExternalLink href="https://twitter.com/naterbug321">
-                    X (Twitter)
-                  </ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href="https://www.facebook.com/nate_wrigh">
-                    Facebook
-                  </ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href="https://www.instagram.com/nate_wright3">
-                    Instagram
-                  </ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href="https://github.com/njwright92">
-                    GitHub
-                  </ExternalLink>
-                </li>
+                {SOCIALS.map(({ href, label }) => (
+                  <li key={href}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    >
+                      {label}
+                      <span className="sr-only"> (opens in new tab)</span>
+                    </a>
+                  </li>
+                ))}
               </ul>
             </nav>
 
-            {/* Legal Nav */}
             <nav aria-labelledby="legal-nav">
-              <h3
-                id="legal-nav"
-                className="font-heading mb-4 text-lg font-extrabold tracking-wider whitespace-nowrap text-amber-600 uppercase md:mb-6 md:text-xl"
-              >
+              <h3 id="legal-nav" className={headingClass}>
                 Legal Info
               </h3>
               <ul className="space-y-3 font-medium text-stone-400 md:space-y-4">
@@ -144,12 +110,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright Bar */}
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-stone-900 sm:flex-row-reverse sm:gap-0">
+        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-stone-400 pt-2 sm:flex-row-reverse sm:gap-0">
           <ScrollToTop />
-
           <small className="font-mono text-xs text-stone-400 md:text-sm">
-            © {CURRENT_YEAR} Humor Hub™. All rights reserved.
+            © {new Date().getFullYear()} Humor Hub™. All rights reserved.
           </small>
         </div>
       </div>

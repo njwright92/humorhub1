@@ -8,26 +8,13 @@ const INPUT_ID = "search-input";
 const POPOVER_ID = "site-search-popover";
 const LISTBOX_ID = "search-suggestions";
 
-interface SearchBarProps {
-  isUserSignedIn: boolean;
-  setIsAuthModalOpen: (open: boolean) => void;
-  onNavigate?: () => void;
-}
-
-interface PageSuggestion {
+type PageItem = {
   label: string;
   route: string;
   requiresAuth?: boolean;
-}
-
-type Suggestion = {
-  type: "page" | "city" | "action";
-  label: string;
-  page?: PageSuggestion;
-  city?: string;
 };
 
-const PAGES: PageSuggestion[] = [
+const PAGES: PageItem[] = [
   { label: "Mic Finder", route: "/MicFinder" },
   { label: "News", route: "/News", requiresAuth: true },
   { label: "Contact", route: "/contact" },
@@ -42,33 +29,23 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className || "size-10"}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.35-4.35" />
-    </svg>
-  );
-}
+type Page = (typeof PAGES)[number];
+type Suggestion =
+  | { type: "action"; label: string }
+  | { type: "page"; label: string; page: Page }
+  | { type: "city"; label: string; city: string };
 
 export default function SearchBar({
   isUserSignedIn,
   setIsAuthModalOpen,
   onNavigate,
-}: SearchBarProps) {
+}: {
+  isUserSignedIn: boolean;
+  setIsAuthModalOpen: (open: boolean) => void;
+  onNavigate?: () => void;
+}) {
   const { showToast } = useToast();
   const router = useRouter();
-
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -94,9 +71,8 @@ export default function SearchBar({
 
   const handleToggleInput = useCallback(() => {
     setInputVisible((prev) => {
-      const next = !prev;
-      if (!prev && next) setTimeout(() => inputRef.current?.focus(), 0);
-      return next;
+      if (!prev) setTimeout(() => inputRef.current?.focus(), 0);
+      return !prev;
     });
   }, []);
 
@@ -120,12 +96,10 @@ export default function SearchBar({
       }
     }
 
-    let shown = 0;
     for (const city of cities) {
-      if (shown === 5) break;
+      if (results.filter((r) => r.type === "city").length >= 5) break;
       if (city.toLowerCase().includes(q)) {
         results.push({ type: "city", label: city, city });
-        shown++;
       }
     }
 
@@ -140,117 +114,105 @@ export default function SearchBar({
         return;
       }
 
-      if (s.type === "city" && s.city) {
+      if (s.type === "city") {
         navigateTo(`/MicFinder?city=${encodeURIComponent(s.city)}`);
         return;
       }
 
-      if (s.page) {
-        if (s.page.requiresAuth && !isUserSignedIn) {
-          showToast(`Please sign in to access ${s.page.label}`, "info");
-          setIsAuthModalOpen(true);
-          closeSearchBar();
-          return;
-        }
-        navigateTo(s.page.route);
+      if (s.page.requiresAuth && !isUserSignedIn) {
+        showToast(`Please sign in to access ${s.page.label}`, "info");
+        setIsAuthModalOpen(true);
+        closeSearchBar();
+        return;
       }
+      navigateTo(s.page.route);
     },
     [navigateTo, isUserSignedIn, setIsAuthModalOpen, showToast, closeSearchBar]
   );
-
-  const resolveSuggestion = useCallback((): Suggestion | null => {
-    if (activeIndex >= 0) return suggestions[activeIndex] ?? null;
-
-    const q = searchTerm.trim().toLowerCase();
-    if (!q) return null;
-
-    const exact = suggestions.find((s) => s.label.toLowerCase() === q);
-    if (exact) return exact;
-
-    const city = cities.find((c) => c.toLowerCase().includes(q));
-    return city ? { type: "city", label: city, city } : null;
-  }, [activeIndex, suggestions, searchTerm, cities]);
 
   const handleSearch = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const suggestion = resolveSuggestion();
-      if (suggestion) {
+      const q = searchTerm.trim().toLowerCase();
+      const suggestion =
+        suggestions[activeIndex] ??
+        suggestions.find((s) => s.label.toLowerCase() === q) ??
+        cities.find((c) => c.toLowerCase().includes(q));
+
+      if (typeof suggestion === "string") {
+        executeSuggestion({
+          type: "city",
+          label: suggestion,
+          city: suggestion,
+        });
+      } else if (suggestion) {
         executeSuggestion(suggestion);
       } else {
         showToast("No results found.", "info");
         closeSearchBar();
       }
     },
-    [resolveSuggestion, executeSuggestion, showToast, closeSearchBar]
+    [
+      activeIndex,
+      suggestions,
+      searchTerm,
+      cities,
+      executeSuggestion,
+      showToast,
+      closeSearchBar,
+    ]
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (suggestions.length === 0) return;
+      const len = suggestions.length;
+      if (!len && e.key !== "Escape") return;
 
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          setActiveIndex((prev) =>
-            prev < suggestions.length - 1 ? prev + 1 : 0
-          );
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          setActiveIndex((prev) =>
-            prev > 0 ? prev - 1 : suggestions.length - 1
-          );
-          break;
-        case "Enter":
-          if (activeIndex >= 0) {
-            e.preventDefault();
-            executeSuggestion(suggestions[activeIndex]);
-          }
-          break;
-        case "Escape":
-          // nice UX even without the document listener
-          e.preventDefault();
-          closeSearchBar();
-          break;
+      const actions: Record<string, () => void> = {
+        ArrowDown: () => setActiveIndex((i) => (i < len - 1 ? i + 1 : 0)),
+        ArrowUp: () => setActiveIndex((i) => (i > 0 ? i - 1 : len - 1)),
+        Enter: () =>
+          activeIndex >= 0 && executeSuggestion(suggestions[activeIndex]),
+        Escape: closeSearchBar,
+      };
+
+      if (actions[e.key]) {
+        e.preventDefault();
+        actions[e.key]();
       }
     },
     [suggestions, activeIndex, executeSuggestion, closeSearchBar]
   );
 
-  // Fetch cities once, only when the user first opens search
   useEffect(() => {
-    if (!isInputVisible || cities.length > 0) return;
+    if (!isInputVisible || cities.length) return;
 
     let mounted = true;
 
-    const fetchCities = async () => {
+    (async () => {
       try {
         const cached = sessionStorage.getItem("hh_cities");
         if (cached) {
-          const parsed: unknown = JSON.parse(cached);
-          if (mounted && Array.isArray(parsed)) setCities(parsed as string[]);
+          const parsed = JSON.parse(cached);
+          if (mounted && Array.isArray(parsed)) setCities(parsed);
           return;
         }
 
-        const response = await fetch("/api/cities");
-        if (!response.ok) return;
+        const res = await fetch("/api/cities");
+        if (!res.ok) return;
 
-        const data = (await response.json()) as { cities?: unknown };
-        if (mounted && Array.isArray(data.cities)) {
-          const nextCities = data.cities.filter(
-            (c): c is string => typeof c === "string"
-          );
-          setCities(nextCities);
-          sessionStorage.setItem("hh_cities", JSON.stringify(nextCities));
+        const { cities: data } = (await res.json()) as { cities?: unknown };
+        if (mounted && Array.isArray(data)) {
+          const valid = data.filter((c): c is string => typeof c === "string");
+          setCities(valid);
+          sessionStorage.setItem("hh_cities", JSON.stringify(valid));
         }
       } catch (err) {
         console.error("Error fetching cities:", err);
       }
-    };
+    })();
 
-    fetchCities();
     return () => {
       mounted = false;
     };
@@ -259,31 +221,37 @@ export default function SearchBar({
   useEffect(() => {
     if (!isInputVisible) return;
 
-    const handleClickOutside = (e: MouseEvent) => {
-      if (formRef.current && !formRef.current.contains(e.target as Node)) {
-        closeSearchBar();
-      }
+    const onClickOutside = (e: MouseEvent) => {
+      if (!formRef.current?.contains(e.target as Node)) closeSearchBar();
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, [isInputVisible, closeSearchBar]);
-
-  const showSuggestions = isInputVisible && suggestions.length > 0;
 
   return (
     <search className="relative">
       <button
         type="button"
         onClick={handleToggleInput}
-        className="flex cursor-pointer text-zinc-200 hover:scale-110 sm:text-stone-900"
+        className="cursor-pointer text-zinc-200 transition hover:scale-110 sm:text-stone-900"
         aria-label="Open search"
         aria-expanded={isInputVisible}
         aria-controls={POPOVER_ID}
       >
-        <SearchIcon />
+        <svg
+          className="size-10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
       </button>
 
       {isInputVisible && (
@@ -315,8 +283,8 @@ export default function SearchBar({
               className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
               autoComplete="off"
               role="combobox"
-              aria-expanded={showSuggestions}
-              aria-controls={showSuggestions ? LISTBOX_ID : undefined}
+              aria-expanded={suggestions.length > 0}
+              aria-controls={suggestions.length > 0 ? LISTBOX_ID : undefined}
               aria-autocomplete="list"
               aria-activedescendant={
                 activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
@@ -325,7 +293,7 @@ export default function SearchBar({
 
             <button
               type="submit"
-              className="mx-auto w-32 cursor-pointer rounded-2xl bg-amber-700 py-1 text-base font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-800"
+              className="mx-auto w-32 cursor-pointer rounded-2xl bg-amber-700 py-1 font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-800"
             >
               Search
             </button>
@@ -333,7 +301,7 @@ export default function SearchBar({
             <button
               type="button"
               onClick={closeSearchBar}
-              className="absolute top-0 right-0 cursor-pointer rounded-full p-1 text-stone-900 transition hover:scale-110"
+              className="absolute top-0 right-0 cursor-pointer p-1 text-stone-900 transition hover:scale-110"
               aria-label="Close search"
             >
               <svg
@@ -341,7 +309,6 @@ export default function SearchBar({
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
-                focusable="false"
               >
                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
               </svg>
@@ -356,17 +323,12 @@ export default function SearchBar({
               >
                 {suggestions.map((sug, idx) => (
                   <li
-                    key={`${sug.type}-${sug.label}-${idx}`}
+                    key={`${sug.type}-${sug.label}`}
                     id={`suggestion-${idx}`}
                     role="option"
                     aria-selected={idx === activeIndex}
-                    className={`flex cursor-pointer items-center justify-between p-2 text-sm text-stone-900 transition-colors ${
-                      idx === activeIndex
-                        ? "bg-amber-100"
-                        : "hover:bg-stone-300"
-                    }`}
+                    className={`flex cursor-pointer items-center justify-between p-2 text-sm text-stone-900 transition-colors ${idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"}`}
                     onMouseDown={(e) => {
-                      // prevent input blur before we handle the click
                       e.preventDefault();
                       executeSuggestion(sug);
                     }}

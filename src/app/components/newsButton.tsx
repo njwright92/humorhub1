@@ -5,19 +5,15 @@ import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import dynamic from "next/dynamic";
 
-const AuthModal = dynamic(() => import("./authModal"), {
-  loading: () => null,
-});
+const AuthModal = dynamic(() => import("./authModal"));
 
-interface NewsButtonProps {
+export default function NewsButton({
+  children = "Check It Out",
+  className = "w-60 self-center rounded-2xl bg-amber-700 px-2 py-1 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:self-end",
+}: {
   children?: ReactNode;
   className?: string;
-}
-
-const defaultClassName =
-  "w-60 md:w-80 self-center rounded-2xl bg-amber-700 px-2 py-1 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:self-end";
-
-export default function NewsButton({ children, className }: NewsButtonProps) {
+}) {
   const { showToast } = useToast();
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -34,36 +30,31 @@ export default function NewsButton({ children, className }: NewsButtonProps) {
 
       showToast("Please sign in to view News.", "info");
       setIsAuthModalOpen(true);
-    } catch (err) {
-      console.error("Auth init error:", err);
+    } catch {
       setIsAuthModalOpen(true);
     }
   }, [router, showToast]);
-
-  const handleClose = useCallback(() => setIsAuthModalOpen(false), []);
-
-  const handleLoginSuccess = useCallback(() => {
-    setIsAuthModalOpen(false);
-    router.push("/News");
-  }, [router]);
 
   return (
     <>
       <button
         type="button"
         onClick={handleClick}
-        className={className ?? defaultClassName}
+        className={className}
         aria-haspopup="dialog"
         aria-expanded={isAuthModalOpen}
       >
-        {children ?? "Check It Out"}
+        {children}
       </button>
 
       {isAuthModalOpen && (
         <AuthModal
           isOpen={isAuthModalOpen}
-          onClose={handleClose}
-          onLoginSuccess={handleLoginSuccess}
+          onClose={() => setIsAuthModalOpen(false)}
+          onLoginSuccess={() => {
+            setIsAuthModalOpen(false);
+            router.push("/News");
+          }}
         />
       )}
     </>

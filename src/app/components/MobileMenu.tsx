@@ -14,14 +14,24 @@ const SearchBar = dynamic(() => import("./searchBar"), {
 
 const AuthModal = dynamic(() => import("./authModal"));
 
+type NavItem = {
+  href: string;
+  label: string;
+  protected?: boolean;
+};
+
+const NAV_ITEMS: NavItem[] = [
+  { href: "/MicFinder", label: "Mic Finder" },
+  { href: "/News", label: "News", protected: true },
+  { href: "/Profile", label: "Profile", protected: true },
+  { href: "/contact", label: "Contact Us" },
+  { href: "/about", label: "About" },
+];
+
 const menuItemClass =
-  "flex items-center justify-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-700";
+  "grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-700";
 
-interface MobileMenuProps {
-  closeMenu: () => void;
-}
-
-export default function MobileMenu({ closeMenu }: MobileMenuProps) {
+export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   const { showToast } = useToast();
   const router = useRouter();
 
@@ -31,21 +41,22 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
 
   useEffect(() => {
     let mounted = true;
-    let unsubscribe: undefined | (() => void);
+    let unsubscribe: (() => void) | undefined;
 
     const initAuth = async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
-
       const auth = await getAuth();
-
       unsubscribe = onAuthStateChanged(auth, (user) => {
         if (mounted) setIsUserSignedIn(!!user);
       });
     };
 
-    if ("requestIdleCallback" in window) requestIdleCallback(initAuth);
-    else setTimeout(initAuth, 100);
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(initAuth);
+    } else {
+      setTimeout(initAuth, 100);
+    }
 
     return () => {
       mounted = false;
@@ -68,7 +79,6 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
         router.push(path);
         return;
       }
-
       showToast(`Please sign in to view ${label}`, "info");
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
@@ -78,16 +88,11 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeMenu();
-    };
-
-    document.addEventListener("keydown", handleEscape);
-
+    const onEscape = (e: KeyboardEvent) => e.key === "Escape" && closeMenu();
+    document.addEventListener("keydown", onEscape);
     return () => {
       document.body.style.overflow = "";
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", onEscape);
     };
   }, [closeMenu]);
 
@@ -104,7 +109,7 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth={2}
         >
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
@@ -113,7 +118,7 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
       <Link href="/" onClick={closeMenu} aria-label="Humor Hub Home">
         <Image
           src={hh}
-          alt="Humor Hub Logo"
+          alt=""
           width={70}
           height={70}
           className="rounded-full border-2 border-stone-900 shadow-lg"
@@ -128,33 +133,27 @@ export default function MobileMenu({ closeMenu }: MobileMenuProps) {
       />
 
       <nav className="mt-2 flex w-full max-w-xs flex-col gap-4">
-        <Link href="/MicFinder" className={menuItemClass} onClick={closeMenu}>
-          Mic Finder
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => handleProtectedRoute("/News", "News")}
-          className={menuItemClass}
-        >
-          News
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleProtectedRoute("/Profile", "Profile")}
-          className={menuItemClass}
-        >
-          Profile
-        </button>
-
-        <Link href="/contact" className={menuItemClass} onClick={closeMenu}>
-          Contact Us
-        </Link>
-
-        <Link href="/about" className={menuItemClass} onClick={closeMenu}>
-          About
-        </Link>
+        {NAV_ITEMS.map(({ href, label, protected: isProtected }) =>
+          isProtected ? (
+            <button
+              key={href}
+              type="button"
+              onClick={() => handleProtectedRoute(href, label)}
+              className={menuItemClass}
+            >
+              {label}
+            </button>
+          ) : (
+            <Link
+              key={href}
+              href={href}
+              onClick={closeMenu}
+              className={menuItemClass}
+            >
+              {label}
+            </Link>
+          )
+        )}
       </nav>
 
       {isAuthModalOpen && (
