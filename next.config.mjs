@@ -2,20 +2,18 @@
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
-  transpilePackages: ["@tanstack/react-virtual"],
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: true,
   },
 
   experimental: {
     optimizePackageImports: [
-      "firebase/app",
-      "firebase/auth",
-      "firebase/firestore",
-      "firebase/storage",
+      "firebase",
       "@tanstack/react-virtual",
       "@vis.gl/react-google-maps",
+      "@emailjs/browser",
     ],
+    cssChunking: true,
   },
 
   images: {

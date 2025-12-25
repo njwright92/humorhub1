@@ -20,7 +20,7 @@
     "@vis.gl/react-google-maps": "^1.7.1",
     "firebase": "^11.6.1",
     "firebase-admin": "^13.6.0",
-    "next": "^16.1.0",
+    "next": "^16.1.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"
   },
@@ -31,7 +31,7 @@
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
     "eslint": "^9.39.1",
-    "eslint-config-next": "^16.1.0",
+    "eslint-config-next": "^16.1.1",
     "lint-staged": "^16.2.7",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
