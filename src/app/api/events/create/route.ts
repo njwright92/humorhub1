@@ -1,109 +1,94 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
+import type {
+  LatLng,
+  EventSubmission,
+  StoredEvent,
+  ApiResponse,
+} from "@/app/lib/types";
 
 const GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
 
-const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+interface GeocodeResponse {
+  status: string;
+  results?: Array<{ geometry?: { location?: LatLng } }>;
+  error_message?: string;
+}
 
-/**
- * Server-side geocoding (Address -> Lat/Lng)
- * Falls back gracefully if Google fails or returns no results
- */
-async function geocodeAddress(address: string): Promise<{
-  lat: number;
-  lng: number;
-}> {
-  if (!GOOGLE_MAPS_API_KEY) {
-    throw new Error("Google Maps API key not configured");
-  }
+async function geocodeAddress(address: string): Promise<LatLng> {
+  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+  if (!apiKey) throw new Error("Google Maps API key not configured");
 
   const url = new URL(GEOCODE_API_URL);
-  url.searchParams.set("key", GOOGLE_MAPS_API_KEY);
+  url.searchParams.set("key", apiKey);
   url.searchParams.set("address", address);
 
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    // Prevent caching bad geocode responses
-    cache: "no-store",
-  });
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Geocoding failed (${response.status})`);
 
-  if (!response.ok) {
-    throw new Error(`Geocoding request failed (${response.status})`);
-  }
+  const data: GeocodeResponse = await response.json();
+  const location = data.results?.[0]?.geometry?.location;
 
-  const data = await response.json();
+  if (data.status === "OK" && location) return location;
+  throw new Error(data.error_message ?? "No geocoding results");
+}
 
-  if (data.status === "OK" && data.results?.length > 0) {
-    const location = data.results[0]?.geometry?.location;
+function isValidSubmission(data: unknown): data is EventSubmission {
+  if (typeof data !== "object" || data === null) return false;
 
-    if (
-      location &&
-      typeof location.lat === "number" &&
-      typeof location.lng === "number"
-    ) {
-      return {
-        lat: location.lat,
-        lng: location.lng,
-      };
-    }
-  }
+  const { name, location, details, date, timestamp } = data as Record<
+    string,
+    unknown
+  >;
 
-  throw new Error(data.error_message || "No geocoding results");
+  // Required text fields must be non-empty strings
+  const hasRequiredStrings = [name, location, details].every(
+    (field) => typeof field === "string" && field.trim() !== ""
+  );
+
+  // Must have either a valid date or timestamp
+  const hasValidDate =
+    typeof date === "string" || typeof timestamp === "string";
+
+  return hasRequiredStrings && hasValidDate;
+}
+
+function json<T>(body: ApiResponse<T>, status = 200) {
+  return NextResponse.json(body, { status });
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { eventData } = body ?? {};
+    const { eventData } = await request.json();
 
-    if (!eventData || typeof eventData !== "object") {
-      return NextResponse.json(
-        { success: false, error: "Invalid request body" },
-        { status: 400 }
+    if (!isValidSubmission(eventData)) {
+      return json(
+        { success: false, error: "Invalid or missing required fields" },
+        400
       );
     }
 
-    if (!eventData.name || !eventData.location) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    const db = getServerDb();
-
-    let collectionName = "events";
-    let lat: number | undefined;
-    let lng: number | undefined;
+    let coords: LatLng | undefined;
+    let collection = "events";
 
     try {
-      const coords = await geocodeAddress(eventData.location);
-      lat = coords.lat;
-      lng = coords.lng;
-    } catch (geocodeError) {
-      console.warn(
-        "Geocoding failed — sending event to manual review:",
-        geocodeError
-      );
-      collectionName = "events_manual_review";
+      coords = await geocodeAddress(eventData.location);
+    } catch (error) {
+      console.warn("Geocoding failed, routing to manual review:", error);
+      collection = "events_manual_review";
     }
 
-    const dataToSave = {
+    const storedEvent: StoredEvent = {
       ...eventData,
-      lat,
-      lng,
+      ...coords,
       submissionDate: new Date().toISOString(),
     };
 
-    await db.collection(collectionName).add(dataToSave);
+    await getServerDb().collection(collection).add(storedEvent);
 
-    return NextResponse.json({ success: true });
+    return json({ success: true });
   } catch (error) {
     console.error("Event creation error:", error);
-
-    return NextResponse.json(
-      { success: false, error: "Failed to create event" },
-      { status: 500 }
-    );
+    return json({ success: false, error: "Failed to create event" }, 500);
   }
 }

@@ -32,7 +32,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
         lng: data.lng ?? 0,
         details: data.details ?? "",
         isRecurring: data.isRecurring ?? false,
-        festival: data.festival === true,
+        isFestival: data.festival === true,
         isMusic: data.isMusic === true,
         numericTimestamp: data.googleTimestamp
           ? new Date(data.googleTimestamp).getTime()

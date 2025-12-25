@@ -1,10 +1,17 @@
 "use client";
 
-import { useState, useCallback, type ChangeEvent, type FormEvent } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  type ChangeEvent,
+  type FormEvent,
+} from "react";
 import { useToast } from "./ToastContext";
+import type { EventSubmission, ApiResponse } from "../lib/types";
 
-type EventData = {
-  id?: string;
+// Local form state (Date object, optional fields not yet set)
+type FormState = {
   name: string;
   location: string;
   date: Date | null;
@@ -12,10 +19,9 @@ type EventData = {
   isRecurring: boolean;
   isFestival: boolean;
   email: string;
-  timestamp?: string;
 };
 
-const initialEvent: EventData = {
+const initialFormState: FormState = {
   name: "",
   location: "",
   date: null,
@@ -29,6 +35,8 @@ const inputClass =
   "mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600";
 const labelClass = "mb-1 block font-bold text-stone-900";
 
+type RadioName = "isRecurring" | "isFestival";
+
 function RadioGroup({
   label,
   name,
@@ -36,9 +44,9 @@ function RadioGroup({
   onChange,
 }: {
   label: string;
-  name: "isRecurring" | "isFestival";
+  name: RadioName;
   value: boolean;
-  onChange: (name: "isRecurring" | "isFestival", value: boolean) => void;
+  onChange: (name: RadioName, value: boolean) => void;
 }) {
   const id = `${name}-label`;
   return (
@@ -71,97 +79,150 @@ function RadioGroup({
   );
 }
 
+function CloseIcon() {
+  return (
+    <svg
+      className="size-10"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  );
+}
+
+function buildSubmission(form: FormState): EventSubmission {
+  return {
+    id: crypto.randomUUID(),
+    name: form.name.trim(),
+    location: form.location.trim(),
+    date: form.date?.toISOString() ?? null,
+    details: form.details.trim(),
+    isRecurring: form.isRecurring,
+    isFestival: form.isFestival,
+    email: form.email.trim(),
+    timestamp: form.date?.toISOString() ?? "",
+  };
+}
+
+async function sendEmailNotification(
+  data: EventSubmission,
+  originalDate: Date | null
+) {
+  const emailjs = (await import("@emailjs/browser")).default;
+  await emailjs.send(
+    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+    {
+      name: data.name,
+      location: data.location,
+      date: originalDate?.toLocaleDateString() ?? "N/A",
+      details: data.details,
+      isRecurring: data.isRecurring ? "Yes" : "No",
+      isFestival: data.isFestival ? "Yes" : "No",
+      user_email: data.email || "No email provided",
+    },
+    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+  );
+}
+
 export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [event, setEvent] = useState<EventData>(initialEvent);
-  const [formErrors, setFormErrors] = useState("");
+  const [form, setForm] = useState<FormState>(initialFormState);
+  const [formError, setFormError] = useState("");
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      setEvent((prev) => ({ ...prev, [name]: value }));
+      setForm((prev) => ({ ...prev, [name]: value }));
     },
     []
   );
 
-  const handleRadioChange = useCallback(
-    (name: "isRecurring" | "isFestival", value: boolean) => {
-      setEvent((prev) => ({ ...prev, [name]: value }));
-    },
-    []
-  );
+  const handleRadioChange = useCallback((name: RadioName, value: boolean) => {
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleDateChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const dateStr = e.target.value;
+    setForm((prev) => ({
+      ...prev,
+      date: dateStr ? new Date(`${dateStr}T12:00:00`) : null,
+    }));
+  }, []);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
       if (isSubmitting) return;
 
+      // Validation
       const missing = [
-        !event.name.trim() && "Event Name",
-        !event.location.trim() && "Location",
-        !event.details.trim() && "Details",
-        !event.date && "Date",
+        !form.name.trim() && "Event Name",
+        !form.location.trim() && "Location",
+        !form.details.trim() && "Details",
+        !form.date && "Date",
       ].filter(Boolean);
 
       if (missing.length) {
-        setFormErrors(`Missing required fields: ${missing.join(", ")}`);
+        setFormError(`Missing required fields: ${missing.join(", ")}`);
         return;
       }
 
-      setFormErrors("");
+      setFormError("");
       setIsSubmitting(true);
 
       try {
-        const eventData = {
-          ...event,
-          id: crypto.randomUUID(),
-          timestamp: event.date?.toISOString() ?? "",
-        };
+        const submission = buildSubmission(form);
 
         const response = await fetch("/api/events/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ eventData }),
+          body: JSON.stringify({ eventData: submission }),
         });
 
-        const result = (await response.json()) as { success?: boolean };
+        const result: ApiResponse = await response.json();
 
-        if (result.success) {
-          try {
-            const emailjs = (await import("@emailjs/browser")).default;
-            await emailjs.send(
-              process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-              process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-              {
-                name: eventData.name,
-                location: eventData.location,
-                date: eventData.date?.toLocaleDateString() ?? "N/A",
-                details: eventData.details,
-                isRecurring: eventData.isRecurring ? "Yes" : "No",
-                isFestival: eventData.isFestival ? "Yes" : "No",
-                user_email: eventData.email || "No email provided",
-              },
-              process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-            );
-          } catch {
-            // Email notification failed silently
-          }
-
-          showToast("Event submitted successfully!", "success");
-          setEvent(initialEvent);
-          onClose();
+        if (!result.success) {
+          showToast(
+            result.error ?? "Submission failed. Please try again.",
+            "error"
+          );
           return;
         }
 
-        showToast("Submission failed. Please try again.", "error");
+        // Send email notification (non-blocking)
+        sendEmailNotification(submission, form.date).catch(() => {
+          // Email notification failed silently
+        });
+
+        showToast("Event submitted successfully!", "success");
+        setForm(initialFormState);
+        onClose();
       } catch {
         showToast("Submission failed. Please try again.", "error");
       } finally {
         setIsSubmitting(false);
       }
     },
-    [event, isSubmitting, showToast, onClose]
+    [form, isSubmitting, showToast, onClose]
   );
 
   return (
@@ -182,20 +243,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           className="absolute top-4 right-4 z-10 text-stone-900"
           aria-label="Close modal"
         >
-          <svg
-            className="size-10"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <CloseIcon />
         </button>
 
         <form
@@ -203,12 +251,12 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           noValidate
           className="w-full overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-6 shadow-lg"
         >
-          {formErrors && (
+          {formError && (
             <div
               role="alert"
               className="mb-4 rounded border border-red-400 bg-red-100 px-4 py-2 text-center text-sm font-bold text-red-700"
             >
-              {formErrors}
+              {formError}
             </div>
           )}
 
@@ -234,7 +282,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             type="text"
             id="event-name"
             name="name"
-            value={event.name}
+            value={form.name}
             onChange={handleChange}
             className={inputClass}
             required
@@ -250,7 +298,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             type="text"
             id="event-location"
             name="location"
-            value={event.location}
+            value={form.location}
             onChange={handleChange}
             className={inputClass}
             required
@@ -263,13 +311,13 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             <RadioGroup
               label="Recurring?"
               name="isRecurring"
-              value={event.isRecurring}
+              value={form.isRecurring}
               onChange={handleRadioChange}
             />
             <RadioGroup
               label="Festival?"
               name="isFestival"
-              value={event.isFestival}
+              value={form.isFestival}
               onChange={handleRadioChange}
             />
           </fieldset>
@@ -278,7 +326,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             Details <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
-          {event.isRecurring && (
+          {form.isRecurring && (
             <p className="mb-1 text-xs font-bold text-red-600" role="note">
               * Please include Frequency (e.g. Weekly)
             </p>
@@ -286,7 +334,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           <textarea
             id="event-details"
             name="details"
-            value={event.details}
+            value={form.details}
             onChange={handleChange}
             required
             autoComplete="off"
@@ -303,14 +351,8 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             id="event-date"
             type="date"
             required
-            value={event.date?.toISOString().split("T")[0] ?? ""}
-            onChange={(e) => {
-              const dateStr = e.target.value;
-              setEvent((prev) => ({
-                ...prev,
-                date: dateStr ? new Date(`${dateStr}T12:00:00`) : null,
-              }));
-            }}
+            value={form.date?.toISOString().split("T")[0] ?? ""}
+            onChange={handleDateChange}
             className={inputClass}
           />
 
@@ -321,7 +363,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             type="email"
             id="event-email"
             name="email"
-            value={event.email}
+            value={form.email}
             onChange={handleChange}
             className={`${inputClass} mb-6`}
             placeholder="yourname@example.com"

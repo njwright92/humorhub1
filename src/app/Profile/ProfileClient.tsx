@@ -409,7 +409,7 @@ export default function ProfileClient() {
                         <h3 className="font-heading text-lg font-bold text-amber-700">
                           {event.name}
                         </h3>
-                        {event.festival && (
+                        {event.isFestival && (
                           <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
                             Festival
                           </span>

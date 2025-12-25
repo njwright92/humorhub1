@@ -20,7 +20,7 @@ const PIN_COLORS = {
 } as const;
 
 const getPinColor = (event: Event) =>
-  event.festival
+  event.isFestival
     ? PIN_COLORS.festival
     : event.isMusic
       ? PIN_COLORS.music

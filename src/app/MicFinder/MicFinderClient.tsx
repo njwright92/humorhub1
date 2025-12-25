@@ -332,9 +332,9 @@ export default function MicFinderClient({
 
   const isTabMatch = useCallback(
     (event: Event) => {
-      if (selectedTab === "Festivals") return event.festival;
+      if (selectedTab === "Festivals") return event.isFestival;
       if (selectedTab === "Other") return event.isMusic;
-      return !event.festival && !event.isMusic;
+      return !event.isFestival && !event.isMusic;
     },
     [selectedTab]
   );
@@ -342,7 +342,7 @@ export default function MicFinderClient({
   const eventsForMap = useMemo(() => {
     if (selectedTab === "Mics") return initialEvents;
     if (selectedTab === "Festivals")
-      return initialEvents.filter((e) => e.festival);
+      return initialEvents.filter((e) => e.isFestival);
     return initialEvents.filter((e) => e.isMusic);
   }, [initialEvents, selectedTab]);
 
