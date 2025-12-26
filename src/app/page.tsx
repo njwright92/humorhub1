@@ -5,17 +5,7 @@ import dynamic from "next/dynamic";
 import micFinder from "../app/micFinder.webp";
 import news from "../app/news1.webp";
 
-const EventForm = dynamic(() => import("./components/EventForm"), {
-  loading: () => (
-    <span
-      aria-busy="true"
-      aria-live="polite"
-      className="inline-block w-80 rounded-2xl px-2 py-1 text-lg font-semibold text-zinc-200"
-    >
-      Loading…
-    </span>
-  ),
-});
+const EventForm = dynamic(() => import("./components/EventForm"));
 const NewsButton = dynamic(() => import("./components/newsButton"));
 
 export const metadata: Metadata = {
@@ -50,8 +40,6 @@ export default function Home() {
       <h1 className="font-heading mt-18 mb-6 hidden text-6xl font-bold tracking-wide md:block">
         Humor Hub!
       </h1>
-
-      {/* Mic Finder Section */}
       <section
         aria-labelledby="micfinder-heading"
         className="mx-auto my-8 w-full grow rounded-2xl p-2 shadow-lg"
@@ -62,25 +50,15 @@ export default function Home() {
         >
           Mic Finder!
         </h2>
-        <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
-          <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-start md:text-left">
-            <p className="text-sm leading-relaxed md:text-lg">
-              Looking for your next Mic?
-              <br />
-              MicFinder connects comics and all artists with open mics
-              worldwide! Explore 1,000s of listings and get on stage!
-            </p>
+        <div className="grid gap-6 text-center md:grid-cols-2 md:text-left">
+          <p className="leading-relaxed md:text-lg">
+            Looking for your next Mic?
+            <br />
+            MicFinder connects comics and all artists with open mics worldwide!
+            Explore 1,000s of listings and get on stage!
+          </p>
 
-            <EventForm />
-
-            <Link
-              href="/MicFinder"
-              className="w-60 rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80"
-            >
-              Find Your Mic!
-            </Link>
-          </div>
-          <figure className="flex flex-1 justify-center md:justify-end">
+          <figure className="row-span-3 flex items-center justify-center md:justify-end">
             <Link href="/MicFinder" className="group">
               <Image
                 src={micFinder}
@@ -88,15 +66,21 @@ export default function Home() {
                 className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
                 width={100}
                 height={100}
-                priority
-                fetchPriority="high"
+                loading="lazy"
               />
             </Link>
           </figure>
+          <div className="items-center">
+            <EventForm />
+          </div>
+          <Link
+            href="/MicFinder"
+            className="w-70 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start"
+          >
+            Find Your Mic!
+          </Link>
         </div>
       </section>
-
-      {/* Hub News Section */}
       <section
         aria-labelledby="news-heading"
         className="mx-auto my-8 w-full grow rounded-2xl p-2 shadow-lg"
@@ -107,19 +91,14 @@ export default function Home() {
         >
           Hub News!
         </h2>
-        <div className="flex flex-col items-center justify-between gap-8 md:flex-row-reverse">
-          <div className="flex flex-1 flex-col items-center space-y-6 text-center md:items-end md:text-right">
-            <p className="text-sm leading-relaxed md:text-lg">
-              Your Source for Fresh Headlines!
-              <br />
-              Looking for something topical?{" "}
-              <span className="mt-2 block">
-                Check out the Hub News for the latest updates!
-              </span>
-            </p>
-            <NewsButton />
-          </div>
-          <figure className="flex flex-1 justify-center md:justify-start">
+        <div className="grid gap-6 text-center md:grid-cols-2 md:text-right">
+          <p className="leading-relaxed md:col-start-2 md:text-lg">
+            Your Source for Fresh Headlines!
+            <br />
+            Looking for something topical? Check out the Hub News for the latest
+            updates!
+          </p>
+          <figure className="row-span-2 flex items-center justify-center md:col-start-1 md:row-start-1 md:justify-start">
             <NewsButton className="group border-0 bg-transparent p-0">
               <Image
                 src={news}
@@ -131,6 +110,9 @@ export default function Home() {
               />
             </NewsButton>
           </figure>
+          <div className="md:col-start-2">
+            <NewsButton />
+          </div>
         </div>
       </section>
     </main>

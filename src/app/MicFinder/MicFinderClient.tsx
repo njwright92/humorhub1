@@ -12,7 +12,6 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
-
 import type { Event, CityCoordinates } from "../lib/types";
 import {
   DAY_MAP,
@@ -22,18 +21,7 @@ import {
 } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
-const EventForm = dynamic(() => import("../components/EventForm"), {
-  loading: () => (
-    <span
-      aria-busy="true"
-      aria-live="polite"
-      className="w-80 rounded-2xl px-2 py-1 text-lg font-semibold text-zinc-200"
-    >
-      Loading…
-    </span>
-  ),
-});
-
+const EventForm = dynamic(() => import("../components/EventForm"));
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
     <span className="flex size-full items-center justify-center text-stone-300">
@@ -430,7 +418,8 @@ export default function MicFinderClient({
 
   return (
     <>
-      <div className="mb-4 flex h-14 w-full items-center justify-center sm:h-16">
+      {/* Hero - flat structure */}
+      <div className="mb-4 flex justify-center">
         <EventForm />
       </div>
 
@@ -438,10 +427,10 @@ export default function MicFinderClient({
         Find your next show or night out. Pick a city and date!
       </p>
 
-      {/* Inputs */}
-      <div className="relative z-10 mt-2 flex flex-col items-center justify-center gap-3 sm:gap-4">
+      {/* Inputs - grid instead of nested flex */}
+      <div className="relative z-10 mt-2 grid justify-center gap-3 sm:gap-4">
         {/* City Dropdown */}
-        <div className="w-full max-w-xs">
+        <div className="relative w-80">
           <button
             type="button"
             aria-haspopup="listbox"
@@ -453,12 +442,13 @@ export default function MicFinderClient({
               setIsFirstDropdownOpen(!isFirstDropdownOpen);
               setIsSecondDropdownOpen(false);
             }}
-            className={dropdownBtnClass}
+            className={`${dropdownBtnClass}`}
           >
             {selectedCity || "Select a City"}
           </button>
+
           {isFirstDropdownOpen && (
-            <div className={dropdownContainerClass}>
+            <div className={`${dropdownContainerClass}`}>
               <label htmlFor="city-search" className="sr-only">
                 Search cities
               </label>
@@ -501,7 +491,7 @@ export default function MicFinderClient({
         </div>
 
         {/* Date Picker */}
-        <div className="w-full max-w-xs">
+        <div className="relative w-80">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
@@ -512,7 +502,8 @@ export default function MicFinderClient({
             onChange={handleDateChange}
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
-            className={dropdownBtnClass}
+            onClick={(e) => e.currentTarget.showPicker()}
+            className={`${dropdownBtnClass} cursor-pointer justify-center`}
           />
         </div>
       </div>
@@ -558,6 +549,30 @@ export default function MicFinderClient({
         Scroll through events to find your next Mic or Festival!
       </p>
 
+      {/* Tabs - moved above results for better flow */}
+      <nav
+        aria-label="Event type filter"
+        role="tablist"
+        className="flex flex-wrap justify-center gap-2"
+      >
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={selectedTab === tab.id}
+            onClick={() => setSelectedTab(tab.id)}
+            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-lg transition-transform sm:text-base ${
+              selectedTab === tab.id
+                ? `${tab.activeClass} text-white ring-2 ring-zinc-200`
+                : tab.inactiveClass
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
       {/* Results */}
       <section
         aria-labelledby="results-heading"
@@ -598,35 +613,12 @@ export default function MicFinderClient({
         )}
       </section>
 
-      {/* Tabs */}
-      <nav
-        aria-label="Event type filter"
-        role="tablist"
-        className="mt-4 flex flex-wrap justify-center gap-2"
-      >
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={selectedTab === tab.id}
-            onClick={() => setSelectedTab(tab.id)}
-            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-lg transition-transform sm:text-base ${
-              selectedTab === tab.id
-                ? `${tab.activeClass} text-white ring-2 ring-zinc-200`
-                : tab.inactiveClass
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
-      {/* All Cities Section */}
+      {/* All Cities Section - simplified */}
       <section
         aria-labelledby="all-events-heading"
-        className="relative z-10 my-8 flex w-full flex-col items-center rounded-2xl p-2 shadow-lg sm:my-10"
+        className="relative z-10 my-8 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg sm:my-10"
       >
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-80">
           <button
             type="button"
             aria-label="Filter by City"
@@ -691,7 +683,7 @@ export default function MicFinderClient({
 
         <h2
           id="all-events-heading"
-          className="font-heading mt-4 w-full rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
+          className="font-heading w-full rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
         >
           {filterCity === "All Cities"
             ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
@@ -705,7 +697,7 @@ export default function MicFinderClient({
         ) : (
           <div
             ref={parentRef}
-            className="scrollbar-thin scrollbar-thumb-amber-700 scrollbar-track-stone-800 mt-4 h-96 w-full overflow-y-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
+            className="scrollbar-thin scrollbar-thumb-amber-700 scrollbar-track-stone-800 h-96 w-full overflow-y-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
             role="feed"
             aria-label={`${sortedEventsByCity.length} events`}
           >

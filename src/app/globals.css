@@ -13,10 +13,8 @@ html {
 
   /* --- Fonts --- */
   --font-heading:
-    var(--font-comic-neue), "Chalkboard SE", "Chalkboard", "Ink Free",
-    "Segoe Print", cursive;
-  --font-body:
-    "Century Gothic", "CenturyGothic", "AppleGothic", "Segoe UI", sans-serif;
+    var(--font-comic-neue), "Chalkboard SE", "Ink Free", "Segoe Print";
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* --- Shadows --- */
   --shadow-lg:

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import hh from "../../app/hh.webp";
+import hh from "../../app/hh1.webp";
 
 const MobileNav = dynamic(() => import("./MobileNav"));
 const DesktopNav = dynamic(() => import("./DesktopNav"));

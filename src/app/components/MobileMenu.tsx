@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
-import hh from "../../app/hh.webp";
+import hh from "../../app/hh1.webp";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
   loading: () => <div className="size-10 animate-pulse rounded-full" />,
@@ -121,7 +121,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
           alt=""
           width={70}
           height={70}
-          className="rounded-full border-2 border-stone-900 shadow-lg"
+          className="rounded-full border border-zinc-200 shadow-lg"
           priority
         />
       </Link>

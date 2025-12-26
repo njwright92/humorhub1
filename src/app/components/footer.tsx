@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import hh from "../../app/hh.webp";
+import hh from "../../app/hh1.webp";
 import ScrollToTop from "./ScrollToTop";
 
 const linkClass =
@@ -45,7 +45,7 @@ export default function Footer() {
               alt=""
               width={80}
               height={80}
-              className="rounded-full border-2 border-stone-800 object-contain shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:border-amber-700"
+              className="rounded-full border border-stone-400 object-contain shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3 group-hover:border-amber-700"
               quality={70}
             />
           </Link>
