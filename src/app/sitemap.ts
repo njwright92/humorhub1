@@ -11,8 +11,8 @@ const STATIC_ROUTES: Array<{
 }> = [
   { path: "", priority: 1.0, changeFrequency: "daily" },
   { path: "/mic-finder", priority: 0.9, changeFrequency: "daily" },
-  { path: "/news", priority: 0.8, changeFrequency: "daily" },
-  { path: "/profile", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/News", priority: 0.8, changeFrequency: "daily" },
+  { path: "/Profile", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.5, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/user-agreement", priority: 0.3, changeFrequency: "monthly" },
@@ -21,8 +21,6 @@ const STATIC_ROUTES: Array<{
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-
-  // Generate static routes
   const staticRoutes: MetadataRoute.Sitemap = STATIC_ROUTES.map(
     ({ path, priority, changeFrequency }) => ({
       url: `${BASE_URL}${path}`,

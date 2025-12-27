@@ -24,7 +24,7 @@ export default function NewsButton({
       const auth = await getAuth();
 
       if (auth.currentUser) {
-        router.push("/news");
+        router.push("/News");
         return;
       }
 
@@ -53,7 +53,7 @@ export default function NewsButton({
           onClose={() => setIsAuthModalOpen(false)}
           onLoginSuccess={() => {
             setIsAuthModalOpen(false);
-            router.push("/news");
+            router.push("/News");
           }}
         />
       )}

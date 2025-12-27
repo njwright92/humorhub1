@@ -6,7 +6,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
-import hh from "../../app/logo.webp";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
   loading: () => <div className="size-10 animate-pulse rounded-full" />,
@@ -22,8 +21,8 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/mic-finder", label: "Mic Finder" },
-  { href: "/news", label: "News", protected: true },
-  { href: "/profile", label: "Profile", protected: true },
+  { href: "/News", label: "News", protected: true },
+  { href: "/Profile", label: "Profile", protected: true },
   { href: "/contact", label: "Contact Us" },
   { href: "/about", label: "About" },
 ];
@@ -117,7 +116,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
 
       <Link href="/" onClick={closeMenu} aria-label="Humor Hub Home">
         <Image
-          src={hh}
+          src="/logo.webp"
           alt=""
           width={70}
           height={70}

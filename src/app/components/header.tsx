@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import hh from "../../app/logo.webp";
 
 const MobileNav = dynamic(() => import("./MobileNav"));
 const DesktopNav = dynamic(() => import("./DesktopNav"));
@@ -12,7 +11,7 @@ export default function Header() {
       <header className="sticky top-0 z-50 flex h-18 items-center justify-between bg-amber-700 p-2 sm:hidden">
         <Link href="/" aria-label="Humor Hub Home">
           <Image
-            src={hh}
+            src="/logo.webp"
             alt=""
             width={60}
             height={60}

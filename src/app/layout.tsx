@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   },
   description:
     "Discover the ultimate hub for everything comedy, featuring open mic events, and comedy tools. Explore jokes, puns, and more at Humor Hub.",
+  icons: {
+    icon: "/favicon.ico",
+  },
   keywords: [
     "comedy platform",
     "stand-up comedy",

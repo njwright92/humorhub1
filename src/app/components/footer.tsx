@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import hh from "../../app/logo.webp";
 import ScrollToTop from "./ScrollToTop";
 
 const linkClass =
@@ -41,7 +40,7 @@ export default function Footer() {
             className="group mb-6 flex justify-center md:mb-0 md:w-1/4 md:justify-start md:pl-10"
           >
             <Image
-              src={hh}
+              src="/logo.webp"
               alt=""
               width={80}
               height={80}

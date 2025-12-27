@@ -82,11 +82,6 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: "/News",
-        destination: "/news",
-        permanent: true,
-      },
-      {
         source: "/privacyPolicy",
         destination: "/privacy-policy",
         permanent: true,

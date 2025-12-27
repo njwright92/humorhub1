@@ -5,7 +5,6 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import hh from "../../app/logo.webp";
 import { useToast } from "./ToastContext";
 
 const SearchBar = dynamic(() => import("./searchBar"));
@@ -27,12 +26,12 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "News",
     icon: "M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9h4|M10 6h8M10 10h8M10 14h4",
-    protected: "/news",
+    protected: "/News",
   },
   {
     label: "Profile",
     icon: "M20 21a8 8 0 0 0-16 0|circle:12,8,4",
-    protected: "/profile",
+    protected: "/Profile",
   },
   {
     href: "/contact",
@@ -134,7 +133,7 @@ export default function DesktopNav() {
       <div className="mt-4 flex flex-col items-center gap-6 text-stone-900">
         <Link href="/" aria-label="Home" className={navItemClass}>
           <Image
-            src={hh}
+            src="/logo.webp"
             alt=""
             width={80}
             height={80}

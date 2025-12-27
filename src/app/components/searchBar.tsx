@@ -16,10 +16,10 @@ type PageItem = {
 
 const PAGES: PageItem[] = [
   { label: "Mic Finder", route: "/mic-finder" },
-  { label: "News", route: "/news", requiresAuth: true },
+  { label: "News", route: "/News", requiresAuth: true },
   { label: "Contact", route: "/contact" },
   { label: "About", route: "/about" },
-  { label: "Profile", route: "/profile", requiresAuth: true },
+  { label: "Profile", route: "/Profile", requiresAuth: true },
 ];
 
 const KEYWORDS_TO_MICFINDER = new Set([

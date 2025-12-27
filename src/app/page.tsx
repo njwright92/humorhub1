@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import micFinder from "../app/hh1.webp";
-import news from "../app/newsy.webp";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 const NewsButton = dynamic(() => import("./components/newsButton"));
@@ -61,7 +59,7 @@ export default function Home() {
           <figure className="row-span-3 flex items-center justify-center md:justify-end">
             <Link href="/mic-finder" className="group">
               <Image
-                src={micFinder}
+                src="/hh1.webp"
                 alt="Mic Finder - Find open mics near you"
                 className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
                 width={100}
@@ -101,7 +99,7 @@ export default function Home() {
           <figure className="row-span-2 flex items-center justify-center md:col-start-1 md:row-start-1 md:justify-start">
             <NewsButton className="group border-0 bg-transparent p-0">
               <Image
-                src={news}
+                src="/newsy.webp"
                 alt="Hub News - Latest comedy headlines"
                 className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
                 width={100}
@@ -110,9 +108,6 @@ export default function Home() {
               />
             </NewsButton>
           </figure>
-          <div className="md:col-start-2">
-            <NewsButton />
-          </div>
         </div>
       </section>
     </main>
