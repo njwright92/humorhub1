@@ -10,13 +10,13 @@ const STATIC_ROUTES: Array<{
   changeFrequency: "daily" | "weekly" | "monthly";
 }> = [
   { path: "", priority: 1.0, changeFrequency: "daily" },
-  { path: "/MicFinder", priority: 0.9, changeFrequency: "daily" },
-  { path: "/News", priority: 0.8, changeFrequency: "daily" },
-  { path: "/Profile", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/mic-finder", priority: 0.9, changeFrequency: "daily" },
+  { path: "/news", priority: 0.8, changeFrequency: "daily" },
+  { path: "/profile", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.5, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/userAgreement", priority: 0.3, changeFrequency: "monthly" },
-  { path: "/privacyPolicy", priority: 0.3, changeFrequency: "monthly" },
+  { path: "/user-agreement", priority: 0.3, changeFrequency: "monthly" },
+  { path: "/privacy-policy", priority: 0.3, changeFrequency: "monthly" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const snapshot = await getDocs(collection(db, "cities"));
 
     cityRoutes = snapshot.docs.map((doc) => ({
-      url: `${BASE_URL}/MicFinder?city=${encodeURIComponent(doc.data().city)}`,
+      url: `${BASE_URL}/mic-finder?city=${encodeURIComponent(doc.data().city)}`,
       lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.85,

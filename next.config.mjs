@@ -73,6 +73,31 @@ const nextConfig = {
       },
     ];
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/MicFinder",
+        destination: "/mic-finder",
+        permanent: true,
+      },
+      {
+        source: "/News",
+        destination: "/news",
+        permanent: true,
+      },
+      {
+        source: "/privacyPolicy",
+        destination: "/privacy-policy",
+        permanent: true,
+      },
+      {
+        source: "/userAgreement",
+        destination: "/user-agreement",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

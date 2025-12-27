@@ -15,11 +15,11 @@ type PageItem = {
 };
 
 const PAGES: PageItem[] = [
-  { label: "Mic Finder", route: "/MicFinder" },
-  { label: "News", route: "/News", requiresAuth: true },
+  { label: "Mic Finder", route: "/mic-finder" },
+  { label: "News", route: "/news", requiresAuth: true },
   { label: "Contact", route: "/contact" },
   { label: "About", route: "/about" },
-  { label: "Profile", route: "/Profile", requiresAuth: true },
+  { label: "Profile", route: "/profile", requiresAuth: true },
 ];
 
 const KEYWORDS_TO_MICFINDER = new Set([
@@ -115,7 +115,7 @@ export default function SearchBar({
       }
 
       if (s.type === "city") {
-        navigateTo(`/MicFinder?city=${encodeURIComponent(s.city)}`);
+        navigateTo(`/mic-finder?city=${encodeURIComponent(s.city)}`);
         return;
       }
 

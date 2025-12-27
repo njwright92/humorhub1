@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Understand how Humor Hub collects, uses, and protects your personal information.",
   alternates: {
-    canonical: "https://www.thehumorhub.com/privacyPolicy",
+    canonical: "https://www.thehumorhub.com/privacy-policy",
   },
 };
 

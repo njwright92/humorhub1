@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Read the terms and conditions of using Humor Hub. Understand your rights and responsibilities.",
   alternates: {
-    canonical: "https://www.thehumorhub.com/userAgreement",
+    canonical: "https://www.thehumorhub.com/user-agreement",
   },
 };
 

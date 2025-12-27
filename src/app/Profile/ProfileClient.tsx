@@ -230,7 +230,7 @@ export default function ProfileClient() {
           Please sign in to view your profile and saved events.
         </p>
         <Link
-          href="/MicFinder"
+          href="/mic-finder"
           className="inline-block rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
         >
           Go to MicFinder
@@ -437,7 +437,7 @@ export default function ProfileClient() {
 
                     <footer className="flex items-end justify-between gap-2 sm:flex-col">
                       <Link
-                        href={`/MicFinder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
+                        href={`/mic-finder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
                         className="text-sm underline hover:text-amber-700"
                       >
                         Find on Map
@@ -465,7 +465,7 @@ export default function ProfileClient() {
               </p>
               <p className="mb-4">Go find some mics to hit!</p>
               <Link
-                href="/MicFinder"
+                href="/mic-finder"
                 className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
               >
                 Go to MicFinder

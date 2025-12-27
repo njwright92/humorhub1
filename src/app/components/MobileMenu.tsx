@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
-import hh from "../../app/hh1.webp";
+import hh from "../../app/logo.webp";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
   loading: () => <div className="size-10 animate-pulse rounded-full" />,
@@ -21,9 +21,9 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/MicFinder", label: "Mic Finder" },
-  { href: "/News", label: "News", protected: true },
-  { href: "/Profile", label: "Profile", protected: true },
+  { href: "/mic-finder", label: "Mic Finder" },
+  { href: "/news", label: "News", protected: true },
+  { href: "/profile", label: "Profile", protected: true },
   { href: "/contact", label: "Contact Us" },
   { href: "/about", label: "About" },
 ];
@@ -121,7 +121,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
           alt=""
           width={70}
           height={70}
-          className="rounded-full border border-zinc-200 shadow-lg"
+          className="rounded-full shadow-lg"
           priority
         />
       </Link>

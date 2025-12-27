@@ -25,7 +25,7 @@ const FEATURES = [
       "The ultimate directory. Search 500+ cities for Comedy Mics, Music Jams, and Festivals. Filter by date, genre, or location.",
     detail:
       "Venue managers can list events in seconds. The wider our database, the more stage time for everyone—whether you're testing 5 minutes or headlining.",
-    link: "/MicFinder",
+    link: "/mic-finder",
     linkText: "Find a Mic",
     titleBaseClass: "text-amber-700",
     titleHoverClass: "group-hover:text-amber-600",
@@ -40,7 +40,7 @@ const FEATURES = [
       "Your daily inspiration feed. Curated headlines across Business, Entertainment, Tech, and Politics—updated every hour.",
     detail:
       "Perfect for writing topical jokes, finding current-event callbacks, or discovering that unexpected angle for your next routine.",
-    link: "/News",
+    link: "/news",
     linkText: "Read News",
     titleBaseClass: "text-blue-400",
     titleHoverClass: "group-hover:text-blue-500",
@@ -110,7 +110,7 @@ export default function AboutPage() {
         </h2>
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
-            href="/MicFinder"
+            href="/mic-finder"
             className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
           >
             Find Events

@@ -13,7 +13,7 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const { city } = await searchParams;
 
-  const baseUrl = "https://www.thehumorhub.com/MicFinder";
+  const baseUrl = "https://www.thehumorhub.com/mic-finder";
   const canonical = city
     ? `${baseUrl}?city=${encodeURIComponent(city)}`
     : baseUrl;
@@ -110,7 +110,7 @@ function StructuredData() {
             "@type": "PerformingGroup",
             name: "Local Comedians",
           },
-          url: "https://www.thehumorhub.com/MicFinder?city=Spokane",
+          url: "https://www.thehumorhub.com/mic-finder?city=Spokane",
         },
       },
       {
@@ -141,7 +141,7 @@ function StructuredData() {
             priceCurrency: "USD",
             availability: "https://schema.org/InStock",
           },
-          url: "https://www.thehumorhub.com/MicFinder?city=New+York",
+          url: "https://www.thehumorhub.com/mic-finder?city=New+York",
         },
       },
       {
@@ -166,7 +166,7 @@ function StructuredData() {
               addressCountry: "US",
             },
           },
-          url: "https://www.thehumorhub.com/MicFinder?city=Las+Vegas",
+          url: "https://www.thehumorhub.com/mic-finder?city=Las+Vegas",
         },
       },
     ],

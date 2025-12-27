@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import micFinder from "../app/micFinder.webp";
-import news from "../app/news1.webp";
+import micFinder from "../app/hh1.webp";
+import news from "../app/newsy.webp";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
 const NewsButton = dynamic(() => import("./components/newsButton"));
@@ -59,7 +59,7 @@ export default function Home() {
           </p>
 
           <figure className="row-span-3 flex items-center justify-center md:justify-end">
-            <Link href="/MicFinder" className="group">
+            <Link href="/mic-finder" className="group">
               <Image
                 src={micFinder}
                 alt="Mic Finder - Find open mics near you"
@@ -74,7 +74,7 @@ export default function Home() {
             <EventForm />
           </div>
           <Link
-            href="/MicFinder"
+            href="/mic-finder"
             className="w-70 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start"
           >
             Find Your Mic!

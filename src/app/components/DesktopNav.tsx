@@ -5,13 +5,10 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import hh from "../../app/hh1.webp";
+import hh from "../../app/logo.webp";
 import { useToast } from "./ToastContext";
 
-const SearchBar = dynamic(() => import("./searchBar"), {
-  loading: () => <div className="size-10 animate-pulse rounded-full" />,
-});
-
+const SearchBar = dynamic(() => import("./searchBar"));
 const AuthModal = dynamic(() => import("./authModal"));
 
 type NavItem = {
@@ -23,19 +20,19 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    href: "/MicFinder",
+    href: "/mic-finder",
     label: "Mic Finder",
     icon: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z|circle:12,10,3",
   },
   {
     label: "News",
     icon: "M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9h4|M10 6h8M10 10h8M10 14h4",
-    protected: "/News",
+    protected: "/news",
   },
   {
     label: "Profile",
     icon: "M20 21a8 8 0 0 0-16 0|circle:12,8,4",
-    protected: "/Profile",
+    protected: "/profile",
   },
   {
     href: "/contact",
@@ -128,7 +125,7 @@ export default function DesktopNav() {
   );
 
   const navItemClass =
-    "group relative cursor-pointer transition hover:scale-110";
+    "group relative cursor-pointer transition hover:scale-110 hover:rotate-3";
   const tooltipClass =
     "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
 
@@ -141,7 +138,7 @@ export default function DesktopNav() {
             alt=""
             width={80}
             height={80}
-            className="rounded-full border-2 border-stone-900 shadow-lg"
+            className="rounded-full shadow-lg"
             priority
           />
         </Link>

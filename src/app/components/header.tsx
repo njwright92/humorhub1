@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import hh from "../../app/hh1.webp";
+import hh from "../../app/logo.webp";
 
 const MobileNav = dynamic(() => import("./MobileNav"));
 const DesktopNav = dynamic(() => import("./DesktopNav"));
@@ -14,9 +14,9 @@ export default function Header() {
           <Image
             src={hh}
             alt=""
-            width={55}
-            height={55}
-            className="rounded-full border-2 border-stone-900 shadow-lg"
+            width={60}
+            height={60}
+            className="rounded-full shadow-lg group-hover:scale-110 group-hover:rotate-3"
             priority
           />
         </Link>
