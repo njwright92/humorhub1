@@ -138,7 +138,9 @@ export default function MicFinderClient({
 
   // State
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  const [selectedDate, setSelectedDate] = useState(
+    () => new Date(new Date().toDateString())
+  );
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
@@ -416,7 +418,6 @@ export default function MicFinderClient({
 
   return (
     <>
-      {/* Hero - already flat, just swap flex for grid */}
       <div className="mb-4 grid justify-center">
         <EventForm />
       </div>
@@ -425,9 +426,7 @@ export default function MicFinderClient({
         Find your next show or night out. Pick a city and date!
       </p>
 
-      {/* Inputs - already good */}
       <div className="relative z-10 mt-2 grid justify-center gap-3 sm:gap-4">
-        {/* City Dropdown - unchanged, structure required for positioning */}
         <div className="relative w-80">
           <button
             type="button"
@@ -488,7 +487,6 @@ export default function MicFinderClient({
           )}
         </div>
 
-        {/* Date Picker - unchanged */}
         <div className="relative w-80">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
@@ -506,7 +504,6 @@ export default function MicFinderClient({
         </div>
       </div>
 
-      {/* Map - unchanged, structure required */}
       <section
         aria-label="Event Map"
         className="relative mt-6 mb-6 h-100 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg"
@@ -547,7 +544,6 @@ export default function MicFinderClient({
         Scroll through events to find your next Mic or Festival!
       </p>
 
-      {/* Tabs - swap flex for grid */}
       <nav
         aria-label="Event type filter"
         role="tablist"
@@ -571,7 +567,6 @@ export default function MicFinderClient({
         ))}
       </nav>
 
-      {/* Results - flatten ul > li */}
       <section
         aria-labelledby="results-heading"
         className="mt-6 mb-10 w-full rounded-2xl shadow-lg sm:mt-10"
@@ -613,7 +608,6 @@ export default function MicFinderClient({
         )}
       </section>
 
-      {/* All Cities Section - unchanged, already uses grid */}
       <section
         aria-labelledby="all-events-heading"
         className="relative z-10 my-8 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg sm:my-10"
