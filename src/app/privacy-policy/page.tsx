@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <main className="grid min-h-screen content-start gap-8 p-2 pt-12 md:ml-20">
-      <h1 className="font-heading text-center text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl">
+      <h1 className="font-heading text-center text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl">
         Privacy Policy
       </h1>
       <section className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-300 bg-zinc-200 p-6 text-left leading-relaxed text-stone-900 shadow-lg">

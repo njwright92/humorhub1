@@ -26,7 +26,7 @@ export default function Footer() {
         </h2>
 
         <header className="grid justify-items-center gap-2">
-          <h3 className="font-heading text-center text-2xl font-extrabold tracking-wide text-shadow-sm md:text-4xl">
+          <h3 className="font-heading text-center text-2xl font-extrabold tracking-wide text-shadow-md md:text-4xl">
             Humor Hub
           </h3>
           <p className="max-w-2xl text-center text-stone-300 md:text-lg">

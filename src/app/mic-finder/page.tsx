@@ -211,15 +211,15 @@ export default function MicFinderPage() {
       </aside>
 
       <header>
-        <h1 className="font-heading mt-4 mb-2 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:mt-6 sm:mb-4 sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="font-heading my-4 text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl md:text-5xl lg:text-6xl">
           Mic Finder
         </h1>
-        <p className="font-heading mb-3 text-lg font-bold text-shadow-sm sm:mb-4 sm:text-xl md:text-2xl lg:text-3xl">
+        <p className="font-heading mb-3 text-lg font-bold text-shadow-md sm:text-xl md:text-2xl lg:text-3xl">
           Discover Mics and Festivals Near You!
         </p>
       </header>
 
-      <p className="mb-4 max-w-2xl text-sm text-stone-300 md:mb-6 md:text-base lg:text-lg">
+      <p className="mb-4 text-sm text-stone-300 md:text-base lg:text-lg">
         Find a Mic tonight or list yours, built by comics for comics. Use Mic
         Finder to connect with your community!
       </p>

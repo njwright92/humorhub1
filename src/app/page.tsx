@@ -44,7 +44,7 @@ export default function Home() {
       >
         <h2
           id="micfinder-heading"
-          className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl md:text-5xl"
+          className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl md:text-5xl"
         >
           Mic Finder!
         </h2>
@@ -81,7 +81,7 @@ export default function Home() {
       >
         <h2
           id="news-heading"
-          className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl md:text-5xl"
+          className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl md:text-5xl"
         >
           Hub News!
         </h2>
