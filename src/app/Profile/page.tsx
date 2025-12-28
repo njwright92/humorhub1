@@ -29,11 +29,11 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
   return (
-    <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
-      <h1 className="font-heading mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl">
+    <main className="grid min-h-screen content-start gap-4 p-2 pt-12 text-center md:ml-20">
+      <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl">
         Profile Management
       </h1>
-      <p className="mb-6 text-sm text-stone-300 md:text-lg">
+      <p className="text-sm text-stone-300 md:text-lg">
         Manage your personal schedule
       </p>
       <ProfileClient />

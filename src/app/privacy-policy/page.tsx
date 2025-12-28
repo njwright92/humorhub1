@@ -12,19 +12,17 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="flex min-h-screen flex-col p-4 md:ml-20">
-      <h1 className="font-heading mt-10 mb-8 text-center text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl">
+    <main className="grid min-h-screen content-start gap-8 p-2 pt-12 md:ml-20">
+      <h1 className="font-heading text-center text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl">
         Privacy Policy
       </h1>
-      <section className="mx-auto max-w-4xl rounded-2xl border border-stone-300 bg-zinc-200 p-6 text-left leading-relaxed text-stone-900 shadow-lg">
-        <p className="mb-6 border-b border-zinc-300 pb-4 text-sm text-zinc-600">
+      <section className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-300 bg-zinc-200 p-6 text-left leading-relaxed text-stone-900 shadow-lg">
+        <p className="border-b border-zinc-300 pb-4 text-sm text-zinc-600">
           <strong>Last Updated:</strong> November 2025
         </p>
-        <div className="space-y-8">
-          <article>
-            <h2 className="font-heading mb-2 text-xl font-bold">
-              1. Introduction
-            </h2>
+        <div className="grid gap-8">
+          <article className="grid gap-2">
+            <h2 className="font-heading text-xl font-bold">1. Introduction</h2>
             <p>
               At Humor Hub, we respect your privacy. This policy explains how we
               collect, use, and protect your information when you use our
@@ -32,14 +30,12 @@ export default function PrivacyPolicyPage() {
               browse events.
             </p>
           </article>
-          <article>
-            <h2 className="font-heading mb-2 text-xl font-bold">
+          <article className="grid gap-2">
+            <h2 className="font-heading text-xl font-bold">
               2. Information We Collect
             </h2>
-            <p className="mb-2">
-              We collect information to provide a better experience:
-            </p>
-            <ul className="list-inside list-disc space-y-1 pl-4">
+            <p>We collect information to provide a better experience:</p>
+            <ul className="grid list-inside list-disc gap-1 pl-4">
               <li>
                 <strong>Account Data:</strong> When you sign in via Google, we
                 store your email, display name, and profile picture.
@@ -54,15 +50,15 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
           </article>
-          <article>
-            <h2 className="font-heading mb-2 text-xl font-bold">
+          <article className="grid gap-2">
+            <h2 className="font-heading text-xl font-bold">
               3. Third-Party Services
             </h2>
             <p>
               We utilize trusted third-party services to operate our platform.
               Your data may be processed by:
             </p>
-            <ul className="mt-2 list-inside list-disc space-y-1 pl-4">
+            <ul className="grid list-inside list-disc gap-1 pl-4">
               <li>
                 <strong>Google Firebase:</strong> For authentication, database
                 storage, and image hosting.
@@ -76,10 +72,8 @@ export default function PrivacyPolicyPage() {
               </li>
             </ul>
           </article>
-          <article>
-            <h2 className="font-heading mb-2 text-xl font-bold">
-              4. Data Security
-            </h2>
+          <article className="grid gap-2">
+            <h2 className="font-heading text-xl font-bold">4. Data Security</h2>
             <p>
               We implement security measures to protect your data. However, no
               method of transmission over the internet is 100% secure. While we
@@ -87,8 +81,8 @@ export default function PrivacyPolicyPage() {
               personal data, we cannot guarantee its absolute security.
             </p>
           </article>
-          <article>
-            <h2 className="font-heading mb-2 text-xl font-bold">5. Contact</h2>
+          <article className="grid gap-2">
+            <h2 className="font-heading text-xl font-bold">5. Contact</h2>
             <p>
               If you have questions about this policy or wish to delete your
               data, please{" "}
@@ -101,7 +95,7 @@ export default function PrivacyPolicyPage() {
             </p>
           </article>
         </div>
-        <div className="mt-10 border-t border-stone-300 pt-6 text-center">
+        <div className="border-t border-stone-300 pt-6 text-center">
           <Link
             href="/"
             className="inline-block rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"

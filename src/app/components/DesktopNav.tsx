@@ -129,15 +129,15 @@ export default function DesktopNav() {
     "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
 
   return (
-    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 flex-col items-center justify-between bg-amber-700 p-2 shadow-lg sm:flex">
-      <div className="mt-4 flex flex-col items-center gap-6 text-stone-900">
+    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 content-start bg-amber-700 p-2 pt-6 shadow-lg sm:grid">
+      <div className="grid justify-items-center gap-6 text-stone-900">
         <Link href="/" aria-label="Home" className={navItemClass}>
           <Image
             src="/logo.webp"
             alt=""
             width={80}
             height={80}
-            className="rounded-full shadow-lg"
+            className="my-2 rounded-full shadow-lg"
             priority
           />
         </Link>

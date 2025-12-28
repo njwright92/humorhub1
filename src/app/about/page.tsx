@@ -40,7 +40,7 @@ const FEATURES = [
       "Your daily inspiration feed. Curated headlines across Business, Entertainment, Tech, and Politics—updated every hour.",
     detail:
       "Perfect for writing topical jokes, finding current-event callbacks, or discovering that unexpected angle for your next routine.",
-    link: "/news",
+    link: "/News",
     linkText: "Read News",
     titleBaseClass: "text-blue-400",
     titleHoverClass: "group-hover:text-blue-500",
@@ -52,44 +52,50 @@ const FEATURES = [
 
 export default function AboutPage() {
   return (
-    <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
-      <h1 className="font-heading mt-10 mb-2 text-2xl font-bold text-amber-700 sm:text-4xl lg:text-5xl">
-        Built for Comics
-      </h1>
-      <p className="font-heading mb-6 text-lg font-bold tracking-wide md:text-xl">
-        By a Comic
-      </p>
-      <p className="mx-auto mb-12 max-w-2xl text-sm leading-relaxed text-stone-300 md:text-base">
-        Humor Hub was created to solve the two biggest problems every working
-        comedian faces: finding the next gig and finding the next joke.
-      </p>
+    <main className="grid min-h-screen content-start gap-12 p-4 pt-12 text-center md:ml-20">
+      <header className="grid justify-items-center gap-6">
+        <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
+          About Humor Hub
+        </h1>
+        <hgroup className="grid gap-2">
+          <h2 className="font-heading text-2xl font-bold text-amber-600">
+            Built for Comics
+          </h2>
+          <p className="font-heading text-lg font-semibold md:text-xl">
+            By a Comic
+          </p>
+        </hgroup>
+        <p className="max-w-2xl text-sm leading-relaxed text-stone-300 md:text-base">
+          Humor Hub was created to solve the two biggest problems every working
+          comedian faces: finding the next gig and finding the next joke.
+        </p>
+      </header>
 
       <section
         aria-labelledby="features-heading"
-        className="animate-slide-in mx-auto mb-12 grid w-full max-w-5xl gap-6 md:grid-cols-2"
+        className="animate-slide-in mx-auto grid w-full max-w-5xl gap-6 md:grid-cols-2"
       >
-        <h2 id="features-heading" className="sr-only">
+        <h3 id="features-heading" className="sr-only">
           Features
-        </h2>
-
+        </h3>
         {FEATURES.map((feature) => (
           <article
             key={feature.title}
-            className={`group rounded-2xl border border-stone-700 bg-stone-800/50 p-6 text-left transition-all hover:-translate-y-1 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
+            className={`group grid content-start gap-2 rounded-2xl border border-stone-700 bg-stone-800/50 p-6 text-left transition-all hover:-translate-y-1 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
           >
-            <span className="mb-3 block text-3xl" aria-hidden="true">
+            <span className="text-3xl" aria-hidden="true">
               {feature.emoji}
             </span>
             <h3
-              className={`font-heading mb-2 text-xl font-bold transition-colors ${feature.titleBaseClass} ${feature.titleHoverClass}`}
+              className={`font-heading text-xl font-bold transition-colors ${feature.titleBaseClass} ${feature.titleHoverClass}`}
             >
               {feature.title}
             </h3>
-            <p className="mb-3 text-sm text-stone-300">{feature.description}</p>
+            <p className="text-sm text-stone-300">{feature.description}</p>
             <p className="text-xs text-stone-400">{feature.detail}</p>
             <Link
               href={feature.link}
-              className={`mt-4 inline-flex items-center gap-1 font-bold transition-colors group-hover:underline ${feature.linkTextClass}`}
+              className={`mt-2 inline-flex items-center gap-1 font-bold transition-colors group-hover:underline ${feature.linkTextClass}`}
             >
               {feature.linkText}
               <span aria-hidden="true">→</span>
@@ -100,15 +106,15 @@ export default function AboutPage() {
 
       <section
         aria-labelledby="cta-heading"
-        className="border-t border-stone-800 pt-8"
+        className="grid gap-6 border-t border-stone-800 pt-8"
       >
-        <h2
+        <h3
           id="cta-heading"
-          className="font-heading mb-6 text-xl font-bold sm:text-2xl"
+          className="font-heading text-xl font-bold sm:text-2xl"
         >
           Ready to hit the stage?
-        </h2>
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+        </h3>
+        <div className="grid gap-3 sm:grid-flow-col sm:justify-center">
           <Link
             href="/mic-finder"
             className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"

@@ -19,16 +19,14 @@ export const metadata: Metadata = {
 
 export default function NewsPage() {
   return (
-    <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
-      <header className="flex flex-col items-center">
-        <h1 className="font-heading mt-10 mb-4 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
-          Hub News
-        </h1>
-        <p className="mb-4 text-sm text-stone-300 md:text-lg">
-          Curated stories from around the world. Stay informed with the latest
-          updates.
-        </p>
-      </header>
+    <main className="grid min-h-screen content-start gap-4 p-2 pt-12 text-center md:ml-20">
+      <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
+        Hub News
+      </h1>
+      <p className="text-sm text-stone-300 md:text-lg">
+        Curated stories from around the world. Stay informed with the latest
+        updates.
+      </p>
       <NewsClient />
     </main>
   );

@@ -1,6 +1,13 @@
 "use client";
 
-export default function ScrollToTop() {
+import type { ComponentProps } from "react";
+
+type ScrollToTopProps = ComponentProps<"button">;
+
+export default function ScrollToTop({
+  className = "",
+  ...props
+}: ScrollToTopProps) {
   return (
     <button
       type="button"
@@ -11,7 +18,8 @@ export default function ScrollToTop() {
         })
       }
       aria-label="Scroll back to top"
-      className="grid size-8 place-items-center rounded-full border border-amber-700 text-amber-700 shadow-lg transition-transform hover:scale-110 md:size-12"
+      className={`grid size-8 place-items-center rounded-full border border-amber-700 text-amber-700 shadow-lg transition-transform hover:scale-110 md:size-12 ${className}`}
+      {...props}
     >
       <svg
         viewBox="0 0 24 24"

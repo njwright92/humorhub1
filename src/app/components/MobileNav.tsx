@@ -15,7 +15,7 @@ export default function MobileNav() {
       <button
         type="button"
         onClick={() => setIsMenuOpen(true)}
-        className="grid size-8 place-items-center"
+        className="grid size-9 place-items-center"
         aria-label="Open menu"
         aria-expanded={isMenuOpen}
       >
@@ -26,7 +26,7 @@ export default function MobileNav() {
           strokeWidth={2.5}
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="size-8 text-stone-900"
+          className="size-9 text-stone-900"
           aria-hidden="true"
         >
           <path d="M3 12h18M3 6h18M3 18h18" />

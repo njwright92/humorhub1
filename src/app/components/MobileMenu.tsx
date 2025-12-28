@@ -96,10 +96,10 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   }, [closeMenu]);
 
   return (
-    <div className="animate-slide-in fixed inset-0 z-50 flex flex-col items-center gap-4 p-4 backdrop-blur-lg">
+    <div className="animate-slide-in fixed inset-0 z-50 grid content-start justify-items-center gap-4 p-2 backdrop-blur-lg">
       <button
         onClick={closeMenu}
-        className="self-end p-2 text-stone-900"
+        className="justify-self-end p-2 text-red-900"
         aria-label="Close menu"
         type="button"
       >
@@ -109,6 +109,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
           fill="none"
           stroke="currentColor"
           strokeWidth={2}
+          aria-hidden="true"
         >
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
@@ -131,7 +132,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
         onNavigate={closeMenu}
       />
 
-      <nav className="mt-2 flex w-full max-w-xs flex-col gap-4">
+      <nav className="grid w-full max-w-xs gap-4">
         {NAV_ITEMS.map(({ href, label, protected: isProtected }) =>
           isProtected ? (
             <button

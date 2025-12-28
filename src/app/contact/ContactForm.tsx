@@ -50,78 +50,76 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="animate-slide-in mx-auto w-full max-w-4xl">
-      <section
-        aria-labelledby="contact-form-heading"
-        className="rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-2 shadow-lg shadow-amber-700/20 backdrop-blur-md sm:p-4 md:p-6"
+    <section
+      aria-labelledby="contact-form-heading"
+      className="animate-slide-in mx-auto w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-2 shadow-lg shadow-amber-700/20 backdrop-blur-md sm:p-4 md:p-6"
+    >
+      <h2 id="contact-form-heading" className="sr-only">
+        Contact Form
+      </h2>
+      <form
+        onSubmit={handleSubmit}
+        className="grid gap-4 text-left sm:gap-6"
+        noValidate
       >
-        <h2 id="contact-form-heading" className="sr-only">
-          Contact Form
-        </h2>
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 text-left sm:space-y-6"
-          noValidate
-        >
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-            <div className="flex flex-col">
-              <label htmlFor="contact-name" className={labelClass}>
-                Name <span className="sr-only">(required)</span>
-              </label>
-              <input
-                type="text"
-                id="contact-name"
-                name="name"
-                placeholder="Your Name"
-                required
-                autoComplete="name"
-                value={formState.name}
-                onChange={handleInputChange}
-                className={inputClass}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="contact-email" className={labelClass}>
-                Email <span className="sr-only">(required)</span>
-              </label>
-              <input
-                type="email"
-                id="contact-email"
-                name="email"
-                placeholder="you@example.com"
-                required
-                autoComplete="email"
-                value={formState.email}
-                onChange={handleInputChange}
-                className={inputClass}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="contact-message" className={labelClass}>
-              Message <span className="sr-only">(required)</span>
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+          <div className="grid gap-1">
+            <label htmlFor="contact-name" className={labelClass}>
+              Name <span className="sr-only">(required)</span>
             </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              placeholder="How can we help you?"
+            <input
+              type="text"
+              id="contact-name"
+              name="name"
+              placeholder="Your Name"
               required
-              rows={5}
-              autoComplete="off"
-              value={formState.message}
+              autoComplete="name"
+              value={formState.name}
               onChange={handleInputChange}
-              className={`${inputClass} resize-none`}
+              className={inputClass}
             />
           </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-2xl bg-amber-700 px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto"
-          >
-            {isSubmitting ? "Sending…" : "Send Message"}
-          </button>
-        </form>
-      </section>
-    </div>
+          <div className="grid gap-1">
+            <label htmlFor="contact-email" className={labelClass}>
+              Email <span className="sr-only">(required)</span>
+            </label>
+            <input
+              type="email"
+              id="contact-email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              autoComplete="email"
+              value={formState.email}
+              onChange={handleInputChange}
+              className={inputClass}
+            />
+          </div>
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="contact-message" className={labelClass}>
+            Message <span className="sr-only">(required)</span>
+          </label>
+          <textarea
+            id="contact-message"
+            name="message"
+            placeholder="How can we help you?"
+            required
+            rows={5}
+            autoComplete="off"
+            value={formState.message}
+            onChange={handleInputChange}
+            className={`${inputClass} resize-none`}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full rounded-2xl bg-amber-700 px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto"
+        >
+          {isSubmitting ? "Sending…" : "Send Message"}
+        </button>
+      </form>
+    </section>
   );
 }

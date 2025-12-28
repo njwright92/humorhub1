@@ -18,13 +18,15 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="flex min-h-screen flex-col p-4 text-center md:ml-20">
-      <h1 className="font-heading mt-10 mb-2 text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
-        Contact Us
-      </h1>
-      <p className="mb-8 text-sm text-stone-300 md:text-base">
-        Questions, feedback, or support? We&#39;re here to help.
-      </p>
+    <main className="grid min-h-screen content-start gap-6 p-4 pt-12 text-center md:ml-20">
+      <header className="grid gap-2">
+        <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
+          Contact Us
+        </h1>
+        <p className="text-sm text-stone-300 md:text-base">
+          Questions, feedback, or support? We&#39;re here to help.
+        </p>
+      </header>
       <ContactForm />
     </main>
   );

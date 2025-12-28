@@ -10,7 +10,6 @@ import {
 import { useToast } from "./ToastContext";
 import type { EventSubmission, ApiResponse } from "../lib/types";
 
-// Local form state (Date object, optional fields not yet set)
 type FormState = {
   name: string;
   location: string;
@@ -139,7 +138,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [formError, setFormError] = useState("");
 
-  // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -173,7 +171,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
       e.preventDefault();
       if (isSubmitting) return;
 
-      // Validation
       const missing = [
         !form.name.trim() && "Event Name",
         !form.location.trim() && "Location",
@@ -208,10 +205,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           return;
         }
 
-        // Send email notification (non-blocking)
-        sendEmailNotification(submission, form.date).catch(() => {
-          // Email notification failed silently
-        });
+        sendEmailNotification(submission, form.date).catch(() => {});
 
         showToast("Event submitted successfully!", "success");
         setForm(initialFormState);
@@ -227,7 +221,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center p-4 backdrop-blur-md"
+      className="fixed inset-0 z-50 grid place-items-center p-2 backdrop-blur-md"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -249,7 +243,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="w-full overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-6 shadow-lg"
+          className="w-full overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-4 shadow-lg"
         >
           {formError && (
             <div
