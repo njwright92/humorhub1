@@ -14,6 +14,22 @@ html {
     0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
+@layer base {
+  input[type="date"] {
+    appearance: none; /* Removes native iOS styling */
+    -webkit-appearance: none; /* Safari specific */
+    min-height: 46px; /* FORCE height to match your text inputs */
+    display: block; /* Prevents collapsing */
+    width: 100%; /* Full width */
+    background-color: white; /* Ensure background matches */
+  }
+
+  /* Optional: This trick makes "mm/dd/yyyy" appear on iOS when empty */
+  input[type="date"]:invalid::-webkit-datetime-edit {
+    color: #9ca3af; /* Matches text-stone-400 placeholder */
+  }
+}
+
 h1,
 h2,
 h3,
