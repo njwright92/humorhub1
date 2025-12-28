@@ -90,25 +90,23 @@ const EventCard = memo(function EventCard({
   onSave: (event: Event) => void;
 }) {
   return (
-    <article className="mb-4 flex flex-col items-center rounded-2xl border border-stone-600 p-2 text-center shadow-lg">
+    <article className="mb-4 grid justify-items-center gap-2 rounded-2xl border border-stone-600 p-2 text-center shadow-lg">
       <h3 className="text-lg font-bold text-amber-600 md:text-xl">
         {event.name}
       </h3>
 
-      <div className="my-2 flex flex-col gap-1">
-        <p className="text-sm">
-          <span aria-hidden="true">📅 </span>
-          <span className="sr-only">Date: </span>
-          {event.date}
-        </p>
-        <p className="text-sm">
-          <span aria-hidden="true">📍 </span>
-          <span className="sr-only">Location: </span>
-          {event.location}
-        </p>
-      </div>
+      <p className="text-sm">
+        <span aria-hidden="true">📅 </span>
+        <span className="sr-only">Date: </span>
+        {event.date}
+      </p>
+      <p className="text-sm">
+        <span aria-hidden="true">📍 </span>
+        <span className="sr-only">Location: </span>
+        {event.location}
+      </p>
 
-      <div className="mt-2 w-full px-2 text-sm">
+      <div className="w-full px-2 text-sm">
         <span className="mb-1 block font-bold">
           <span aria-hidden="true">ℹ️ </span>
           Details:
@@ -418,8 +416,8 @@ export default function MicFinderClient({
 
   return (
     <>
-      {/* Hero - flat structure */}
-      <div className="mb-4 flex justify-center">
+      {/* Hero - already flat, just swap flex for grid */}
+      <div className="mb-4 grid justify-center">
         <EventForm />
       </div>
 
@@ -427,9 +425,9 @@ export default function MicFinderClient({
         Find your next show or night out. Pick a city and date!
       </p>
 
-      {/* Inputs - grid instead of nested flex */}
+      {/* Inputs - already good */}
       <div className="relative z-10 mt-2 grid justify-center gap-3 sm:gap-4">
-        {/* City Dropdown */}
+        {/* City Dropdown - unchanged, structure required for positioning */}
         <div className="relative w-80">
           <button
             type="button"
@@ -442,13 +440,13 @@ export default function MicFinderClient({
               setIsFirstDropdownOpen(!isFirstDropdownOpen);
               setIsSecondDropdownOpen(false);
             }}
-            className={`${dropdownBtnClass}`}
+            className={dropdownBtnClass}
           >
             {selectedCity || "Select a City"}
           </button>
 
           {isFirstDropdownOpen && (
-            <div className={`${dropdownContainerClass}`}>
+            <div className={dropdownContainerClass}>
               <label htmlFor="city-search" className="sr-only">
                 Search cities
               </label>
@@ -470,7 +468,7 @@ export default function MicFinderClient({
                     fetchUserLocation();
                     setIsFirstDropdownOpen(false);
                   }}
-                  className="flex cursor-pointer items-center justify-center gap-2 border-b border-zinc-200 bg-amber-100 px-4 py-3 text-center font-bold text-stone-900 hover:bg-amber-700"
+                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-zinc-200 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
                 >
                   <span aria-hidden="true">📍</span> Use My Location
                 </li>
@@ -490,7 +488,7 @@ export default function MicFinderClient({
           )}
         </div>
 
-        {/* Date Picker */}
+        {/* Date Picker - unchanged */}
         <div className="relative w-80">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
@@ -508,7 +506,7 @@ export default function MicFinderClient({
         </div>
       </div>
 
-      {/* Map */}
+      {/* Map - unchanged, structure required */}
       <section
         aria-label="Event Map"
         className="relative mt-6 mb-6 h-100 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg"
@@ -549,11 +547,11 @@ export default function MicFinderClient({
         Scroll through events to find your next Mic or Festival!
       </p>
 
-      {/* Tabs - moved above results for better flow */}
+      {/* Tabs - swap flex for grid */}
       <nav
         aria-label="Event type filter"
         role="tablist"
-        className="flex flex-wrap justify-center gap-2"
+        className="grid auto-cols-auto grid-flow-col justify-center gap-2"
       >
         {TABS.map((tab) => (
           <button
@@ -573,7 +571,7 @@ export default function MicFinderClient({
         ))}
       </nav>
 
-      {/* Results */}
+      {/* Results - flatten ul > li */}
       <section
         aria-labelledby="results-heading"
         className="mt-6 mb-10 w-full rounded-2xl shadow-lg sm:mt-10"
@@ -598,13 +596,15 @@ export default function MicFinderClient({
             Please select a city above to see events.
           </p>
         ) : filteredEventsForView.length > 0 ? (
-          <ul aria-label={resultCountText}>
+          <div role="list" aria-label={resultCountText} className="grid gap-4">
             {filteredEventsForView.map((event) => (
-              <li key={event.id}>
-                <EventCard event={event} onSave={handleEventSave} />
-              </li>
+              <EventCard
+                key={event.id}
+                event={event}
+                onSave={handleEventSave}
+              />
             ))}
-          </ul>
+          </div>
         ) : (
           <p className="py-4 text-center text-stone-400">
             No {selectedTab.toLowerCase()} found for {selectedCity} on{" "}
@@ -613,7 +613,7 @@ export default function MicFinderClient({
         )}
       </section>
 
-      {/* All Cities Section - simplified */}
+      {/* All Cities Section - unchanged, already uses grid */}
       <section
         aria-labelledby="all-events-heading"
         className="relative z-10 my-8 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg sm:my-10"

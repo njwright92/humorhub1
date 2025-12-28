@@ -373,106 +373,104 @@ export default function ProfileClient() {
         </section>
       </aside>
 
-      <section className="lg:col-span-2">
-        <div className="min-h-125 rounded-2xl border border-stone-700 bg-stone-800/80 p-6 shadow-lg">
-          <h2 className="font-heading mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start">
-            <span aria-hidden="true">🎟️</span>
-            Saved Events
-            {!isEventsLoading && (
-              <span className="rounded-full bg-zinc-700 px-2 py-1 text-xs">
-                {savedEvents.length}
-              </span>
-            )}
-          </h2>
-
-          {isEventsLoading ? (
-            <div role="status" className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="animate-pulse rounded-2xl border border-stone-700 p-5"
-                >
-                  <div className="mb-3 h-5 w-1/2 rounded bg-stone-700" />
-                  <div className="mb-2 h-4 w-3/4 rounded bg-stone-700" />
-                  <div className="h-4 w-1/4 rounded bg-stone-700" />
-                </div>
-              ))}
-              <span className="sr-only">Loading events...</span>
-            </div>
-          ) : savedEvents.length > 0 ? (
-            <ul className="space-y-4">
-              {savedEvents.map((event) => (
-                <li key={event.id}>
-                  <article className="group flex flex-col justify-between gap-4 rounded-2xl border border-stone-700 p-4 text-left shadow-lg hover:border-amber-700 sm:flex-row">
-                    <div className="flex-1">
-                      <header className="mb-1 flex flex-wrap items-center gap-2">
-                        <h3 className="font-heading text-lg font-bold text-amber-700">
-                          {event.name}
-                        </h3>
-                        {event.isFestival && (
-                          <span className="rounded bg-purple-900 px-2 py-0.5 text-[10px] font-bold text-purple-200 uppercase">
-                            Festival
-                          </span>
-                        )}
-                        {event.isMusic && (
-                          <span className="rounded bg-blue-900 px-2 py-0.5 text-[10px] font-bold text-blue-200 uppercase">
-                            Music
-                          </span>
-                        )}
-                      </header>
-                      <p className="mb-1 text-sm">
-                        <span aria-hidden="true">📍</span> {event.location}
-                      </p>
-                      <p className="mb-3 text-xs">
-                        <span aria-hidden="true">📅</span> {event.date}
-                        {event.isRecurring && " (Recurring)"}
-                      </p>
-                      {event.details && (
-                        <div
-                          className="line-clamp-2 text-sm group-hover:line-clamp-none"
-                          dangerouslySetInnerHTML={{ __html: event.details }}
-                        />
-                      )}
-                    </div>
-
-                    <footer className="flex items-end justify-between gap-2 sm:flex-col">
-                      <Link
-                        href={`/mic-finder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
-                        className="text-sm underline hover:text-amber-700"
-                      >
-                        Find on Map
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteEvent(event.id, event.name)}
-                        disabled={isDeleting === event.id}
-                        className="rounded-2xl border border-red-500 px-3 py-1 text-sm font-semibold text-red-400 transition hover:bg-red-900/50 hover:text-red-100 disabled:opacity-50"
-                      >
-                        {isDeleting === event.id ? "Removing..." : "Remove"}
-                      </button>
-                    </footer>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="flex h-64 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-stone-700 text-stone-400">
-              <span className="mb-2 text-4xl" aria-hidden="true">
-                📭
-              </span>
-              <p className="font-heading text-lg font-semibold">
-                No events saved yet
-              </p>
-              <p className="mb-4">Go find some mics to hit!</p>
-              <Link
-                href="/mic-finder"
-                className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
-              >
-                Go to MicFinder
-              </Link>
-            </div>
+      <section className="min-h-125 rounded-2xl border border-stone-600 bg-stone-800/80 p-4 shadow-lg lg:col-span-2">
+        <h2 className="font-heading mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start">
+          <span aria-hidden="true">🎟️</span>
+          Saved Events
+          {!isEventsLoading && (
+            <span className="rounded-full bg-stone-700 px-2 py-1 text-xs">
+              {savedEvents.length}
+            </span>
           )}
-        </div>
+        </h2>
+
+        {isEventsLoading ? (
+          <div role="status" className="grid gap-4">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse rounded-2xl border border-stone-600 p-4 shadow-lg"
+              >
+                <div className="mb-3 h-5 w-1/2 rounded bg-stone-700" />
+                <div className="mb-2 h-4 w-3/4 rounded bg-stone-700" />
+                <div className="h-4 w-1/4 rounded bg-stone-700" />
+              </div>
+            ))}
+            <span className="sr-only">Loading events...</span>
+          </div>
+        ) : savedEvents.length > 0 ? (
+          <div role="list" className="grid gap-4">
+            {savedEvents.map((event) => (
+              <article
+                key={event.id}
+                role="listitem"
+                className="group grid gap-4 rounded-2xl border border-stone-600 p-4 text-left shadow-lg hover:border-amber-700 sm:grid-cols-[1fr_auto]"
+              >
+                <div>
+                  <h3 className="font-heading mb-1 inline font-bold text-amber-700">
+                    {event.name}
+                  </h3>
+                  {event.isFestival && (
+                    <span className="ml-2 inline-block rounded bg-purple-900 px-2 py-0.5 align-middle text-[10px] font-bold text-purple-200 uppercase">
+                      Festival
+                    </span>
+                  )}
+                  {event.isMusic && (
+                    <span className="ml-2 inline-block rounded bg-blue-900 px-2 py-0.5 align-middle text-[10px] font-bold text-blue-200 uppercase">
+                      Music
+                    </span>
+                  )}
+                  <p className="mt-1 text-sm">
+                    <span aria-hidden="true">📍</span> {event.location}
+                  </p>
+                  <p className="mb-3 text-xs">
+                    <span aria-hidden="true">📅</span> {event.date}
+                    {event.isRecurring && " (Recurring)"}
+                  </p>
+                  {event.details && (
+                    <div
+                      className="line-clamp-2 text-sm group-hover:line-clamp-none"
+                      dangerouslySetInnerHTML={{ __html: event.details }}
+                    />
+                  )}
+                </div>
+
+                <div className="grid auto-cols-auto grid-flow-col items-end justify-between gap-2 sm:grid-flow-row sm:justify-items-end">
+                  <Link
+                    href={`/mic-finder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
+                    className="text-sm underline hover:text-amber-700"
+                  >
+                    Find on Map
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteEvent(event.id, event.name)}
+                    disabled={isDeleting === event.id}
+                    className="rounded-2xl border border-red-500 px-3 py-1 text-sm font-semibold text-red-400 transition hover:bg-red-900/50 hover:text-red-100 disabled:opacity-50"
+                  >
+                    {isDeleting === event.id ? "Removing..." : "Remove"}
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="grid h-64 place-content-center place-items-center gap-1 rounded-2xl border-2 border-dashed border-stone-600 text-center text-stone-400">
+            <span className="mb-2 text-4xl" aria-hidden="true">
+              📭
+            </span>
+            <p className="font-heading text-lg font-semibold">
+              No events saved yet
+            </p>
+            <p className="mb-4">Go find some mics to hit!</p>
+            <Link
+              href="/mic-finder"
+              className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
+            >
+              Go to MicFinder
+            </Link>
+          </div>
+        )}
       </section>
     </div>
   );

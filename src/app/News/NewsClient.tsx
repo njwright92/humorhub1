@@ -46,7 +46,7 @@ function ArticleCard({
   const [imgError, setImgError] = useState(false);
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-lg hover:shadow-amber-900/20">
+    <article className="group grid h-full grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-lg hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full overflow-hidden">
         {article.image_url && !imgError ? (
           <Image
@@ -61,7 +61,7 @@ function ArticleCard({
           />
         ) : (
           <div
-            className="flex h-full items-center justify-center bg-stone-800"
+            className="grid h-full place-content-center bg-stone-800"
             aria-hidden="true"
           >
             📰
@@ -71,11 +71,11 @@ function ArticleCard({
           {article.source || "News"}
         </span>
       </figure>
-      <div className="flex grow flex-col p-5">
-        <h2 className="font-heading mb-3 line-clamp-3 text-lg leading-tight font-bold transition-colors group-hover:text-amber-700">
+      <div className="grid grid-rows-[auto_1fr_auto] gap-3 p-5">
+        <h2 className="font-heading line-clamp-3 text-lg leading-tight font-bold transition-colors group-hover:text-amber-700">
           {article.title}
         </h2>
-        <p className="mb-6 line-clamp-3 grow text-sm text-stone-400">
+        <p className="line-clamp-3 self-start text-sm text-stone-400">
           {article.description}
         </p>
         <a
@@ -83,12 +83,10 @@ function ArticleCard({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Read full story: ${article.title}`}
-          className="inline-flex items-center justify-center rounded-2xl border border-stone-700 py-2.5 text-sm font-semibold text-stone-300 transition-all hover:border-amber-700 hover:bg-amber-700 hover:text-stone-900"
+          className="grid grid-flow-col place-content-center gap-1 rounded-2xl border border-stone-700 py-2.5 text-sm font-semibold text-stone-300 transition-all hover:border-amber-700 hover:bg-amber-700 hover:text-stone-900"
         >
           Read Full Story
-          <span className="ml-1" aria-hidden="true">
-            →
-          </span>
+          <span aria-hidden="true">→</span>
         </a>
       </div>
     </article>
