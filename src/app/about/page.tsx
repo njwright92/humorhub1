@@ -55,7 +55,7 @@ export default function AboutPage() {
     <main className="grid min-h-screen content-start gap-12 p-4 pt-12 text-center md:ml-20">
       <header className="grid justify-items-center gap-6">
         <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-sm sm:text-4xl lg:text-5xl">
-          About Humor Hub
+          About Us
         </h1>
         <hgroup className="grid gap-2">
           <h2 className="font-heading text-2xl font-bold text-amber-600">

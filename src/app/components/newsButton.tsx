@@ -9,7 +9,7 @@ const AuthModal = dynamic(() => import("./authModal"));
 
 export default function NewsButton({
   children = "Check It Out",
-  className = "w-70 self-center rounded-2xl bg-amber-700 px-2 py-1 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:self-end",
+  className = "w-70 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-end",
 }: {
   children?: ReactNode;
   className?: string;

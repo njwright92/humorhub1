@@ -99,12 +99,12 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
     <div className="animate-slide-in fixed inset-0 z-50 grid content-start justify-items-center gap-4 p-2 backdrop-blur-lg">
       <button
         onClick={closeMenu}
-        className="justify-self-end p-2 text-red-900"
+        className="justify-self-end p-1 text-stone-900"
         aria-label="Close menu"
         type="button"
       >
         <svg
-          className="size-10"
+          className="size-8"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

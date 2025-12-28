@@ -144,12 +144,12 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center backdrop-blur-md"
+      className="fixed inset-0 z-50 grid place-items-center backdrop-blur-lg"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-title"
     >
-      <div className="relative w-full max-w-sm rounded-2xl bg-stone-300 p-6 shadow-lg">
+      <div className="relative grid w-full max-w-sm gap-3 rounded-2xl bg-stone-300 p-4 shadow-lg">
         <button
           onClick={handleClose}
           className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-700"
@@ -158,7 +158,7 @@ export default function AuthModal({
           type="button"
         >
           <svg
-            className="size-6"
+            className="size-8"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
@@ -173,17 +173,14 @@ export default function AuthModal({
 
         <h2
           id="auth-title"
-          className="mb-4 text-center text-2xl font-bold text-stone-900"
+          className="text-center text-2xl font-bold text-stone-900"
         >
           {isSignIn ? "Sign In" : "Sign Up"}
         </h2>
 
-        <form onSubmit={handleAuth} className="space-y-3" noValidate>
-          <div>
-            <label
-              htmlFor="auth-email"
-              className="mb-1 block text-sm text-stone-900"
-            >
+        <form onSubmit={handleAuth} className="mb-2 grid gap-3" noValidate>
+          <div className="grid gap-1">
+            <label htmlFor="auth-email" className="text-sm text-stone-900">
               Email
             </label>
             <input
@@ -199,11 +196,8 @@ export default function AuthModal({
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="auth-password"
-              className="mb-1 block text-sm text-stone-900"
-            >
+          <div className="grid gap-1">
+            <label htmlFor="auth-password" className="text-sm text-stone-900">
               Password
             </label>
             <input
@@ -220,11 +214,8 @@ export default function AuthModal({
           </div>
 
           {!isSignIn && (
-            <div>
-              <label
-                htmlFor="auth-confirm"
-                className="mb-1 block text-sm text-stone-900"
-              >
+            <div className="grid gap-1">
+              <label htmlFor="auth-confirm" className="text-sm text-stone-900">
                 Confirm Password
               </label>
               <input
@@ -244,12 +235,12 @@ export default function AuthModal({
           <button
             type="submit"
             disabled={isLoading}
-            className={`mt-2 w-full rounded-2xl py-2 font-semibold text-white shadow-lg transition-colors disabled:opacity-50 ${isSignIn ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}`}
+            className={`w-full rounded-2xl py-2 font-semibold text-white shadow-lg transition-colors disabled:opacity-50 ${isSignIn ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}`}
           >
             {isLoading ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
           </button>
 
-          <p className="mt-4 text-center text-sm text-stone-900">
+          <p className="text-center text-sm text-stone-900">
             {isSignIn ? "Need an account? " : "Already have an account? "}
             <button
               type="button"
@@ -265,18 +256,15 @@ export default function AuthModal({
           </p>
         </form>
 
-        <div
-          className="my-3 text-center text-sm text-stone-900"
-          aria-hidden="true"
-        >
+        <p className="text-center text-sm text-stone-900" aria-hidden="true">
           OR
-        </div>
+        </p>
 
         <button
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-300 disabled:opacity-50"
+          className="grid grid-flow-col items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-300 disabled:opacity-50"
         >
           <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true">
             <path

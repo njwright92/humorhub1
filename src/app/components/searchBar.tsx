@@ -234,7 +234,7 @@ export default function SearchBar({
       <button
         type="button"
         onClick={handleToggleInput}
-        className="cursor-pointer text-zinc-200 transition hover:scale-110 sm:text-stone-900"
+        className="cursor-pointer text-zinc-200 transition hover:scale-110 sm:text-stone-900 sm:hover:text-stone-700"
         aria-label="Open search"
         aria-expanded={isInputVisible}
         aria-controls={POPOVER_ID}
@@ -255,95 +255,91 @@ export default function SearchBar({
       </button>
 
       {isInputVisible && (
-        <div
+        <form
+          ref={formRef}
           id={POPOVER_ID}
-          className="absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
+          role="search"
+          onSubmit={handleSearch}
+          className="absolute top-0 left-1/2 z-50 grid w-72 -translate-x-1/2 gap-3 rounded-2xl border border-stone-400 bg-zinc-200 p-4 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
         >
-          <form
-            ref={formRef}
-            role="search"
-            onSubmit={handleSearch}
-            className="relative flex flex-col gap-3 rounded-2xl border border-stone-400 bg-zinc-200 p-4"
+          <button
+            type="button"
+            onClick={closeSearchBar}
+            className="absolute top-0 right-0 cursor-pointer p-1 text-stone-900 hover:scale-105"
+            aria-label="Close search"
           >
-            <label htmlFor={INPUT_ID} className="sr-only">
-              Search city, page, or keyword
-            </label>
-
-            <input
-              ref={inputRef}
-              id={INPUT_ID}
-              type="search"
-              placeholder="Search city, page, or keyword..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setActiveIndex(-1);
-              }}
-              onKeyDown={handleKeyDown}
-              className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
-              autoComplete="off"
-              role="combobox"
-              aria-expanded={suggestions.length > 0}
-              aria-controls={suggestions.length > 0 ? LISTBOX_ID : undefined}
-              aria-autocomplete="list"
-              aria-activedescendant={
-                activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
-              }
-            />
-
-            <button
-              type="submit"
-              className="mx-auto w-32 cursor-pointer rounded-2xl bg-amber-700 py-1 font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-800"
+            <svg
+              className="size-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
             >
-              Search
-            </button>
+              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+            </svg>
+          </button>
 
-            <button
-              type="button"
-              onClick={closeSearchBar}
-              className="absolute top-0 right-0 cursor-pointer p-1 text-stone-900 transition hover:scale-110"
-              aria-label="Close search"
+          <label htmlFor={INPUT_ID} className="sr-only">
+            Search city, page, or keyword
+          </label>
+
+          <input
+            ref={inputRef}
+            id={INPUT_ID}
+            type="search"
+            placeholder="Search city, page, or keyword..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setActiveIndex(-1);
+            }}
+            onKeyDown={handleKeyDown}
+            className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
+            autoComplete="off"
+            role="combobox"
+            aria-expanded={suggestions.length > 0}
+            aria-controls={suggestions.length > 0 ? LISTBOX_ID : undefined}
+            aria-autocomplete="list"
+            aria-activedescendant={
+              activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
+            }
+          />
+
+          <button
+            type="submit"
+            className="mb-2 w-32 cursor-pointer justify-self-center rounded-2xl bg-amber-700 py-1 font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-900"
+          >
+            Search
+          </button>
+
+          {suggestions.length > 0 && (
+            <ul
+              id={LISTBOX_ID}
+              role="listbox"
+              aria-label="Search suggestions"
+              className="grid max-h-60 divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
             >
-              <svg
-                className="size-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-              </svg>
-            </button>
-
-            {suggestions.length > 0 && (
-              <ul
-                id={LISTBOX_ID}
-                role="listbox"
-                aria-label="Search suggestions"
-                className="mt-4 max-h-60 w-full divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
-              >
-                {suggestions.map((sug, idx) => (
-                  <li
-                    key={`${sug.type}-${sug.label}`}
-                    id={`suggestion-${idx}`}
-                    role="option"
-                    aria-selected={idx === activeIndex}
-                    className={`flex cursor-pointer items-center justify-between p-2 text-sm text-stone-900 transition-colors ${idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"}`}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      executeSuggestion(sug);
-                    }}
-                    onMouseEnter={() => setActiveIndex(idx)}
-                  >
-                    <span className="font-medium">{sug.label}</span>
-                    <span className="text-xs font-bold tracking-wider text-stone-500">
-                      {sug.type}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </form>
-        </div>
+              {suggestions.map((sug, idx) => (
+                <li
+                  key={`${sug.type}-${sug.label}`}
+                  id={`suggestion-${idx}`}
+                  role="option"
+                  aria-selected={idx === activeIndex}
+                  className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm text-stone-900 transition-colors ${idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"}`}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    executeSuggestion(sug);
+                  }}
+                  onMouseEnter={() => setActiveIndex(idx)}
+                >
+                  <span className="font-medium">{sug.label}</span>
+                  <span className="text-xs font-bold tracking-wider text-stone-500">
+                    {sug.type}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </form>
       )}
     </search>
   );

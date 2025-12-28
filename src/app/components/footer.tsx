@@ -53,12 +53,12 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:pr-10">
             <nav
               aria-labelledby="about-nav"
-              className="grid content-start gap-2"
+              className="grid h-fit justify-items-center gap-1 text-center"
             >
               <h3 id="about-nav" className={headingClass}>
                 Get to Know Us
               </h3>
-              <ul className="grid gap-2 font-medium text-stone-400">
+              <ul className="grid gap-1 font-medium text-stone-400">
                 <li>
                   <Link href="/about" className={linkClass}>
                     About Humor Hub
@@ -74,12 +74,12 @@ export default function Footer() {
 
             <nav
               aria-labelledby="social-nav"
-              className="grid content-start gap-2"
+              className="grid h-fit justify-items-center gap-1 text-center"
             >
               <h3 id="social-nav" className={headingClass}>
                 Stay Connected
               </h3>
-              <ul className="grid gap-2 font-medium text-stone-400">
+              <ul className="grid gap-1 font-medium text-stone-400">
                 {SOCIALS.map(({ href, label }) => (
                   <li key={href}>
                     <a
@@ -98,12 +98,12 @@ export default function Footer() {
 
             <nav
               aria-labelledby="legal-nav"
-              className="grid content-start gap-2"
+              className="grid h-fit justify-items-center gap-1 text-center"
             >
               <h3 id="legal-nav" className={headingClass}>
                 Legal Info
               </h3>
-              <ul className="grid gap-2 font-medium text-stone-400">
+              <ul className="grid gap-1 font-medium text-stone-400">
                 <li>
                   <Link href="/user-agreement" className={linkClass}>
                     User Agreement

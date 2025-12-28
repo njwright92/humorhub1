@@ -1,22 +1,15 @@
 @import "tailwindcss";
 
 html {
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 @theme {
-  /* --- Brand Color Overrides --- */
-  --color-zinc-200: #f0eee9;
-
-  /* --- Animation --- */
+  --color-zinc-200: #f0efeb;
   --animate-slide-in: slide-in 0.3s forwards;
-
-  /* --- Fonts --- */
   --font-heading:
     var(--font-comic-neue), "Chalkboard SE", "Ink Free", "Segoe Print";
   --font-body: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
-  /* --- Shadows --- */
   --shadow-lg:
     0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
@@ -28,6 +21,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
+  font-weight: 700;
 }
 
 @layer base {

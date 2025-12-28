@@ -57,7 +57,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={comicNeue.variable}>
       <head>
         <link
           rel="preconnect"
@@ -75,9 +75,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           crossOrigin="anonymous"
         />
       </head>
-      <body
-        className={`${comicNeue.variable} font-body bg-stone-900 text-zinc-200 antialiased`}
-      >
+      <body className="bg-stone-900 text-zinc-200 antialiased">
         <ToastProvider>
           <Header />
           {children}

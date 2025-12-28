@@ -49,19 +49,19 @@ function RadioGroup({
 }) {
   const id = `${name}-label`;
   return (
-    <div className="rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-center">
+    <div className="grid gap-2 rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-center">
       <span className="text-sm font-bold text-stone-900" id={id}>
         {label}
       </span>
       <div
-        className="mt-2 flex justify-center gap-4"
+        className="grid grid-flow-col justify-center gap-4"
         role="radiogroup"
         aria-labelledby={id}
       >
         {[true, false].map((v) => (
           <label
             key={String(v)}
-            className="flex items-center gap-1 text-sm font-medium text-stone-800"
+            className="grid grid-flow-col items-center gap-1 text-sm font-medium text-stone-800"
           >
             <input
               type="radio"
@@ -81,7 +81,7 @@ function RadioGroup({
 function CloseIcon() {
   return (
     <svg
-      className="size-10"
+      className="size-8"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -227,47 +227,40 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
       aria-modal="true"
       aria-labelledby="event-form-title"
     >
-      <div
-        className="relative flex max-h-[90vh] w-full max-w-md flex-col"
+      <form
+        onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
+        noValidate
+        className="relative grid max-h-[90vh] w-full max-w-md gap-3 overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-4 shadow-lg"
       >
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 right-4 z-10 text-stone-900"
+          className="absolute top-4 right-4 text-stone-900"
           aria-label="Close modal"
         >
           <CloseIcon />
         </button>
 
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-          className="w-full overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-4 shadow-lg"
-        >
-          {formError && (
-            <div
-              role="alert"
-              className="mb-4 rounded border border-red-400 bg-red-100 px-4 py-2 text-center text-sm font-bold text-red-700"
-            >
-              {formError}
-            </div>
-          )}
-
-          <h1
-            id="event-form-title"
-            className="font-heading mb-2 text-center text-3xl font-bold text-stone-900"
+        {formError && (
+          <div
+            role="alert"
+            className="rounded border border-red-400 bg-red-100 px-4 py-2 text-center text-sm font-bold text-red-700"
           >
+            {formError}
+          </div>
+        )}
+
+        <header className="grid gap-1 text-center">
+          <h1 id="event-form-title" className="text-3xl text-stone-900">
             Event Form
           </h1>
-
-          <p
-            className="mb-4 text-center text-sm font-semibold text-red-600"
-            aria-hidden="true"
-          >
-            * Indicates required fields
+          <p className="text-sm font-semibold text-red-600" aria-hidden="true">
+            * Required fields
           </p>
+        </header>
 
+        <div className="grid gap-1">
           <label htmlFor="event-name" className={labelClass}>
             Event Name <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
@@ -283,7 +276,9 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             autoComplete="off"
             placeholder="e.g., The Comedy Store Open Mic"
           />
+        </div>
 
+        <div className="grid gap-1">
           <label htmlFor="event-location" className={labelClass}>
             Location (Full Address) <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
@@ -299,29 +294,31 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             autoComplete="off"
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles, CA"
           />
+        </div>
 
-          <fieldset className="mb-4 grid grid-cols-2 gap-4">
-            <legend className="sr-only">Event options</legend>
-            <RadioGroup
-              label="Recurring?"
-              name="isRecurring"
-              value={form.isRecurring}
-              onChange={handleRadioChange}
-            />
-            <RadioGroup
-              label="Festival?"
-              name="isFestival"
-              value={form.isFestival}
-              onChange={handleRadioChange}
-            />
-          </fieldset>
+        <fieldset className="grid grid-cols-2 gap-4">
+          <legend className="sr-only">Event options</legend>
+          <RadioGroup
+            label="Recurring?"
+            name="isRecurring"
+            value={form.isRecurring}
+            onChange={handleRadioChange}
+          />
+          <RadioGroup
+            label="Festival?"
+            name="isFestival"
+            value={form.isFestival}
+            onChange={handleRadioChange}
+          />
+        </fieldset>
 
+        <div className="grid gap-1">
           <label htmlFor="event-details" className={labelClass}>
             Details <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
           {form.isRecurring && (
-            <p className="mb-1 text-xs font-bold text-red-600" role="note">
+            <p className="text-xs font-bold text-red-600" role="note">
               * Please include Frequency (e.g. Weekly)
             </p>
           )}
@@ -336,7 +333,9 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             className={`${inputClass} resize-y`}
             placeholder="Event Time, Frequency (if recurring), Host, Entry Fee, etc."
           />
+        </div>
 
+        <div className="grid gap-1">
           <label htmlFor="event-date" className={labelClass}>
             Date <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
@@ -349,9 +348,15 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleDateChange}
             className={inputClass}
           />
+        </div>
 
-          <label htmlFor="event-email" className={`${labelClass} text-sm`}>
-            Email (Optional for Verification)
+        <div className="grid gap-1">
+          <label htmlFor="event-email" className={labelClass}>
+            Email
+            <br />
+            <span className="text-xs text-amber-700">
+              (optional) if you want to be notified when the event is added.
+            </span>
           </label>
           <input
             type="email"
@@ -359,20 +364,20 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             name="email"
             value={form.email}
             onChange={handleChange}
-            className={`${inputClass} mb-6`}
+            className={inputClass}
             placeholder="yourname@example.com"
             autoComplete="email"
           />
+        </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full rounded-2xl bg-green-600 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-[1.02] hover:bg-green-700 disabled:opacity-50"
-          >
-            {isSubmitting ? "Submitting..." : "Submit Event"}
-          </button>
-        </form>
-      </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full rounded-2xl bg-green-600 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-[1.02] hover:bg-green-700 disabled:opacity-50"
+        >
+          {isSubmitting ? "Submitting..." : "Submit Event"}
+        </button>
+      </form>
     </div>
   );
 }

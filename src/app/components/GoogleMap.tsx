@@ -32,7 +32,7 @@ function EventPin({ color }: { color: string }) {
       width="28"
       height="28"
       viewBox="0 0 32 32"
-      className="cursor-pointer transition-transform hover:scale-110"
+      className="cursor-pointer hover:scale-110"
       style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.4))" }}
       aria-hidden="true"
     >
@@ -134,20 +134,36 @@ const InnerMap = memo(function InnerMap({
           onCloseClick={() => setSelectedEvent(null)}
           maxWidth={250}
           pixelOffset={[0, -30]}
+          headerDisabled={true}
         >
-          <article className="p-2 text-center text-zinc-800">
-            <h2 className="mb-1 text-lg font-bold">{selectedEvent.name}</h2>
-            <p className="mb-1 text-sm">
+          <article className="relative grid gap-1 bg-zinc-200 p-2 pr-6 text-center text-zinc-900">
+            <button
+              onClick={() => setSelectedEvent(null)}
+              className="absolute top-0 right-0 grid size-5 cursor-pointer place-items-center rounded-full bg-stone-400 text-stone-900 hover:scale-105"
+              aria-label="Close"
+              type="button"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="size-4"
+                aria-hidden="true"
+              >
+                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+              </svg>
+            </button>
+            <h2 className="text-base font-bold">{selectedEvent.name}</h2>
+            <p className="text-sm">
               <span aria-hidden="true">📍</span>
               <span className="sr-only">Location:</span>{" "}
               {selectedEvent.location}
             </p>
-            <p className="mb-2 text-sm text-zinc-600">
+            <p className="text-sm text-zinc-600">
               <span aria-hidden="true">📅</span>
               <span className="sr-only">Date:</span> {selectedEvent.date}
             </p>
             {selectedEvent.details && (
-              <p className="mt-2 text-left text-sm whitespace-pre-wrap">
+              <p className="text-left text-sm whitespace-pre-wrap">
                 {selectedEvent.details}
               </p>
             )}
@@ -172,8 +188,8 @@ export default function GoogleMap(props: {
         className="grid size-full min-h-100 place-items-center overflow-hidden rounded-2xl bg-zinc-800 shadow-lg"
         role="alert"
       >
-        <div className="p-4 text-center text-zinc-400">
-          <p className="mb-2 text-lg font-semibold">
+        <div className="grid gap-2 p-4 text-center text-zinc-400">
+          <p className="text-lg font-semibold">
             <span aria-hidden="true">⚠️</span> Map Unavailable
           </p>
           <p className="text-sm">Google Maps API key is not configured.</p>
