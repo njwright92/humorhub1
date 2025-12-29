@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -77,29 +77,32 @@ export default function DesktopNav() {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
-    let unsubscribe: (() => void) | undefined;
+  const authInitPromiseRef = useRef<Promise<void> | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+  const mountedRef = useRef(true);
 
-    const initAuth = async () => {
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+      unsubscribeRef.current?.();
+    };
+  }, []);
+
+  const ensureAuthListener = useCallback(() => {
+    if (authInitPromiseRef.current) return;
+
+    authInitPromiseRef.current = (async () => {
       const { getAuth } = await import("../../../firebase.config");
       const { onAuthStateChanged } = await import("firebase/auth");
+
       const auth = await getAuth();
-      unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (mounted) setIsUserSignedIn(!!user);
+
+      if (mountedRef.current) setIsUserSignedIn(Boolean(auth.currentUser));
+
+      unsubscribeRef.current = onAuthStateChanged(auth, (user) => {
+        if (mountedRef.current) setIsUserSignedIn(Boolean(user));
       });
-    };
-
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(initAuth);
-    } else {
-      setTimeout(initAuth, 100);
-    }
-
-    return () => {
-      mounted = false;
-      unsubscribe?.();
-    };
+    })();
   }, []);
 
   useEffect(() => {
@@ -159,6 +162,9 @@ export default function DesktopNav() {
             <button
               key={label}
               type="button"
+              onMouseEnter={ensureAuthListener}
+              onFocus={ensureAuthListener}
+              onTouchStart={ensureAuthListener}
               onClick={() => handleProtectedRoute(protectedPath, label)}
               aria-label={label}
               className={navItemClass}

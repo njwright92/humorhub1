@@ -21,7 +21,6 @@ import {
 } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
-const EventForm = dynamic(() => import("../components/EventForm"));
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
     <span className="flex size-full items-center justify-center text-stone-300">
@@ -129,6 +128,20 @@ const EventCard = memo(function EventCard({
   );
 });
 
+type EventIndex = {
+  nameLower: string;
+  locationLower: string;
+  normalizedCity: string; // from your existing split(",")[1] logic
+  isSpokaneClub: boolean;
+  dateMs: number | null; // midnight ms for non-recurring
+  recurringDow: number | null;
+};
+
+function getEventCacheKey(e: Event): string {
+  // Prefer id; otherwise use a stable-ish composite key.
+  return e.id ?? `${e.name}|${e.location}|${e.date}`;
+}
+
 export default function MicFinderClient({
   initialEvents,
   initialCityCoordinates,
@@ -141,7 +154,6 @@ export default function MicFinderClient({
   const [selectedDate, setSelectedDate] = useState(
     () => new Date(new Date().toDateString())
   );
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("All Cities");
   const [isMapVisible, setIsMapVisible] = useState(false);
@@ -153,7 +165,53 @@ export default function MicFinderClient({
 
   // Refs
   const authRef = useRef<Auth | null>(null);
+  const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
+
+  // Cache for lowercased strings + parsed dates to avoid repeated work
+  const eventIndexRef = useRef<Map<string, EventIndex>>(new Map());
+
+  useEffect(() => {
+    // If events change (deploy / revalidate), clear cached computed fields.
+    eventIndexRef.current.clear();
+  }, [initialEvents]);
+
+  const getEventIndex = useCallback((e: Event): EventIndex => {
+    const key = getEventCacheKey(e);
+    const cached = eventIndexRef.current.get(key);
+    if (cached) return cached;
+
+    const nameLower = (e.name || "").toLowerCase();
+    const locationLower = (e.location || "").toLowerCase();
+
+    const cityPart = (e.location || "").split(",")[1]?.trim() ?? "";
+    const normalizedCity = normalizeCityName(cityPart);
+
+    const isSpokaneClub = (e.location || "").includes("Spokane Comedy Club");
+
+    const recurringDow = e.isRecurring ? (DAY_MAP[e.date] ?? null) : null;
+
+    let dateMs: number | null = null;
+    if (!e.isRecurring) {
+      const parsed = new Date(e.date);
+      if (!isNaN(parsed.getTime())) {
+        parsed.setHours(0, 0, 0, 0);
+        dateMs = parsed.getTime();
+      }
+    }
+
+    const idx: EventIndex = {
+      nameLower,
+      locationLower,
+      normalizedCity,
+      isSpokaneClub,
+      dateMs,
+      recurringDow,
+    };
+
+    eventIndexRef.current.set(key, idx);
+    return idx;
+  }, []);
 
   // Analytics helper
   const sendDataLayerEvent = useCallback(
@@ -177,24 +235,20 @@ export default function MicFinderClient({
     return () => clearTimeout(handler);
   }, [searchTerm, sendDataLayerEvent]);
 
-  // Auth initialization
-  useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
+  // Lazy auth: only initialize Firebase Auth if/when user clicks "Save"
+  const ensureAuth = useCallback(async (): Promise<Auth> => {
+    if (authRef.current) return authRef.current;
 
-    const initAuth = async () => {
-      const { getAuth } = await import("../../../firebase.config");
-      const { onAuthStateChanged } = await import("firebase/auth");
-      const auth = await getAuth();
-      authRef.current = auth;
-      unsubscribe = onAuthStateChanged(auth, (user) => {
-        setIsUserSignedIn(Boolean(user));
-      });
-    };
+    if (!authInitPromiseRef.current) {
+      authInitPromiseRef.current = (async () => {
+        const { getAuth } = await import("../../../firebase.config");
+        const auth = await getAuth();
+        authRef.current = auth;
+        return auth;
+      })();
+    }
 
-    initAuth();
-    return () => {
-      unsubscribe?.();
-    };
+    return authInitPromiseRef.current;
   }, []);
 
   // URL params on mount
@@ -263,13 +317,15 @@ export default function MicFinderClient({
 
   const handleEventSave = useCallback(
     async (event: Event) => {
-      if (!isUserSignedIn) {
-        showToast("Please sign in to save events.", "info");
-        return;
-      }
       try {
-        const user = authRef.current?.currentUser;
-        if (!user || !event.id) throw new Error("Invalid state");
+        const auth = await ensureAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+          showToast("Please sign in to save events.", "info");
+          return;
+        }
+        if (!event.id) throw new Error("Invalid state");
 
         const token = await user.getIdToken();
         const response = await fetch("/api/events/save", {
@@ -293,7 +349,7 @@ export default function MicFinderClient({
         showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [isUserSignedIn, sendDataLayerEvent, showToast]
+    [ensureAuth, sendDataLayerEvent, showToast]
   );
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -350,28 +406,26 @@ export default function MicFinderClient({
   const filteredEventsForView = useMemo(() => {
     const dateCheck = new Date(selectedDate);
     dateCheck.setHours(0, 0, 0, 0);
-    const term = debouncedSearchTerm.toLowerCase();
-    const city = selectedCity.toLowerCase();
+    const dateCheckMs = dateCheck.getTime();
+    const selectedDow = selectedDate.getDay();
+
+    const termLower = debouncedSearchTerm.toLowerCase();
+    const cityLower = selectedCity.toLowerCase();
 
     return initialEvents.filter((e) => {
       if (!isTabMatch(e)) return false;
 
-      const matchesCity = !city || e.location.toLowerCase().includes(city);
-      const matchesSearch =
-        !term ||
-        e.name.toLowerCase().includes(term) ||
-        e.location.toLowerCase().includes(term);
+      const idx = getEventIndex(e);
 
-      let matchesDate = false;
-      if (e.isRecurring) {
-        matchesDate = DAY_MAP[e.date] === selectedDate.getDay();
-      } else {
-        const parsedDate = new Date(e.date);
-        if (!isNaN(parsedDate.getTime())) {
-          parsedDate.setHours(0, 0, 0, 0);
-          matchesDate = parsedDate.getTime() === dateCheck.getTime();
-        }
-      }
+      const matchesCity = !cityLower || idx.locationLower.includes(cityLower);
+      const matchesSearch =
+        !termLower ||
+        idx.nameLower.includes(termLower) ||
+        idx.locationLower.includes(termLower);
+
+      const matchesDate = e.isRecurring
+        ? idx.recurringDow === selectedDow
+        : idx.dateMs !== null && idx.dateMs === dateCheckMs;
 
       return matchesCity && matchesDate && matchesSearch;
     });
@@ -381,22 +435,26 @@ export default function MicFinderClient({
     selectedDate,
     debouncedSearchTerm,
     isTabMatch,
+    getEventIndex,
   ]);
 
   const sortedEventsByCity = useMemo(() => {
     let list = initialEvents.filter(isTabMatch);
+
     if (filterCity !== "All Cities") {
-      list = list.filter(
-        (e) => normalizeCityName(e.location.split(",")[1] || "") === filterCity
-      );
+      list = list.filter((e) => getEventIndex(e).normalizedCity === filterCity);
     }
+
     return list.sort((a, b) => {
-      const aClub = a.location.includes("Spokane Comedy Club");
-      const bClub = b.location.includes("Spokane Comedy Club");
-      if (aClub !== bClub) return aClub ? -1 : 1;
+      const aIdx = getEventIndex(a);
+      const bIdx = getEventIndex(b);
+
+      if (aIdx.isSpokaneClub !== bIdx.isSpokaneClub) {
+        return aIdx.isSpokaneClub ? -1 : 1;
+      }
       return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
     });
-  }, [initialEvents, filterCity, isTabMatch]);
+  }, [initialEvents, filterCity, isTabMatch, getEventIndex]);
 
   const rowVirtualizer = useVirtualizer({
     count: sortedEventsByCity.length,
@@ -418,14 +476,6 @@ export default function MicFinderClient({
 
   return (
     <>
-      <div className="mb-4 grid justify-center">
-        <EventForm />
-      </div>
-
-      <p className="mt-2 mb-4 text-center text-sm font-semibold text-stone-400 sm:text-base">
-        Find your next show or night out. Pick a city and date!
-      </p>
-
       <div className="relative z-10 mt-2 grid justify-center gap-3 sm:gap-4">
         <div className="relative w-80">
           <button
@@ -680,8 +730,20 @@ export default function MicFinderClient({
           className="font-heading w-full rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
         >
           {filterCity === "All Cities"
-            ? `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"}`
-            : `All ${selectedTab === "Mics" ? "Mics" : selectedTab === "Festivals" ? "Festivals" : "Arts"} in ${filterCity}`}
+            ? `All ${
+                selectedTab === "Mics"
+                  ? "Mics"
+                  : selectedTab === "Festivals"
+                    ? "Festivals"
+                    : "Arts"
+              }`
+            : `All ${
+                selectedTab === "Mics"
+                  ? "Mics"
+                  : selectedTab === "Festivals"
+                    ? "Festivals"
+                    : "Arts"
+              } in ${filterCity}`}
         </h2>
 
         {sortedEventsByCity.length === 0 ? (

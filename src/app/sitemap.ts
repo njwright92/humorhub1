@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
+import { getServerDb } from "@/app/lib/firebase-admin";
 
 export const revalidate = 86400;
+export const runtime = "nodejs";
 
 const BASE_URL = "https://www.thehumorhub.com";
 
@@ -11,8 +13,6 @@ const STATIC_ROUTES: Array<{
 }> = [
   { path: "", priority: 1.0, changeFrequency: "daily" },
   { path: "/mic-finder", priority: 0.9, changeFrequency: "daily" },
-  { path: "/News", priority: 0.8, changeFrequency: "daily" },
-  { path: "/Profile", priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.5, changeFrequency: "monthly" },
   { path: "/about", priority: 0.7, changeFrequency: "monthly" },
   { path: "/user-agreement", priority: 0.3, changeFrequency: "monthly" },
@@ -21,6 +21,7 @@ const STATIC_ROUTES: Array<{
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+
   const staticRoutes: MetadataRoute.Sitemap = STATIC_ROUTES.map(
     ({ path, priority, changeFrequency }) => ({
       url: `${BASE_URL}${path}`,
@@ -33,18 +34,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cityRoutes: MetadataRoute.Sitemap = [];
 
   try {
-    const { getDb } = await import("../../firebase.config");
-    const { collection, getDocs } = await import("firebase/firestore");
+    const db = getServerDb();
+    const snapshot = await db.collection("cities").get();
 
-    const db = await getDb();
-    const snapshot = await getDocs(collection(db, "cities"));
-
-    cityRoutes = snapshot.docs.map((doc) => ({
-      url: `${BASE_URL}/mic-finder?city=${encodeURIComponent(doc.data().city)}`,
-      lastModified: now,
-      changeFrequency: "daily" as const,
-      priority: 0.85,
-    }));
+    cityRoutes = snapshot.docs
+      .map((doc) => doc.data()?.city as string | undefined)
+      .filter((city): city is string => Boolean(city))
+      .map((city) => ({
+        url: `${BASE_URL}/mic-finder?city=${encodeURIComponent(city)}`,
+        lastModified: now,
+        changeFrequency: "daily" as const,
+        priority: 0.85,
+      }));
   } catch (error) {
     console.error("Sitemap: Failed to fetch cities:", error);
   }

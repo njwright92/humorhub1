@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { fetchMicFinderData } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
+import EventForm from "../components/EventForm";
 
 export const metadata: Metadata = {
   title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
@@ -165,13 +166,13 @@ async function MicFinderContent() {
 
 export default function MicFinderPage() {
   return (
-    <main className="grid min-h-screen justify-items-center p-2 text-center md:ml-20">
+    <main className="grid min-h-screen justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
       <StructuredData />
 
-      <aside className="mb-3 max-w-2xl rounded-2xl border border-red-700 bg-zinc-200 px-2 py-1.5 text-xs text-red-700 shadow-lg sm:px-3 sm:py-2 sm:text-sm">
+      <aside className="max-w-2xl rounded-2xl border border-red-700 bg-zinc-200 p-2 text-xs text-red-700 shadow-lg sm:p-3 sm:text-sm">
         <p>
-          <span aria-hidden="true">📢 </span>Note: Open mic events evolve
-          quickly. See something outdated?{" "}
+          <span aria-hidden="true">📢 </span>
+          Note: Open mic events evolve quickly. See something outdated?{" "}
           <Link
             href="/contact"
             className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
@@ -182,20 +183,25 @@ export default function MicFinderPage() {
         </p>
       </aside>
 
-      <header>
-        <h1 className="my-4 text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl md:text-5xl lg:text-6xl">
+      <header className="space-y-3">
+        <h1 className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl md:text-5xl lg:text-6xl">
           Mic Finder
         </h1>
-        <p className="mb-3 text-lg font-bold text-shadow-md sm:text-xl md:text-2xl lg:text-3xl">
+        <p className="text-lg font-bold text-shadow-md sm:text-xl md:text-2xl lg:text-3xl">
           Discover Mics and Festivals Near You!
         </p>
       </header>
 
-      <p className="mb-4 text-sm text-stone-300 md:text-base lg:text-lg">
+      <p className="text-sm text-stone-300 md:text-base lg:text-lg">
         Find a Mic tonight or list yours, built by comics for comics. Use Mic
         Finder to connect with your community!
       </p>
 
+      <EventForm />
+
+      <p className="mb-2 text-sm font-semibold text-stone-400 md:text-base">
+        Find your next show or night out. Pick a city and date!
+      </p>
       <Suspense fallback={<MicFinderSkeleton />}>
         <MicFinderContent />
       </Suspense>

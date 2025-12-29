@@ -58,23 +58,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={comicNeue.variable}>
-      <head>
-        <link
-          rel="preconnect"
-          href="https://humorhub-73ff9.firebaseapp.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://apis.google.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://firestore.googleapis.com"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body className="bg-stone-900 text-zinc-200 antialiased">
         <ToastProvider>
           <Header />
