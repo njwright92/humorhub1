@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     const dataToSave: Record<string, unknown> = {
       id: eventData.id,
-      userId: uid, // ✅ Make sure this is "userId" consistently
+      userId: uid,
       savedAt: new Date().toISOString(),
     };
 
