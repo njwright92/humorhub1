@@ -17,6 +17,7 @@ export default function Header() {
             height={60}
             className="rounded-full shadow-lg group-hover:scale-110 group-hover:rotate-3"
             priority
+            quality={70}
           />
         </Link>
         <h1 className="font-heading text-center text-4xl font-bold tracking-wide whitespace-nowrap text-stone-900">

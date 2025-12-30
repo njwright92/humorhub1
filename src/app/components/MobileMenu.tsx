@@ -123,6 +123,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
           height={70}
           className="rounded-full shadow-lg"
           priority
+          quality={70}
         />
       </Link>
 

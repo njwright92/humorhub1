@@ -63,6 +63,7 @@ export default function Home() {
                 className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
                 width={100}
                 height={100}
+                quality={70}
               />
             </Link>
           </figure>
@@ -100,7 +101,7 @@ export default function Home() {
                 className="mb-4 h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
                 width={100}
                 height={100}
-                quality={65}
+                quality={70}
               />
             </NewsButton>
             <NewsButton />

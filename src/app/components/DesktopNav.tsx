@@ -142,6 +142,7 @@ export default function DesktopNav() {
             height={80}
             className="my-2 rounded-full shadow-lg"
             priority
+            quality={70}
           />
         </Link>
 
