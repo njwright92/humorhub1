@@ -8,7 +8,7 @@ const DesktopNav = dynamic(() => import("./DesktopNav"));
 export default function Header() {
   return (
     <>
-      <header className="sticky top-0 z-50 grid h-20 grid-cols-[auto_1fr_auto] items-center bg-amber-700 p-2 sm:hidden">
+      <header className="sticky top-0 z-50 grid h-18 grid-cols-[auto_1fr_auto] items-center bg-amber-700 p-2 sm:hidden">
         <Link href="/" aria-label="Humor Hub Home">
           <Image
             src="/logo.webp"

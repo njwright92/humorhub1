@@ -49,12 +49,17 @@ export default function Home() {
           Mic Finder!
         </h2>
         <div className="grid gap-6 text-center md:grid-cols-2 md:text-left">
-          <p className="leading-relaxed md:text-lg">
-            Looking for your next Mic?
-            <br />
-            MicFinder connects comics and all artists with open mics worldwide!
-            Explore 1,000s of listings and get on stage!
-          </p>
+          <div>
+            <h3 className="font-heading mb-1 text-lg md:col-start-2 md:text-xl">
+              Looking for your next Mic?
+            </h3>
+            <p className="text-sm leading-relaxed md:text-base">
+              MicFinder connects comics, musicians and poets with open mics
+              worldwide!
+              <br />
+              Explore 1,000s of listings and get on stage!
+            </p>
+          </div>
           <figure className="row-span-3 grid place-items-center md:justify-items-end">
             <Link href="/mic-finder" className="group">
               <Image
@@ -86,13 +91,17 @@ export default function Home() {
         >
           Hub News!
         </h2>
-        <div className="grid gap-6 text-center md:grid-cols-2 md:text-right">
-          <p className="leading-relaxed md:col-start-2 md:text-lg">
-            Your Source for Fresh Headlines!
-            <br />
-            Looking for something topical? Check out the Hub News for the latest
-            updates!
-          </p>
+        <div className="grid gap-6 text-center md:mr-4 md:grid-cols-2 md:text-right">
+          <div>
+            <h3 className="font-heading mb-1 text-lg md:col-start-2 md:text-xl">
+              Your Source for Fresh Headlines!
+            </h3>
+            <p className="text-sm leading-relaxed md:text-base">
+              Looking for something topical?
+              <br />
+              Check out the Hub News for the latest updates!
+            </p>
+          </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
             <NewsButton className="group border-0 bg-transparent shadow-lg">
               <Image
