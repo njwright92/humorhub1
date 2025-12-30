@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerDb, verifyIdToken } from "@/app/lib/firebase-admin";
 
-// Define the shape of a saved event from Firestore
+export const runtime = "nodejs";
+
 interface SavedEventData {
   id: string;
   name?: string;
@@ -21,7 +22,6 @@ interface SavedEventData {
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization");
-
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { success: false, error: "Missing authorization header" },
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.slice(7);
     const { valid, uid } = await verifyIdToken(token);
 
     if (!valid || !uid) {
@@ -44,9 +44,22 @@ export async function GET(request: NextRequest) {
     const snapshot = await db
       .collection("savedEvents")
       .where("userId", "==", uid)
+      .select(
+        "name",
+        "location",
+        "date",
+        "lat",
+        "lng",
+        "details",
+        "isRecurring",
+        "festival",
+        "isMusic",
+        "userId",
+        "savedAt",
+        "googleTimestamp"
+      )
       .get();
 
-    // Map with proper typing
     const events: SavedEventData[] = snapshot.docs.map((doc) => {
       const data = doc.data();
       return {
@@ -66,19 +79,13 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Sort by savedAt (newest first)
-    events.sort((a, b) => {
-      const dateA = a.savedAt ? new Date(a.savedAt).getTime() : 0;
-      const dateB = b.savedAt ? new Date(b.savedAt).getTime() : 0;
-      return dateB - dateA;
-    });
-
     return NextResponse.json({ success: true, events });
   } catch (error) {
     console.error("❌ [API] Fetch saved events error:", error);
 
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
+
     return NextResponse.json(
       {
         success: false,

@@ -20,7 +20,7 @@ export default function ContactPage() {
   return (
     <main className="grid min-h-screen content-start gap-6 p-2 pt-12 text-center md:ml-20">
       <header className="grid gap-2">
-        <h1 className="font-heading text-shadowmd text-3xl font-bold tracking-wide text-amber-700 sm:text-4xl lg:text-5xl">
+        <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl">
           Contact Us
         </h1>
         <p className="text-sm text-stone-300 md:text-base">

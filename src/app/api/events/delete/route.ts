@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerDb, verifyIdToken } from "@/app/lib/firebase-admin";
 import type { ApiResponse } from "@/app/lib/types";
 
+export const runtime = "nodejs";
+
 function json<T>(body: ApiResponse<T>, status = 200) {
   return NextResponse.json(body, { status });
 }
@@ -21,20 +23,23 @@ export async function DELETE(request: NextRequest) {
       return json({ success: false, error: "Invalid or expired token" }, 401);
     }
 
-    const { eventId } = await request.json();
+    const body = (await request.json()) as { eventId?: string };
+    const eventId = body?.eventId;
+
     if (!eventId) {
       return json({ success: false, error: "Event ID is required" }, 400);
     }
 
     const db = getServerDb();
     const eventRef = db.collection("savedEvents").doc(eventId);
-    const eventDoc = await eventRef.get();
 
+    const eventDoc = await eventRef.get();
     if (!eventDoc.exists) {
       return json({ success: false, error: "Event not found" }, 404);
     }
 
-    if (eventDoc.data()?.userId !== uid) {
+    const data = eventDoc.data();
+    if (data?.userId !== uid) {
       return json(
         { success: false, error: "Unauthorized to delete this event" },
         403
@@ -42,7 +47,6 @@ export async function DELETE(request: NextRequest) {
     }
 
     await eventRef.delete();
-
     return json({ success: true });
   } catch (error) {
     console.error("Delete event error:", error);

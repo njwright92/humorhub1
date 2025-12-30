@@ -638,7 +638,7 @@ export default function MicFinderClient({
 
         {!selectedCity ? (
           <p className="py-4 text-center text-base sm:text-lg">
-            Please select a city above to see events.
+            Please select a city to see events.
           </p>
         ) : filteredEventsForView.length > 0 ? (
           <div role="list" aria-label={resultCountText} className="grid gap-4">

@@ -7,7 +7,10 @@ import type {
   ApiResponse,
 } from "@/app/lib/types";
 
+export const runtime = "nodejs";
+
 const GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 interface GeocodeResponse {
   status: string;
@@ -16,14 +19,17 @@ interface GeocodeResponse {
 }
 
 async function geocodeAddress(address: string): Promise<LatLng> {
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-  if (!apiKey) throw new Error("Google Maps API key not configured");
+  if (!GOOGLE_MAPS_API_KEY)
+    throw new Error("Google Maps API key not configured");
 
   const url = new URL(GEOCODE_API_URL);
-  url.searchParams.set("key", apiKey);
+  url.searchParams.set("key", GOOGLE_MAPS_API_KEY);
   url.searchParams.set("address", address);
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" },
+  });
+
   if (!response.ok) throw new Error(`Geocoding failed (${response.status})`);
 
   const data: GeocodeResponse = await response.json();
@@ -41,12 +47,10 @@ function isValidSubmission(data: unknown): data is EventSubmission {
     unknown
   >;
 
-  // Required text fields must be non-empty strings
   const hasRequiredStrings = [name, location, details].every(
     (field) => typeof field === "string" && field.trim() !== ""
   );
 
-  // Must have either a valid date or timestamp
   const hasValidDate =
     typeof date === "string" || typeof timestamp === "string";
 
@@ -59,7 +63,8 @@ function json<T>(body: ApiResponse<T>, status = 200) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { eventData } = await request.json();
+    const body = (await request.json()) as { eventData?: unknown };
+    const eventData = body.eventData;
 
     if (!isValidSubmission(eventData)) {
       return json(
@@ -84,7 +89,8 @@ export async function POST(request: NextRequest) {
       submissionDate: new Date().toISOString(),
     };
 
-    await getServerDb().collection(collection).add(storedEvent);
+    const db = getServerDb();
+    await db.collection(collection).add(storedEvent);
 
     return json({ success: true });
   } catch (error) {

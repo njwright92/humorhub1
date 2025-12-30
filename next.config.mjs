@@ -14,7 +14,6 @@ const nextConfig = {
       "@vis.gl/react-google-maps",
       "@emailjs/browser",
     ],
-    cssChunking: true,
   },
 
   images: {

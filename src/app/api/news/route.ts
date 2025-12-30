@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import type { ApiResponse } from "@/app/lib/types";
 
 const NEWS_API_TOKEN = process.env.NEWS_API;
+
 const ENDPOINTS = {
   top: "https://api.thenewsapi.com/v1/news/top",
   all: "https://api.thenewsapi.com/v1/news/all",
 } as const;
+
+const CACHE_HEADERS = { "Cache-Control": "max-age=300" } as const;
 
 interface NewsArticle {
   title: string;
@@ -36,11 +39,13 @@ export async function GET(request: NextRequest) {
     return json({ success: false, error: "Server API token missing" }, 500);
   }
 
-  const { searchParams } = new URL(request.url);
+  // Slightly cheaper than new URL(request.url)
+  const searchParams = request.nextUrl.searchParams;
   const category = searchParams.get("category") ?? "all_news";
   const subcategory = searchParams.get("subcategory") ?? "general";
 
   const endpoint = category === "top_stories" ? ENDPOINTS.top : ENDPOINTS.all;
+
   const params = new URLSearchParams({
     api_token: NEWS_API_TOKEN,
     locale: "us,ca",
@@ -50,8 +55,13 @@ export async function GET(request: NextRequest) {
   });
 
   try {
-    const response = await fetch(`${endpoint}?${params}`, {
+    // Avoid string concat; same final URL
+    const url = new URL(endpoint);
+    url.search = params.toString();
+
+    const response = await fetch(url, {
       next: { revalidate: 30 },
+      headers: { Accept: "application/json" },
     });
 
     if (!response.ok) {
@@ -61,9 +71,7 @@ export async function GET(request: NextRequest) {
     const { data = [] }: NewsApiResponse = await response.json();
     const articles = data.filter(hasRequiredFields);
 
-    return json({ success: true, data: articles }, 200, {
-      "Cache-Control": "max-age=300",
-    });
+    return json({ success: true, data: articles }, 200, CACHE_HEADERS);
   } catch (error) {
     console.error("News fetch failed:", error);
     return json({ success: false, error: "Failed to fetch news" }, 500);

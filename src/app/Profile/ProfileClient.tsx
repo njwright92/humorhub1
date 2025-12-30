@@ -400,59 +400,72 @@ export default function ProfileClient() {
           </div>
         ) : savedEvents.length > 0 ? (
           <div role="list" className="grid gap-4">
-            {savedEvents.map((event) => (
-              <article
-                key={event.id}
-                role="listitem"
-                className="group grid gap-4 rounded-2xl border border-stone-600 p-4 text-left shadow-lg hover:border-amber-700 sm:grid-cols-[1fr_auto]"
-              >
-                <div>
-                  <h3 className="font-heading mb-1 inline font-bold text-amber-700">
-                    {event.name}
-                  </h3>
-                  {event.isFestival && (
-                    <span className="ml-2 inline-block rounded bg-purple-900 px-2 py-0.5 align-middle text-xs font-bold text-purple-200 uppercase">
-                      Festival
-                    </span>
-                  )}
-                  {event.isMusic && (
-                    <span className="ml-2 inline-block rounded bg-blue-900 px-2 py-0.5 align-middle text-xs font-bold text-blue-200 uppercase">
-                      Music
-                    </span>
-                  )}
-                  <p className="mt-1 text-sm">
-                    <span aria-hidden="true">📍</span> {event.location}
-                  </p>
-                  <p className="mb-3 text-xs">
-                    <span aria-hidden="true">📅</span> {event.date}
-                    {event.isRecurring && " (Recurring)"}
-                  </p>
-                  {event.details && (
-                    <div
-                      className="line-clamp-2 text-sm group-hover:line-clamp-none"
-                      dangerouslySetInnerHTML={{ __html: event.details }}
-                    />
-                  )}
-                </div>
+            {savedEvents.map((event) => {
+              const isRemoving = isDeleting === event.id;
+              const city = event.location.split(",")[1]?.trim() || "";
+              const mapHref = `/mic-finder?city=${encodeURIComponent(city)}`;
 
-                <div className="grid auto-cols-auto grid-flow-col items-end justify-between gap-2 sm:grid-flow-row sm:justify-items-end">
-                  <Link
-                    href={`/mic-finder?city=${encodeURIComponent(event.location.split(",")[1]?.trim() || "")}`}
-                    className="text-sm underline hover:text-amber-700"
-                  >
-                    Find on Map
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteEvent(event.id, event.name)}
-                    disabled={isDeleting === event.id}
-                    className="rounded-2xl border border-red-500 px-3 py-1 text-sm font-semibold text-red-400 transition hover:bg-red-900/50 hover:text-red-100 disabled:opacity-50"
-                  >
-                    {isDeleting === event.id ? "Removing..." : "Remove"}
-                  </button>
-                </div>
-              </article>
-            ))}
+              return (
+                <article
+                  key={event.id}
+                  role="listitem"
+                  className="group grid gap-4 rounded-2xl border border-stone-600 p-4 text-left shadow-lg hover:border-amber-700 sm:grid-cols-[1fr_auto]"
+                >
+                  <div>
+                    <h3 className="font-heading mb-1 inline font-bold text-amber-700">
+                      {event.name}
+                    </h3>
+
+                    {event.isFestival && (
+                      <span className="ml-2 inline-block rounded bg-purple-900 px-2 py-0.5 align-middle text-xs font-bold text-purple-200 uppercase">
+                        Festival
+                      </span>
+                    )}
+
+                    {event.isMusic && (
+                      <span className="ml-2 inline-block rounded bg-blue-900 px-2 py-0.5 align-middle text-xs font-bold text-blue-200 uppercase">
+                        Music
+                      </span>
+                    )}
+
+                    <p className="mt-1 text-sm">
+                      <span aria-hidden="true">📍</span> {event.location}
+                    </p>
+
+                    <p className="mb-3 text-xs">
+                      <span aria-hidden="true">📅</span> {event.date}
+                      {event.isRecurring && " (Recurring)"}
+                    </p>
+
+                    {event.details && (
+                      <div
+                        className="line-clamp-2 text-sm group-hover:line-clamp-none"
+                        dangerouslySetInnerHTML={{ __html: event.details }}
+                      />
+                    )}
+                  </div>
+
+                  <div className="grid auto-cols-auto grid-flow-col items-end justify-between gap-2 sm:grid-flow-row sm:justify-items-end">
+                    <Link
+                      prefetch={false}
+                      href={mapHref}
+                      className="text-sm underline hover:text-amber-700"
+                    >
+                      Find on Map
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteEvent(event.id, event.name)}
+                      disabled={isRemoving}
+                      className="rounded-2xl border border-red-500 px-3 py-1 text-sm font-semibold text-red-400 transition hover:bg-red-900/50 hover:text-red-100 disabled:opacity-50"
+                    >
+                      {isRemoving ? "Removing..." : "Remove"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
           <div className="grid h-64 place-content-center place-items-center gap-1 rounded-2xl border-2 border-dashed border-stone-600 text-center text-stone-400">
