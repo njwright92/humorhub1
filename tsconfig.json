@@ -26,13 +26,10 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "src/app/api/route.ts",
-    "src/app/utils/geocode.ts",
-    "src/app/components/GoogleMap.tsx"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

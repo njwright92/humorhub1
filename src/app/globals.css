@@ -1,8 +1,6 @@
 @import "tailwindcss";
 
-html {
-  scrollbar-gutter: auto;
-}
+@source "./**/*.{ts,tsx}";
 
 @theme {
   --color-zinc-200: #f0efeb;
@@ -16,31 +14,28 @@ html {
 
 @layer base {
   input[type="date"] {
-    appearance: none; /* Removes native iOS styling */
-    -webkit-appearance: none; /* Safari specific */
-    min-height: 46px; /* FORCE height to match your text inputs */
-    display: block; /* Prevents collapsing */
-    width: 100%; /* Full width */
-    background-color: white; /* Ensure background matches */
+    appearance: none;
+    -webkit-appearance: none;
+    min-height: 46px;
+    display: block;
+    width: 100%;
+    background-color: white;
   }
 
-  /* Optional: This trick makes "mm/dd/yyyy" appear on iOS when empty */
   input[type="date"]:invalid::-webkit-datetime-edit {
-    color: #9ca3af; /* Matches text-stone-400 placeholder */
+    color: #9ca3af;
   }
-}
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  font-weight: 700;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
 
-@layer base {
   select,
   select:required:invalid {
     color: var(--color-zinc-200);

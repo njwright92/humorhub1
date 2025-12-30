@@ -411,12 +411,12 @@ export default function ProfileClient() {
                     {event.name}
                   </h3>
                   {event.isFestival && (
-                    <span className="ml-2 inline-block rounded bg-purple-900 px-2 py-0.5 align-middle text-[10px] font-bold text-purple-200 uppercase">
+                    <span className="ml-2 inline-block rounded bg-purple-900 px-2 py-0.5 align-middle text-xs font-bold text-purple-200 uppercase">
                       Festival
                     </span>
                   )}
                   {event.isMusic && (
-                    <span className="ml-2 inline-block rounded bg-blue-900 px-2 py-0.5 align-middle text-[10px] font-bold text-blue-200 uppercase">
+                    <span className="ml-2 inline-block rounded bg-blue-900 px-2 py-0.5 align-middle text-xs font-bold text-blue-200 uppercase">
                       Music
                     </span>
                   )}

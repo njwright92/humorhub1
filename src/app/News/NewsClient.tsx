@@ -217,10 +217,7 @@ export default function NewsClient() {
         </fieldset>
       </form>
 
-      <section
-        aria-labelledby="results-heading"
-        className="min-h-[60vh] w-full"
-      >
+      <section aria-labelledby="results-heading">
         <h2 id="results-heading" className="sr-only">
           News Articles
         </h2>

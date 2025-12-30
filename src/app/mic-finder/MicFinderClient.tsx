@@ -619,7 +619,7 @@ export default function MicFinderClient({
 
       <section
         aria-labelledby="results-heading"
-        className="mt-6 mb-10 w-full rounded-2xl shadow-lg sm:mt-10"
+        className="my-8 w-full rounded-2xl shadow-lg"
       >
         <h2
           id="results-heading"
@@ -660,7 +660,7 @@ export default function MicFinderClient({
 
       <section
         aria-labelledby="all-events-heading"
-        className="relative z-10 my-8 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg sm:my-10"
+        className="relative z-10 my-8 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg"
       >
         <div className="relative w-80">
           <button
@@ -753,7 +753,7 @@ export default function MicFinderClient({
         ) : (
           <div
             ref={parentRef}
-            className="scrollbar-thin scrollbar-thumb-amber-700 scrollbar-track-stone-800 h-96 w-full overflow-y-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
+            className="scrollbar-thin scrollbar-thumb-amber-700 scrollbar-track-stone-800 h-110 w-full overflow-y-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
             role="feed"
             aria-label={`${sortedEventsByCity.length} events`}
           >
