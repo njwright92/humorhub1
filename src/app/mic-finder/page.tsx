@@ -184,7 +184,7 @@ export default function MicFinderPage() {
       </aside>
 
       <header className="space-y-3">
-        <h1 className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl">
+        <h1 className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl">
           Mic Finder
         </h1>
         <p className="text-lg font-bold text-shadow-md sm:text-xl md:text-2xl lg:text-3xl">

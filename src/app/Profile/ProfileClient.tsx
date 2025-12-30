@@ -223,7 +223,7 @@ export default function ProfileClient() {
         <span className="mb-4 block text-6xl" aria-hidden="true">
           🔐
         </span>
-        <h2 className="font-heading mb-4 text-2xl font-bold text-amber-700">
+        <h2 className="mb-4 text-2xl font-bold text-amber-700">
           Sign In Required
         </h2>
         <p className="mb-6 text-stone-400">
@@ -247,7 +247,7 @@ export default function ProfileClient() {
 
           <div className="flex flex-col items-center">
             {!isEditing && (
-              <p className="font-heading mb-4 text-center text-2xl font-bold">
+              <p className="mb-4 text-center text-2xl font-bold">
                 {name || "Anonymous Comic"}
               </p>
             )}
@@ -374,7 +374,7 @@ export default function ProfileClient() {
       </aside>
 
       <section className="min-h-125 rounded-2xl border border-stone-600 bg-stone-800/80 p-4 shadow-lg lg:col-span-2">
-        <h2 className="font-heading mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start">
+        <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start">
           <span aria-hidden="true">🎟️</span>
           Saved Events
           {!isEventsLoading && (
@@ -412,7 +412,7 @@ export default function ProfileClient() {
                   className="group grid gap-4 rounded-2xl border border-stone-600 p-4 text-left shadow-lg hover:border-amber-700 sm:grid-cols-[1fr_auto]"
                 >
                   <div>
-                    <h3 className="font-heading mb-1 inline font-bold text-amber-700">
+                    <h3 className="mb-1 inline font-bold text-amber-700">
                       {event.name}
                     </h3>
 
@@ -472,9 +472,7 @@ export default function ProfileClient() {
             <span className="mb-2 text-4xl" aria-hidden="true">
               📭
             </span>
-            <p className="font-heading text-lg font-semibold">
-              No events saved yet
-            </p>
+            <p className="text-lg font-semibold">No events saved yet</p>
             <p className="mb-4">Go find some mics to hit!</p>
             <Link
               href="/mic-finder"

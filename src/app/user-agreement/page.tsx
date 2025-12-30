@@ -13,27 +13,23 @@ export const metadata: Metadata = {
 export default function UserAgreementPage() {
   return (
     <main className="grid min-h-screen content-start gap-8 p-2 pt-12 md:ml-20">
-      <h1 className="font-heading text-center text-3xl font-bold tracking-wide text-amber-700 text-shadow-md sm:text-4xl">
+      <h1 className="text-center text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl">
         User Agreement
       </h1>
-      <section className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-300 bg-zinc-200 p-6 text-left leading-relaxed text-stone-900 shadow-lg">
+      <section className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-300 bg-zinc-200 p-4 text-left leading-relaxed text-stone-900 shadow-lg">
         <p className="border-b border-zinc-300 pb-4 text-sm text-zinc-600">
-          <strong>Last Updated:</strong> November 2025
+          <strong>Last Updated:</strong> December 2025
         </p>
         <div className="grid gap-8">
           <article className="grid gap-2">
-            <h2 className="font-heading text-xl font-bold">
-              1. Acceptance of Terms
-            </h2>
+            <h2 className="text-xl font-bold">1. Acceptance of Terms</h2>
             <p>
               By using Humor Hub, you agree to these Terms of Use. If you do not
               agree, please discontinue use of the platform immediately.
             </p>
           </article>
           <article className="grid gap-2">
-            <h2 className="font-heading text-xl font-bold">
-              2. Open Source & License
-            </h2>
+            <h2 className="text-xl font-bold">2. Open Source & License</h2>
             <p>
               This project is provided under the <strong>MIT License</strong>.
               You are free to use, copy, and modify the software, provided that:
@@ -46,9 +42,7 @@ export default function UserAgreementPage() {
             </ul>
           </article>
           <article className="grid gap-2">
-            <h2 className="font-heading text-xl font-bold">
-              3. User Responsibilities
-            </h2>
+            <h2 className="text-xl font-bold">3. User Responsibilities</h2>
             <p>
               You are responsible for the content you upload (events, profiles,
               images). You agree not to use the platform for unlawful, harmful,
@@ -57,9 +51,7 @@ export default function UserAgreementPage() {
             </p>
           </article>
           <article className="grid gap-2">
-            <h2 className="font-heading text-xl font-bold">
-              4. Disclaimer & Liability
-            </h2>
+            <h2 className="text-xl font-bold">4. Disclaimer & Liability</h2>
             <p>
               Humor Hub is provided without warranties of any kind. The
               operators and contributors are not liable for any damages arising
@@ -67,7 +59,7 @@ export default function UserAgreementPage() {
             </p>
           </article>
           <article className="grid gap-2">
-            <h2 className="font-heading text-xl font-bold">5. Contact</h2>
+            <h2 className="text-xl font-bold">5. Contact</h2>
             <p>
               Questions? Contact us at{" "}
               <Link

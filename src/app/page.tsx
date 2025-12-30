@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="grid min-h-screen content-start gap-8 p-2 pt-20 text-center md:ml-20">
-      <h1 className="font-heading hidden text-5xl font-bold tracking-wide text-shadow-md md:block md:text-6xl lg:text-7xl">
+      <h1 className="hidden text-5xl font-bold tracking-wide text-shadow-md md:block md:text-6xl lg:text-7xl">
         Humor Hub!
       </h1>
       <section
@@ -44,13 +44,13 @@ export default function Home() {
       >
         <h2
           id="micfinder-heading"
-          className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl"
+          className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl"
         >
           Mic Finder!
         </h2>
         <div className="grid gap-6 text-center md:grid-cols-2 md:text-left">
           <div>
-            <h3 className="font-heading mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Looking for your next Mic?
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
@@ -87,13 +87,13 @@ export default function Home() {
       >
         <h2
           id="news-heading"
-          className="font-heading text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl"
+          className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl"
         >
           Hub News!
         </h2>
         <div className="grid gap-6 text-center md:mr-4 md:grid-cols-2 md:text-right">
           <div>
-            <h3 className="font-heading mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Your Source for Fresh Headlines!
             </h3>
             <p className="text-sm leading-relaxed md:text-base">

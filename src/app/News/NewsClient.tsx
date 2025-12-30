@@ -72,7 +72,7 @@ function ArticleCard({
         </span>
       </figure>
       <div className="grid grid-rows-[auto_1fr_auto] gap-3 p-5">
-        <h2 className="font-heading line-clamp-3 text-lg leading-tight font-bold transition-colors group-hover:text-amber-700">
+        <h2 className="line-clamp-3 text-lg leading-tight font-bold transition-colors group-hover:text-amber-700">
           {article.title}
         </h2>
         <p className="line-clamp-3 self-start text-sm text-stone-400">
@@ -242,7 +242,7 @@ export default function NewsClient() {
             ))}
           </ul>
         ) : (
-          <p className="font-heading py-20 text-center text-xl text-stone-500">
+          <p className="py-20 text-center text-xl text-stone-500">
             No articles found for this category.
           </p>
         )}

@@ -5,7 +5,7 @@ import ScrollToTop from "./ScrollToTop";
 const linkClass =
   "transition-colors hover:text-amber-700 hover:underline md:text-lg";
 const headingClass =
-  "font-heading mb-4 text-lg font-extrabold uppercase tracking-wider whitespace-nowrap text-amber-600 md:mb-6 md:text-xl";
+  " mb-4 text-lg font-extrabold uppercase tracking-wider whitespace-nowrap text-amber-600 md:mb-6 md:text-xl";
 
 const SOCIALS = [
   { href: "https://twitter.com/naterbug321", label: "X (Twitter)" },
@@ -26,7 +26,7 @@ export default function Footer() {
         </h2>
 
         <header className="grid justify-items-center gap-2">
-          <h3 className="font-heading text-center text-2xl font-extrabold tracking-wide text-shadow-md md:text-4xl">
+          <h3 className="text-center text-2xl font-extrabold tracking-wide text-shadow-md md:text-4xl">
             Humor Hub
           </h3>
           <p className="max-w-2xl text-center text-stone-300 md:text-lg">

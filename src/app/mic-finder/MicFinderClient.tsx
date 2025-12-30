@@ -623,7 +623,7 @@ export default function MicFinderClient({
       >
         <h2
           id="results-heading"
-          className="font-heading mb-4 rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:mb-6 sm:text-3xl"
+          className="mb-4 rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:mb-6 sm:text-3xl"
         >
           {selectedTab === "Mics"
             ? "Comedy Mics"
@@ -727,7 +727,7 @@ export default function MicFinderClient({
 
         <h2
           id="all-events-heading"
-          className="font-heading w-full rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
+          className="w-full rounded-2xl border-b-4 border-amber-700 pb-2 text-center text-2xl shadow-lg sm:text-3xl"
         >
           {filterCity === "All Cities"
             ? `All ${

@@ -20,7 +20,7 @@ export default function Header() {
             quality={70}
           />
         </Link>
-        <h1 className="font-heading text-center text-4xl font-bold tracking-wide whitespace-nowrap text-stone-900">
+        <h1 className="text-center text-4xl font-bold tracking-wide whitespace-nowrap text-stone-900">
           Humor Hub!
         </h1>
         <MobileNav />
