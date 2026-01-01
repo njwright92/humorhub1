@@ -75,7 +75,6 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-// Moved outside component - static label lookup
 const TAB_LABELS: Record<TabId, string> = {
   Mics: "Comedy Mics",
   Festivals: "Festivals/Competitions",
@@ -117,7 +116,7 @@ const EventCard = memo(function EventCard({
       <button
         type="button"
         onClick={() => onSave(event)}
-        className="my-2 rounded-2xl bg-amber-700 px-3 py-1.5 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 sm:px-2 sm:py-1 sm:text-lg"
+        className="my-2 rounded-2xl bg-amber-700 px-3 py-1.5 font-bold text-white shadow-lg hover:scale-105"
         aria-label={`Save ${event.name}`}
       >
         Save Event
@@ -339,10 +338,8 @@ export default function MicFinderClient({
     setIsMapVisible((prev) => !prev);
   }, [hasMapInit]);
 
-  // Memoize cityLower once - used by multiple filters
   const cityLower = useMemo(() => selectedCity.toLowerCase(), [selectedCity]);
 
-  // Memoize date-derived values together
   const { selectedDow, dateCheckMs, dayOfWeek, formattedDate } = useMemo(() => {
     const dow = selectedDate.getDay();
     const dateCheck = new Date(selectedDate);
@@ -359,7 +356,6 @@ export default function MicFinderClient({
     };
   }, [selectedDate]);
 
-  // Simple lookup - no need for useMemo
   const tabLabel = TAB_LABELS[selectedTab];
 
   const dropdownCities = useMemo(() => {
@@ -450,7 +446,6 @@ export default function MicFinderClient({
 
   return (
     <>
-      {/* City + Date Selection */}
       <div className="relative z-20 mt-2 grid justify-center gap-3 sm:flex sm:gap-4">
         <div className="relative w-80 sm:w-64">
           <button
@@ -525,12 +520,10 @@ export default function MicFinderClient({
           />
         </div>
       </div>
-
-      {/* Tabs */}
       <nav
         aria-label="Event type filter"
         role="tablist"
-        className="mt-4 grid auto-cols-auto grid-flow-col justify-center gap-2"
+        className="my-6 grid auto-cols-auto grid-flow-col justify-center gap-2"
       >
         {TABS.map((tab) => (
           <button
@@ -549,8 +542,6 @@ export default function MicFinderClient({
           </button>
         ))}
       </nav>
-
-      {/* Recurring Events */}
       <section
         aria-labelledby="recurring-heading"
         className="my-6 w-full rounded-2xl shadow-lg"
@@ -584,8 +575,6 @@ export default function MicFinderClient({
           </p>
         )}
       </section>
-
-      {/* One-Time Events */}
       <section
         aria-labelledby="onetime-heading"
         className="my-6 w-full rounded-2xl shadow-lg"
@@ -619,7 +608,6 @@ export default function MicFinderClient({
           </p>
         )}
       </section>
-
       {/* Map */}
       <section
         aria-label="Event Map"
@@ -657,7 +645,6 @@ export default function MicFinderClient({
         )}
       </section>
 
-      {/* All Events */}
       <section
         aria-labelledby="all-events-heading"
         className="relative z-10 my-6 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg"
