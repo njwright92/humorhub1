@@ -47,7 +47,7 @@ function ArticleCard({
 
   return (
     <article className="group grid h-full grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-lg hover:shadow-amber-900/20">
-      <figure className="relative h-48 w-full overflow-hidden">
+      <figure className="relative h-48 w-full">
         {article.image_url && !imgError ? (
           <Image
             src={article.image_url}

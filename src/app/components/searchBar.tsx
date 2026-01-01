@@ -316,7 +316,7 @@ export default function SearchBar({
               id={LISTBOX_ID}
               role="listbox"
               aria-label="Search suggestions"
-              className="grid max-h-60 divide-y divide-stone-300 overflow-y-auto border-t border-stone-300"
+              className="grid max-h-60 divide-y divide-stone-300 overflow-auto border-t border-stone-300"
             >
               {suggestions.map((sug, idx) => (
                 <li
