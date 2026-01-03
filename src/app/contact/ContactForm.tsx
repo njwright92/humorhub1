@@ -1,7 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "../components/ToastContext";
+
+interface FormState {
+  name: string;
+  email: string;
+  message: string;
+}
+
+const INITIAL_FORM_STATE: FormState = {
+  name: "",
+  email: "",
+  message: "",
+};
 
 const inputClass =
   "w-full rounded-2xl border-2 border-stone-500 px-4 py-3 shadow-lg placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
@@ -9,50 +21,50 @@ const labelClass = "mb-2 mt-2 text-xs uppercase md:text-sm";
 
 export default function ContactForm() {
   const { showToast } = useToast();
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formState, setFormState] = useState<FormState>(INITIAL_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormState((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormState((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (isSubmitting) return;
+      setIsSubmitting(true);
 
-    try {
-      const emailjs = await import("@emailjs/browser");
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
-        {
-          name: formState.name,
-          email: formState.email,
-          message: formState.message,
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      );
-      showToast("Message sent! We'll get back to you soon.", "success");
-      setFormState({ name: "", email: "", message: "" });
-    } catch {
-      showToast("Something went wrong. Please try again.", "error");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      try {
+        const emailjs = (await import("@emailjs/browser")).default;
+        await emailjs.send(
+          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
+          {
+            name: formState.name,
+            email: formState.email,
+            message: formState.message,
+          },
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        );
+        showToast("Message sent! We'll get back to you soon.", "success");
+        setFormState(INITIAL_FORM_STATE);
+      } catch {
+        showToast("Something went wrong. Please try again.", "error");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [formState, isSubmitting, showToast]
+  );
 
   return (
     <section
       aria-labelledby="contact-form-heading"
-      className="animate-slide-in mx-auto w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-2 shadow-lg shadow-amber-700/20 backdrop-blur-md sm:p-4 md:p-6"
+      className="animate-slide-in mx-auto w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800 p-2 shadow-lg backdrop-blur-md md:p-4 lg:p-6"
     >
       <h2 id="contact-form-heading" className="sr-only">
         Contact Form

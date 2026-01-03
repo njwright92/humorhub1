@@ -1,11 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
-import type {
-  LatLng,
-  EventSubmission,
-  StoredEvent,
-  ApiResponse,
-} from "@/app/lib/types";
+import { jsonResponse } from "@/app/lib/auth-helpers";
+import type { LatLng, EventSubmission, StoredEvent } from "@/app/lib/types";
 
 export const runtime = "nodejs";
 
@@ -57,17 +53,13 @@ function isValidSubmission(data: unknown): data is EventSubmission {
   return hasRequiredStrings && hasValidDate;
 }
 
-function json<T>(body: ApiResponse<T>, status = 200) {
-  return NextResponse.json(body, { status });
-}
-
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { eventData?: unknown };
     const eventData = body.eventData;
 
     if (!isValidSubmission(eventData)) {
-      return json(
+      return jsonResponse(
         { success: false, error: "Invalid or missing required fields" },
         400
       );
@@ -92,9 +84,12 @@ export async function POST(request: NextRequest) {
     const db = getServerDb();
     await db.collection(collection).add(storedEvent);
 
-    return json({ success: true });
+    return jsonResponse({ success: true });
   } catch (error) {
     console.error("Event creation error:", error);
-    return json({ success: false, error: "Failed to create event" }, 500);
+    return jsonResponse(
+      { success: false, error: "Failed to create event" },
+      500
+    );
   }
 }

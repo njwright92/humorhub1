@@ -1,55 +1,45 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerDb, verifyIdToken } from "@/app/lib/firebase-admin";
-import type { ApiResponse } from "@/app/lib/types";
+import { NextRequest } from "next/server";
+import { getServerDb } from "@/app/lib/firebase-admin";
+import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
 
 export const runtime = "nodejs";
 
-function json<T>(body: ApiResponse<T>, status = 200) {
-  return NextResponse.json(body, { status });
-}
-
 export async function DELETE(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return json(
-        { success: false, error: "Missing authorization header" },
-        401
-      );
-    }
+    const auth = await authenticateRequest(request);
+    if (!auth.success) return auth.response;
 
-    const { valid, uid } = await verifyIdToken(authHeader.slice(7));
-    if (!valid || !uid) {
-      return json({ success: false, error: "Invalid or expired token" }, 401);
-    }
-
-    const body = (await request.json()) as { eventId?: string };
-    const eventId = body?.eventId;
+    const { eventId } = (await request.json()) as { eventId?: string };
 
     if (!eventId) {
-      return json({ success: false, error: "Event ID is required" }, 400);
+      return jsonResponse(
+        { success: false, error: "Event ID is required" },
+        400
+      );
     }
 
     const db = getServerDb();
     const eventRef = db.collection("savedEvents").doc(eventId);
-
     const eventDoc = await eventRef.get();
+
     if (!eventDoc.exists) {
-      return json({ success: false, error: "Event not found" }, 404);
+      return jsonResponse({ success: false, error: "Event not found" }, 404);
     }
 
-    const data = eventDoc.data();
-    if (data?.userId !== uid) {
-      return json(
+    if (eventDoc.data()?.userId !== auth.uid) {
+      return jsonResponse(
         { success: false, error: "Unauthorized to delete this event" },
         403
       );
     }
 
     await eventRef.delete();
-    return json({ success: true });
+    return jsonResponse({ success: true });
   } catch (error) {
     console.error("Delete event error:", error);
-    return json({ success: false, error: "Failed to delete event" }, 500);
+    return jsonResponse(
+      { success: false, error: "Failed to delete event" },
+      500
+    );
   }
 }

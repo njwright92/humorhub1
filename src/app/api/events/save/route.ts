@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerDb, verifyIdToken } from "@/app/lib/firebase-admin";
+import { NextRequest } from "next/server";
+import { getServerDb } from "@/app/lib/firebase-admin";
+import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
 
 export const runtime = "nodejs";
 
@@ -16,60 +17,38 @@ const ALLOWED_FIELDS = [
   "googleTimestamp",
 ] as const;
 
-type AllowedField = (typeof ALLOWED_FIELDS)[number];
-
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { success: false, error: "Missing authorization header" },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.slice(7); // faster than split
-    const { valid, uid } = await verifyIdToken(token);
-
-    if (!valid || !uid) {
-      return NextResponse.json(
-        { success: false, error: "Invalid or expired token" },
-        { status: 401 }
-      );
-    }
+    const auth = await authenticateRequest(request);
+    if (!auth.success) return auth.response;
 
     const eventData = (await request.json()) as Record<string, unknown>;
 
     const eventId = eventData.id;
     if (typeof eventId !== "string" || eventId.length === 0) {
-      return NextResponse.json(
+      return jsonResponse(
         { success: false, error: "Event ID is required" },
-        { status: 400 }
+        400
       );
     }
 
-    const savedAt = new Date().toISOString();
-
     const dataToSave: Record<string, unknown> = {
       id: eventId,
-      userId: uid,
-      savedAt,
+      userId: auth.uid,
+      savedAt: new Date().toISOString(),
     };
 
     for (const field of ALLOWED_FIELDS) {
-      const value = eventData[field as AllowedField];
+      const value = eventData[field];
       if (value != null) dataToSave[field] = value;
     }
 
     const db = getServerDb();
     await db.collection("savedEvents").doc(eventId).set(dataToSave);
 
-    return NextResponse.json({ success: true });
+    return jsonResponse({ success: true });
   } catch (error) {
     console.error("Save event error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to save event" },
-      { status: 500 }
-    );
+    return jsonResponse({ success: false, error: "Failed to save event" }, 500);
   }
 }

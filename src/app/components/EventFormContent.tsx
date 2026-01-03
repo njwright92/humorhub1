@@ -4,13 +4,14 @@ import {
   useState,
   useCallback,
   useEffect,
+  memo,
   type ChangeEvent,
   type FormEvent,
 } from "react";
 import { useToast } from "./ToastContext";
 import type { EventSubmission, ApiResponse } from "../lib/types";
 
-type FormState = {
+interface FormState {
   name: string;
   location: string;
   date: Date | null;
@@ -18,9 +19,9 @@ type FormState = {
   isRecurring: boolean;
   isFestival: boolean;
   email: string;
-};
+}
 
-const initialFormState: FormState = {
+const INITIAL_FORM_STATE: FormState = {
   name: "",
   location: "",
   date: null,
@@ -36,7 +37,7 @@ const labelClass = "mb-1 block font-bold text-stone-900";
 
 type RadioName = "isRecurring" | "isFestival";
 
-function RadioGroup({
+const RadioGroup = memo(function RadioGroup({
   label,
   name,
   value,
@@ -58,25 +59,30 @@ function RadioGroup({
         role="radiogroup"
         aria-labelledby={id}
       >
-        {[true, false].map((v) => (
-          <label
-            key={String(v)}
-            className="grid grid-flow-col items-center gap-1 text-sm font-medium text-stone-800"
-          >
-            <input
-              type="radio"
-              name={name}
-              checked={value === v}
-              onChange={() => onChange(name, v)}
-              className={`size-4 ${v ? "accent-green-600" : "accent-red-500"}`}
-            />
-            {v ? "Yes" : "No"}
-          </label>
-        ))}
+        <label className="grid grid-flow-col items-center gap-1 text-sm font-medium text-stone-800">
+          <input
+            type="radio"
+            name={name}
+            checked={value}
+            onChange={() => onChange(name, true)}
+            className="size-4 accent-green-600"
+          />
+          Yes
+        </label>
+        <label className="grid grid-flow-col items-center gap-1 text-sm font-medium text-stone-800">
+          <input
+            type="radio"
+            name={name}
+            checked={!value}
+            onChange={() => onChange(name, false)}
+            className="size-4 accent-red-500"
+          />
+          No
+        </label>
       </div>
     </div>
   );
-}
+});
 
 function CloseIcon() {
   return (
@@ -98,16 +104,17 @@ function CloseIcon() {
 }
 
 function buildSubmission(form: FormState): EventSubmission {
+  const dateIso = form.date?.toISOString() ?? "";
   return {
     id: crypto.randomUUID(),
     name: form.name.trim(),
     location: form.location.trim(),
-    date: form.date?.toISOString() ?? null,
+    date: dateIso || null,
     details: form.details.trim(),
     isRecurring: form.isRecurring,
     isFestival: form.isFestival,
     email: form.email.trim(),
-    timestamp: form.date?.toISOString() ?? "",
+    timestamp: dateIso,
   };
 }
 
@@ -135,7 +142,7 @@ async function sendEmailNotification(
 export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [form, setForm] = useState<FormState>(initialFormState);
+  const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE);
   const [formError, setFormError] = useState("");
 
   useEffect(() => {
@@ -205,10 +212,11 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           return;
         }
 
+        // Fire and forget - don't await
         sendEmailNotification(submission, form.date).catch(() => {});
 
         showToast("Event submitted successfully!", "success");
-        setForm(initialFormState);
+        setForm(INITIAL_FORM_STATE);
         onClose();
       } catch {
         showToast("Submission failed. Please try again.", "error");
@@ -218,6 +226,8 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
     },
     [form, isSubmitting, showToast, onClose]
   );
+
+  const dateValue = form.date?.toISOString().split("T")[0] ?? "";
 
   return (
     <div
@@ -305,7 +315,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleRadioChange}
           />
           <RadioGroup
-            label="Festival?"
+            label="isFestival"
             name="isFestival"
             value={form.isFestival}
             onChange={handleRadioChange}
@@ -344,7 +354,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             id="event-date"
             type="date"
             required
-            value={form.date?.toISOString().split("T")[0] ?? ""}
+            value={dateValue}
             onChange={handleDateChange}
             className={inputClass}
           />
