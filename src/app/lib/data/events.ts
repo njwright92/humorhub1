@@ -2,6 +2,8 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import type { Event, CityCoordinates, MicFinderData } from "../types";
 import { getServerDb } from "../firebase-admin";
+import { normalizeCityName } from "../utils";
+import { DAY_MAP } from "../constants";
 
 export type MicFinderDataWithCities = MicFinderData & {
   cities: string[];
@@ -13,7 +15,6 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
   try {
     const db = getServerDb();
 
-    // Projection: only fetch fields you actually use
     const [eventsSnap, citiesSnap] = await Promise.all([
       db
         .collection("userEvents")
@@ -46,21 +47,60 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
       const numericTimestamp = ts
         ? new Date(ts as unknown as string | number | Date).getTime()
         : 0;
+
+      const name = data.name as string;
+      const location = data.location as string;
+      const date = (data.date as string) ?? "";
+      const isRecurring = (data.isRecurring as boolean) ?? false;
+
+      const locationLower = location.toLowerCase();
+
+      const cityPart = location.split(",")[1]?.trim() ?? "";
+      const normalizedCity = normalizeCityName(cityPart);
+
+      const isSpokaneClub = location.includes("Spokane Comedy Club");
+
+      let recurringDow: number | null = null;
+      if (isRecurring && date) {
+        recurringDow = DAY_MAP[date] ?? null;
+      }
+
+      let dateMs: number | null = null;
+      if (!isRecurring && date) {
+        const parsed = new Date(date);
+        if (!Number.isNaN(parsed.getTime())) {
+          parsed.setHours(0, 0, 0, 0);
+          dateMs = parsed.getTime();
+        }
+      }
+
       events.push({
         id: doc.id,
-        name: data.name,
-        location: data.location,
-        date: data.date ?? "",
-        lat: data.lat ?? 0,
-        lng: data.lng ?? 0,
-        details: data.details ?? "",
-        isRecurring: data.isRecurring ?? false,
+        name,
+        location,
+        date,
+        lat: (data.lat as number) ?? 0,
+        lng: (data.lng as number) ?? 0,
+        details: (data.details as string) ?? "",
+        isRecurring,
         isFestival: data.festival === true,
         isMusic: data.isMusic === true,
         numericTimestamp,
         googleTimestamp: ts,
+        locationLower,
+        normalizedCity,
+        isSpokaneClub,
+        recurringDow,
+        dateMs,
       });
     }
+
+    events.sort((a, b) => {
+      if (a.isSpokaneClub !== b.isSpokaneClub) {
+        return a.isSpokaneClub ? -1 : 1;
+      }
+      return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
+    });
 
     const citiesDocs = citiesSnap.docs;
     const cityCoordinates: CityCoordinates = {};
@@ -71,7 +111,6 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
       const city = data.city;
       const coordinates = data.coordinates;
 
-      // keeping your exact truthy checks (no logic change)
       if (city && coordinates?.lat && coordinates?.lng) {
         cityCoordinates[city] = coordinates;
         cities.push(city);

@@ -13,17 +13,12 @@ import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
 import type { Event, CityCoordinates } from "../lib/types";
-import {
-  DAY_MAP,
-  DEFAULT_US_CENTER,
-  DEFAULT_ZOOM,
-  CITY_ZOOM,
-} from "../lib/constants";
+import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
-    <span className="flex size-full items-center justify-center text-stone-300">
+    <span className="size-full items-center justify-center text-stone-300">
       Loading Map...
     </span>
   ),
@@ -125,19 +120,6 @@ const EventCard = memo(function EventCard({
   );
 });
 
-type EventIndex = {
-  nameLower: string;
-  locationLower: string;
-  normalizedCity: string;
-  isSpokaneClub: boolean;
-  dateMs: number | null;
-  recurringDow: number | null;
-};
-
-function getEventCacheKey(e: Event): string {
-  return e.id ?? `${e.name}|${e.location}|${e.date}`;
-}
-
 export default function MicFinderClient({
   initialEvents,
   initialCityCoordinates,
@@ -159,45 +141,6 @@ export default function MicFinderClient({
   const authRef = useRef<Auth | null>(null);
   const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
-  const eventIndexRef = useRef<Map<string, EventIndex>>(new Map());
-
-  useEffect(() => {
-    eventIndexRef.current.clear();
-  }, [initialEvents]);
-
-  const getEventIndex = useCallback((e: Event): EventIndex => {
-    const key = getEventCacheKey(e);
-    const cached = eventIndexRef.current.get(key);
-    if (cached) return cached;
-
-    const nameLower = (e.name || "").toLowerCase();
-    const locationLower = (e.location || "").toLowerCase();
-    const cityPart = (e.location || "").split(",")[1]?.trim() ?? "";
-    const normalizedCity = normalizeCityName(cityPart);
-    const isSpokaneClub = (e.location || "").includes("Spokane Comedy Club");
-    const recurringDow = e.isRecurring ? (DAY_MAP[e.date] ?? null) : null;
-
-    let dateMs: number | null = null;
-    if (!e.isRecurring) {
-      const parsed = new Date(e.date);
-      if (!isNaN(parsed.getTime())) {
-        parsed.setHours(0, 0, 0, 0);
-        dateMs = parsed.getTime();
-      }
-    }
-
-    const idx: EventIndex = {
-      nameLower,
-      locationLower,
-      normalizedCity,
-      isSpokaneClub,
-      dateMs,
-      recurringDow,
-    };
-
-    eventIndexRef.current.set(key, idx);
-    return idx;
-  }, []);
 
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
@@ -237,11 +180,19 @@ export default function MicFinderClient({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const city = params.get("city");
-    if (city) setSelectedCity(city);
     const term = params.get("searchTerm");
-    if (term) setSearchTerm(term);
-  }, []);
 
+    if (city) {
+      const normalized = normalizeCityName(city);
+      setSelectedCity(normalized);
+      setSearchTerm(normalized);
+    } else if (term) {
+      setSearchTerm(term);
+    }
+    if (city || term) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       return showToast("Geolocation not supported", "error");
@@ -366,23 +317,22 @@ export default function MicFinderClient({
 
   const isTabMatch = useCallback(
     (event: Event): boolean => {
-      if (selectedTab === "Festivals") return !!event.isFestival;
-      if (selectedTab === "Other") return !!event.isMusic;
+      if (selectedTab === "Festivals") return event.isFestival;
+      if (selectedTab === "Other") return event.isMusic;
       return !event.isFestival && !event.isMusic;
     },
     [selectedTab]
   );
+
   const eventsForMap = useMemo(() => {
     let events = initialEvents;
 
-    if (cityLower) {
-      events = events.filter((e) =>
-        getEventIndex(e).locationLower.includes(cityLower)
-      );
+    if (cityLower && cityLower !== "all cities") {
+      events = events.filter((e) => e.locationLower.includes(cityLower));
     }
 
     return events.filter(isTabMatch);
-  }, [initialEvents, cityLower, getEventIndex, isTabMatch]);
+  }, [initialEvents, cityLower, isTabMatch]);
 
   const mapConfig = useMemo(() => {
     const cityCoords = selectedCity
@@ -400,41 +350,26 @@ export default function MicFinderClient({
   const recurringEvents = useMemo(() => {
     return initialEvents.filter((e) => {
       if (!e.isRecurring || !isTabMatch(e)) return false;
-
-      const idx = getEventIndex(e);
-      const matchesCity = !cityLower || idx.locationLower.includes(cityLower);
-      return matchesCity && idx.recurringDow === selectedDow;
+      const matchesCity = !cityLower || e.locationLower.includes(cityLower);
+      return matchesCity && e.recurringDow === selectedDow;
     });
-  }, [initialEvents, cityLower, selectedDow, getEventIndex, isTabMatch]);
+  }, [initialEvents, cityLower, selectedDow, isTabMatch]);
 
   const oneTimeEvents = useMemo(() => {
     return initialEvents.filter((e) => {
       if (e.isRecurring || !isTabMatch(e)) return false;
-
-      const idx = getEventIndex(e);
-      const matchesCity = !cityLower || idx.locationLower.includes(cityLower);
-      return matchesCity && idx.dateMs === dateCheckMs;
+      const matchesCity = !cityLower || e.locationLower.includes(cityLower);
+      return matchesCity && e.dateMs === dateCheckMs;
     });
-  }, [initialEvents, cityLower, dateCheckMs, getEventIndex, isTabMatch]);
+  }, [initialEvents, cityLower, dateCheckMs, isTabMatch]);
 
   const allCityEvents = useMemo(() => {
     let list = initialEvents.filter(isTabMatch);
     if (cityLower && cityLower !== "all cities") {
-      list = list.filter((e) =>
-        getEventIndex(e).locationLower.includes(cityLower)
-      );
+      list = list.filter((e) => e.locationLower.includes(cityLower));
     }
-
-    return list.sort((a, b) => {
-      const aIdx = getEventIndex(a);
-      const bIdx = getEventIndex(b);
-
-      if (aIdx.isSpokaneClub !== bIdx.isSpokaneClub) {
-        return aIdx.isSpokaneClub ? -1 : 1;
-      }
-      return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
-    });
-  }, [initialEvents, cityLower, getEventIndex, isTabMatch]);
+    return list;
+  }, [initialEvents, cityLower, isTabMatch]);
 
   const rowVirtualizer = useVirtualizer({
     count: allCityEvents.length,

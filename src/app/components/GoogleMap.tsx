@@ -11,8 +11,6 @@ import {
 } from "@vis.gl/react-google-maps";
 import type { Event } from "../lib/types";
 
-type SelectedEvent = Event & { lat: number; lng: number };
-
 const PIN_COLORS = {
   festival: "#7e22ce",
   music: "#15803d",
@@ -50,22 +48,43 @@ function EventPin({ color }: { color: string }) {
 }
 
 function MapHandler({
-  place,
+  lat,
+  lng,
   zoom,
 }: {
-  place: { lat: number; lng: number };
+  lat: number;
+  lng: number;
   zoom: number;
 }) {
   const map = useMap();
 
   useEffect(() => {
-    if (!map || Number.isNaN(place.lat) || Number.isNaN(place.lng)) return;
-    map.panTo(place);
+    if (!map || Number.isNaN(lat) || Number.isNaN(lng)) return;
+    map.panTo({ lat, lng });
     map.setZoom(zoom);
-  }, [map, place, zoom]);
+  }, [map, lat, lng, zoom]);
 
   return null;
 }
+const EventMarker = memo(function EventMarker({
+  event,
+  onClick,
+}: {
+  event: Event;
+  onClick: (event: Event) => void;
+}) {
+  if (Number.isNaN(event.lat) || Number.isNaN(event.lng)) return null;
+
+  return (
+    <AdvancedMarker
+      position={{ lat: event.lat, lng: event.lng }}
+      onClick={() => onClick(event)}
+      title={event.name}
+    >
+      <EventPin color={getPinColor(event)} />
+    </AdvancedMarker>
+  );
+});
 
 const InnerMap = memo(function InnerMap({
   lat,
@@ -79,16 +98,14 @@ const InnerMap = memo(function InnerMap({
   events: Event[];
 }) {
   const apiIsLoaded = useApiIsLoaded();
-  const [selectedEvent, setSelectedEvent] = useState<SelectedEvent | null>(
-    null
-  );
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const handleMarkerClick = useCallback((event: Event) => {
-    const eventLat = Number(event.lat);
-    const eventLng = Number(event.lng);
-    if (!Number.isNaN(eventLat) && !Number.isNaN(eventLng)) {
-      setSelectedEvent({ ...event, lat: eventLat, lng: eventLng });
-    }
+    setSelectedEvent(event);
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedEvent(null);
   }, []);
 
   if (!apiIsLoaded) {
@@ -107,39 +124,26 @@ const InnerMap = memo(function InnerMap({
       disableDefaultUI={false}
       clickableIcons={false}
       className="size-full"
-      onClick={() => setSelectedEvent(null)}
+      onClick={clearSelection}
     >
-      <MapHandler place={{ lat, lng }} zoom={zoom} />
+      <MapHandler lat={lat} lng={lng} zoom={zoom} />
 
-      {events.map((event, index) => {
-        const eventLat = Number(event.lat);
-        const eventLng = Number(event.lng);
-        if (Number.isNaN(eventLat) || Number.isNaN(eventLng)) return null;
-
-        return (
-          <AdvancedMarker
-            key={event.id ?? `${event.name}-${eventLat}-${eventLng}-${index}`}
-            position={{ lat: eventLat, lng: eventLng }}
-            onClick={() => handleMarkerClick(event)}
-            title={event.name}
-          >
-            <EventPin color={getPinColor(event)} />
-          </AdvancedMarker>
-        );
-      })}
+      {events.map((event) => (
+        <EventMarker key={event.id} event={event} onClick={handleMarkerClick} />
+      ))}
 
       {selectedEvent && (
         <InfoWindow
           position={{ lat: selectedEvent.lat, lng: selectedEvent.lng }}
-          onCloseClick={() => setSelectedEvent(null)}
+          onCloseClick={clearSelection}
           maxWidth={250}
           pixelOffset={[0, -30]}
-          headerDisabled={true}
+          headerDisabled
         >
-          <article className="relative grid gap-1 bg-zinc-200 p-2 pr-6 text-center text-zinc-900">
+          <article className="relative grid gap-1 p-2 pr-4 text-center text-stone-900">
             <button
-              onClick={() => setSelectedEvent(null)}
-              className="absolute top-0 right-0 grid size-5 cursor-pointer place-items-center rounded-full bg-stone-400 text-stone-900 hover:scale-105"
+              onClick={clearSelection}
+              className="absolute top-0 right-0 grid size-5 cursor-pointer place-items-center rounded-full bg-zinc-200 text-stone-900 shadow-lg hover:scale-105"
               aria-label="Close"
               type="button"
             >
@@ -158,7 +162,7 @@ const InnerMap = memo(function InnerMap({
               <span className="sr-only">Location:</span>{" "}
               {selectedEvent.location}
             </p>
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-stone-600">
               <span aria-hidden="true">📅</span>
               <span className="sr-only">Date:</span> {selectedEvent.date}
             </p>
@@ -174,18 +178,18 @@ const InnerMap = memo(function InnerMap({
   );
 });
 
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
 export default function GoogleMap(props: {
   lat: number;
   lng: number;
   zoom?: number;
   events: Event[];
 }) {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-  if (!apiKey) {
+  if (!API_KEY) {
     return (
       <div
-        className="grid size-full min-h-96 place-items-center overflow-hidden rounded-2xl bg-zinc-800 shadow-lg"
+        className="grid size-full min-h-96 place-items-center overflow-hidden rounded-2xl bg-stone-800 shadow-lg"
         role="alert"
       >
         <div className="grid gap-2 p-4 text-center text-zinc-400">
@@ -199,8 +203,8 @@ export default function GoogleMap(props: {
   }
 
   return (
-    <div className="relative size-full min-h-96 overflow-hidden rounded-2xl bg-zinc-800 shadow-lg">
-      <APIProvider apiKey={apiKey}>
+    <div className="relative size-full min-h-96 overflow-hidden rounded-2xl bg-stone-800 shadow-lg">
+      <APIProvider apiKey={API_KEY}>
         <InnerMap {...props} />
       </APIProvider>
     </div>

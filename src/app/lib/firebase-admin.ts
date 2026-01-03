@@ -18,7 +18,6 @@ function getAdminApp(): App {
     return adminApp;
   }
 
-  // Validate environment variables
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -34,7 +33,6 @@ function getAdminApp(): App {
     credential: cert({
       projectId,
       clientEmail,
-      // Handle the escaped newlines in the private key
       privateKey: privateKey.replace(/\\n/g, "\n"),
     }),
   });
@@ -54,7 +52,6 @@ export function getServerDb(): Firestore {
   return adminDb;
 }
 
-// Helper to verify ID tokens from client
 export async function verifyIdToken(token: string) {
   try {
     const auth = getServerAuth();

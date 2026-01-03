@@ -26,18 +26,19 @@ export interface Event {
   name: string;
   location: string;
   date: string;
+  lat: number;
+  lng: number;
   details: string;
-  lat?: number;
-  lng?: number;
-  isRecurring?: boolean;
-  isFestival?: boolean;
-  isMusic?: boolean;
-  email?: string;
-  timestamp?: string;
-  numericTimestamp?: number;
-  googleTimestamp?: string | number | Date;
-  savedAt?: string;
-  submissionDate?: string;
+  isRecurring: boolean;
+  isFestival: boolean;
+  isMusic: boolean;
+  numericTimestamp: number;
+  googleTimestamp?: unknown;
+  locationLower: string;
+  normalizedCity: string;
+  isSpokaneClub: boolean;
+  recurringDow: number | null;
+  dateMs: number | null;
 }
 
 export interface ApiResponse<T = undefined> {

@@ -1,21 +1,11 @@
 import { NextResponse } from "next/server";
-import { getServerDb } from "@/app/lib/firebase-admin";
+import { fetchMicFinderData } from "@/app/lib/data/events";
 
 export const runtime = "nodejs";
 
 export async function GET(): Promise<Response> {
   try {
-    const db = getServerDb();
-
-    const snapshot = await db.collection("cities").select("city").get();
-
-    const docs = snapshot.docs;
-    const cities: string[] = [];
-
-    for (let i = 0; i < docs.length; i++) {
-      const city = docs[i].get("city") as unknown as string | undefined;
-      if (city) cities.push(city);
-    }
+    const { cities } = await fetchMicFinderData();
 
     return NextResponse.json({ cities });
   } catch (error) {
