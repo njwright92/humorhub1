@@ -209,7 +209,7 @@ export default function NewsClient() {
             <button
               type="reset"
               onClick={resetNews}
-              className="h-11.5 rounded-2xl border-2 border-stone-600 bg-stone-700 font-bold shadow-lg transition-all hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
+              className="h-11 rounded-2xl border-2 border-stone-600 bg-stone-700 font-bold shadow-lg transition-all hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
             >
               Reset Filters
             </button>

@@ -629,7 +629,7 @@ export default function MicFinderClient({
       {/* Map */}
       <section
         aria-label="Event Map"
-        className="relative mt-6 mb-6 h-100 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg"
+        className="relative mt-6 mb-6 h-96 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg"
       >
         <button
           type="button"
@@ -690,7 +690,7 @@ export default function MicFinderClient({
         ) : (
           <div
             ref={parentRef}
-            className="h-105 w-full overflow-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
+            className="h-96 w-full overflow-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
             role="feed"
             aria-label={`${allCityEvents.length} ${tabLabel.toLowerCase()}`}
           >

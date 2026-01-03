@@ -75,7 +75,7 @@ export default function Home() {
           <EventForm />
           <Link
             href="/mic-finder"
-            className="mb-2 w-70 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start"
+            className="mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start"
           >
             Find Your Mic!
           </Link>
