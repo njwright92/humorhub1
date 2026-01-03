@@ -169,7 +169,7 @@ export default function MicFinderPage() {
     <main className="grid min-h-screen justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
       <StructuredData />
 
-      <aside className="max-w-2xl rounded-2xl border border-red-700 bg-zinc-200 p-2 text-xs text-red-700 shadow-lg sm:p-3 sm:text-sm">
+      <aside className="rounded-2xl border border-red-800 bg-zinc-200 p-1 text-sm text-red-800 shadow-lg sm:p-3 lg:p-2 lg:text-base">
         <p>
           <span aria-hidden="true">📢 </span>
           Note: Open mic events evolve quickly. See something outdated?{" "}

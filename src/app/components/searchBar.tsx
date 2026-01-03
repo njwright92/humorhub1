@@ -91,14 +91,14 @@ export default function SearchBar({
     }
 
     for (const page of PAGES) {
-      if (page.label.toLowerCase().includes(q)) {
+      if (page.label.toLowerCase().startsWith(q)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
     for (const city of cities) {
       if (results.filter((r) => r.type === "city").length >= 5) break;
-      if (city.toLowerCase().includes(q)) {
+      if (city.toLowerCase().startsWith(q)) {
         results.push({ type: "city", label: city, city });
       }
     }
@@ -138,7 +138,7 @@ export default function SearchBar({
       const suggestion =
         suggestions[activeIndex] ??
         suggestions.find((s) => s.label.toLowerCase() === q) ??
-        cities.find((c) => c.toLowerCase().includes(q));
+        cities.find((c) => c.toLowerCase().startsWith(q));
 
       if (typeof suggestion === "string") {
         executeSuggestion({
@@ -316,7 +316,7 @@ export default function SearchBar({
               id={LISTBOX_ID}
               role="listbox"
               aria-label="Search suggestions"
-              className="grid max-h-60 divide-y divide-stone-300 overflow-auto border-t border-stone-300"
+              className="grid max-h-60 divide-y divide-stone-300 overflow-auto border-t border-stone-400"
             >
               {suggestions.map((sug, idx) => (
                 <li

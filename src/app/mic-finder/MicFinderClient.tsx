@@ -361,7 +361,7 @@ export default function MicFinderClient({
   const dropdownCities = useMemo(() => {
     if (!debouncedSearchTerm) return initialCities;
     const term = debouncedSearchTerm.toLowerCase();
-    return initialCities.filter((c) => c.toLowerCase().includes(term));
+    return initialCities.filter((c) => c.toLowerCase().startsWith(term));
   }, [initialCities, debouncedSearchTerm]);
 
   const isTabMatch = useCallback(
@@ -419,8 +419,7 @@ export default function MicFinderClient({
 
   const allCityEvents = useMemo(() => {
     let list = initialEvents.filter(isTabMatch);
-
-    if (cityLower) {
+    if (cityLower && cityLower !== "all cities") {
       list = list.filter((e) =>
         getEventIndex(e).locationLower.includes(cityLower)
       );
@@ -484,9 +483,20 @@ export default function MicFinderClient({
                     fetchUserLocation();
                     setIsCityDropdownOpen(false);
                   }}
-                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-zinc-200 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
                 >
                   <span aria-hidden="true">📍</span> Use My Location
+                </li>
+                <li
+                  role="option"
+                  aria-selected={selectedCity === "All Cities"}
+                  onClick={() => {
+                    setSelectedCity("All Cities");
+                    setIsCityDropdownOpen(false);
+                  }}
+                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700 hover:text-white"
+                >
+                  <span aria-hidden="true">🌎</span> All Cities
                 </li>
                 {dropdownCities.map((city) => (
                   <li
@@ -494,7 +504,7 @@ export default function MicFinderClient({
                     role="option"
                     aria-selected={selectedCity === city}
                     onClick={() => handleCitySelect(city)}
-                    className="cursor-pointer border-b border-zinc-200 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
+                    className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
                   >
                     {city}
                   </li>
@@ -558,6 +568,10 @@ export default function MicFinderClient({
           <p className="py-4 text-center text-base sm:text-lg">
             Select a city to see weekly {tabLabel.toLowerCase()}.
           </p>
+        ) : selectedCity === "All Cities" ? (
+          <p className="animate-pulse py-6 text-center text-lg font-bold text-amber-700">
+            👇 Scroll to the bottom to see all {tabLabel.toLowerCase()}!
+          </p>
         ) : recurringEvents.length > 0 ? (
           <div role="list" className="grid gap-4">
             {recurringEvents.map((event) => (
@@ -590,6 +604,10 @@ export default function MicFinderClient({
         {!selectedCity ? (
           <p className="py-4 text-center text-base sm:text-lg">
             Select a city to see one-time events.
+          </p>
+        ) : selectedCity === "All Cities" ? (
+          <p className="animate-pulse py-6 text-center text-lg font-bold text-purple-700">
+            👇 Scroll to the bottom to see all {tabLabel.toLowerCase()}!
           </p>
         ) : oneTimeEvents.length > 0 ? (
           <div role="list" className="grid gap-4">
@@ -657,13 +675,17 @@ export default function MicFinderClient({
           {selectedCity && ` in ${selectedCity}`}
         </h2>
 
-        {!selectedCity ? (
+        {!selectedCity && selectedTab !== "Festivals" ? (
           <p className={emptyStateClass}>
             Select a city to see all {tabLabel.toLowerCase()}.
           </p>
         ) : allCityEvents.length === 0 ? (
           <p className={emptyStateClass}>
-            No {tabLabel.toLowerCase()} found in {selectedCity}.
+            No {tabLabel.toLowerCase()} found
+            {selectedCity && selectedCity !== "All Cities"
+              ? ` in ${selectedCity}`
+              : ""}
+            .
           </p>
         ) : (
           <div

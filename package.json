@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "browserslist": [
-    ">0.2%, defaults, fully supports es6-module"
+    "chrome 111",
+    "edge 111",
+    "firefox 111",
+    "safari 16.4"
   ],
   "scripts": {
     "dev": "next dev",
@@ -18,7 +21,7 @@
     "@emailjs/browser": "^4.4.1",
     "@tanstack/react-virtual": "^3.13.12",
     "@vis.gl/react-google-maps": "^1.7.1",
-    "firebase": "^11.6.1",
+    "firebase": "^12.7.0",
     "firebase-admin": "^13.6.0",
     "next": "^16.1.1",
     "react": "^19.2.1",
@@ -27,7 +30,7 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.17",
     "@tailwindcss/postcss": "^4.1.8",
-    "@types/node": "^22.15.21",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
     "eslint": "^9.39.1",
