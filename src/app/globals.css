@@ -13,6 +13,10 @@
 }
 
 @layer base {
+  img,
+  svg {
+    vertical-align: unset;
+  }
   input[type="date"] {
     appearance: none;
     -webkit-appearance: none;
