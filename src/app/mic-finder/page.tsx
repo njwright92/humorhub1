@@ -161,13 +161,13 @@ async function MicFinderContent() {
 
 export default function MicFinderPage() {
   return (
-    <main className="grid min-h-screen justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
+    <main className="grid min-h-dvh justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
       />
 
-      <aside className="rounded-2xl border border-red-800 bg-zinc-200 p-1 text-sm text-red-800 shadow-lg sm:p-3 lg:p-2 lg:text-base">
+      <aside className="rounded-2xl border border-red-800 bg-zinc-200 p-2 text-xs font-medium text-red-800 shadow-lg lg:text-base">
         <p>
           <span aria-hidden="true">📢 </span>
           Note: Open mic events evolve quickly. See something outdated?{" "}

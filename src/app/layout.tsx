@@ -6,6 +6,7 @@ import "./globals.css";
 import { ToastProvider } from "./components/ToastContext";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const comicNeue = Comic_Neue({
   weight: ["300", "400", "700"],
@@ -79,6 +80,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KVJSFKV8');`,
           }}
         />
+        <SpeedInsights />
       </body>
     </html>
   );

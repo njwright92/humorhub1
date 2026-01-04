@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="grid min-h-screen content-start gap-6 p-2 pt-12 text-center md:ml-20">
+    <main className="grid min-h-dvh content-start gap-6 p-2 pt-12 text-center md:ml-20">
       <header className="grid gap-2">
         <h1 className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl">
           Contact Us

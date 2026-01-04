@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="grid min-h-screen content-start gap-8 p-2 pt-20 text-center md:ml-20">
+    <main className="grid min-h-dvh content-start gap-8 p-2 pt-20 text-center md:ml-20">
       <h1 className="hidden text-5xl font-bold tracking-wide text-shadow-md md:block md:text-6xl lg:text-7xl">
         Humor Hub!
       </h1>
