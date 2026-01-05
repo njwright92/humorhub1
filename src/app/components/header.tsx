@@ -15,7 +15,7 @@ export default function Header() {
             alt=""
             width={60}
             height={60}
-            className="rounded-full shadow-lg group-hover:scale-110 group-hover:rotate-3"
+            className="rounded-full shadow-lg hover:scale-110 hover:rotate-3"
             priority
             quality={70}
           />

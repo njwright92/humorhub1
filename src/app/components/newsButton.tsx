@@ -18,6 +18,12 @@ export default function NewsButton({
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  const preload = useCallback(() => {
+    void import("./authModal");
+    void import("../../../firebase.config");
+    router.prefetch?.("/News");
+  }, [router]);
+
   const handleClick = useCallback(async () => {
     try {
       const { getAuth } = await import("../../../firebase.config");
@@ -39,6 +45,9 @@ export default function NewsButton({
     <>
       <button
         type="button"
+        onPointerEnter={preload}
+        onFocus={preload}
+        onTouchStart={preload}
         onClick={handleClick}
         className={className}
         aria-haspopup="dialog"

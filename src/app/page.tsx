@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import EventForm from "./components/EventForm";
-
-const NewsButton = dynamic(() => import("./components/newsButton"));
+import NewsButton from "./components/newsButton";
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
@@ -61,13 +59,14 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:justify-items-end">
-            <Link href="/mic-finder" className="group">
+            <Link href="/mic-finder">
               <Image
                 src="/hh1.webp"
                 alt="Mic Finder - Find open mics near you"
-                className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
-                width={100}
-                height={100}
+                className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform hover:scale-105 hover:rotate-3 md:h-42 md:w-42"
+                width={168}
+                height={168}
+                sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
               />
             </Link>
@@ -103,13 +102,14 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
-            <NewsButton className="group border-0 bg-transparent shadow-lg">
+            <NewsButton className="border-0 bg-transparent">
               <Image
                 src="/newsy.webp"
                 alt="Hub News - Latest comedy headlines"
-                className="mb-4 h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg group-hover:scale-105 group-hover:rotate-3 md:h-42 md:w-42"
-                width={100}
-                height={100}
+                className="mb-4 h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform hover:scale-105 hover:rotate-3 md:h-42 md:w-42"
+                width={168}
+                height={168}
+                sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
               />
             </NewsButton>

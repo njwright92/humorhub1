@@ -14,13 +14,14 @@
 
 @layer base {
   img,
-  svg {
+  svg,
+  iframe {
     vertical-align: unset;
   }
   input[type="date"] {
     appearance: none;
     -webkit-appearance: none;
-    min-height: 46px;
+    min-height: 2.75rem;
     display: block;
     width: 100%;
     background-color: white;
@@ -38,6 +39,9 @@
   h6 {
     font-family: var(--font-heading);
     font-weight: 700;
+    --tw-text-shadow-color: var(--color-amber-700);
+    --tw-text-shadow: 0 1px 2px var(--tw-text-shadow-color);
+    text-shadow: var(--tw-text-shadow);
   }
 
   select,

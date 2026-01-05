@@ -9,7 +9,7 @@ import Footer from "./components/footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const comicNeue = Comic_Neue({
-  weight: ["300", "400", "700"],
+  weight: ["700"],
   subsets: ["latin"],
   variable: "--font-comic-neue",
   display: "swap",

@@ -38,14 +38,14 @@ export default function Footer() {
           <Link
             href="/"
             aria-label="Humor Hub Home"
-            className="group justify-self-center md:justify-self-start md:pl-10"
+            className="justify-self-center md:justify-self-start md:pl-10"
           >
             <Image
               src="/logo.webp"
               alt=""
               width={80}
               height={80}
-              className="rounded-full object-contain shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3"
+              className="rounded-full object-contain shadow-lg transition-transform hover:scale-110 hover:rotate-3"
               quality={70}
             />
           </Link>
