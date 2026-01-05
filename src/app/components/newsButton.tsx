@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useCallback, type ReactNode } from "react";
+import { useState, useCallback, useRef, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import dynamic from "next/dynamic";
+import type { User } from "firebase/auth";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
 export default function NewsButton({
   children = "Check It Out",
-  className = "w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-lg font-bold text-white transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-end",
+  className = "w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-lg font-bold text-white transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-end cursor-pointer",
 }: {
   children?: ReactNode;
   className?: string;
@@ -18,18 +19,31 @@ export default function NewsButton({
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  const authPromiseRef = useRef<Promise<User | null> | null>(null);
+
+  const getAuthUser = useCallback(() => {
+    if (!authPromiseRef.current) {
+      authPromiseRef.current = (async () => {
+        const { getAuth } = await import("../../../firebase.config");
+        const auth = await getAuth();
+        await auth.authStateReady();
+        return auth.currentUser;
+      })();
+    }
+    return authPromiseRef.current;
+  }, []);
+
   const preload = useCallback(() => {
     void import("./authModal");
-    void import("../../../firebase.config");
+    void getAuthUser();
     router.prefetch?.("/News");
-  }, [router]);
+  }, [router, getAuthUser]);
 
   const handleClick = useCallback(async () => {
     try {
-      const { getAuth } = await import("../../../firebase.config");
-      const auth = await getAuth();
+      const user = await getAuthUser();
 
-      if (auth.currentUser) {
+      if (user) {
         router.push("/News");
         return;
       }
@@ -39,7 +53,7 @@ export default function NewsButton({
     } catch {
       setIsAuthModalOpen(true);
     }
-  }, [router, showToast]);
+  }, [router, showToast, getAuthUser]);
 
   return (
     <>

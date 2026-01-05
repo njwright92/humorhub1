@@ -106,7 +106,7 @@ export default function Home() {
               <Image
                 src="/newsy.webp"
                 alt="Hub News - Latest comedy headlines"
-                className="mb-4 h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform hover:scale-105 hover:rotate-3 md:h-42 md:w-42"
+                className="mb-4 h-32 w-32 cursor-pointer rounded-full border-2 border-zinc-700 object-contain shadow-lg hover:scale-105 hover:rotate-3 md:h-42 md:w-42"
                 width={168}
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"
