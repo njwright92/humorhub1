@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="grid min-h-dvh content-start gap-8 p-2 pt-20 text-center md:ml-20">
-      <h1 className="hidden text-5xl font-bold tracking-wide text-shadow-md md:block md:text-6xl lg:text-7xl">
+      <h1 className="hidden text-5xl font-bold tracking-wide md:block md:text-6xl lg:text-7xl">
         Humor Hub!
       </h1>
       <section
@@ -42,7 +42,7 @@ export default function Home() {
       >
         <h2
           id="micfinder-heading"
-          className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl"
+          className="text-3xl font-bold tracking-wide text-amber-700 md:text-4xl lg:text-5xl"
         >
           Mic Finder!
         </h2>
@@ -86,7 +86,7 @@ export default function Home() {
       >
         <h2
           id="news-heading"
-          className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl"
+          className="text-3xl font-bold tracking-wide text-amber-700 md:text-4xl lg:text-5xl"
         >
           Hub News!
         </h2>

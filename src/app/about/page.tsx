@@ -54,7 +54,7 @@ export default function AboutPage() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-4 pt-12 text-center md:ml-20">
       <header className="grid justify-items-center gap-6">
-        <h1 className="text-3xl font-bold tracking-wide text-amber-700 text-shadow-md md:text-4xl lg:text-5xl">
+        <h1 className="text-3xl font-bold tracking-wide text-amber-700 md:text-4xl lg:text-5xl">
           About Us
         </h1>
         <hgroup className="grid gap-2">
