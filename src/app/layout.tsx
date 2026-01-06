@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import Script from "next/script";
 import { Comic_Neue } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "./components/ToastContext";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const comicNeue = Comic_Neue({
   weight: ["700"],
@@ -19,7 +19,8 @@ export const viewport: Viewport = {
   themeColor: "#18181b",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export const metadata: Metadata = {
@@ -59,27 +60,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={comicNeue.variable}>
-      <head>
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" />
-      </head>
       <body className="bg-stone-900 text-zinc-200 antialiased">
         <ToastProvider>
           <Header />
           {children}
           <Footer />
         </ToastProvider>
-        <Script
-          id="gtm"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KVJSFKV8');`,
-          }}
-        />
+        <GoogleTagManager gtmId="GTM-KVJSFKV8" />
         <SpeedInsights />
       </body>
     </html>

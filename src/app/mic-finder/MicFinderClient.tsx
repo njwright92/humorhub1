@@ -12,6 +12,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
+import { sendGTMEvent } from "@next/third-parties/google"; // <--- Added this
 import type { Event, CityCoordinates } from "../lib/types";
 import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
@@ -24,11 +25,8 @@ const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ),
 });
 
-declare global {
-  interface Window {
-    dataLayer: Record<string, unknown>[];
-  }
-}
+// REMOVED: The manual global declaration that caused the conflict
+// declare global { ... }
 
 interface MicFinderClientProps {
   initialEvents: Event[];
@@ -142,9 +140,10 @@ export default function MicFinderClient({
   const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
+  // UPDATED: Now uses the sendGTMEvent library function
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
-      window.dataLayer?.push({ event: event_name, ...params });
+      sendGTMEvent({ event: event_name, ...params });
     },
     []
   );
