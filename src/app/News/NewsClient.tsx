@@ -72,7 +72,7 @@ function ArticleCard({
         </span>
       </figure>
       <div className="grid grid-rows-[auto_1fr_auto] gap-3 p-5">
-        <h2 className="line-clamp-3 text-lg leading-tight font-bold transition-colors group-hover:text-amber-700">
+        <h2 className="line-clamp-3 text-lg leading-tight transition-colors group-hover:text-amber-700">
           {article.title}
         </h2>
         <p className="line-clamp-3 self-start text-sm text-stone-400">

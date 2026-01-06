@@ -156,7 +156,7 @@ const InnerMap = memo(function InnerMap({
                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
               </svg>
             </button>
-            <h2 className="text-base font-bold">{selectedEvent.name}</h2>
+            <h2>{selectedEvent.name}</h2>
             <p className="text-sm">
               <span aria-hidden="true">📍</span>
               <span className="sr-only">Location:</span>{" "}

@@ -41,7 +41,7 @@ const SavedEventCard = memo(function SavedEventCard({
       className="group grid gap-4 rounded-2xl border border-stone-600 p-4 text-left shadow-lg hover:border-amber-700 sm:grid-cols-[1fr_auto]"
     >
       <div>
-        <h3 className="mb-1 inline font-bold text-amber-700">{event.name}</h3>
+        <h3 className="mb-1 inline text-amber-700">{event.name}</h3>
 
         {event.isFestival && (
           <span className="ml-2 inline-block rounded bg-purple-900 px-2 py-0.5 align-middle text-xs font-bold text-purple-200 uppercase">
@@ -132,9 +132,7 @@ function SignInPrompt() {
       <span className="mb-4 block text-6xl" aria-hidden="true">
         🔐
       </span>
-      <h2 className="mb-4 text-2xl font-bold text-amber-700">
-        Sign In Required
-      </h2>
+      <h2 className="mb-4 text-2xl text-amber-700">Sign In Required</h2>
       <p className="mb-6 text-stone-400">
         Please sign in to view your profile and saved events.
       </p>
@@ -539,7 +537,7 @@ export default function ProfileClient() {
 
       {/* Saved Events */}
       <section className="min-h-125 rounded-2xl border border-stone-600 bg-stone-800/80 p-4 shadow-lg lg:col-span-2">
-        <h2 className="mb-4 flex items-center justify-center gap-2 text-xl font-bold md:justify-start">
+        <h2 className="mb-4 flex items-center justify-center gap-2 text-xl md:justify-start">
           <span aria-hidden="true">🎟️</span>
           Saved Events
           {!isEventsLoading && (

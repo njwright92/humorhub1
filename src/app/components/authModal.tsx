@@ -171,10 +171,7 @@ export default function AuthModal({
           </svg>
         </button>
 
-        <h2
-          id="auth-title"
-          className="text-center text-2xl font-bold text-stone-900"
-        >
+        <h2 id="auth-title" className="text-center text-2xl text-stone-900">
           {isSignIn ? "Sign In" : "Sign Up"}
         </h2>
 

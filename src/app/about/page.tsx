@@ -54,13 +54,11 @@ export default function AboutPage() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-4 pt-12 text-center md:ml-20">
       <header className="grid justify-items-center gap-6">
-        <h1 className="text-3xl font-bold tracking-wide text-amber-700 md:text-4xl lg:text-5xl">
+        <h1 className="text-3xl text-amber-700 md:text-4xl lg:text-5xl">
           About Us
         </h1>
         <hgroup className="grid gap-2">
-          <h2 className="text-2xl font-bold text-amber-600">
-            Built for Comics
-          </h2>
+          <h2 className="text-2xl text-amber-600">Built for Comics</h2>
           <p className="text-lg font-semibold md:text-xl">By a Comic</p>
         </hgroup>
         <p className="max-w-2xl text-sm leading-relaxed text-stone-300 md:text-base">
@@ -85,7 +83,7 @@ export default function AboutPage() {
               {feature.emoji}
             </span>
             <h3
-              className={`text-xl font-bold transition-colors ${feature.titleBaseClass} ${feature.titleHoverClass}`}
+              className={`text-xl transition-colors ${feature.titleBaseClass} ${feature.titleHoverClass}`}
             >
               {feature.title}
             </h3>
@@ -106,7 +104,7 @@ export default function AboutPage() {
         aria-labelledby="cta-heading"
         className="grid gap-6 border-t border-stone-800 pt-8"
       >
-        <h3 id="cta-heading" className="text-xl font-bold sm:text-2xl">
+        <h3 id="cta-heading" className="text-xl sm:text-2xl">
           Ready to hit the stage?
         </h3>
         <div className="grid gap-3 sm:grid-flow-col sm:justify-center">

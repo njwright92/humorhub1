@@ -83,9 +83,7 @@ const EventCard = memo(function EventCard({
 }) {
   return (
     <article className="mb-4 grid justify-items-center gap-2 rounded-2xl border border-stone-600 p-2 text-center shadow-lg">
-      <h3 className="text-lg font-bold text-amber-600 md:text-xl">
-        {event.name}
-      </h3>
+      <h3 className="text-lg text-amber-600 md:text-xl">{event.name}</h3>
       <p className="text-sm">
         <span aria-hidden="true">📅 </span>
         <span className="sr-only">Date: </span>

@@ -39,7 +39,8 @@
   h6 {
     font-family: var(--font-heading);
     font-weight: 700;
-    --tw-text-shadow-color: var(--color-amber-800);
+    letter-spacing: 0.025em;
+    --tw-text-shadow-color: rgb(120 53 15);
     text-shadow:
       0 1px 0px var(--tw-text-shadow-color),
       0 1px 1px var(--tw-text-shadow-color),
