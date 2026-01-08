@@ -503,12 +503,12 @@ export default function ProfileClient({
         </section>
       </aside>
 
-      <section className="min-h-125 rounded-2xl border border-stone-600 bg-stone-800/80 p-4 shadow-lg lg:col-span-2">
+      <section className="min-h-125 rounded-2xl border border-stone-600 bg-stone-950/80 p-4 shadow-lg lg:col-span-2">
         <h2 className="mb-4 grid grid-flow-col place-content-center gap-2 text-xl md:place-content-start">
           <span aria-hidden="true">🎟️</span>
           Saved Events
           {!isEventsLoading && (
-            <span className="rounded-full bg-stone-700 px-2 py-1 text-xs">
+            <span className="rounded-full bg-stone-800 px-2 py-1 text-xs">
               {savedEvents.length}
             </span>
           )}
