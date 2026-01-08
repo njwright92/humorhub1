@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@source "./**/*.{ts,tsx}";
-
 @theme {
   --color-zinc-200: #f0efeb;
   --animate-slide-in: slide-in 0.3s forwards;
@@ -9,7 +7,7 @@
     var(--font-comic-neue), "Chalkboard SE", "Ink Free", "Segoe Print";
   --font-body: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --shadow-lg:
-    0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.4);
 }
 
 @layer base {
@@ -18,9 +16,13 @@
   iframe {
     vertical-align: unset;
   }
+
+  button {
+    cursor: pointer;
+  }
+
   input[type="date"] {
     appearance: none;
-    -webkit-appearance: none;
     min-height: 2.75rem;
     display: block;
     width: 100%;
@@ -42,7 +44,7 @@
     letter-spacing: 0.025em;
     --tw-text-shadow-color: rgb(120 53 15);
     text-shadow:
-      0 1px 0px var(--tw-text-shadow-color),
+      0 1px 0 var(--tw-text-shadow-color),
       0 1px 1px var(--tw-text-shadow-color),
       0 2px 2px var(--tw-text-shadow-color);
   }

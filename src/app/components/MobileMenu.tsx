@@ -6,10 +6,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
-
-const SearchBar = dynamic(() => import("./searchBar"), {
-  loading: () => <div className="size-10 animate-pulse rounded-full" />,
-});
+import SearchBar from "./searchBar";
 
 const AuthModal = dynamic(() => import("./authModal"));
 

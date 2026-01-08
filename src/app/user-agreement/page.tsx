@@ -72,10 +72,10 @@ export default function UserAgreementPage() {
             </p>
           </article>
         </div>
-        <div className="border-t border-stone-300 pt-6 text-center">
+        <div className="grid border-t border-stone-300 pt-6">
           <Link
             href="/"
-            className="inline-block rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
+            className="justify-self-center rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105"
           >
             Return Home
           </Link>

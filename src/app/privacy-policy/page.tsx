@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
       </h1>
       <section className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-300 bg-zinc-200 p-4 text-left leading-relaxed text-stone-900 shadow-lg">
         <p className="border-b border-zinc-300 pb-4 text-sm text-zinc-600">
-          <strong>Last Updated:</strong> Decemeber 2025
+          <strong>Last Updated:</strong> December 2025
         </p>
         <div className="grid gap-8">
           <article className="grid gap-2">
@@ -91,10 +91,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </article>
         </div>
-        <div className="border-t border-stone-300 pt-6 text-center">
+        <div className="grid border-t border-stone-300 pt-6">
           <Link
             href="/"
-            className="inline-block rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-800"
+            className="justify-self-center rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105"
           >
             Return Home
           </Link>

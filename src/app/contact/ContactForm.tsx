@@ -16,8 +16,9 @@ const INITIAL_FORM_STATE: FormState = {
 };
 
 const inputClass =
-  "w-full rounded-2xl border-2 border-stone-500 px-4 py-3 shadow-lg placeholder:text-stone-500 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
-const labelClass = "mb-2 mt-2 text-xs uppercase md:text-sm";
+  "w-full rounded-2xl border-2 border-stone-500 px-4 py-3 shadow-lg transition-colors placeholder:text-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+
+const labelClass = "my-2 text-xs uppercase md:text-sm";
 
 export default function ContactForm() {
   const { showToast } = useToast();
@@ -127,7 +128,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-2xl bg-amber-700 px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 hover:bg-amber-600 disabled:scale-100 disabled:bg-stone-600 disabled:text-stone-400 sm:w-auto"
+          className="mx-auto w-72 cursor-pointer rounded-2xl bg-amber-700 px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-stone-400"
         >
           {isSubmitting ? "Sending…" : "Send Message"}
         </button>
