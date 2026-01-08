@@ -106,8 +106,8 @@ export default function NewsClient() {
     setError("");
 
     try {
-      const qs = new URLSearchParams({ category: cat, subcategory: sub });
-      const response = await fetch(`/api/news?${qs.toString()}`);
+      const params = new URLSearchParams({ category: cat, subcategory: sub });
+      const response = await fetch(`/api/news?${params}`);
 
       if (!response.ok) throw new Error("Failed to fetch");
 
@@ -152,7 +152,7 @@ export default function NewsClient() {
           <button
             type="button"
             onClick={() => fetchNews(selectedCategory, selectedSubcategory)}
-            className="mt-2 text-sm text-red-300 underline transition-colors hover:text-white"
+            className="mt-2 cursor-pointer text-sm text-red-300 underline shadow-lg transition-colors hover:text-white"
           >
             Try Again
           </button>
@@ -170,7 +170,7 @@ export default function NewsClient() {
           </legend>
 
           <div className="grid items-end gap-6 text-left md:grid-cols-3">
-            <div className="flex flex-col">
+            <div className="grid">
               <label htmlFor="news-category" className={labelClass}>
                 Feed Type
               </label>
@@ -188,7 +188,7 @@ export default function NewsClient() {
               </select>
             </div>
 
-            <div className="flex flex-col">
+            <div className="grid">
               <label htmlFor="news-subcategory" className={labelClass}>
                 Topic
               </label>
@@ -209,7 +209,7 @@ export default function NewsClient() {
             <button
               type="reset"
               onClick={resetNews}
-              className="h-11 rounded-2xl border-2 border-stone-600 bg-stone-700 font-bold shadow-lg transition-all hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
+              className="h-10 cursor-pointer rounded-2xl border-2 border-stone-600 bg-stone-700 font-bold shadow-lg transition-colors hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
             >
               Reset Filters
             </button>
@@ -224,7 +224,7 @@ export default function NewsClient() {
 
         {isLoading ? (
           <div
-            className="flex justify-center pt-20"
+            className="grid place-content-center pt-20"
             role="status"
             aria-label="Loading articles"
           >
@@ -242,7 +242,7 @@ export default function NewsClient() {
             ))}
           </ul>
         ) : (
-          <p className="py-20 text-center text-xl text-stone-500">
+          <p className="py-20 text-xl text-stone-500">
             No articles found for this category.
           </p>
         )}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ProfileClient from "./ProfileClient";
 
 export const metadata: Metadata = {
@@ -27,6 +28,40 @@ export const metadata: Metadata = {
   },
 };
 
+function ProfileSkeleton() {
+  return (
+    <div className="grid flex-1 place-content-center" role="status">
+      <div className="grid w-64 animate-pulse gap-4">
+        <div className="h-8 rounded-2xl bg-stone-700" />
+        <div className="mx-auto size-36 rounded-full bg-stone-700" />
+        <div className="h-4 rounded-2xl bg-stone-700" />
+        <div className="mx-auto h-4 w-1/2 rounded-2xl bg-stone-700" />
+      </div>
+      <span className="sr-only">Loading profile...</span>
+    </div>
+  );
+}
+
+function SignInPrompt() {
+  return (
+    <section className="mx-auto mt-10 grid max-w-md gap-4 rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center shadow-lg">
+      <span className="text-6xl" aria-hidden="true">
+        🔐
+      </span>
+      <h2 className="text-2xl text-amber-700">Sign In Required</h2>
+      <p className="text-stone-400">
+        Please sign in to view your profile and saved events.
+      </p>
+      <Link
+        href="/mic-finder"
+        className="cursor-pointer justify-self-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105"
+      >
+        Go to MicFinder
+      </Link>
+    </section>
+  );
+}
+
 export default function ProfilePage() {
   return (
     <>
@@ -39,7 +74,10 @@ export default function ProfilePage() {
         <p className="text-sm text-stone-300 md:text-lg">
           Manage your personal schedule
         </p>
-        <ProfileClient />
+        <ProfileClient
+          skeleton={<ProfileSkeleton />}
+          signInPrompt={<SignInPrompt />}
+        />
       </main>
     </>
   );
