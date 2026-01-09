@@ -29,10 +29,9 @@ const KEYWORDS_TO_MICFINDER = new Set([
   "competitions",
 ]);
 
-type Page = (typeof PAGES)[number];
 type Suggestion =
   | { type: "action"; label: string }
-  | { type: "page"; label: string; page: Page }
+  | { type: "page"; label: string; page: PageItem }
   | { type: "city"; label: string; city: string };
 
 export default function SearchBar({
@@ -76,30 +75,37 @@ export default function SearchBar({
     });
   }, []);
 
+  // Optimized Search Logic
   const suggestions = useMemo<Suggestion[]>(() => {
     const q = searchTerm.trim().toLowerCase();
     if (q.length < 2) return [];
 
     const results: Suggestion[] = [];
 
-    if (q === "login" || q === "sign in" || q === "sign up") {
+    // 1. Actions
+    if (["login", "sign in", "sign up"].includes(q)) {
       results.push({ type: "action", label: "Login / Sign Up" });
     }
 
+    // 2. Keywords
     if (KEYWORDS_TO_MICFINDER.has(q)) {
       results.push({ type: "page", label: "Mic Finder", page: PAGES[0] });
     }
 
+    // 3. Static Pages
     for (const page of PAGES) {
       if (page.label.toLowerCase().startsWith(q)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
+    // 4. Cities (Optimized Loop)
+    let cityCount = 0;
     for (const city of cities) {
-      if (results.filter((r) => r.type === "city").length >= 5) break;
+      if (cityCount >= 5) break; // Stop after 5 matches
       if (city.toLowerCase().startsWith(q)) {
         results.push({ type: "city", label: city, city });
+        cityCount++;
       }
     }
 
@@ -119,13 +125,15 @@ export default function SearchBar({
         return;
       }
 
-      if (s.page.requiresAuth && !isUserSignedIn) {
-        showToast(`Please sign in to access ${s.page.label}`, "info");
-        setIsAuthModalOpen(true);
-        closeSearchBar();
-        return;
+      if (s.type === "page") {
+        if (s.page.requiresAuth && !isUserSignedIn) {
+          showToast(`Please sign in to access ${s.page.label}`, "info");
+          setIsAuthModalOpen(true);
+          closeSearchBar();
+          return;
+        }
+        navigateTo(s.page.route);
       }
-      navigateTo(s.page.route);
     },
     [navigateTo, isUserSignedIn, setIsAuthModalOpen, showToast, closeSearchBar]
   );
@@ -135,23 +143,29 @@ export default function SearchBar({
       e.preventDefault();
 
       const q = searchTerm.trim().toLowerCase();
+
+      // Prioritize active selection, then exact match, then first partial city match
       const suggestion =
         suggestions[activeIndex] ??
-        suggestions.find((s) => s.label.toLowerCase() === q) ??
-        cities.find((c) => c.toLowerCase().startsWith(q));
+        suggestions.find((s) => s.label.toLowerCase() === q);
 
-      if (typeof suggestion === "string") {
+      if (suggestion) {
+        executeSuggestion(suggestion);
+        return;
+      }
+
+      const matchedCity = cities.find((c) => c.toLowerCase().startsWith(q));
+      if (matchedCity) {
         executeSuggestion({
           type: "city",
-          label: suggestion,
-          city: suggestion,
+          label: matchedCity,
+          city: matchedCity,
         });
-      } else if (suggestion) {
-        executeSuggestion(suggestion);
-      } else {
-        showToast("No results found.", "info");
-        closeSearchBar();
+        return;
       }
+
+      showToast("No results found.", "info");
+      closeSearchBar();
     },
     [
       activeIndex,
@@ -172,24 +186,28 @@ export default function SearchBar({
       const actions: Record<string, () => void> = {
         ArrowDown: () => setActiveIndex((i) => (i < len - 1 ? i + 1 : 0)),
         ArrowUp: () => setActiveIndex((i) => (i > 0 ? i - 1 : len - 1)),
-        Enter: () =>
-          activeIndex >= 0 && executeSuggestion(suggestions[activeIndex]),
+        Enter: () => {
+          if (activeIndex >= 0) {
+            e.preventDefault();
+            executeSuggestion(suggestions[activeIndex]);
+          }
+        },
         Escape: closeSearchBar,
       };
 
       if (actions[e.key]) {
-        e.preventDefault();
+        if (e.key !== "Enter") e.preventDefault(); // Enter handled inside
         actions[e.key]();
       }
     },
     [suggestions, activeIndex, executeSuggestion, closeSearchBar]
   );
 
+  // Load Cities (Cached)
   useEffect(() => {
     if (!isInputVisible || cities.length) return;
 
     let mounted = true;
-
     (async () => {
       try {
         const cached = sessionStorage.getItem("hh_cities");
@@ -218,13 +236,12 @@ export default function SearchBar({
     };
   }, [isInputVisible, cities.length]);
 
+  // Click Outside
   useEffect(() => {
     if (!isInputVisible) return;
-
     const onClickOutside = (e: MouseEvent) => {
       if (!formRef.current?.contains(e.target as Node)) closeSearchBar();
     };
-
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [isInputVisible, closeSearchBar]);
@@ -234,7 +251,7 @@ export default function SearchBar({
       <button
         type="button"
         onClick={handleToggleInput}
-        className="cursor-pointer text-zinc-200 transition hover:scale-110 sm:text-stone-900 sm:hover:text-stone-700"
+        className="cursor-pointer text-zinc-200 transition-transform hover:scale-110 sm:text-stone-900 sm:hover:text-stone-700"
         aria-label="Open search"
         aria-expanded={isInputVisible}
         aria-controls={POPOVER_ID}
@@ -265,7 +282,7 @@ export default function SearchBar({
           <button
             type="button"
             onClick={closeSearchBar}
-            className="absolute top-0 right-0 cursor-pointer p-1 text-stone-900 hover:scale-105"
+            className="absolute top-0 right-0 cursor-pointer p-1 text-stone-900 transition-transform hover:scale-105"
             aria-label="Close search"
           >
             <svg
@@ -293,7 +310,7 @@ export default function SearchBar({
               setActiveIndex(-1);
             }}
             onKeyDown={handleKeyDown}
-            className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400"
+            className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50 focus:outline-hidden"
             autoComplete="off"
             role="combobox"
             aria-expanded={suggestions.length > 0}
@@ -306,7 +323,7 @@ export default function SearchBar({
 
           <button
             type="submit"
-            className="mb-2 w-32 cursor-pointer justify-self-center rounded-2xl bg-amber-700 py-1 font-semibold text-white shadow-lg transition hover:scale-110 hover:bg-amber-900"
+            className="mb-2 w-32 cursor-pointer justify-self-center rounded-2xl bg-amber-700 py-1 font-semibold text-white shadow-lg transition-transform hover:scale-110 hover:bg-amber-900"
           >
             Search
           </button>
@@ -324,7 +341,9 @@ export default function SearchBar({
                   id={`suggestion-${idx}`}
                   role="option"
                   aria-selected={idx === activeIndex}
-                  className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm text-stone-900 transition-colors ${idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"}`}
+                  className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm text-stone-900 transition-colors ${
+                    idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"
+                  }`}
                   onMouseDown={(e) => {
                     e.preventDefault();
                     executeSuggestion(sug);
@@ -332,7 +351,7 @@ export default function SearchBar({
                   onMouseEnter={() => setActiveIndex(idx)}
                 >
                   <span className="font-medium">{sug.label}</span>
-                  <span className="text-xs font-bold tracking-wider text-stone-500">
+                  <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">
                     {sug.type}
                   </span>
                 </li>
