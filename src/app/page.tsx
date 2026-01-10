@@ -46,7 +46,7 @@ export default function Home() {
         >
           Mic Finder!
         </h2>
-        <div className="grid gap-6 text-center md:grid-cols-2 md:text-left">
+        <div className="grid gap-6 md:grid-cols-2 md:text-left">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Looking for your next Mic?
@@ -90,7 +90,7 @@ export default function Home() {
         >
           Hub News!
         </h2>
-        <div className="grid gap-6 text-center md:mr-4 md:grid-cols-2 md:text-right">
+        <div className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Your Source for Fresh Headlines!

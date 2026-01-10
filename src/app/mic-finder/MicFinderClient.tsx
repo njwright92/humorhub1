@@ -12,7 +12,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
-import { sendGTMEvent } from "@next/third-parties/google"; // <--- Added this
+import { sendGTMEvent } from "@next/third-parties/google";
 import type { Event, CityCoordinates } from "../lib/types";
 import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
@@ -25,9 +25,6 @@ const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ),
 });
 
-// REMOVED: The manual global declaration that caused the conflict
-// declare global { ... }
-
 interface MicFinderClientProps {
   initialEvents: Event[];
   initialCityCoordinates: CityCoordinates;
@@ -35,7 +32,7 @@ interface MicFinderClientProps {
 }
 
 const inputClass =
-  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-lg outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-lg outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
 const sectionHeadingClass =
   "mb-4 w-full rounded-2xl border-b-4 pb-2 text-center text-xl sm:text-2xl";
@@ -138,7 +135,6 @@ export default function MicFinderClient({
   const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
   const parentRef = useRef<HTMLDivElement>(null);
 
-  // UPDATED: Now uses the sendGTMEvent library function
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
       sendGTMEvent({ event: event_name, ...params });
@@ -403,7 +399,7 @@ export default function MicFinderClient({
                 placeholder="Search city..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-none"
+                className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-hidden"
                 autoComplete="off"
                 autoFocus
               />

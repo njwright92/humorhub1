@@ -165,7 +165,6 @@ export default function DesktopNav() {
               type="button"
               onMouseEnter={ensureAuthListener}
               onFocus={ensureAuthListener}
-              onTouchStart={ensureAuthListener}
               onClick={() => handleProtectedRoute(protectedPath, label)}
               aria-label={label}
               className={navItemClass}

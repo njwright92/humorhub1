@@ -5,9 +5,7 @@ export const metadata: Metadata = {
   title: "About Humor Hub | Mission & Tools",
   description:
     "Humor Hub empowers comedians with real-time event listings and curated news to supercharge your career.",
-  alternates: {
-    canonical: "https://www.thehumorhub.com/about",
-  },
+  alternates: { canonical: "https://www.thehumorhub.com/about" },
   openGraph: {
     title: "About Humor Hub | Mission & Tools",
     description:
@@ -50,6 +48,14 @@ const FEATURES = [
   },
 ] as const;
 
+const FEATURE_CARD_BASE =
+  "group grid gap-2 rounded-2xl border border-stone-700 bg-stone-800/50 p-6 text-left transition-transform hover:-translate-y-1";
+
+const FEATURE_TITLE_BASE = "text-xl transition-colors";
+
+const FEATURE_LINK_BASE =
+  "mt-2 inline-flex items-center gap-1 font-bold transition-colors group-hover:underline";
+
 export default function AboutPage() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-4 pt-12 text-center md:ml-20">
@@ -69,29 +75,33 @@ export default function AboutPage() {
 
       <section
         aria-labelledby="features-heading"
-        className="animate-slide-in mx-auto grid w-full max-w-5xl gap-6 md:grid-cols-2"
+        className="animate-slide-in mx-auto grid max-w-5xl gap-6 md:grid-cols-2"
       >
         <h3 id="features-heading" className="sr-only">
           Features
         </h3>
+
         {FEATURES.map((feature) => (
           <article
             key={feature.title}
-            className={`group grid content-start gap-2 rounded-2xl border border-stone-700 bg-stone-800/50 p-6 text-left transition-all hover:-translate-y-1 ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
+            className={`${FEATURE_CARD_BASE} ${feature.borderHoverClass} ${feature.shadowHoverClass}`}
           >
             <span className="text-3xl" aria-hidden="true">
               {feature.emoji}
             </span>
+
             <h3
-              className={`text-xl transition-colors ${feature.titleBaseClass} ${feature.titleHoverClass}`}
+              className={`${FEATURE_TITLE_BASE} ${feature.titleBaseClass} ${feature.titleHoverClass}`}
             >
               {feature.title}
             </h3>
+
             <p className="text-sm text-stone-300">{feature.description}</p>
             <p className="text-xs text-stone-400">{feature.detail}</p>
+
             <Link
               href={feature.link}
-              className={`mt-2 inline-flex items-center gap-1 font-bold transition-colors group-hover:underline ${feature.linkTextClass}`}
+              className={`${FEATURE_LINK_BASE} ${feature.linkTextClass}`}
             >
               {feature.linkText}
               <span aria-hidden="true">→</span>
@@ -104,10 +114,11 @@ export default function AboutPage() {
         aria-labelledby="cta-heading"
         className="grid gap-6 border-t border-stone-800 pt-8"
       >
-        <h3 id="cta-heading" className="text-xl sm:text-2xl">
+        <h3 id="cta-heading" className="text-xl md:text-2xl">
           Ready to hit the stage?
         </h3>
-        <div className="grid gap-3 sm:grid-flow-col sm:justify-center">
+
+        <div className="grid grid-flow-col justify-center gap-3">
           <Link
             href="/mic-finder"
             className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
