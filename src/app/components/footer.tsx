@@ -1,20 +1,20 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import ScrollToTop from "./ScrollToTop";
 
-const linkClass =
-  "transition-colors hover:text-amber-700 hover:underline md:text-lg";
-const headingClass =
-  " mb-4 text-lg  uppercase  whitespace-nowrap text-amber-600 md:mb-6 md:text-xl";
-
 const SOCIALS = [
-  { href: "https://twitter.com/naterbug321", label: "X (Twitter)" },
-  { href: "https://www.facebook.com/nate_wrigh", label: "Facebook" },
-  { href: "https://www.instagram.com/nate_wright3", label: "Instagram" },
-  { href: "https://github.com/njwright92", label: "GitHub" },
+  { label: "X (Twitter)", href: "https://twitter.com/naterbug321" },
+  { label: "Facebook", href: "https://www.facebook.com/nate_wrigh" },
+  { label: "Instagram", href: "https://www.instagram.com/nate_wright3" },
+  { label: "GitHub", href: "https://github.com/njwright92" },
 ];
 
+const headingClass = "text-stone-200 uppercase";
+const linkClass = "transition-colors hover:text-amber-700";
+
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer
       className="border-t border-stone-500 md:ml-20"
@@ -25,9 +25,9 @@ export default function Footer() {
           Site Footer
         </h2>
 
-        <header className="grid justify-items-center gap-2">
-          <h3 className="text-center text-2xl md:text-4xl">Humor Hub</h3>
-          <p className="max-w-2xl text-center text-stone-300 md:text-lg">
+        <header className="grid place-items-center gap-2 text-center">
+          <h3 className="text-2xl md:text-4xl">Humor Hub</h3>
+          <p className="max-w-2xl text-stone-300 md:text-lg">
             The Hub of Humor, Connecting comics and fans globally. Join the fun!
           </p>
         </header>
@@ -36,7 +36,7 @@ export default function Footer() {
           <Link
             href="/"
             aria-label="Humor Hub Home"
-            className="justify-self-center md:justify-self-start md:pl-10"
+            className="cursor-pointer justify-self-center md:justify-self-start md:pl-10"
           >
             <Image
               src="/logo.webp"
@@ -48,11 +48,8 @@ export default function Footer() {
             />
           </Link>
 
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:pr-10">
-            <nav
-              aria-labelledby="about-nav"
-              className="grid h-fit justify-items-center gap-1 text-center"
-            >
+          <div className="grid grid-cols-2 gap-6 text-center sm:grid-cols-3 md:pr-10">
+            <nav aria-labelledby="about-nav" className="grid h-fit gap-1">
               <h3 id="about-nav" className={headingClass}>
                 Get to Know Us
               </h3>
@@ -70,10 +67,7 @@ export default function Footer() {
               </ul>
             </nav>
 
-            <nav
-              aria-labelledby="social-nav"
-              className="grid h-fit justify-items-center gap-1 text-center"
-            >
+            <nav aria-labelledby="social-nav" className="grid h-fit gap-1">
               <h3 id="social-nav" className={headingClass}>
                 Stay Connected
               </h3>
@@ -94,10 +88,7 @@ export default function Footer() {
               </ul>
             </nav>
 
-            <nav
-              aria-labelledby="legal-nav"
-              className="grid h-fit justify-items-center gap-1 text-center"
-            >
+            <nav aria-labelledby="legal-nav" className="grid h-fit gap-1">
               <h3 id="legal-nav" className={headingClass}>
                 Legal Info
               </h3>
@@ -119,7 +110,7 @@ export default function Footer() {
 
         <div className="grid items-center gap-2 border-t border-stone-400 pt-2 sm:grid-cols-[1fr_auto_1fr]">
           <small className="font-mono text-xs text-stone-400 sm:col-start-2 md:text-sm">
-            © {new Date().getFullYear()} Humor Hub™. All rights reserved.
+            © {currentYear} Humor Hub™. All rights reserved.
           </small>
           <ScrollToTop className="justify-self-center sm:col-start-3 sm:justify-self-end" />
         </div>
