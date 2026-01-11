@@ -16,7 +16,7 @@
 
 ## 📖 Overview
 
-**Humor Hub** is a robust, full-stack platform engineered to modernize the workflow of stand-up comedians, writers, and live performers. By bridging the gap between talent and opportunity, the application provides a centralized interface for venue discovery and material development.
+**Humor Hub** is a full-stack platform engineered to modernize the workflow of stand-up comedians, writers, and live performers. By bridging the gap between talent and opportunity, the application provides a centralized interface for venue discovery and material development.
 
 Currently serving as a premier resource for the industry, the platform aggregates real-time data for live open mic events across **500+ cities worldwide**, utilizing geospatial technology to connect performers with their next stage.
 
@@ -28,7 +28,7 @@ Currently serving as a premier resource for the industry, the platform aggregate
 
 A high-performance "Mic Finder" engine that allows users to discover, filter, and share live performance stages for comedy, music, and poetry.
 
-- **Scalable Database:** Manages a continuously expanding dataset of 1,600+ events.
+- **Scalable Database:** Backed by Firestore for fast, flexible querying.
 - **Location Services:** Integrated Google Maps API for precise event geolocation and routing.
 - **Virtualized Lists:** Optimized rendering with TanStack Virtual for smooth scrolling through large datasets.
 
@@ -36,30 +36,36 @@ A high-performance "Mic Finder" engine that allows users to discover, filter, an
 
 A curated content stream tailored for comedic professionals.
 
-- **Real-Time News:** Fetches and filters trending news topics to inspire fresh comedic material.
+- **Real-Time News:** Fetches and filters trending topics via a news API to inspire fresh material.
 
 ### 📧 Contact & Communication
 
 - **EmailJS Integration:** Seamless contact form functionality for user inquiries and collaboration requests.
+### 🔐 Auth & Profiles
+
+- **Firebase Auth + Admin SDK:** Client-side auth flows paired with server-side verification.
+- **Storage-ready:** Firebase Storage hooks for media handling.
 
 ---
 
 ## 🛠️ Architecture & Tech Stack
 
-This project utilizes a modern **Next.js 16** framework with **React 19**, leveraging server-side rendering and static generation for optimal performance and SEO. The codebase is strictly typed with **TypeScript** and formatted with **Prettier** for consistency.
+This project utilizes **Next.js 16.1** with **React 19**, leveraging server-side rendering and static generation for performance and SEO. The codebase is strictly typed with **TypeScript 5.8** and formatted with **Prettier 3** for consistency.
 
-| Domain             | Technology                                |
-| :----------------- | :---------------------------------------- |
-| **Core Framework** | Next.js 16, React 19, Node.js             |
-| **Language**       | TypeScript 5.8                            |
-| **Styling & UI**   | Tailwind CSS 4, PostCSS                   |
-| **Backend & Auth** | Firebase Authentication, Firebase Admin   |
-| **Database**       | Cloud Firestore                           |
-| **Geospatial**     | Google Maps (`@vis.gl/react-google-maps`) |
-| **Performance**    | TanStack Virtual (list virtualization)    |
-| **Communication**  | EmailJS                                   |
-| **Code Quality**   | ESLint 9, Prettier 3, lint-staged         |
-| **Deployment**     | Vercel (CI/CD Integration)                |
+| Domain             | Technology                                          |
+| :----------------- | :-------------------------------------------------- |
+| **Core Framework** | Next.js 16.1, React 19, Node.js                     |
+| **Language**       | TypeScript 5.8                                      |
+| **Styling & UI**   | Tailwind CSS 4, PostCSS                             |
+| **Backend & Auth** | Firebase Auth (client), Firebase Admin (server)     |
+| **Database**       | Cloud Firestore                                    |
+| **Storage**        | Firebase Storage                                   |
+| **Geospatial**     | Google Maps (`@vis.gl/react-google-maps`)           |
+| **Performance**    | `@tanstack/react-virtual` (list virtualization)     |
+| **Communication**  | EmailJS (`@emailjs/browser`)                        |
+| **Observability**  | Vercel Speed Insights                               |
+| **Code Quality**   | ESLint 9, Prettier 3, lint-staged                   |
+| **Deployment**     | Vercel                                              |
 
 ---
 
@@ -73,6 +79,7 @@ Follow these steps to set up the environment locally.
 - **npm** or **yarn**
 - A configured **Firebase** project
 - A **Google Maps API** key
+ - A **News API** key (for the aggregator)
 
 ### Installation Guide
 
@@ -93,20 +100,30 @@ Follow these steps to set up the environment locally.
     Create a `.env.local` file in the root directory. Add your credentials:
 
     ```env
-    # Firebase Configuration
+    # Firebase (client)
     NEXT_PUBLIC_FIREBASE_API_KEY=your_key
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+    FIREBASE_PROJECT_ID=your_project_id
     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
     NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+
+    # Firebase Admin (server)
+    FIREBASE_CLIENT_EMAIL=your_client_email
+    FIREBASE_PRIVATE_KEY="your_private_key"
 
     # Google Maps
-    NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_key
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_key
+    GOOGLE_MAPS_API_KEY=your_key
+
+    # News API
+    NEWS_API=your_key
 
     # EmailJS (optional)
     NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
     NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1=your_template_id_alt
     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
     ```
 
