@@ -29,7 +29,7 @@ const FEATURES = [
     titleHoverClass: "hover:text-amber-600",
     borderHoverClass: "hover:border-amber-600/50",
     shadowHoverClass: "hover:shadow-amber-900/20",
-    linkTextClass: "text-amber-700 hover:text-amber-600",
+    linkTextClass: "text-amber-600 hover:text-amber-500",
   },
   {
     emoji: "📰",
@@ -60,9 +60,7 @@ export default function AboutPage() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-4 pt-12 text-center md:ml-20">
       <header className="grid justify-items-center gap-6">
-        <h1 className="text-3xl text-amber-700 md:text-4xl lg:text-5xl">
-          About Us
-        </h1>
+        <h1 className="page-title">About Us</h1>
         <hgroup className="grid gap-2">
           <h2 className="text-2xl text-amber-600">Built for Comics</h2>
           <p className="text-lg font-semibold md:text-xl">By a Comic</p>
@@ -119,10 +117,7 @@ export default function AboutPage() {
         </h3>
 
         <div className="grid grid-flow-col justify-center gap-3">
-          <Link
-            href="/mic-finder"
-            className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-amber-600"
-          >
+          <Link href="/mic-finder" className="btn-amber hover:bg-amber-600">
             Find Events
           </Link>
           <Link

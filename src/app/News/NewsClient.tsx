@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Loading from "../components/loading";
+import dynamic from "next/dynamic";
 
 type Category = "top_stories" | "all_news";
 
@@ -29,12 +30,21 @@ const SUBCATEGORIES = [
   "travel",
 ] as const;
 
-const formatText = (text: string) =>
-  text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-
-const selectClass =
-  "w-full rounded-2xl border-2 border-stone-600 px-4 py-3 transition-all focus:border-amber-700 focus:ring-2 focus:ring-amber-700 disabled:opacity-70 cursor-pointer";
-const labelClass = "mb-2 text-xs sm:text-sm font-bold uppercase tracking-wide";
+const NewsFilters = dynamic(() => import("./NewsFilters"), {
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="card-shell card-border-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md"
+    >
+      <div className="grid items-end gap-6 md:grid-cols-3">
+        <div className="h-10 rounded-2xl bg-stone-700" />
+        <div className="h-10 rounded-2xl bg-stone-700" />
+        <div className="h-10 rounded-2xl bg-stone-700" />
+      </div>
+    </div>
+  ),
+});
+const SKELETON_COUNT = 6;
 
 function ArticleCard({
   article,
@@ -67,7 +77,7 @@ function ArticleCard({
             📰
           </div>
         )}
-        <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold">
+        <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold text-white">
           {article.source || "News"}
         </span>
       </figure>
@@ -127,14 +137,6 @@ export default function NewsClient() {
     fetchNews(selectedCategory, selectedSubcategory);
   }, [selectedCategory, selectedSubcategory]);
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value as Category);
-  };
-
-  const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSubcategory(e.target.value);
-  };
-
   const resetNews = () => {
     setSelectedCategory("all_news");
     setSelectedSubcategory("general");
@@ -159,63 +161,16 @@ export default function NewsClient() {
         </div>
       )}
 
-      <form
-        aria-labelledby="filters-heading"
-        onSubmit={(e) => e.preventDefault()}
-        className="mx-auto mb-12 w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800/80 p-6 shadow-lg shadow-amber-900/10 backdrop-blur-md"
-      >
-        <fieldset disabled={isLoading}>
-          <legend id="filters-heading" className="sr-only">
-            Filter News
-          </legend>
-
-          <div className="grid items-end gap-6 text-left md:grid-cols-3">
-            <div className="grid">
-              <label htmlFor="news-category" className={labelClass}>
-                Feed Type
-              </label>
-              <select
-                id="news-category"
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-                className={selectClass}
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {formatText(cat)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid">
-              <label htmlFor="news-subcategory" className={labelClass}>
-                Topic
-              </label>
-              <select
-                id="news-subcategory"
-                value={selectedSubcategory}
-                onChange={handleSubcategoryChange}
-                className={selectClass}
-              >
-                {SUBCATEGORIES.map((sub) => (
-                  <option key={sub} value={sub}>
-                    {formatText(sub)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="reset"
-              onClick={resetNews}
-              className="h-10 cursor-pointer rounded-2xl border-2 border-stone-600 bg-stone-700 font-bold shadow-lg transition-colors hover:border-amber-700/50 hover:bg-stone-600 disabled:opacity-70"
-            >
-              Reset Filters
-            </button>
-          </div>
-        </fieldset>
-      </form>
+      <NewsFilters
+        selectedCategory={selectedCategory}
+        selectedSubcategory={selectedSubcategory}
+        onCategoryChange={(value) => setSelectedCategory(value)}
+        onSubcategoryChange={(value) => setSelectedSubcategory(value)}
+        onReset={resetNews}
+        isLoading={isLoading}
+        categories={CATEGORIES}
+        subcategories={SUBCATEGORIES}
+      />
 
       <section aria-labelledby="results-heading">
         <h2 id="results-heading" className="sr-only">
@@ -223,12 +178,27 @@ export default function NewsClient() {
         </h2>
 
         {isLoading ? (
-          <div
-            className="grid place-content-center pt-20"
-            role="status"
-            aria-label="Loading articles"
-          >
-            <Loading />
+          <div className="grid gap-6">
+            <div className="grid place-content-center pt-6" role="status">
+              <Loading />
+            </div>
+            <ul
+              className="animate-slide-in grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+              aria-label="Loading articles"
+            >
+              {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+                <li key={index}>
+                  <div className="grid h-full min-h-[22rem] animate-pulse grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50">
+                    <div className="h-48 w-full bg-stone-800" />
+                    <div className="grid grid-rows-[auto_1fr_auto] gap-3 p-5">
+                      <div className="h-5 w-3/4 rounded-full bg-stone-700" />
+                      <div className="h-12 w-full rounded-2xl bg-stone-700" />
+                      <div className="h-9 w-1/2 rounded-2xl bg-stone-700" />
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         ) : articles.length > 0 ? (
           <ul

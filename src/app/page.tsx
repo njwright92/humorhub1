@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import EventForm from "./components/EventForm";
 import NewsButton from "./components/newsButton";
+import RoundImage from "./components/RoundImage";
+import SectionCard from "./components/SectionCard";
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
@@ -32,21 +33,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="grid min-h-dvh content-start gap-8 p-2 pt-20 text-center md:ml-20">
-      <h1 className="hidden text-5xl md:block md:text-6xl lg:text-7xl">
-        Humor Hub!
-      </h1>
-      <section
-        aria-labelledby="micfinder-heading"
-        className="mx-auto mb-4 grid w-full gap-8 rounded-2xl p-2 shadow-lg"
-      >
-        <h2
-          id="micfinder-heading"
-          className="text-3xl text-amber-700 md:text-4xl lg:text-5xl"
-        >
-          Mic Finder!
-        </h2>
-        <div className="grid gap-6 md:grid-cols-2 md:text-left">
+    <main className="home-main">
+      <h1 className="home-hero-title">Humor Hub!</h1>
+      <SectionCard id="micfinder-heading" title="Mic Finder!" variant="spaced">
+        <div className="home-mic-grid">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Looking for your next Mic?
@@ -58,12 +48,12 @@ export default function Home() {
               Explore 1,000s of listings and get on stage!
             </p>
           </div>
-          <figure className="row-span-3 grid place-items-center md:justify-items-end">
+          <figure className="home-mic-figure">
             <Link href="/mic-finder">
-              <Image
+              <RoundImage
                 src="/hh1.webp"
                 alt="Mic Finder - Find open mics near you"
-                className="h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-lg transition-transform hover:scale-105 hover:rotate-3 md:h-42 md:w-42"
+                interactive
                 width={168}
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"
@@ -72,25 +62,13 @@ export default function Home() {
             </Link>
           </figure>
           <EventForm />
-          <Link
-            href="/mic-finder"
-            className="mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start"
-          >
+          <Link href="/mic-finder" className="primary-cta">
             Find Your Mic!
           </Link>
         </div>
-      </section>
-      <section
-        aria-labelledby="news-heading"
-        className="mx-auto grid w-full gap-8 rounded-2xl p-2 shadow-lg"
-      >
-        <h2
-          id="news-heading"
-          className="text-3xl text-amber-700 md:text-4xl lg:text-5xl"
-        >
-          Hub News!
-        </h2>
-        <div className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right">
+      </SectionCard>
+      <SectionCard id="news-heading" title="Hub News!">
+        <div className="home-news-grid">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Your Source for Fresh Headlines!
@@ -101,12 +79,13 @@ export default function Home() {
               Check out the Hub News for the latest updates!
             </p>
           </div>
-          <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
+          <figure className="home-news-figure">
             <NewsButton className="border-0 bg-transparent">
-              <Image
+              <RoundImage
                 src="/newsy.webp"
                 alt="Hub News - Latest comedy headlines"
-                className="mb-4 h-32 w-32 cursor-pointer rounded-full border-2 border-zinc-700 object-contain shadow-lg hover:scale-105 hover:rotate-3 md:h-42 md:w-42"
+                interactive
+                variant="news"
                 width={168}
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"
@@ -116,7 +95,7 @@ export default function Home() {
             <NewsButton />
           </figure>
         </div>
-      </section>
+      </SectionCard>
     </main>
   );
 }

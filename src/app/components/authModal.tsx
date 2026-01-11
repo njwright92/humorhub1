@@ -149,7 +149,7 @@ export default function AuthModal({
       aria-modal="true"
       aria-labelledby="auth-title"
     >
-      <div className="relative grid w-full max-w-sm gap-3 rounded-2xl bg-stone-300 p-4 shadow-lg">
+      <div className="card-shell relative grid w-full max-w-sm gap-3 bg-stone-300 p-4">
         <button
           onClick={handleClose}
           className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-700"

@@ -16,7 +16,7 @@ const INITIAL_FORM_STATE: FormState = {
 };
 
 const inputClass =
-  "w-full rounded-2xl border-2 border-stone-500 px-4 py-3 shadow-lg transition-colors placeholder:text-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "input-amber border-stone-500 shadow-lg text-zinc-200 placeholder:text-zinc-400";
 
 const labelClass = "my-2 text-xs uppercase md:text-sm";
 
@@ -65,7 +65,7 @@ export default function ContactForm() {
   return (
     <section
       aria-labelledby="contact-form-heading"
-      className="animate-slide-in mx-auto w-full max-w-4xl rounded-2xl border-2 border-amber-700 bg-stone-800 p-2 shadow-lg backdrop-blur-md md:p-4 lg:p-6"
+      className="animate-slide-in card-shell card-border-2 card-dark mx-auto w-full max-w-4xl border-amber-700 p-2 backdrop-blur-md md:p-4 lg:p-6"
     >
       <h2 id="contact-form-heading" className="sr-only">
         Contact Form
@@ -128,7 +128,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mx-auto w-72 cursor-pointer rounded-2xl bg-amber-700 px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-stone-400"
+          className="btn-amber mx-auto w-72 cursor-pointer disabled:scale-100 disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-stone-400"
         >
           {isSubmitting ? "Sending…" : "Send Message"}
         </button>

@@ -6,16 +6,14 @@ import React, {
   useCallback,
   useMemo,
   useRef,
-  memo,
 } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
 import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
-import { sendGTMEvent } from "@next/third-parties/google";
 import type { Event, CityCoordinates } from "../lib/types";
 import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
+import EventCard from "./EventCard";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   loading: () => (
@@ -23,6 +21,10 @@ const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
       Loading Map...
     </span>
   ),
+});
+
+const VirtualizedEventList = dynamic(() => import("./VirtualizedEventList"), {
+  ssr: false,
 });
 
 interface MicFinderClientProps {
@@ -71,47 +73,14 @@ const TAB_LABELS: Record<TabId, string> = {
   Other: "Music/All-Arts Mics",
 };
 
-const EventCard = memo(function EventCard({
-  event,
-  onSave,
-}: {
-  event: Event;
-  onSave: (event: Event) => void;
-}) {
-  return (
-    <article className="mb-4 grid justify-items-center gap-2 rounded-2xl border border-stone-600 p-2 text-center shadow-lg">
-      <h3 className="text-lg text-amber-600 md:text-xl">{event.name}</h3>
-      <p className="text-sm">
-        <span aria-hidden="true">📅 </span>
-        <span className="sr-only">Date: </span>
-        {event.date}
-      </p>
-      <p className="text-sm">
-        <span aria-hidden="true">📍 </span>
-        <span className="sr-only">Location: </span>
-        {event.location}
-      </p>
-      <div className="w-full px-2 text-sm">
-        <span className="mb-1 block font-bold">
-          <span aria-hidden="true">ℹ️ </span>
-          Details:
-        </span>
-        <div
-          className="wrap-break-word [&_a]:text-blue-400"
-          dangerouslySetInnerHTML={{ __html: event.details }}
-        />
-      </div>
-      <button
-        type="button"
-        onClick={() => onSave(event)}
-        className="my-2 rounded-2xl bg-amber-700 px-3 py-1.5 font-bold text-white shadow-lg hover:scale-105"
-        aria-label={`Save ${event.name}`}
-      >
-        Save Event
-      </button>
-    </article>
-  );
-});
+async function sendGtmEvent(
+  event_name: string,
+  params: Record<string, unknown>
+) {
+  if (process.env.NODE_ENV !== "production") return;
+  const { sendGTMEvent } = await import("@next/third-parties/google");
+  sendGTMEvent({ event: event_name, ...params });
+}
 
 export default function MicFinderClient({
   initialEvents,
@@ -133,11 +102,10 @@ export default function MicFinderClient({
 
   const authRef = useRef<Auth | null>(null);
   const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
-  const parentRef = useRef<HTMLDivElement>(null);
 
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
-      sendGTMEvent({ event: event_name, ...params });
+      void sendGtmEvent(event_name, params);
     },
     []
   );
@@ -364,13 +332,6 @@ export default function MicFinderClient({
     return list;
   }, [initialEvents, cityLower, isTabMatch]);
 
-  const rowVirtualizer = useVirtualizer({
-    count: allCityEvents.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 150,
-    overscan: 5,
-  });
-
   return (
     <>
       <div className="relative z-20 mt-2 grid justify-center gap-3 sm:flex sm:gap-4">
@@ -482,7 +443,7 @@ export default function MicFinderClient({
       </nav>
       <section
         aria-labelledby="recurring-heading"
-        className="my-6 w-full rounded-2xl shadow-lg"
+        className="card-shell my-6 w-full"
       >
         <h2
           id="recurring-heading"
@@ -519,7 +480,7 @@ export default function MicFinderClient({
       </section>
       <section
         aria-labelledby="onetime-heading"
-        className="my-6 w-full rounded-2xl shadow-lg"
+        className="card-shell my-6 w-full"
       >
         <h2
           id="onetime-heading"
@@ -557,7 +518,7 @@ export default function MicFinderClient({
       {/* Map */}
       <section
         aria-label="Event Map"
-        className="relative mt-6 mb-6 h-96 w-full rounded-2xl border-2 border-amber-700 bg-stone-800 shadow-lg"
+        className="card-shell card-border-2 relative mt-6 mb-6 h-96 w-full border-amber-700 bg-stone-800"
       >
         <button
           type="button"
@@ -593,7 +554,7 @@ export default function MicFinderClient({
 
       <section
         aria-labelledby="all-events-heading"
-        className="relative z-10 my-6 grid w-full justify-items-center gap-4 rounded-2xl p-2 shadow-lg"
+        className="card-shell relative z-10 my-6 grid w-full justify-items-center gap-4 p-2"
       >
         <h2
           id="all-events-heading"
@@ -616,32 +577,12 @@ export default function MicFinderClient({
             .
           </p>
         ) : (
-          <div
-            ref={parentRef}
+          <VirtualizedEventList
+            events={allCityEvents}
+            onSave={handleEventSave}
             className="h-96 w-full overflow-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
-            role="feed"
-            aria-label={`${allCityEvents.length} ${tabLabel.toLowerCase()}`}
-          >
-            <div
-              className="relative w-full"
-              style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
-            >
-              {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                const event = allCityEvents[virtualItem.index];
-                return (
-                  <div
-                    key={virtualItem.key}
-                    data-index={virtualItem.index}
-                    ref={rowVirtualizer.measureElement}
-                    className="absolute top-0 left-0 w-full"
-                    style={{ transform: `translateY(${virtualItem.start}px)` }}
-                  >
-                    <EventCard event={event} onSave={handleEventSave} />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+            ariaLabel={`${allCityEvents.length} ${tabLabel.toLowerCase()}`}
+          />
         )}
       </section>
     </>

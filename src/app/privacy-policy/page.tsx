@@ -13,10 +13,8 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <main className="grid min-h-dvh content-start gap-8 p-2 pt-12 md:ml-20">
-      <h1 className="text-center text-3xl text-amber-700 md:text-4xl">
-        Privacy Policy
-      </h1>
-      <section className="mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-300 bg-zinc-200 p-4 leading-relaxed text-stone-900 shadow-lg">
+      <h1 className="page-title text-center">Privacy Policy</h1>
+      <section className="panel-light">
         <p className="border-b border-zinc-300 pb-4 text-sm text-zinc-600">
           <strong>Last Updated:</strong> December 2025
         </p>
@@ -89,10 +87,7 @@ export default function PrivacyPolicyPage() {
           </p>
         </article>
         <div className="flex justify-center border-t border-stone-300 pt-6">
-          <Link
-            href="/"
-            className="rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105"
-          >
+          <Link href="/" className="btn-amber">
             Return Home
           </Link>
         </div>

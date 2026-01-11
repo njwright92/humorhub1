@@ -20,9 +20,7 @@ export const metadata: Metadata = {
 export default function NewsPage() {
   return (
     <main className="grid min-h-dvh content-start gap-4 p-2 pt-12 text-center md:ml-20">
-      <h1 className="text-3xl text-amber-700 md:text-4xl lg:text-5xl">
-        Hub News
-      </h1>
+      <h1 className="page-title">Hub News</h1>
       <p className="text-sm text-stone-300 md:text-lg">
         Curated stories from around the world. Stay informed with the latest
         updates.

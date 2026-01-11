@@ -68,9 +68,7 @@ export default function ProfilePage() {
       <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
       <link rel="preconnect" href="https://humorhub-73ff9.firebaseapp.com" />
       <main className="grid min-h-dvh content-start gap-4 p-2 pt-12 text-center md:ml-20">
-        <h1 className="text-3xl text-amber-700 md:text-4xl lg:text-5xl">
-          Profile Management
-        </h1>
+        <h1 className="page-title">Profile Management</h1>
         <p className="text-sm text-stone-300 md:text-lg">
           Manage your personal schedule
         </p>

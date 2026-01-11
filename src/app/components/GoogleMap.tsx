@@ -189,7 +189,7 @@ export default function GoogleMap(props: {
   if (!API_KEY) {
     return (
       <div
-        className="grid size-full min-h-96 place-items-center overflow-hidden rounded-2xl bg-stone-800 shadow-lg"
+        className="card-shell grid size-full min-h-96 place-items-center overflow-hidden bg-stone-800"
         role="alert"
       >
         <div className="grid gap-2 p-4 text-center text-zinc-400">
@@ -203,7 +203,7 @@ export default function GoogleMap(props: {
   }
 
   return (
-    <div className="relative size-full min-h-96 overflow-hidden rounded-2xl bg-stone-800 shadow-lg">
+    <div className="card-shell relative size-full min-h-96 overflow-hidden bg-stone-800">
       <APIProvider apiKey={API_KEY}>
         <InnerMap {...props} />
       </APIProvider>

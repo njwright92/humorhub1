@@ -182,9 +182,7 @@ export default function MicFinderPage() {
       </aside>
 
       <header className="space-y-3">
-        <h1 className="text-3xl text-amber-700 md:text-4xl lg:text-5xl">
-          Mic Finder
-        </h1>
+        <h1 className="page-title">Mic Finder</h1>
         <p className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
           Discover Mics and Festivals Near You!
         </p>

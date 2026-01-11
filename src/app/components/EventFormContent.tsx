@@ -31,8 +31,7 @@ const INITIAL_FORM_STATE: FormState = {
   email: "",
 };
 
-const inputClass =
-  "mb-4 w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600";
+const inputClass = "mb-4 input-green";
 const labelClass = "mb-1 block font-bold text-stone-900";
 
 type RadioName = "isRecurring" | "isFestival";
@@ -241,7 +240,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
         noValidate
-        className="relative grid max-h-[90vh] w-full max-w-md gap-3 overflow-auto rounded-2xl border-2 border-stone-900 bg-zinc-200 p-4 shadow-lg"
+        className="card-shell card-border-2 relative grid max-h-[90vh] w-full max-w-md gap-3 overflow-auto border-stone-900 bg-zinc-200 p-4"
       >
         <button
           onClick={onClose}

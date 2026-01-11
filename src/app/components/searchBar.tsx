@@ -277,7 +277,7 @@ export default function SearchBar({
           id={POPOVER_ID}
           role="search"
           onSubmit={handleSearch}
-          className="absolute top-0 left-1/2 z-50 grid w-72 -translate-x-1/2 gap-3 rounded-2xl border border-stone-400 bg-zinc-200 p-4 shadow-lg sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
+          className="card-shell card-border absolute top-0 left-1/2 z-50 grid w-72 -translate-x-1/2 gap-3 border-stone-400 bg-zinc-200 p-4 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
         >
           <button
             type="button"
@@ -310,7 +310,7 @@ export default function SearchBar({
               setActiveIndex(-1);
             }}
             onKeyDown={handleKeyDown}
-            className="w-full rounded-2xl border-2 border-stone-400 bg-white p-2 text-stone-900 placeholder:text-stone-400 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50 focus:outline-hidden"
+            className="input-amber border-stone-400 bg-white p-2 placeholder:text-stone-400 focus:outline-hidden"
             autoComplete="off"
             role="combobox"
             aria-expanded={suggestions.length > 0}
@@ -323,7 +323,7 @@ export default function SearchBar({
 
           <button
             type="submit"
-            className="mb-2 w-32 cursor-pointer justify-self-center rounded-2xl bg-amber-700 py-1 font-semibold text-white shadow-lg transition-transform hover:scale-110 hover:bg-amber-900"
+            className="btn-amber mb-2 w-32 cursor-pointer justify-self-center py-1 text-sm hover:scale-110 hover:bg-amber-900"
           >
             Search
           </button>
