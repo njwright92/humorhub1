@@ -66,7 +66,8 @@ function ArticleCard({
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover group-hover:scale-105"
             priority={priority}
-            quality={65}
+            fetchPriority={priority ? "high" : "auto"}
+            quality={70}
             onError={() => setImgError(true)}
           />
         ) : (
@@ -188,7 +189,7 @@ export default function NewsClient() {
             >
               {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
                 <li key={index}>
-                  <div className="grid h-full min-h-[22rem] animate-pulse grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50">
+                  <div className="grid h-full min-h-80 animate-pulse grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50">
                     <div className="h-48 w-full bg-stone-800" />
                     <div className="grid grid-rows-[auto_1fr_auto] gap-3 p-5">
                       <div className="h-5 w-3/4 rounded-full bg-stone-700" />
@@ -207,7 +208,7 @@ export default function NewsClient() {
           >
             {articles.map((article, index) => (
               <li key={article.uuid}>
-                <ArticleCard article={article} priority={index < 3} />
+                <ArticleCard article={article} priority={index === 0} />
               </li>
             ))}
           </ul>

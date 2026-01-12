@@ -21,6 +21,7 @@ import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
+  ssr: false,
   loading: () => (
     <span className="size-full items-center justify-center text-stone-300">
       Loading Map...
@@ -95,9 +96,7 @@ export default function MicFinderClient({
   const { showToast } = useToast();
 
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDate, setSelectedDate] = useState(
-    () => new Date(new Date().toDateString())
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [hasMapInit, setHasMapInit] = useState(false);
@@ -158,6 +157,10 @@ export default function MicFinderClient({
     if (city || term) {
       window.history.replaceState({}, "", window.location.pathname);
     }
+  }, []);
+
+  useEffect(() => {
+    setSelectedDate(new Date(new Date().toDateString()));
   }, []);
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
@@ -258,6 +261,15 @@ export default function MicFinderClient({
   const cityLower = useMemo(() => selectedCity.toLowerCase(), [selectedCity]);
 
   const { selectedDow, dateCheckMs, dayOfWeek, formattedDate } = useMemo(() => {
+    if (!selectedDate) {
+      return {
+        selectedDow: -1,
+        dateCheckMs: 0,
+        dayOfWeek: "",
+        formattedDate: "",
+      };
+    }
+
     const dow = selectedDate.getDay();
     const dateCheck = new Date(selectedDate);
     dateCheck.setHours(0, 0, 0, 0);
@@ -415,7 +427,7 @@ export default function MicFinderClient({
           <input
             id="event-date-picker"
             type="date"
-            value={selectedDate.toLocaleDateString("en-CA")}
+            value={selectedDate ? selectedDate.toLocaleDateString("en-CA") : ""}
             onChange={handleDateChange}
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
