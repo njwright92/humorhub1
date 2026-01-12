@@ -232,7 +232,7 @@ export default function AuthModal({
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full rounded-2xl py-2 font-semibold text-white shadow-lg transition-colors disabled:opacity-50 ${isSignIn ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}`}
+            className={`w-full rounded-2xl py-2 font-semibold text-white shadow-xl transition-colors disabled:opacity-50 ${isSignIn ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}`}
           >
             {isLoading ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
           </button>
@@ -261,7 +261,7 @@ export default function AuthModal({
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="grid grid-flow-col items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-lg transition-colors hover:bg-zinc-300 disabled:opacity-50"
+          className="grid grid-flow-col items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-xl transition-colors hover:bg-zinc-300 disabled:opacity-50"
         >
           <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true">
             <path

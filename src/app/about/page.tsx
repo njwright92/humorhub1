@@ -122,7 +122,7 @@ export default function AboutPage() {
           </Link>
           <Link
             href="/"
-            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-stone-600"
+            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-600"
           >
             Back Home
           </Link>

@@ -129,10 +129,10 @@ export default function DesktopNav() {
   const navItemClass =
     "group relative cursor-pointer transition hover:scale-110 hover:rotate-3";
   const tooltipClass =
-    "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-lg transition-opacity group-hover:opacity-100";
+    "pointer-events-none absolute left-16 top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold text-amber-700 opacity-0 shadow-xl transition-opacity group-hover:opacity-100";
 
   return (
-    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 content-start bg-amber-700 p-2 pt-6 shadow-lg sm:grid">
+    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 content-start bg-amber-700 p-2 pt-6 shadow-xl sm:grid">
       <div className="grid justify-items-center gap-6 text-stone-900">
         <Link href="/" aria-label="Home" className={navItemClass}>
           <Image
@@ -140,7 +140,7 @@ export default function DesktopNav() {
             alt=""
             width={80}
             height={80}
-            className="my-2 rounded-full shadow-lg"
+            className="my-2 rounded-full shadow-xl"
             priority
             quality={70}
           />

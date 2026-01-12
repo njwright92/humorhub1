@@ -25,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const menuItemClass =
-  "grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-lg transition-transform hover:scale-105 hover:bg-stone-700";
+  "grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:bg-stone-700";
 
 export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   const { showToast } = useToast();
@@ -118,7 +118,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
           alt=""
           width={70}
           height={70}
-          className="rounded-full shadow-lg"
+          className="rounded-full shadow-xl"
           priority
           quality={70}
         />

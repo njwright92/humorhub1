@@ -382,7 +382,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-2xl bg-green-600 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:bg-green-700 disabled:opacity-50"
+          className="w-full rounded-2xl bg-green-600 py-3 font-bold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:bg-green-700 disabled:opacity-50"
         >
           {isSubmitting ? "Submitting..." : "Submit Event"}
         </button>

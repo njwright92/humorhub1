@@ -44,7 +44,7 @@ function ProfileSkeleton() {
 
 function SignInPrompt() {
   return (
-    <section className="mx-auto mt-10 grid max-w-md gap-4 rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center shadow-lg">
+    <section className="mx-auto mt-10 grid max-w-md gap-4 rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
       <span className="text-6xl" aria-hidden="true">
         🔐
       </span>
@@ -54,7 +54,7 @@ function SignInPrompt() {
       </p>
       <Link
         href="/mic-finder"
-        className="cursor-pointer justify-self-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-lg transition-transform hover:scale-105"
+        className="cursor-pointer justify-self-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-xl transition-transform hover:scale-105"
       >
         Go to MicFinder
       </Link>

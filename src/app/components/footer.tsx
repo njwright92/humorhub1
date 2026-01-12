@@ -9,7 +9,7 @@ const SOCIALS = [
   { label: "GitHub", href: "https://github.com/njwright92" },
 ];
 
-const headingClass = "text-stone-200 uppercase";
+const headingClass = "text-amber-700 uppercase";
 const linkClass = "transition-colors hover:text-amber-700";
 
 export default function Footer() {
@@ -27,8 +27,8 @@ export default function Footer() {
 
         <header className="grid place-items-center gap-2 text-center">
           <h3 className="text-2xl md:text-4xl">Humor Hub</h3>
-          <p className="max-w-2xl text-stone-300 md:text-lg">
-            The Hub of Humor, Connecting comics and fans globally. Join the fun!
+          <p className="max-w-2xl text-stone-400 md:text-lg">
+            The Hub of Humor connecting comics and fans globally!
           </p>
         </header>
 
@@ -43,7 +43,7 @@ export default function Footer() {
               alt=""
               width={80}
               height={80}
-              className="rounded-full object-contain shadow-lg transition-transform hover:scale-110 hover:rotate-3"
+              className="rounded-full object-contain shadow-xl transition-transform hover:scale-110 hover:rotate-3"
               quality={70}
             />
           </Link>

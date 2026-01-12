@@ -56,7 +56,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           className="animate-slide-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
         >
           <div
-            className={`grid grid-flow-col items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-lg ${TOAST_CONFIG[toast.type].bg}`}
+            className={`grid grid-flow-col items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-xl ${TOAST_CONFIG[toast.type].bg}`}
           >
             <span aria-hidden="true">{TOAST_CONFIG[toast.type].icon}</span>
             <span>{toast.msg}</span>

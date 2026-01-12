@@ -143,7 +143,7 @@ const InnerMap = memo(function InnerMap({
           <article className="relative grid gap-1 p-2 pr-4 text-center text-stone-900">
             <button
               onClick={clearSelection}
-              className="absolute top-0 right-0 grid size-5 cursor-pointer place-items-center rounded-full bg-zinc-200 text-stone-900 shadow-lg hover:scale-105"
+              className="absolute top-0 right-0 grid size-5 cursor-pointer place-items-center rounded-full bg-zinc-200 text-stone-900 shadow-xl hover:scale-105"
               aria-label="Close"
               type="button"
             >

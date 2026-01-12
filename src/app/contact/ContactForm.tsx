@@ -16,7 +16,7 @@ const INITIAL_FORM_STATE: FormState = {
 };
 
 const inputClass =
-  "input-amber border-stone-500 shadow-lg text-zinc-200 placeholder:text-zinc-400";
+  "input-amber border-stone-500 shadow-xl text-zinc-200 placeholder:text-zinc-400";
 
 const labelClass = "my-2 text-xs uppercase md:text-sm";
 

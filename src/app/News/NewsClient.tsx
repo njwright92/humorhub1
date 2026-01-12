@@ -56,7 +56,7 @@ function ArticleCard({
   const [imgError, setImgError] = useState(false);
 
   return (
-    <article className="group grid h-full grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-lg hover:shadow-amber-900/20">
+    <article className="group grid h-full grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full">
         {article.image_url && !imgError ? (
           <Image
@@ -155,7 +155,7 @@ export default function NewsClient() {
           <button
             type="button"
             onClick={() => fetchNews(selectedCategory, selectedSubcategory)}
-            className="mt-2 cursor-pointer text-sm text-red-300 underline shadow-lg transition-colors hover:text-white"
+            className="mt-2 cursor-pointer text-sm text-red-300 underline shadow-xl transition-colors hover:text-white"
           >
             Try Again
           </button>

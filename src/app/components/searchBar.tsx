@@ -283,7 +283,7 @@ export default function SearchBar({
           <button
             type="button"
             onClick={closeSearchBar}
-            className="absolute top-0 right-0 cursor-pointer p-1 text-stone-900 transition-transform hover:scale-105"
+            className="inset absolute top-0 right-0 cursor-pointer p-1 text-stone-900 transition-transform hover:scale-105"
             aria-label="Close search"
           >
             <svg
@@ -311,7 +311,7 @@ export default function SearchBar({
               setActiveIndex(-1);
             }}
             onKeyDown={handleKeyDown}
-            className="input-amber border-stone-400 bg-white p-2 placeholder:text-stone-400 focus:outline-hidden"
+            className="input-amber mt-2 border-stone-400 bg-white p-2 placeholder:text-stone-400 focus:outline-hidden"
             autoComplete="off"
             role="combobox"
             aria-expanded={suggestions.length > 0}
@@ -324,7 +324,7 @@ export default function SearchBar({
 
           <button
             type="submit"
-            className="btn-amber mb-2 w-32 cursor-pointer justify-self-center py-1 text-sm hover:scale-110 hover:bg-amber-900"
+            className="btn-amber w-32 cursor-pointer justify-self-center py-1 text-sm hover:scale-105"
           >
             Search
           </button>

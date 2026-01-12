@@ -39,7 +39,7 @@ export default function ProfileSidebar({
             {profile.name || "Anonymous Comic"}
           </p>
         )}
-        <figure className="group relative mx-auto size-32 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300 shadow-lg">
+        <figure className="group relative mx-auto size-32 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300 shadow-xl">
           {(isEditing ? editImageUrl : displayImageUrl) ? (
             <Image
               src={isEditing ? editImageUrl : displayImageUrl}
@@ -151,7 +151,7 @@ export default function ProfileSidebar({
               <button
                 type="button"
                 onClick={onSignOut}
-                className="mx-auto w-1/2 cursor-pointer rounded-2xl border-2 border-red-300 bg-red-100 py-2 font-bold text-red-700 shadow-lg transition-colors hover:bg-red-200"
+                className="mx-auto w-1/2 cursor-pointer rounded-2xl border-2 border-red-300 bg-red-100 py-2 font-bold text-red-700 shadow-xl transition-colors hover:bg-red-200"
               >
                 Sign Out
               </button>

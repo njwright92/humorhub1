@@ -40,7 +40,7 @@ interface MicFinderClientProps {
 }
 
 const inputClass =
-  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-lg outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-xl outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 
 const sectionHeadingClass =
   "mb-4 w-full rounded-2xl border-b-4 pb-2 text-center text-xl sm:text-2xl";
@@ -370,7 +370,7 @@ export default function MicFinderClient({
           </button>
 
           {isCityDropdownOpen && (
-            <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-lg">
+            <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
               <label htmlFor="city-search" className="sr-only">
                 Search cities
               </label>
@@ -451,7 +451,7 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => setSelectedTab(tab.id)}
-            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-lg transition-transform sm:text-base ${
+            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-xl transition-transform sm:text-base ${
               selectedTab === tab.id
                 ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
                 : tab.inactiveClass
@@ -546,7 +546,7 @@ export default function MicFinderClient({
           onMouseEnter={handleMapHover}
           onTouchStart={handleMapHover}
           onFocus={handleMapHover}
-          className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 ${
+          className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${
             !isMapVisible
               ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-stone-900 sm:text-lg"
               : "bottom-4 left-4 bg-stone-900 text-sm"

@@ -10,7 +10,7 @@ export default function ScrollToTop({
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Scroll back to top"
-      className={`grid size-8 cursor-pointer place-content-center rounded-full border border-amber-700 text-amber-700 shadow-lg transition-transform hover:scale-110 md:size-12 ${className}`}
+      className={`grid size-8 cursor-pointer place-content-center rounded-full border border-amber-700 text-amber-700 shadow-xl transition-transform hover:scale-110 md:size-12 ${className}`}
     >
       <svg
         viewBox="0 0 24 24"
