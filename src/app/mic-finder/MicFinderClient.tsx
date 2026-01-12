@@ -52,6 +52,7 @@ const TABS = [
     id: "Mics",
     label: "Comedy Mics",
     activeClass: "bg-amber-700",
+    activeTextClass: "text-stone-900",
     inactiveClass:
       "bg-amber-100 text-amber-800 hover:bg-amber-200 font-bold tracking-wide",
   },
@@ -59,6 +60,7 @@ const TABS = [
     id: "Festivals",
     label: "Festivals",
     activeClass: "bg-purple-700",
+    activeTextClass: "text-white",
     inactiveClass:
       "bg-purple-100 text-purple-800 hover:bg-purple-200 font-bold tracking-wide",
   },
@@ -66,6 +68,7 @@ const TABS = [
     id: "Other",
     label: "Music/All Arts",
     activeClass: "bg-green-700",
+    activeTextClass: "text-white",
     inactiveClass:
       "bg-green-100 text-green-800 hover:bg-green-200 font-bold tracking-wide",
   },
@@ -400,7 +403,7 @@ export default function MicFinderClient({
                     setSelectedCity("All Cities");
                     setIsCityDropdownOpen(false);
                   }}
-                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700 hover:text-white"
+                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700 hover:text-stone-900"
                 >
                   <span aria-hidden="true">🌎</span> All Cities
                 </li>
@@ -450,7 +453,7 @@ export default function MicFinderClient({
             onClick={() => setSelectedTab(tab.id)}
             className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-lg transition-transform sm:text-base ${
               selectedTab === tab.id
-                ? `${tab.activeClass} text-white ring-2 ring-zinc-200`
+                ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
                 : tab.inactiveClass
             }`}
           >
@@ -545,7 +548,7 @@ export default function MicFinderClient({
           onFocus={handleMapHover}
           className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-lg transition-transform hover:scale-105 ${
             !isMapVisible
-              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-white sm:text-lg"
+              ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-stone-900 sm:text-lg"
               : "bottom-4 left-4 bg-stone-900 text-sm"
           }`}
         >

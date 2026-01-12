@@ -2,6 +2,8 @@
 
 @theme {
   --color-zinc-200: #f0efeb;
+  --color-amber-700: #dd9e64;
+  --color-stone-900: #211e1c;
   --animate-slide-in: slide-in 0.3s forwards;
   --font-heading:
     var(--font-comic-neue), "Chalkboard SE", "Ink Free", "Segoe Print";
@@ -47,7 +49,7 @@
     font-family: var(--font-heading);
     font-weight: 700;
     letter-spacing: 0.025em;
-    --tw-text-shadow-color: rgb(120 53 15);
+    --tw-text-shadow-color: rgb(104 64 24);
     text-shadow:
       0 1px 0 var(--tw-text-shadow-color),
       0 1px 1px var(--tw-text-shadow-color),
@@ -143,7 +145,7 @@
   }
 
   .primary-cta {
-    @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
+    @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-stone-900 shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
   }
 
   .btn-amber,
@@ -152,7 +154,7 @@
   }
 
   .btn-amber {
-    @apply bg-amber-700 px-4 py-2 text-white;
+    @apply bg-amber-700 px-4 py-2 text-stone-900;
   }
 
   .btn-blue {

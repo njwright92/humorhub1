@@ -78,7 +78,7 @@ function ArticleCard({
             📰
           </div>
         )}
-        <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold text-white">
+        <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold text-stone-900">
           {article.source || "News"}
         </span>
       </figure>
