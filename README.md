@@ -76,8 +76,8 @@ Follow these steps to set up the environment locally.
 
 ### Prerequisites
 
-- **Node.js** (v18+)
-- **npm** or **yarn**
+- **Node.js** (v24.12.0)
+- **npm**
 - A configured **Firebase** project
 - A **Google Maps API** key
 - A **News API** key (for the aggregator)
