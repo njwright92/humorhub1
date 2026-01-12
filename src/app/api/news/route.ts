@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ApiResponse } from "@/app/lib/types";
+import { NEWS_API_DEFAULTS, NEWS_CACHE_HEADERS } from "@/app/lib/constants";
 
 const NEWS_API_TOKEN = process.env.NEWS_API;
 
@@ -7,8 +8,6 @@ const ENDPOINTS = {
   top: "https://api.thenewsapi.com/v1/news/top",
   all: "https://api.thenewsapi.com/v1/news/all",
 } as const;
-
-const CACHE_HEADERS = { "Cache-Control": "max-age=300" } as const;
 
 interface NewsArticle {
   title: string;
@@ -48,9 +47,9 @@ export async function GET(request: NextRequest) {
 
   const params = new URLSearchParams({
     api_token: NEWS_API_TOKEN,
-    locale: "us,ca",
-    language: "en",
-    limit: "10",
+    locale: NEWS_API_DEFAULTS.locale,
+    language: NEWS_API_DEFAULTS.language,
+    limit: NEWS_API_DEFAULTS.limit,
     categories: subcategory,
   });
 
@@ -71,7 +70,7 @@ export async function GET(request: NextRequest) {
     const { data = [] }: NewsApiResponse = await response.json();
     const articles = data.filter(hasRequiredFields);
 
-    return json({ success: true, data: articles }, 200, CACHE_HEADERS);
+    return json({ success: true, data: articles }, 200, NEWS_CACHE_HEADERS);
   } catch (error) {
     console.error("News fetch failed:", error);
     return json({ success: false, error: "Failed to fetch news" }, 500);

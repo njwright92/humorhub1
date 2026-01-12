@@ -11,7 +11,12 @@ import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
 import type { Event, CityCoordinates } from "../lib/types";
-import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
+import {
+  DEFAULT_US_CENTER,
+  DEFAULT_ZOOM,
+  CITY_ZOOM,
+  ALL_CITIES_LABEL,
+} from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
 
@@ -128,7 +133,7 @@ export default function MicFinderClient({
 
     if (!authInitPromiseRef.current) {
       authInitPromiseRef.current = (async () => {
-        const { getAuth } = await import("../../../firebase.config");
+        const { getAuth } = await import("@/app/lib/firebase-auth");
         const auth = await getAuth();
         authRef.current = auth;
         return auth;
@@ -288,7 +293,7 @@ export default function MicFinderClient({
   const eventsForMap = useMemo(() => {
     let events = initialEvents;
 
-    if (cityLower && cityLower !== "all cities") {
+    if (cityLower && cityLower !== ALL_CITIES_LABEL) {
       events = events.filter((e) => e.locationLower.includes(cityLower));
     }
 
@@ -326,7 +331,7 @@ export default function MicFinderClient({
 
   const allCityEvents = useMemo(() => {
     let list = initialEvents.filter(isTabMatch);
-    if (cityLower && cityLower !== "all cities") {
+    if (cityLower && cityLower !== ALL_CITIES_LABEL) {
       list = list.filter((e) => e.locationLower.includes(cityLower));
     }
     return list;

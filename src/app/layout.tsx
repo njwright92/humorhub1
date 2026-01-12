@@ -58,14 +58,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={comicNeue.variable}>
+      <head>
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+      </head>
       <body className="bg-stone-900 text-zinc-200 antialiased">
         <ToastProvider>
           <Header />
           {children}
           <Footer />
         </ToastProvider>
-        <GoogleTagManager gtmId="GTM-KVJSFKV8" />
         <SpeedInsights />
+        <GoogleTagManager gtmId="GTM-KVJSFKV8" />
       </body>
     </html>
   );

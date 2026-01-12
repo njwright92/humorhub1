@@ -2,10 +2,10 @@ import { NextRequest } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { jsonResponse } from "@/app/lib/auth-helpers";
 import type { LatLng, EventSubmission, StoredEvent } from "@/app/lib/types";
+import { COLLECTIONS, GEOCODE_API_URL } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
 
-const GEOCODE_API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 interface GeocodeResponse {
@@ -66,13 +66,13 @@ export async function POST(request: NextRequest) {
     }
 
     let coords: LatLng | undefined;
-    let collection = "events";
+    let collection: string = COLLECTIONS.events;
 
     try {
       coords = await geocodeAddress(eventData.location);
     } catch (error) {
       console.warn("Geocoding failed, routing to manual review:", error);
-      collection = "events_manual_review";
+      collection = COLLECTIONS.eventsManualReview;
     }
 
     const storedEvent: StoredEvent = {

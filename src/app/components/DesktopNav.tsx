@@ -92,7 +92,7 @@ export default function DesktopNav() {
     if (authInitPromiseRef.current) return;
 
     authInitPromiseRef.current = (async () => {
-      const { getAuth } = await import("../../../firebase.config");
+      const { getAuth } = await import("@/app/lib/firebase-auth");
       const { onAuthStateChanged } = await import("firebase/auth");
 
       const auth = await getAuth();

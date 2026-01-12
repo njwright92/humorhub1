@@ -21,8 +21,7 @@
     cursor: pointer;
   }
 
-  a:focus-visible,
-  button:focus-visible {
+  :is(a, button):focus-visible {
     outline: 2px solid #e4e4e7;
     outline-offset: 2px;
   }
@@ -102,10 +101,7 @@
     @apply mb-4;
   }
 
-  .section-title {
-    @apply text-3xl text-amber-700 md:text-4xl lg:text-5xl;
-  }
-
+  .section-title,
   .page-title {
     @apply text-3xl text-amber-700 md:text-4xl lg:text-5xl;
   }
@@ -150,12 +146,13 @@
     @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
   }
 
-  .btn-amber {
-    @apply rounded-2xl bg-amber-700 px-4 py-2 font-bold text-white shadow-lg transition-transform hover:scale-105;
-  }
-
+  .btn-amber,
   .btn-solid {
     @apply rounded-2xl font-bold shadow-lg transition-transform hover:scale-105;
+  }
+
+  .btn-amber {
+    @apply bg-amber-700 px-4 py-2 text-white;
   }
 
   .btn-blue {

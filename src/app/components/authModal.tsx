@@ -66,7 +66,7 @@ export default function AuthModal({
           { getAuth },
           { createUserWithEmailAndPassword, signInWithEmailAndPassword },
         ] = await Promise.all([
-          import("../../../firebase.config"),
+          import("@/app/lib/firebase-auth"),
           import("firebase/auth"),
         ]);
 
@@ -119,7 +119,7 @@ export default function AuthModal({
     try {
       const [{ getAuth }, { GoogleAuthProvider, signInWithPopup }] =
         await Promise.all([
-          import("../../../firebase.config"),
+          import("@/app/lib/firebase-auth"),
           import("firebase/auth"),
         ]);
 

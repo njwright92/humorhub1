@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getServerDb } from "@/app/lib/firebase-admin";
+import { COLLECTIONS } from "@/app/lib/constants";
 
 export const revalidate = 86400;
 export const runtime = "nodejs";
@@ -35,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const db = getServerDb();
-    const snapshot = await db.collection("cities").get();
+    const snapshot = await db.collection(COLLECTIONS.cities).get();
 
     cityRoutes = snapshot.docs
       .map((doc) => doc.data()?.city as string | undefined)

@@ -62,3 +62,5 @@ events.json
 backend/.env
 backend/new_events.json
 .prettierrc
+.nvmrc
+scripts/analyze-bundles.mjs

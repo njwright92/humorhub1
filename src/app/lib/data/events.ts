@@ -1,15 +1,13 @@
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import type { Event, CityCoordinates, MicFinderData } from "../types";
+import type { CityCoordinates, MicFinderData, Event } from "../types";
 import { getServerDb } from "../firebase-admin";
-import { normalizeCityName } from "../utils";
-import { DAY_MAP } from "../constants";
+import { buildEventFromData } from "../event-mappers";
+import { COLLECTIONS, FEATURED_CITY } from "../constants";
 
 export type MicFinderDataWithCities = MicFinderData & {
   cities: string[];
 };
-
-const FEATURED_CITY = "Spokane WA";
 
 const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
   try {
@@ -17,7 +15,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
 
     const [eventsSnap, citiesSnap] = await Promise.all([
       db
-        .collection("userEvents")
+        .collection(COLLECTIONS.userEvents)
         .select(
           "name",
           "location",
@@ -31,7 +29,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
           "googleTimestamp"
         )
         .get(),
-      db.collection("cities").select("city", "coordinates").get(),
+      db.collection(COLLECTIONS.cities).select("city", "coordinates").get(),
     ]);
 
     const eventsDocs = eventsSnap.docs;
@@ -43,56 +41,12 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
 
       if (!data.name || !data.location) continue;
 
-      const ts = data.googleTimestamp;
-      const numericTimestamp = ts
-        ? new Date(ts as unknown as string | number | Date).getTime()
-        : 0;
-
-      const name = data.name as string;
-      const location = data.location as string;
-      const date = (data.date as string) ?? "";
-      const isRecurring = (data.isRecurring as boolean) ?? false;
-
-      const locationLower = location.toLowerCase();
-
-      const cityPart = location.split(",")[1]?.trim() ?? "";
-      const normalizedCity = normalizeCityName(cityPart);
-
-      const isSpokaneClub = location.includes("Spokane Comedy Club");
-
-      let recurringDow: number | null = null;
-      if (isRecurring && date) {
-        recurringDow = DAY_MAP[date] ?? null;
-      }
-
-      let dateMs: number | null = null;
-      if (!isRecurring && date) {
-        const parsed = new Date(date);
-        if (!Number.isNaN(parsed.getTime())) {
-          parsed.setHours(0, 0, 0, 0);
-          dateMs = parsed.getTime();
-        }
-      }
-
-      events.push({
-        id: doc.id,
-        name,
-        location,
-        date,
-        lat: (data.lat as number) ?? 0,
-        lng: (data.lng as number) ?? 0,
-        details: (data.details as string) ?? "",
-        isRecurring,
-        isFestival: data.festival === true,
-        isMusic: data.isMusic === true,
-        numericTimestamp,
-        googleTimestamp: ts,
-        locationLower,
-        normalizedCity,
-        isSpokaneClub,
-        recurringDow,
-        dateMs,
-      });
+      events.push(
+        buildEventFromData(doc.id, data, {
+          includeNormalizedCity: true,
+          includeDerivedDates: true,
+        })
+      );
     }
 
     events.sort((a, b) => {

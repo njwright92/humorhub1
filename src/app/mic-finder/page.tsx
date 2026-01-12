@@ -161,47 +161,48 @@ async function MicFinderContent() {
 
 export default function MicFinderPage() {
   return (
-    <main className="grid min-h-dvh justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
-      />
+    <>
+      <main className="grid min-h-dvh justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
+        />
+        <aside className="rounded-2xl border border-red-800 bg-zinc-200 p-2 text-xs font-medium text-red-800 shadow-lg lg:text-base">
+          <p>
+            <span aria-hidden="true">📢 </span>
+            Note: Open mic events evolve quickly. See something outdated?{" "}
+            <Link
+              href="/contact"
+              className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
+            >
+              Contact Us
+            </Link>{" "}
+            to keep the comedy community thriving!
+          </p>
+        </aside>
 
-      <aside className="rounded-2xl border border-red-800 bg-zinc-200 p-2 text-xs font-medium text-red-800 shadow-lg lg:text-base">
-        <p>
-          <span aria-hidden="true">📢 </span>
-          Note: Open mic events evolve quickly. See something outdated?{" "}
-          <Link
-            href="/contact"
-            className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
-          >
-            Contact Us
-          </Link>{" "}
-          to keep the comedy community thriving!
+        <header className="space-y-3">
+          <h1 className="page-title">Mic Finder</h1>
+          <p className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
+            Discover Mics and Festivals Near You!
+          </p>
+        </header>
+
+        <p className="text-sm text-stone-300 md:text-base lg:text-lg">
+          Find a Mic tonight or list yours, built by comics for comics. Use Mic
+          Finder to connect with your community!
         </p>
-      </aside>
 
-      <header className="space-y-3">
-        <h1 className="page-title">Mic Finder</h1>
-        <p className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
-          Discover Mics and Festivals Near You!
+        <EventForm />
+
+        <p className="mb-2 text-sm font-semibold text-stone-400 md:text-base">
+          Find your next show or night out. Pick a city and date!
         </p>
-      </header>
 
-      <p className="text-sm text-stone-300 md:text-base lg:text-lg">
-        Find a Mic tonight or list yours, built by comics for comics. Use Mic
-        Finder to connect with your community!
-      </p>
-
-      <EventForm />
-
-      <p className="mb-2 text-sm font-semibold text-stone-400 md:text-base">
-        Find your next show or night out. Pick a city and date!
-      </p>
-
-      <Suspense fallback={<MicFinderSkeleton />}>
-        <MicFinderContent />
-      </Suspense>
-    </main>
+        <Suspense fallback={<MicFinderSkeleton />}>
+          <MicFinderContent />
+        </Suspense>
+      </main>
+    </>
   );
 }

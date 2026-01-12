@@ -24,7 +24,7 @@ export default function NewsButton({
   const getAuthUser = useCallback(() => {
     if (!authPromiseRef.current) {
       authPromiseRef.current = (async () => {
-        const { getAuth } = await import("../../../firebase.config");
+        const { getAuth } = await import("@/app/lib/firebase-auth");
         const auth = await getAuth();
         await auth.authStateReady();
         return auth.currentUser;

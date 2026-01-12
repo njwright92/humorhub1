@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
+import { COLLECTIONS } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
 
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     if (!auth.success) return auth.response;
 
     const db = getServerDb();
-    const userDoc = await db.collection("users").doc(auth.uid).get();
+    const userDoc = await db.collection(COLLECTIONS.users).doc(auth.uid).get();
 
     if (!userDoc.exists) {
       return NextResponse.json({ success: true, profile: EMPTY_PROFILE });
@@ -47,11 +48,18 @@ export async function POST(request: NextRequest) {
       profileImageUrl?: string;
     };
 
+    const update: Record<string, string> = {};
+    if (typeof name === "string") update.name = name;
+    if (typeof bio === "string") update.bio = bio;
+    if (typeof profileImageUrl === "string") {
+      update.profileImageUrl = profileImageUrl;
+    }
+
     const db = getServerDb();
     await db
-      .collection("users")
+      .collection(COLLECTIONS.users)
       .doc(auth.uid)
-      .set({ name, bio, profileImageUrl }, { merge: true });
+      .set(update, { merge: true });
 
     return NextResponse.json({ success: true });
   } catch (error) {

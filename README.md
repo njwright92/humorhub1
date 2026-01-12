@@ -41,6 +41,7 @@ A curated content stream tailored for comedic professionals.
 ### 📧 Contact & Communication
 
 - **EmailJS Integration:** Seamless contact form functionality for user inquiries and collaboration requests.
+
 ### 🔐 Auth & Profiles
 
 - **Firebase Auth + Admin SDK:** Client-side auth flows paired with server-side verification.
@@ -52,20 +53,20 @@ A curated content stream tailored for comedic professionals.
 
 This project utilizes **Next.js 16.1** with **React 19**, leveraging server-side rendering and static generation for performance and SEO. The codebase is strictly typed with **TypeScript 5.8** and formatted with **Prettier 3** for consistency.
 
-| Domain             | Technology                                          |
-| :----------------- | :-------------------------------------------------- |
-| **Core Framework** | Next.js 16.1, React 19, Node.js                     |
-| **Language**       | TypeScript 5.8                                      |
-| **Styling & UI**   | Tailwind CSS 4, PostCSS                             |
-| **Backend & Auth** | Firebase Auth (client), Firebase Admin (server)     |
-| **Database**       | Cloud Firestore                                    |
-| **Storage**        | Firebase Storage                                   |
-| **Geospatial**     | Google Maps (`@vis.gl/react-google-maps`)           |
-| **Performance**    | `@tanstack/react-virtual` (list virtualization)     |
-| **Communication**  | EmailJS (`@emailjs/browser`)                        |
-| **Observability**  | Vercel Speed Insights                               |
-| **Code Quality**   | ESLint 9, Prettier 3, lint-staged                   |
-| **Deployment**     | Vercel                                              |
+| Domain             | Technology                                      |
+| :----------------- | :---------------------------------------------- |
+| **Core Framework** | Next.js 16.1, React 19, Node.js                 |
+| **Language**       | TypeScript 5.8                                  |
+| **Styling & UI**   | Tailwind CSS 4, PostCSS                         |
+| **Backend & Auth** | Firebase Auth (client), Firebase Admin (server) |
+| **Database**       | Cloud Firestore                                 |
+| **Storage**        | Firebase Storage                                |
+| **Geospatial**     | Google Maps (`@vis.gl/react-google-maps`)       |
+| **Performance**    | `@tanstack/react-virtual` (list virtualization) |
+| **Communication**  | EmailJS (`@emailjs/browser`)                    |
+| **Observability**  | Vercel Speed Insights                           |
+| **Code Quality**   | ESLint 9, Prettier 3, lint-staged               |
+| **Deployment**     | Vercel                                          |
 
 ---
 
@@ -79,7 +80,7 @@ Follow these steps to set up the environment locally.
 - **npm** or **yarn**
 - A configured **Firebase** project
 - A **Google Maps API** key
- - A **News API** key (for the aggregator)
+- A **News API** key (for the aggregator)
 
 ### Installation Guide
 

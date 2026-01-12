@@ -30,6 +30,44 @@ export function parseEventDate(dateStr: string): Date | undefined {
   return parsed;
 }
 
+export function parseTimestampToMs(value: unknown): number {
+  if (!value) return 0;
+
+  if (value instanceof Date) return value.getTime();
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  if (typeof value === "string") {
+    const parsed = new Date(value);
+    const time = parsed.getTime();
+    return Number.isNaN(time) ? 0 : time;
+  }
+
+  if (typeof value === "object") {
+    const maybeTimestamp = value as {
+      toDate?: () => Date;
+      seconds?: number;
+      nanoseconds?: number;
+    };
+
+    if (typeof maybeTimestamp.toDate === "function") {
+      return maybeTimestamp.toDate().getTime();
+    }
+
+    if (typeof maybeTimestamp.seconds === "number") {
+      const nanos =
+        typeof maybeTimestamp.nanoseconds === "number"
+          ? maybeTimestamp.nanoseconds
+          : 0;
+      return maybeTimestamp.seconds * 1000 + Math.floor(nanos / 1e6);
+    }
+  }
+
+  return 0;
+}
+
 export function extractCityFromLocation(location: string): string {
   return location.split(",")[1]?.trim() || "";
 }

@@ -1,21 +1,9 @@
 import { NextRequest } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
+import { COLLECTIONS, SAVED_EVENT_ALLOWED_FIELDS } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
-
-const ALLOWED_FIELDS = [
-  "name",
-  "location",
-  "date",
-  "lat",
-  "lng",
-  "details",
-  "isRecurring",
-  "festival",
-  "isMusic",
-  "googleTimestamp",
-] as const;
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,13 +26,13 @@ export async function POST(request: NextRequest) {
       savedAt: new Date().toISOString(),
     };
 
-    for (const field of ALLOWED_FIELDS) {
+    for (const field of SAVED_EVENT_ALLOWED_FIELDS) {
       const value = eventData[field];
       if (value != null) dataToSave[field] = value;
     }
 
     const db = getServerDb();
-    await db.collection("savedEvents").doc(eventId).set(dataToSave);
+    await db.collection(COLLECTIONS.savedEvents).doc(eventId).set(dataToSave);
 
     return jsonResponse({ success: true });
   } catch (error) {

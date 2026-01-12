@@ -33,7 +33,7 @@ export interface Event {
   isFestival: boolean;
   isMusic: boolean;
   numericTimestamp: number;
-  googleTimestamp?: unknown;
+  googleTimestamp?: GoogleTimestamp;
   locationLower: string;
   normalizedCity: string;
   isSpokaneClub: boolean;
@@ -58,3 +58,17 @@ export interface SavedEvent extends Event {
   userId: string;
   savedAt: string;
 }
+
+export type GoogleTimestamp =
+  | string
+  | number
+  | Date
+  | {
+      toDate?: () => Date;
+      seconds?: number;
+      nanoseconds?: number;
+    }
+  | null
+  | undefined;
+
+export type EventData = Record<string, unknown>;

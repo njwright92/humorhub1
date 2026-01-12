@@ -104,7 +104,10 @@ export default function ProfileClient({
     let unsubscribe: (() => void) | undefined;
 
     const initAuth = async () => {
-      const { getAuth, getStorage } = await import("../../../firebase.config");
+      const [{ getAuth }, { getStorage }] = await Promise.all([
+        import("@/app/lib/firebase-auth"),
+        import("@/app/lib/firebase-storage"),
+      ]);
       const { onAuthStateChanged } = await import("firebase/auth");
 
       authRef.current = await getAuth();

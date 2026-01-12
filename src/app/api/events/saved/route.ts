@@ -2,22 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
 import type { Event } from "@/app/lib/types";
+import { buildEventFromData } from "@/app/lib/event-mappers";
+import { COLLECTIONS, SAVED_EVENT_FIELDS } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
-
-const SAVED_EVENT_FIELDS = [
-  "name",
-  "location",
-  "date",
-  "lat",
-  "lng",
-  "details",
-  "isRecurring",
-  "festival",
-  "isMusic",
-  "savedAt",
-  "googleTimestamp",
-] as const;
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +15,7 @@ export async function GET(request: NextRequest) {
     const db = getServerDb();
 
     const snapshot = await db
-      .collection("savedEvents")
+      .collection(COLLECTIONS.savedEvents)
       .where("userId", "==", auth.uid)
       .select(...SAVED_EVENT_FIELDS)
       .get();
@@ -38,27 +26,7 @@ export async function GET(request: NextRequest) {
       const doc = snapshot.docs[i];
       const data = doc.data();
 
-      events.push({
-        id: doc.id,
-        name: data.name ?? "",
-        location: data.location ?? "",
-        date: data.date ?? "",
-        lat: data.lat ?? 0,
-        lng: data.lng ?? 0,
-        details: data.details ?? "",
-        isRecurring: data.isRecurring ?? false,
-        isFestival: data.festival === true,
-        isMusic: data.isMusic === true,
-        numericTimestamp: data.googleTimestamp
-          ? new Date(data.googleTimestamp).getTime()
-          : 0,
-        googleTimestamp: data.googleTimestamp,
-        locationLower: (data.location ?? "").toLowerCase(),
-        normalizedCity: "",
-        isSpokaneClub: (data.location ?? "").includes("Spokane Comedy Club"),
-        recurringDow: null,
-        dateMs: null,
-      });
+      events.push(buildEventFromData(doc.id, data));
     }
 
     return NextResponse.json({ success: true, events });

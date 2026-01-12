@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
+import { COLLECTIONS } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
 
@@ -19,7 +20,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const db = getServerDb();
-    const eventRef = db.collection("savedEvents").doc(eventId);
+    const eventRef = db.collection(COLLECTIONS.savedEvents).doc(eventId);
     const eventDoc = await eventRef.get();
 
     if (!eventDoc.exists) {

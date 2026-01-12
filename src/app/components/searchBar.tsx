@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
+import { CITIES_CACHE_KEY } from "../lib/constants";
 
 const INPUT_ID = "search-input";
 const POPOVER_ID = "site-search-popover";
@@ -210,7 +211,7 @@ export default function SearchBar({
     let mounted = true;
     (async () => {
       try {
-        const cached = sessionStorage.getItem("hh_cities");
+        const cached = sessionStorage.getItem(CITIES_CACHE_KEY);
         if (cached) {
           const parsed = JSON.parse(cached);
           if (mounted && Array.isArray(parsed)) setCities(parsed);
@@ -224,7 +225,7 @@ export default function SearchBar({
         if (mounted && Array.isArray(data)) {
           const valid = data.filter((c): c is string => typeof c === "string");
           setCities(valid);
-          sessionStorage.setItem("hh_cities", JSON.stringify(valid));
+          sessionStorage.setItem(CITIES_CACHE_KEY, JSON.stringify(valid));
         }
       } catch (err) {
         console.error("Error fetching cities:", err);

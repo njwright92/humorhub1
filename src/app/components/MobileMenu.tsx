@@ -40,7 +40,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
     let unsubscribe: (() => void) | undefined;
 
     const initAuth = async () => {
-      const { getAuth } = await import("../../../firebase.config");
+      const { getAuth } = await import("@/app/lib/firebase-auth");
       const { onAuthStateChanged } = await import("firebase/auth");
       const auth = await getAuth();
       unsubscribe = onAuthStateChanged(auth, (user) => {
