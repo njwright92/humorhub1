@@ -51,13 +51,14 @@ export default function Home() {
           <figure className="home-mic-figure">
             <Link href="/mic-finder">
               <RoundImage
-                src="/hh1.webp"
+                src="/favicon.ico"
                 alt="Mic Finder - Find open mics near you"
                 interactive
                 width={168}
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
+                priority
               />
             </Link>
           </figure>

@@ -10,6 +10,7 @@ type RoundImageProps = {
   height: number;
   sizes?: string;
   quality?: number;
+  priority?: boolean;
 };
 
 export default function RoundImage({
@@ -22,6 +23,7 @@ export default function RoundImage({
   height,
   sizes,
   quality,
+  priority = false,
 }: RoundImageProps) {
   const mergedClassName = [
     "round-image",
@@ -41,6 +43,7 @@ export default function RoundImage({
       height={height}
       sizes={sizes}
       quality={quality}
+      priority={priority}
     />
   );
 }
