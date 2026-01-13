@@ -44,7 +44,7 @@ const NewsFilters = dynamic(() => import("./NewsFilters"), {
     </div>
   ),
 });
-const SKELETON_COUNT = 6;
+const SKELETON_COUNT = 3;
 
 function ArticleCard({
   article,
