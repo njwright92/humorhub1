@@ -70,7 +70,7 @@
 
 @layer components {
   .home-main {
-    @apply grid min-h-dvh content-start gap-8 p-2 pt-20 text-center md:ml-20;
+    @apply grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20;
   }
 
   .home-hero-title {
@@ -94,7 +94,7 @@
   }
 
   .section-card {
-    @apply mx-auto grid w-full gap-8 rounded-2xl p-2 shadow-xl;
+    @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2 shadow-xl;
   }
 
   .section-card-spaced {

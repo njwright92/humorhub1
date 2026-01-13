@@ -96,6 +96,94 @@ export default function Home() {
           </figure>
         </div>
       </SectionCard>
+      <SectionCard id="profile-heading" title="Profile">
+        <div className="home-mic-grid">
+          <div>
+            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+              Keep your comedy calling card fresh.
+            </h3>
+            <p className="text-sm leading-relaxed md:text-base">
+              Update your bio, avatar, and favorites so other comics can find
+              you.
+            </p>
+          </div>
+          <figure className="home-mic-figure">
+            <Link href="/Profile">
+              <RoundImage
+                src="/profile.webp"
+                alt="Profile page placeholder"
+                interactive
+                width={168}
+                height={168}
+                sizes="(min-width: 768px) 168px, 128px"
+                quality={70}
+              />
+            </Link>
+          </figure>
+          <Link href="/Profile" className="primary-cta">
+            Visit Your Profile
+          </Link>
+        </div>
+      </SectionCard>
+      <SectionCard id="contact-heading" title="Contact">
+        <div className="home-news-grid">
+          <div>
+            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+              Questions, feedback, or collabs?
+            </h3>
+            <p className="text-sm leading-relaxed md:text-base">
+              Drop the Humor Hub team a note and we will get back to you.
+            </p>
+          </div>
+          <figure className="home-news-figure">
+            <Link href="/contact">
+              <RoundImage
+                src="/contact.webp"
+                alt="Contact page placeholder"
+                interactive
+                width={168}
+                height={168}
+                sizes="(min-width: 768px) 168px, 128px"
+                quality={70}
+              />
+            </Link>
+          </figure>
+          <Link
+            href="/contact"
+            className="primary-cta md:self-start md:justify-self-end"
+          >
+            Contact Us
+          </Link>
+        </div>
+      </SectionCard>
+      <SectionCard id="about-heading" title="About">
+        <div className="home-mic-grid">
+          <div>
+            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+              See what makes the Hub tick.
+            </h3>
+            <p className="text-sm leading-relaxed md:text-base">
+              Learn the mission, the tools, and the team behind the laughs.
+            </p>
+          </div>
+          <figure className="home-mic-figure">
+            <Link href="/about">
+              <RoundImage
+                src="/about.webp"
+                alt="About page placeholder"
+                interactive
+                width={168}
+                height={168}
+                sizes="(min-width: 768px) 168px, 128px"
+                quality={70}
+              />
+            </Link>
+          </figure>
+          <Link href="/about" className="primary-cta">
+            Learn About Us
+          </Link>
+        </div>
+      </SectionCard>
     </main>
   );
 }
