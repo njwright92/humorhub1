@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import EventForm from "./components/EventForm";
 import NewsButton from "./components/newsButton";
+import ProtectedLinkButton from "./components/ProtectedLinkButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
 
@@ -109,7 +110,11 @@ export default function Home() {
             </p>
           </div>
           <figure className="home-mic-figure">
-            <Link href="/Profile">
+            <ProtectedLinkButton
+              href="/Profile"
+              label="Profile"
+              className="contents"
+            >
               <RoundImage
                 src="/profile.webp"
                 alt="Profile page placeholder"
@@ -119,11 +124,15 @@ export default function Home() {
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
               />
-            </Link>
+            </ProtectedLinkButton>
           </figure>
-          <Link href="/Profile" className="primary-cta">
+          <ProtectedLinkButton
+            href="/Profile"
+            label="Profile"
+            className="primary-cta"
+          >
             Visit Your Profile
-          </Link>
+          </ProtectedLinkButton>
         </div>
       </SectionCard>
       <SectionCard id="contact-heading" title="Contact">

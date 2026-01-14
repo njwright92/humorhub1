@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Link from "next/link";
 import type { Event } from "@/app/lib/types";
 import { sanitizeHtml } from "@/app/lib/sanitizeHtml";
@@ -13,6 +14,9 @@ const SavedEventCard = function SavedEventCard({
 }) {
   const city = event.location.split(",")[1]?.trim() || "";
   const mapHref = `/mic-finder?city=${encodeURIComponent(city)}`;
+  const sanitizedDetails = useMemo(() => {
+    return sanitizeHtml(event.details);
+  }, [event.details]);
 
   return (
     <article
@@ -46,7 +50,7 @@ const SavedEventCard = function SavedEventCard({
         {event.details && (
           <div
             className="line-clamp-2 text-sm group-hover:line-clamp-none"
-            dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.details) }}
+            dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
           />
         )}
       </div>

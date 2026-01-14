@@ -99,13 +99,21 @@ export default function MicFinderClient({
   const { showToast } = useToast();
 
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  // Initialize once to avoid a mount-only setState render.
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
+    return new Date(new Date().toDateString());
+  });
   const [searchTerm, setSearchTerm] = useState("");
-  const [isMapVisible, setIsMapVisible] = useState(false);
-  const [hasMapInit, setHasMapInit] = useState(false);
+  // Single state update for map init/visibility to reduce render churn.
+  const [mapState, setMapState] = useState({
+    isMapVisible: false,
+    hasMapInit: false,
+  });
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState<TabId>("Mics");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  const { isMapVisible, hasMapInit } = mapState;
 
   const authRef = useRef<Auth | null>(null);
   const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
@@ -137,6 +145,7 @@ export default function MicFinderClient({
       authInitPromiseRef.current = (async () => {
         const { getAuth } = await import("@/app/lib/firebase-auth");
         const auth = await getAuth();
+        await auth.authStateReady();
         authRef.current = auth;
         return auth;
       })();
@@ -162,9 +171,6 @@ export default function MicFinderClient({
     }
   }, []);
 
-  useEffect(() => {
-    setSelectedDate(new Date(new Date().toDateString()));
-  }, []);
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation) {
       return showToast("Geolocation not supported", "error");
@@ -253,13 +259,17 @@ export default function MicFinderClient({
   );
 
   const handleMapHover = useCallback(() => {
-    setHasMapInit(true);
+    setMapState((prev) =>
+      prev.hasMapInit ? prev : { ...prev, hasMapInit: true }
+    );
   }, []);
 
   const toggleMapVisibility = useCallback(() => {
-    if (!hasMapInit) setHasMapInit(true);
-    setIsMapVisible((prev) => !prev);
-  }, [hasMapInit]);
+    setMapState((prev) => ({
+      hasMapInit: true,
+      isMapVisible: !prev.isMapVisible,
+    }));
+  }, []);
 
   const cityLower = useMemo(() => selectedCity.toLowerCase(), [selectedCity]);
 
@@ -305,14 +315,13 @@ export default function MicFinderClient({
     [selectedTab]
   );
 
-  const eventsForMap = useMemo(() => {
-    let events = initialEvents;
-
+  // Shared base list to avoid repeating full-array filters in multiple memos.
+  const filteredByTabAndCity = useMemo(() => {
+    let list = initialEvents.filter(isTabMatch);
     if (cityLower && cityLower !== ALL_CITIES_LABEL) {
-      events = events.filter((e) => e.locationLower.includes(cityLower));
+      list = list.filter((e) => e.locationLower.includes(cityLower));
     }
-
-    return events.filter(isTabMatch);
+    return list;
   }, [initialEvents, cityLower, isTabMatch]);
 
   const mapConfig = useMemo(() => {
@@ -329,28 +338,22 @@ export default function MicFinderClient({
   }, [selectedCity, initialCityCoordinates]);
 
   const recurringEvents = useMemo(() => {
-    return initialEvents.filter((e) => {
-      if (!e.isRecurring || !isTabMatch(e)) return false;
-      const matchesCity = !cityLower || e.locationLower.includes(cityLower);
-      return matchesCity && e.recurringDow === selectedDow;
-    });
-  }, [initialEvents, cityLower, selectedDow, isTabMatch]);
+    return filteredByTabAndCity.filter(
+      (e) => e.isRecurring && e.recurringDow === selectedDow
+    );
+  }, [filteredByTabAndCity, selectedDow]);
 
   const oneTimeEvents = useMemo(() => {
-    return initialEvents.filter((e) => {
-      if (e.isRecurring || !isTabMatch(e)) return false;
-      const matchesCity = !cityLower || e.locationLower.includes(cityLower);
-      return matchesCity && e.dateMs === dateCheckMs;
-    });
-  }, [initialEvents, cityLower, dateCheckMs, isTabMatch]);
+    return filteredByTabAndCity.filter(
+      (e) => !e.isRecurring && e.dateMs === dateCheckMs
+    );
+  }, [filteredByTabAndCity, dateCheckMs]);
 
   const allCityEvents = useMemo(() => {
-    let list = initialEvents.filter(isTabMatch);
-    if (cityLower && cityLower !== ALL_CITIES_LABEL) {
-      list = list.filter((e) => e.locationLower.includes(cityLower));
-    }
-    return list;
-  }, [initialEvents, cityLower, isTabMatch]);
+    return filteredByTabAndCity;
+  }, [filteredByTabAndCity]);
+
+  const eventsForMap = filteredByTabAndCity;
 
   return (
     <>

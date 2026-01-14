@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
@@ -24,8 +25,30 @@ export default function ContactPage() {
         <p className="text-sm text-stone-300 md:text-base">
           Questions, feedback, or support? We&#39;re here to help.
         </p>
+        <p className="text-xs text-stone-400 md:text-sm">
+          We typically respond within 1-2 business days.
+        </p>
       </header>
       <ContactForm />
+      <section
+        aria-labelledby="contact-cta-heading"
+        className="grid gap-4 border-t border-stone-800 pt-6"
+      >
+        <h2 id="contact-cta-heading" className="text-lg md:text-xl">
+          Want to keep exploring?
+        </h2>
+        <div className="grid grid-flow-col justify-center gap-3">
+          <Link href="/mic-finder" className="btn-amber hover:bg-amber-600">
+            Find Events
+          </Link>
+          <Link
+            href="/"
+            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-600"
+          >
+            Back Home
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

@@ -38,6 +38,15 @@ export default function ContactForm() {
       e.preventDefault();
       if (isSubmitting) return;
       setIsSubmitting(true);
+      const name = formState.name.trim();
+      const email = formState.email.trim();
+      const message = formState.message.trim();
+
+      if (!name || !email || !message) {
+        showToast("Please fill out all fields.", "info");
+        setIsSubmitting(false);
+        return;
+      }
 
       try {
         const emailjs = (await import("@emailjs/browser")).default;
@@ -45,9 +54,9 @@ export default function ContactForm() {
           process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
           process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
           {
-            name: formState.name,
-            email: formState.email,
-            message: formState.message,
+            name,
+            email,
+            message,
           },
           process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
         );

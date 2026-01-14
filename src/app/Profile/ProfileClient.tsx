@@ -62,9 +62,8 @@ export default function ProfileClient({
     return user.getIdToken();
   }, []);
 
-  const fetchUserProfile = useCallback(async (user: User) => {
+  const fetchUserProfile = useCallback(async (token: string) => {
     try {
-      const token = await user.getIdToken();
       const res = await fetch("/api/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -81,10 +80,9 @@ export default function ProfileClient({
     }
   }, []);
 
-  const fetchSavedEvents = useCallback(async (user: User) => {
+  const fetchSavedEvents = useCallback(async (token: string) => {
     setIsEventsLoading(true);
     try {
-      const token = await user.getIdToken();
       const res = await fetch("/api/events/saved", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -117,9 +115,10 @@ export default function ProfileClient({
         userRef.current = user;
 
         if (user) {
-          await fetchUserProfile(user);
+          const token = await user.getIdToken();
+          await fetchUserProfile(token);
           setIsLoading(false);
-          fetchSavedEvents(user);
+          fetchSavedEvents(token);
         } else {
           setSavedEvents([]);
           setProfile(EMPTY_PROFILE);
@@ -252,7 +251,9 @@ export default function ProfileClient({
   }, []);
 
   const displayImageUrl = previewUrlRef.current || profile.profileImageUrl;
-  const editImageUrl = previewUrlRef.current || editForm.profileImageUrl;
+  const editImageUrl = isEditing
+    ? previewUrlRef.current || editForm.profileImageUrl
+    : "";
   const handleFieldChange = useCallback(
     (field: "name" | "bio", value: string) => {
       setEditForm((prev) => ({ ...prev, [field]: value }));

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { Event } from "../lib/types";
 import { sanitizeHtml } from "../lib/sanitizeHtml";
 
@@ -8,6 +9,10 @@ export default function EventCard({
   event: Event;
   onSave: (event: Event) => void;
 }) {
+  const sanitizedDetails = useMemo(() => {
+    return sanitizeHtml(event.details);
+  }, [event.details]);
+
   return (
     <article className="card-shell card-border mb-4 grid justify-items-center gap-2 border-stone-600 p-2 text-center">
       <h3 className="text-lg text-amber-600 md:text-xl">{event.name}</h3>
@@ -28,7 +33,7 @@ export default function EventCard({
         </span>
         <div
           className="wrap-break-word [&_a]:text-blue-400"
-          dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.details) }}
+          dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
         />
       </div>
       <button
