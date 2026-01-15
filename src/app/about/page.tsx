@@ -22,7 +22,7 @@ const FEATURES = [
     description:
       "The ultimate directory. Search 500+ cities for Comedy Mics, Music Jams, and Festivals. Filter by date, genre, or location.",
     detail:
-      "Venue managers can list events in seconds. The wider our database, the more stage time for everyone—whether you're testing 5 minutes or headlining.",
+      "Venue managers can list events in seconds. The wider our database, the more stage time for everyone!",
     link: "/mic-finder",
     linkText: "Find a Mic",
     titleBaseClass: "text-amber-700",
@@ -35,9 +35,9 @@ const FEATURES = [
     emoji: "📰",
     title: "Hub News",
     description:
-      "Your daily inspiration feed. Curated headlines across Business, Entertainment, Tech, and Politics—updated every hour.",
+      "Your daily inspiration feed. Curated headlines across Business, Entertainment, Tech, and Politics!",
     detail:
-      "Perfect for writing topical jokes, finding current-event callbacks, or discovering that unexpected angle for your next routine.",
+      "Perfect for writing topical jokes, finding current event, or discovering that unexpected angle for your next routine.",
     link: "/News",
     linkText: "Read News",
     titleBaseClass: "text-blue-400",
@@ -60,14 +60,15 @@ export default function AboutPage() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-4 pt-12 text-center md:ml-20">
       <header className="grid justify-items-center gap-6">
-        <h1 className="page-title">About Us</h1>
         <hgroup className="grid gap-2">
-          <h2 className="text-2xl text-amber-600">Built for Comics</h2>
-          <p className="text-lg font-semibold md:text-xl">By a Comic</p>
+          <h1 className="page-title">About Us</h1>
+          <p className="text-lg font-semibold md:text-xl">
+            Built for Comics by Comics
+          </p>
         </hgroup>
         <p className="max-w-2xl text-sm leading-relaxed text-stone-300 md:text-base">
-          Humor Hub was created to solve the two biggest problems every working
-          comedian faces: finding the next gig and finding the next joke.
+          “Humor Hub is a fast, friendly hub to help comedians find their next
+          gig and their next joke.”
         </p>
       </header>
 
