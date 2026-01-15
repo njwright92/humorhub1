@@ -37,7 +37,7 @@ const FEATURES = [
     description:
       "Your daily inspiration feed. Curated headlines across Business, Entertainment, Tech, and Politics!",
     detail:
-      "Perfect for writing topical jokes, finding current event, or discovering that unexpected angle for your next routine.",
+      "Perfect for writing topical jokes, finding current events, or discovering that unexpected angle of a story.",
     link: "/News",
     linkText: "Read News",
     titleBaseClass: "text-blue-400",
