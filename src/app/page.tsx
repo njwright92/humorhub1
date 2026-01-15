@@ -71,7 +71,7 @@ export default function Home() {
       </SectionCard>
       <SectionCard id="news-heading" title="Hub News!">
         <div className="home-news-grid">
-          <div>
+          <div className="md:col-start-2">
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Your Source for Fresh Headlines!
             </h3>
@@ -94,8 +94,10 @@ export default function Home() {
                 quality={70}
               />
             </NewsButton>
-            <NewsButton />
           </figure>
+          <div className="md:col-start-2 md:justify-self-end">
+            <NewsButton />
+          </div>
         </div>
       </SectionCard>
       <SectionCard id="profile-heading" title="Profile">
@@ -109,7 +111,7 @@ export default function Home() {
               you.
             </p>
           </div>
-          <figure className="home-mic-figure">
+          <figure className="home-mic-figure md:row-span-2">
             <ProtectedLinkButton
               href="/Profile"
               label="Profile"
@@ -129,7 +131,7 @@ export default function Home() {
           <ProtectedLinkButton
             href="/Profile"
             label="Profile"
-            className="primary-cta"
+            className="primary-cta md:self-start"
           >
             Visit Your Profile
           </ProtectedLinkButton>
