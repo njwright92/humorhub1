@@ -2,27 +2,22 @@
 
 import { useState, useCallback, useRef, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "./ToastContext";
 import dynamic from "next/dynamic";
 import type { User } from "firebase/auth";
-import { useToast } from "./ToastContext";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
-export default function ProtectedLinkButton({
-  href,
-  label,
-  className,
-  children,
+export default function ProfileButton({
+  children = "Visit Your Profile",
+  className = "primary-cta",
 }: {
-  href: string;
-  label: string;
+  children?: ReactNode;
   className?: string;
-  children: ReactNode;
 }) {
-  const router = useRouter();
   const { showToast } = useToast();
+  const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
   const authPromiseRef = useRef<Promise<User | null> | null>(null);
 
@@ -41,18 +36,24 @@ export default function ProtectedLinkButton({
   const preload = useCallback(() => {
     void import("./authModal");
     void getAuthUser();
-  }, [getAuthUser]);
+    router.prefetch?.("/Profile");
+  }, [router, getAuthUser]);
 
   const handleClick = useCallback(async () => {
-    const user = await getAuthUser();
-    if (user) {
-      router.push(href);
-      return;
+    try {
+      const user = await getAuthUser();
+
+      if (user) {
+        router.push("/Profile");
+        return;
+      }
+
+      showToast("Please sign in to view Profile.", "info");
+      setIsAuthModalOpen(true);
+    } catch {
+      setIsAuthModalOpen(true);
     }
-    showToast(`Please sign in to view ${label}`, "info");
-    setPendingRedirect(href);
-    setIsAuthModalOpen(true);
-  }, [getAuthUser, router, href, label, showToast]);
+  }, [router, showToast, getAuthUser]);
 
   return (
     <>
@@ -63,7 +64,8 @@ export default function ProtectedLinkButton({
         onTouchStart={preload}
         onClick={handleClick}
         className={className}
-        aria-label={label}
+        aria-haspopup="dialog"
+        aria-expanded={isAuthModalOpen}
       >
         {children}
       </button>
@@ -73,12 +75,8 @@ export default function ProtectedLinkButton({
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
           onLoginSuccess={() => {
-            authPromiseRef.current = null;
             setIsAuthModalOpen(false);
-            if (pendingRedirect) {
-              router.push(pendingRedirect);
-              setPendingRedirect(null);
-            }
+            router.push("/Profile");
           }}
         />
       )}

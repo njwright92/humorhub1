@@ -5,7 +5,6 @@ import "./globals.css";
 import { ToastProvider } from "./components/ToastContext";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleTagManager } from "@next/third-parties/google";
 
 const comicNeue = Comic_Neue({
@@ -68,7 +67,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
           <Footer />
         </ToastProvider>
-        <SpeedInsights />
         <GoogleTagManager gtmId="GTM-KVJSFKV8" />
       </body>
     </html>
