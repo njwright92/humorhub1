@@ -39,6 +39,7 @@ export interface Event {
   isSpokaneClub: boolean;
   recurringDow: number | null;
   dateMs: number | null;
+  sanitizedDetails?: string;
 }
 
 export interface ApiResponse<T = undefined> {
@@ -49,9 +50,14 @@ export interface ApiResponse<T = undefined> {
 
 export type CityCoordinates = Record<string, LatLng>;
 
+export type EventCategory = "Mics" | "Festivals" | "Other";
+
+export type EventsByTab = Record<EventCategory, Event[]>;
+
 export interface MicFinderData {
   events: Event[];
   cityCoordinates: CityCoordinates;
+  eventsByTab: EventsByTab;
 }
 
 export interface SavedEvent extends Event {
@@ -72,3 +78,10 @@ export type GoogleTimestamp =
   | undefined;
 
 export type EventData = Record<string, unknown>;
+
+export interface MicFinderFilterResult {
+  baseEvents: Event[];
+  recurringEvents: Event[];
+  oneTimeEvents: Event[];
+  allCityEvents: Event[];
+}

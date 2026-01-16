@@ -10,13 +10,13 @@ import React, {
 import dynamic from "next/dynamic";
 import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
-import type { Event, CityCoordinates } from "../lib/types";
-import {
-  DEFAULT_US_CENTER,
-  DEFAULT_ZOOM,
-  CITY_ZOOM,
-  ALL_CITIES_LABEL,
-} from "../lib/constants";
+import type {
+  Event,
+  CityCoordinates,
+  EventCategory,
+  MicFinderFilterResult,
+} from "../lib/types";
+import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
 
@@ -34,9 +34,9 @@ const VirtualizedEventList = dynamic(() => import("./VirtualizedEventList"), {
 });
 
 interface MicFinderClientProps {
-  initialEvents: Event[];
   initialCityCoordinates: CityCoordinates;
   initialCities: string[];
+  initialFilters: MicFinderFilterResult;
 }
 
 const inputClass =
@@ -74,7 +74,7 @@ const TABS = [
   },
 ] as const;
 
-type TabId = (typeof TABS)[number]["id"];
+type TabId = EventCategory;
 
 const TAB_LABELS: Record<TabId, string> = {
   Mics: "Comedy Mics",
@@ -92,9 +92,9 @@ async function sendGtmEvent(
 }
 
 export default function MicFinderClient({
-  initialEvents,
   initialCityCoordinates,
   initialCities,
+  initialFilters,
 }: MicFinderClientProps) {
   const { showToast } = useToast();
 
@@ -114,6 +114,17 @@ export default function MicFinderClient({
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   const { isMapVisible, hasMapInit } = mapState;
+
+  const [baseEvents, setBaseEvents] = useState(initialFilters.baseEvents);
+  const [recurringEvents, setRecurringEvents] = useState(
+    initialFilters.recurringEvents
+  );
+  const [oneTimeEvents, setOneTimeEvents] = useState(
+    initialFilters.oneTimeEvents
+  );
+  const [allCityEvents, setAllCityEvents] = useState(
+    initialFilters.allCityEvents
+  );
 
   const authRef = useRef<Auth | null>(null);
   const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
@@ -271,25 +282,15 @@ export default function MicFinderClient({
     }));
   }, []);
 
-  const cityLower = useMemo(() => selectedCity.toLowerCase(), [selectedCity]);
-
-  const { selectedDow, dateCheckMs, dayOfWeek, formattedDate } = useMemo(() => {
+  const { dayOfWeek, formattedDate } = useMemo(() => {
     if (!selectedDate) {
       return {
-        selectedDow: -1,
-        dateCheckMs: 0,
         dayOfWeek: "",
         formattedDate: "",
       };
     }
 
-    const dow = selectedDate.getDay();
-    const dateCheck = new Date(selectedDate);
-    dateCheck.setHours(0, 0, 0, 0);
-
     return {
-      selectedDow: dow,
-      dateCheckMs: dateCheck.getTime(),
       dayOfWeek: selectedDate.toLocaleDateString("en-US", { weekday: "long" }),
       formattedDate: selectedDate.toLocaleDateString("en-US", {
         month: "short",
@@ -306,23 +307,38 @@ export default function MicFinderClient({
     return initialCities.filter((c) => c.toLowerCase().startsWith(term));
   }, [initialCities, debouncedSearchTerm]);
 
-  const isTabMatch = useCallback(
-    (event: Event): boolean => {
-      if (selectedTab === "Festivals") return event.isFestival;
-      if (selectedTab === "Other") return event.isMusic;
-      return !event.isFestival && !event.isMusic;
-    },
-    [selectedTab]
-  );
+  const initialLoadRef = useRef(true);
 
-  // Shared base list to avoid repeating full-array filters in multiple memos.
-  const filteredByTabAndCity = useMemo(() => {
-    let list = initialEvents.filter(isTabMatch);
-    if (cityLower && cityLower !== ALL_CITIES_LABEL) {
-      list = list.filter((e) => e.locationLower.includes(cityLower));
+  useEffect(() => {
+    if (initialLoadRef.current) {
+      initialLoadRef.current = false;
+      return;
     }
-    return list;
-  }, [initialEvents, cityLower, isTabMatch]);
+
+    const controller = new AbortController();
+    const fetchFilters = async () => {
+      const params = new URLSearchParams();
+      params.set("tab", selectedTab);
+      if (selectedCity) params.set("city", selectedCity);
+      if (selectedDate) {
+        params.set("date", selectedDate.toLocaleDateString("en-CA"));
+      }
+
+      const response = await fetch(
+        `/api/mic-finder/filter?${params.toString()}`,
+        { signal: controller.signal }
+      );
+      if (!response.ok) return;
+      const data: MicFinderFilterResult = await response.json();
+      setBaseEvents(data.baseEvents);
+      setRecurringEvents(data.recurringEvents);
+      setOneTimeEvents(data.oneTimeEvents);
+      setAllCityEvents(data.allCityEvents);
+    };
+
+    void fetchFilters();
+    return () => controller.abort();
+  }, [selectedCity, selectedDate, selectedTab]);
 
   const mapConfig = useMemo(() => {
     const cityCoords = selectedCity
@@ -337,23 +353,7 @@ export default function MicFinderClient({
         };
   }, [selectedCity, initialCityCoordinates]);
 
-  const recurringEvents = useMemo(() => {
-    return filteredByTabAndCity.filter(
-      (e) => e.isRecurring && e.recurringDow === selectedDow
-    );
-  }, [filteredByTabAndCity, selectedDow]);
-
-  const oneTimeEvents = useMemo(() => {
-    return filteredByTabAndCity.filter(
-      (e) => !e.isRecurring && e.dateMs === dateCheckMs
-    );
-  }, [filteredByTabAndCity, dateCheckMs]);
-
-  const allCityEvents = useMemo(() => {
-    return filteredByTabAndCity;
-  }, [filteredByTabAndCity]);
-
-  const eventsForMap = filteredByTabAndCity;
+  const eventsForMap = baseEvents;
 
   return (
     <>

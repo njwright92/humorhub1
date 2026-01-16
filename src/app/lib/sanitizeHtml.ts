@@ -2,7 +2,18 @@ const EVENT_HANDLER_PATTERN = /^on/i;
 const JAVASCRIPT_PROTOCOL = /^javascript:/i;
 
 export function sanitizeHtml(html: string) {
-  if (typeof window === "undefined") return html;
+  if (typeof window === "undefined") {
+    let cleaned = html;
+    cleaned = cleaned.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "");
+    cleaned = cleaned.replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "");
+    cleaned = cleaned.replace(/\son\w+\s*=\s*(['"]).*?\1/gi, "");
+    cleaned = cleaned.replace(/\sstyle\s*=\s*(['"]).*?\1/gi, "");
+    cleaned = cleaned.replace(
+      /\s(href|src)\s*=\s*(['"])\s*javascript:[^'"]*\2/gi,
+      ""
+    );
+    return cleaned;
+  }
 
   const doc = new DOMParser().parseFromString(html, "text/html");
 

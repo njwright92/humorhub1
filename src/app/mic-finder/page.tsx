@@ -148,13 +148,19 @@ const STRUCTURED_DATA = {
 const STRUCTURED_DATA_STRING = JSON.stringify(STRUCTURED_DATA);
 
 async function MicFinderContent() {
-  const { events, cities, cityCoordinates } = await fetchMicFinderData();
+  const { cities, cityCoordinates } = await fetchMicFinderData();
+  const initialFilters = {
+    baseEvents: [],
+    recurringEvents: [],
+    oneTimeEvents: [],
+    allCityEvents: [],
+  };
 
   return (
     <MicFinderClient
-      initialEvents={events}
       initialCityCoordinates={cityCoordinates}
       initialCities={cities}
+      initialFilters={initialFilters}
     />
   );
 }
@@ -188,7 +194,7 @@ export default function MicFinderPage() {
           </p>
         </header>
 
-        <p className="text-sm text-stone-300 md:text-base lg:text-lg">
+        <p className="text-sm text-stone-300 lg:text-lg">
           Find a Mic tonight or list yours, built by comics for comics. Use Mic
           Finder to connect with your community!
         </p>

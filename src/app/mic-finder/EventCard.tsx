@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import type { Event } from "../lib/types";
-import { sanitizeHtml } from "../lib/sanitizeHtml";
 
 export default function EventCard({
   event,
@@ -9,9 +7,7 @@ export default function EventCard({
   event: Event;
   onSave: (event: Event) => void;
 }) {
-  const sanitizedDetails = useMemo(() => {
-    return sanitizeHtml(event.details);
-  }, [event.details]);
+  const sanitizedDetails = event.sanitizedDetails ?? event.details;
 
   return (
     <article className="card-shell card-border mb-4 grid justify-items-center gap-2 border-stone-600 p-2 text-center">

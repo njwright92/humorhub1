@@ -55,12 +55,12 @@ export default function Footer() {
               </h3>
               <ul className="grid gap-1 font-medium text-stone-400">
                 <li>
-                  <Link href="/about" className={linkClass}>
+                  <Link href="/about" prefetch={false} className={linkClass}>
                     About Humor Hub
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className={linkClass}>
+                  <Link href="/contact" prefetch={false} className={linkClass}>
                     Contact Our Team
                   </Link>
                 </li>
@@ -94,12 +94,20 @@ export default function Footer() {
               </h3>
               <ul className="grid gap-1 font-medium text-stone-400">
                 <li>
-                  <Link href="/user-agreement" className={linkClass}>
+                  <Link
+                    href="/user-agreement"
+                    prefetch={false}
+                    className={linkClass}
+                  >
                     User Agreement
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy-policy" className={linkClass}>
+                  <Link
+                    href="/privacy-policy"
+                    prefetch={false}
+                    className={linkClass}
+                  >
                     Privacy Policy
                   </Link>
                 </li>
