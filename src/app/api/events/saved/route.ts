@@ -4,6 +4,7 @@ import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
 import type { Event } from "@/app/lib/types";
 import { buildEventFromData } from "@/app/lib/event-mappers";
 import { COLLECTIONS, SAVED_EVENT_FIELDS } from "@/app/lib/constants";
+import { sanitizeHtml } from "@/app/lib/sanitizeHtml";
 
 export const runtime = "nodejs";
 
@@ -26,7 +27,9 @@ export async function GET(request: NextRequest) {
       const doc = snapshot.docs[i];
       const data = doc.data();
 
-      events.push(buildEventFromData(doc.id, data));
+      const event = buildEventFromData(doc.id, data);
+      event.sanitizedDetails = event.details ? sanitizeHtml(event.details) : "";
+      events.push(event);
     }
 
     return NextResponse.json({ success: true, events });

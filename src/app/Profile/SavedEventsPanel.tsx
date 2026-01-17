@@ -1,7 +1,5 @@
-import { useMemo } from "react";
 import Link from "next/link";
 import type { Event } from "@/app/lib/types";
-import { sanitizeHtml } from "@/app/lib/sanitizeHtml";
 
 const SavedEventCard = function SavedEventCard({
   event,
@@ -14,9 +12,7 @@ const SavedEventCard = function SavedEventCard({
 }) {
   const city = event.location.split(",")[1]?.trim() || "";
   const mapHref = `/mic-finder?city=${encodeURIComponent(city)}`;
-  const sanitizedDetails = useMemo(() => {
-    return sanitizeHtml(event.details);
-  }, [event.details]);
+  const sanitizedDetails = event.sanitizedDetails ?? event.details;
 
   return (
     <article
