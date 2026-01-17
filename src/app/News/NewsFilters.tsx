@@ -2,7 +2,7 @@ type Category = "top_stories" | "all_news";
 
 const labelClass = "mb-2 text-xs sm:text-sm font-bold uppercase tracking-wide";
 const selectClass =
-  "input-amber border-stone-600 bg-stone-900 text-zinc-200 cursor-pointer disabled:opacity-70";
+  "input-amber border-stone-600 bg-stone-900 text-zinc-200 cursor-pointer disabled:opacity-70 hover:border-amber-700";
 
 const formatText = (text: string) =>
   text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
@@ -10,29 +10,22 @@ const formatText = (text: string) =>
 export default function NewsFilters({
   selectedCategory,
   selectedSubcategory,
-  onCategoryChange,
-  onSubcategoryChange,
-  onReset,
-  isLoading,
   categories,
   subcategories,
 }: {
   selectedCategory: Category;
   selectedSubcategory: string;
-  onCategoryChange: (value: Category) => void;
-  onSubcategoryChange: (value: string) => void;
-  onReset: () => void;
-  isLoading: boolean;
   categories: readonly Category[];
   subcategories: readonly string[];
 }) {
   return (
     <form
       aria-labelledby="filters-heading"
-      onSubmit={(e) => e.preventDefault()}
+      method="get"
+      action="/News"
       className="card-shell card-border-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md"
     >
-      <fieldset disabled={isLoading}>
+      <fieldset>
         <legend id="filters-heading" className="sr-only">
           Filter News
         </legend>
@@ -40,12 +33,12 @@ export default function NewsFilters({
         <div className="grid items-end gap-6 text-left md:grid-cols-3">
           <div className="grid">
             <label htmlFor="news-category" className={labelClass}>
-              Feed Type
+              All or Top Stories
             </label>
             <select
               id="news-category"
-              value={selectedCategory}
-              onChange={(e) => onCategoryChange(e.target.value as Category)}
+              name="category"
+              defaultValue={selectedCategory}
               className={selectClass}
             >
               {categories.map((cat) => (
@@ -62,8 +55,8 @@ export default function NewsFilters({
             </label>
             <select
               id="news-subcategory"
-              value={selectedSubcategory}
-              onChange={(e) => onSubcategoryChange(e.target.value)}
+              name="subcategory"
+              defaultValue={selectedSubcategory}
               className={selectClass}
             >
               {subcategories.map((sub) => (
@@ -75,11 +68,10 @@ export default function NewsFilters({
           </div>
 
           <button
-            type="reset"
-            onClick={onReset}
+            type="submit"
             className="btn-solid btn-stone-soft h-10 cursor-pointer border-2 border-stone-600 transition-colors hover:border-amber-700/50 disabled:opacity-70"
           >
-            Reset Filters
+            Search
           </button>
         </div>
       </fieldset>

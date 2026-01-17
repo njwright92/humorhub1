@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import NewsClient from "./NewsClient";
+import { fetchNewsArticles } from "@/app/lib/data/news";
+import type { NewsCategory } from "@/app/lib/types";
 
 export const metadata: Metadata = {
   title: "Hub News - Latest Comedy & World Stories | Humor Hub",
@@ -17,7 +19,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function NewsPage() {
+export default async function NewsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ category?: string; subcategory?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : undefined;
+  const category = resolvedParams?.category;
+  const subcategory = resolvedParams?.subcategory ?? "general";
+  const resolvedCategory: NewsCategory =
+    category === "top_stories" ? "top_stories" : "all_news";
+  const { articles, error } = await fetchNewsArticles(
+    resolvedCategory,
+    subcategory
+  );
+
   return (
     <main className="grid min-h-dvh content-start gap-4 p-2 pt-12 text-center md:ml-20">
       <h1 className="page-title">Hub News</h1>
@@ -25,7 +41,12 @@ export default function NewsPage() {
         Curated stories from around the world. Stay informed with the latest
         updates.
       </p>
-      <NewsClient />
+      <NewsClient
+        articles={articles}
+        error={error}
+        selectedCategory={resolvedCategory}
+        selectedSubcategory={subcategory}
+      />
     </main>
   );
 }

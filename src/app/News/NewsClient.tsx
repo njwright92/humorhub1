@@ -1,22 +1,8 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Image from "next/image";
-import Loading from "../components/loading";
-import dynamic from "next/dynamic";
+import NewsFilters from "./NewsFilters";
+import type { NewsArticle, NewsCategory } from "../lib/types";
 
-type Category = "top_stories" | "all_news";
-
-type Article = {
-  uuid: string;
-  title: string;
-  url: string;
-  description: string;
-  image_url?: string;
-  source?: string;
-};
-
-const CATEGORIES: Category[] = ["top_stories", "all_news"];
+const CATEGORIES: NewsCategory[] = ["top_stories", "all_news"];
 const SUBCATEGORIES = [
   "general",
   "science",
@@ -30,35 +16,17 @@ const SUBCATEGORIES = [
   "travel",
 ] as const;
 
-const NewsFilters = dynamic(() => import("./NewsFilters"), {
-  loading: () => (
-    <div
-      aria-hidden="true"
-      className="card-shell card-border-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md"
-    >
-      <div className="grid items-end gap-6 md:grid-cols-3">
-        <div className="h-10 rounded-2xl bg-stone-700" />
-        <div className="h-10 rounded-2xl bg-stone-700" />
-        <div className="h-10 rounded-2xl bg-stone-700" />
-      </div>
-    </div>
-  ),
-});
-const SKELETON_COUNT = 3;
-
 function ArticleCard({
   article,
   priority,
 }: {
-  article: Article;
+  article: NewsArticle;
   priority: boolean;
 }) {
-  const [imgError, setImgError] = useState(false);
-
   return (
     <article className="group grid h-full grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full">
-        {article.image_url && !imgError ? (
+        {article.image_url ? (
           <Image
             src={article.image_url}
             alt={article.title}
@@ -68,7 +36,6 @@ function ArticleCard({
             priority={priority}
             fetchPriority={priority ? "high" : "auto"}
             quality={70}
-            onError={() => setImgError(true)}
           />
         ) : (
           <div
@@ -104,44 +71,19 @@ function ArticleCard({
   );
 }
 
-export default function NewsClient() {
-  const [selectedCategory, setSelectedCategory] =
-    useState<Category>("all_news");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("general");
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchNews = async (cat: Category, sub: string) => {
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const params = new URLSearchParams({ category: cat, subcategory: sub });
-      const response = await fetch(`/api/news?${params}`);
-
-      if (!response.ok) throw new Error("Failed to fetch");
-
-      const json = await response.json();
-      if (json.error) throw new Error(json.error);
-
-      setArticles(json.data ?? []);
-    } catch {
-      setError("Unable to load the latest headlines. Please try again.");
-      setArticles([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchNews(selectedCategory, selectedSubcategory);
-  }, [selectedCategory, selectedSubcategory]);
-
-  const resetNews = () => {
-    setSelectedCategory("all_news");
-    setSelectedSubcategory("general");
-  };
+export default function NewsClient({
+  articles,
+  error,
+  selectedCategory: initialCategory,
+  selectedSubcategory: initialSubcategory,
+}: {
+  articles: NewsArticle[];
+  error?: string;
+  selectedCategory: NewsCategory;
+  selectedSubcategory: string;
+}) {
+  const selectedCategory = initialCategory;
+  const selectedSubcategory = initialSubcategory;
 
   return (
     <>
@@ -152,23 +94,18 @@ export default function NewsClient() {
           className="mx-auto mb-8 max-w-2xl rounded-2xl border border-red-500/50 bg-red-900 p-4 text-center"
         >
           <p className="font-semibold text-red-200">{error}</p>
-          <button
-            type="button"
-            onClick={() => fetchNews(selectedCategory, selectedSubcategory)}
+          <a
+            href={`/News?category=${selectedCategory}&subcategory=${selectedSubcategory}`}
             className="mt-2 cursor-pointer text-sm text-red-300 underline shadow-xl transition-colors hover:text-white"
           >
             Try Again
-          </button>
+          </a>
         </div>
       )}
 
       <NewsFilters
         selectedCategory={selectedCategory}
         selectedSubcategory={selectedSubcategory}
-        onCategoryChange={(value) => setSelectedCategory(value)}
-        onSubcategoryChange={(value) => setSelectedSubcategory(value)}
-        onReset={resetNews}
-        isLoading={isLoading}
         categories={CATEGORIES}
         subcategories={SUBCATEGORIES}
       />
@@ -178,30 +115,7 @@ export default function NewsClient() {
           News Articles
         </h2>
 
-        {isLoading ? (
-          <div className="grid gap-6">
-            <div className="grid place-content-center pt-6" role="status">
-              <Loading />
-            </div>
-            <ul
-              className="animate-slide-in grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-              aria-label="Loading articles"
-            >
-              {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
-                <li key={index}>
-                  <div className="grid h-full min-h-80 animate-pulse grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50">
-                    <div className="h-48 w-full bg-stone-800" />
-                    <div className="grid grid-rows-[auto_1fr_auto] gap-3 p-5">
-                      <div className="h-5 w-3/4 rounded-full bg-stone-700" />
-                      <div className="h-12 w-full rounded-2xl bg-stone-700" />
-                      <div className="h-9 w-1/2 rounded-2xl bg-stone-700" />
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : articles.length > 0 ? (
+        {articles.length > 0 ? (
           <ul
             className="animate-slide-in grid gap-6 md:grid-cols-2 lg:grid-cols-3"
             aria-label={`${articles.length} articles`}

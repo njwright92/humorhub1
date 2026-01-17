@@ -85,3 +85,14 @@ export interface MicFinderFilterResult {
   oneTimeEvents: Event[];
   allCityEvents: Event[];
 }
+
+export type NewsCategory = "top_stories" | "all_news";
+
+export interface NewsArticle {
+  uuid: string;
+  title: string;
+  url: string;
+  description: string;
+  image_url?: string;
+  source?: string;
+}
