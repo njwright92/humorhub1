@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback, useRef, type ReactNode } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import dynamic from "next/dynamic";
-import type { User } from "firebase/auth";
+import { getSession } from "@/app/lib/auth-client";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
@@ -19,31 +19,17 @@ export default function ProfileButton({
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const authPromiseRef = useRef<Promise<User | null> | null>(null);
-
-  const getAuthUser = useCallback(() => {
-    if (!authPromiseRef.current) {
-      authPromiseRef.current = (async () => {
-        const { getAuth } = await import("@/app/lib/firebase-auth");
-        const auth = await getAuth();
-        await auth.authStateReady();
-        return auth.currentUser;
-      })();
-    }
-    return authPromiseRef.current;
-  }, []);
-
   const preload = useCallback(() => {
     void import("./authModal");
-    void getAuthUser();
+    void getSession();
     router.prefetch?.("/Profile");
-  }, [router, getAuthUser]);
+  }, [router]);
 
   const handleClick = useCallback(async () => {
     try {
-      const user = await getAuthUser();
+      const user = await getSession();
 
-      if (user) {
+      if (user.signedIn) {
         router.push("/Profile");
         return;
       }
@@ -53,7 +39,7 @@ export default function ProfileButton({
     } catch {
       setIsAuthModalOpen(true);
     }
-  }, [router, showToast, getAuthUser]);
+  }, [router, showToast]);
 
   return (
     <>

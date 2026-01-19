@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyIdToken } from "@/app/lib/firebase-admin";
+import { getServerAuth, verifyIdToken } from "@/app/lib/firebase-admin";
+import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
 import type { ApiResponse } from "@/app/lib/types";
 
 export type AuthResult =
@@ -9,6 +10,16 @@ export type AuthResult =
 export async function authenticateRequest(
   request: NextRequest
 ): Promise<AuthResult> {
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (sessionCookie) {
+    try {
+      const decoded = await getServerAuth().verifySessionCookie(sessionCookie);
+      return { success: true, uid: decoded.uid };
+    } catch {
+      // Fall back to bearer token for legacy callers.
+    }
+  }
+
   const authHeader = request.headers.get("authorization");
 
   if (!authHeader?.startsWith("Bearer ")) {

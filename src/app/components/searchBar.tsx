@@ -39,10 +39,12 @@ export default function SearchBar({
   isUserSignedIn,
   setIsAuthModalOpen,
   onNavigate,
+  onRequireAuth,
 }: {
   isUserSignedIn: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   onNavigate?: () => void;
+  onRequireAuth?: (path: string, label: string) => void;
 }) {
   const { showToast } = useToast();
   const router = useRouter();
@@ -129,14 +131,25 @@ export default function SearchBar({
       if (s.type === "page") {
         if (s.page.requiresAuth && !isUserSignedIn) {
           showToast(`Please sign in to access ${s.page.label}`, "info");
-          setIsAuthModalOpen(true);
+          if (onRequireAuth) {
+            onRequireAuth(s.page.route, s.page.label);
+          } else {
+            setIsAuthModalOpen(true);
+          }
           closeSearchBar();
           return;
         }
         navigateTo(s.page.route);
       }
     },
-    [navigateTo, isUserSignedIn, setIsAuthModalOpen, showToast, closeSearchBar]
+    [
+      navigateTo,
+      isUserSignedIn,
+      onRequireAuth,
+      setIsAuthModalOpen,
+      showToast,
+      closeSearchBar,
+    ]
   );
 
   const handleSearch = useCallback(

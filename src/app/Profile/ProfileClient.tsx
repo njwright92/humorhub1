@@ -10,9 +10,9 @@ import {
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useToast } from "../components/ToastContext";
-import type { Auth, User } from "firebase/auth";
 import type { FirebaseStorage } from "firebase/storage";
 import type { Event } from "@/app/lib/types";
+import { getSession } from "@/app/lib/auth-client";
 
 const ProfileSidebar = dynamic(() => import("./ProfileSidebar"));
 const SavedEventsPanel = dynamic(() => import("./SavedEventsPanel"));
@@ -45,9 +45,8 @@ export default function ProfileClient({
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const authRef = useRef<Auth | null>(null);
   const storageRef = useRef<FirebaseStorage | null>(null);
-  const userRef = useRef<User | null>(null);
+  const userIdRef = useRef<string | null>(null);
   const previewUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -56,16 +55,10 @@ export default function ProfileClient({
     };
   }, []);
 
-  const getToken = useCallback(async (): Promise<string | null> => {
-    const user = userRef.current;
-    if (!user) return null;
-    return user.getIdToken();
-  }, []);
-
-  const fetchUserProfile = useCallback(async (token: string) => {
+  const fetchUserProfile = useCallback(async () => {
     try {
       const res = await fetch("/api/profile", {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const result = await res.json();
 
@@ -80,11 +73,11 @@ export default function ProfileClient({
     }
   }, []);
 
-  const fetchSavedEvents = useCallback(async (token: string) => {
+  const fetchSavedEvents = useCallback(async () => {
     setIsEventsLoading(true);
     try {
       const res = await fetch("/api/events/saved", {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
       const result = await res.json();
 
@@ -99,48 +92,42 @@ export default function ProfileClient({
   }, []);
 
   useEffect(() => {
-    let unsubscribe: (() => void) | undefined;
-
     const initAuth = async () => {
-      const [{ getAuth }, { getStorage }] = await Promise.all([
-        import("@/app/lib/firebase-auth"),
+      const [{ getStorage }, session] = await Promise.all([
         import("@/app/lib/firebase-storage"),
+        getSession(),
       ]);
-      const { onAuthStateChanged } = await import("firebase/auth");
-
-      authRef.current = await getAuth();
       storageRef.current = await getStorage();
+      userIdRef.current = session.signedIn ? (session.uid ?? null) : null;
 
-      unsubscribe = onAuthStateChanged(authRef.current, async (user) => {
-        userRef.current = user;
-
-        if (user) {
-          const token = await user.getIdToken();
-          await fetchUserProfile(token);
-          setIsLoading(false);
-          fetchSavedEvents(token);
-        } else {
-          setSavedEvents([]);
-          setProfile(EMPTY_PROFILE);
-          setEditForm(EMPTY_PROFILE);
-          setIsLoading(false);
-          setIsEventsLoading(false);
-        }
-      });
+      if (session.signedIn) {
+        await fetchUserProfile();
+        setIsLoading(false);
+        fetchSavedEvents();
+      } else {
+        setSavedEvents([]);
+        setProfile(EMPTY_PROFILE);
+        setEditForm(EMPTY_PROFILE);
+        setIsLoading(false);
+        setIsEventsLoading(false);
+      }
     };
 
     initAuth();
-    return () => unsubscribe?.();
   }, [fetchUserProfile, fetchSavedEvents]);
 
   const handleSignOut = useCallback(async () => {
     try {
-      const { signOut } = await import("firebase/auth");
-      if (authRef.current) {
-        await signOut(authRef.current);
-        showToast("Signed out successfully", "success");
-        router.push("/");
-      }
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      userIdRef.current = null;
+      setSavedEvents([]);
+      setProfile(EMPTY_PROFILE);
+      setEditForm(EMPTY_PROFILE);
+      showToast("Signed out successfully", "success");
+      router.push("/");
     } catch {
       showToast("Error signing out", "error");
     }
@@ -149,8 +136,8 @@ export default function ProfileClient({
   const handleImageChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      const user = userRef.current;
-      if (!file || !user || !storageRef.current) return;
+      const userId = userIdRef.current;
+      if (!file || !userId || !storageRef.current) return;
 
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
       previewUrlRef.current = URL.createObjectURL(file);
@@ -158,7 +145,7 @@ export default function ProfileClient({
       try {
         const { ref, uploadBytes, getDownloadURL } =
           await import("firebase/storage");
-        const imageRef = ref(storageRef.current, `profileImages/${user.uid}`);
+        const imageRef = ref(storageRef.current, `profileImages/${userId}`);
         await uploadBytes(imageRef, file);
         const url = await getDownloadURL(imageRef);
 
@@ -175,16 +162,13 @@ export default function ProfileClient({
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      const token = await getToken();
-      if (!token) return;
-
       try {
         const res = await fetch("/api/profile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify(editForm),
         });
 
@@ -201,7 +185,7 @@ export default function ProfileClient({
         showToast("Error saving profile.", "error");
       }
     },
-    [editForm, getToken, showToast]
+    [editForm, showToast]
   );
 
   const handleCancel = useCallback(() => {
@@ -213,9 +197,6 @@ export default function ProfileClient({
     async (eventId: string, eventName: string) => {
       if (!confirm(`Remove "${eventName}" from your saved events?`)) return;
 
-      const token = await getToken();
-      if (!token) return;
-
       setDeletingId(eventId);
 
       try {
@@ -223,8 +204,8 @@ export default function ProfileClient({
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify({ eventId }),
         });
 
@@ -243,7 +224,7 @@ export default function ProfileClient({
         setDeletingId(null);
       }
     },
-    [getToken, showToast]
+    [showToast]
   );
 
   const startEditing = useCallback(() => {
@@ -265,7 +246,7 @@ export default function ProfileClient({
     return skeleton;
   }
 
-  if (!userRef.current) {
+  if (!userIdRef.current) {
     return signInPrompt;
   }
 

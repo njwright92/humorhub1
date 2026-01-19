@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useToast } from "./ToastContext";
+import { getSession } from "@/app/lib/auth-client";
 
 const SearchBar = dynamic(() => import("./searchBar"));
 const AuthModal = dynamic(() => import("./authModal"));
@@ -78,13 +79,11 @@ export default function DesktopNav() {
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
   const authInitPromiseRef = useRef<Promise<void> | null>(null);
-  const unsubscribeRef = useRef<(() => void) | null>(null);
   const mountedRef = useRef(true);
 
   useEffect(() => {
     return () => {
       mountedRef.current = false;
-      unsubscribeRef.current?.();
     };
   }, []);
 
@@ -92,26 +91,19 @@ export default function DesktopNav() {
     if (authInitPromiseRef.current) return;
 
     authInitPromiseRef.current = (async () => {
-      const { getAuth } = await import("@/app/lib/firebase-auth");
-      const { onAuthStateChanged } = await import("firebase/auth");
-
-      const auth = await getAuth();
-
-      if (mountedRef.current) setIsUserSignedIn(Boolean(auth.currentUser));
-
-      unsubscribeRef.current = onAuthStateChanged(auth, (user) => {
-        if (mountedRef.current) setIsUserSignedIn(Boolean(user));
-      });
+      const session = await getSession();
+      if (mountedRef.current) setIsUserSignedIn(session.signedIn);
     })();
   }, []);
 
-  useEffect(() => {
-    if (isUserSignedIn && pendingRedirect) {
+  const handleLoginSuccess = useCallback(() => {
+    setIsUserSignedIn(true);
+    if (pendingRedirect) {
       router.push(pendingRedirect);
       setPendingRedirect(null);
       setIsAuthModalOpen(false);
     }
-  }, [isUserSignedIn, pendingRedirect, router]);
+  }, [pendingRedirect, router]);
 
   const handleProtectedRoute = useCallback(
     (path: string, label: string) => {
@@ -149,6 +141,10 @@ export default function DesktopNav() {
         <SearchBar
           isUserSignedIn={isUserSignedIn}
           setIsAuthModalOpen={setIsAuthModalOpen}
+          onRequireAuth={(path) => {
+            setPendingRedirect(path);
+            setIsAuthModalOpen(true);
+          }}
         />
 
         {NAV_ITEMS.map(({ href, label, icon, protected: protectedPath }) => {
@@ -188,7 +184,7 @@ export default function DesktopNav() {
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
-          onLoginSuccess={() => setIsUserSignedIn(true)}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
     </nav>

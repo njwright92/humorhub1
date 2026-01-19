@@ -46,6 +46,10 @@ export interface ApiResponse<T = undefined> {
   success: boolean;
   data?: T;
   error?: string;
+  errorCode?: string;
+  signedIn?: boolean;
+  uid?: string;
+  email?: string;
 }
 
 export type CityCoordinates = Record<string, LatLng>;

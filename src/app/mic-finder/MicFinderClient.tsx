@@ -8,7 +8,6 @@ import React, {
   useRef,
 } from "react";
 import dynamic from "next/dynamic";
-import type { Auth } from "firebase/auth";
 import { useToast } from "@/app/components/ToastContext";
 import type {
   Event,
@@ -19,6 +18,7 @@ import type {
 import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
+import { getSession } from "@/app/lib/auth-client";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
@@ -126,9 +126,6 @@ export default function MicFinderClient({
     initialFilters.allCityEvents
   );
 
-  const authRef = useRef<Auth | null>(null);
-  const authInitPromiseRef = useRef<Promise<Auth> | null>(null);
-
   const sendDataLayerEvent = useCallback(
     (event_name: string, params: Record<string, unknown>) => {
       void sendGtmEvent(event_name, params);
@@ -149,21 +146,7 @@ export default function MicFinderClient({
     return () => clearTimeout(handler);
   }, [searchTerm, sendDataLayerEvent]);
 
-  const ensureAuth = useCallback(async (): Promise<Auth> => {
-    if (authRef.current) return authRef.current;
-
-    if (!authInitPromiseRef.current) {
-      authInitPromiseRef.current = (async () => {
-        const { getAuth } = await import("@/app/lib/firebase-auth");
-        const auth = await getAuth();
-        await auth.authStateReady();
-        authRef.current = auth;
-        return auth;
-      })();
-    }
-
-    return authInitPromiseRef.current;
-  }, []);
+  const ensureSession = useCallback(async () => getSession(), []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -226,22 +209,19 @@ export default function MicFinderClient({
   const handleEventSave = useCallback(
     async (event: Event) => {
       try {
-        const auth = await ensureAuth();
-        const user = auth.currentUser;
-
-        if (!user) {
+        const session = await ensureSession();
+        if (!session.signedIn) {
           showToast("Please sign in to save events.", "info");
           return;
         }
         if (!event.id) throw new Error("Invalid state");
 
-        const token = await user.getIdToken();
         const response = await fetch("/api/events/save", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify(event),
         });
 
@@ -257,7 +237,7 @@ export default function MicFinderClient({
         showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [ensureAuth, sendDataLayerEvent, showToast]
+    [ensureSession, sendDataLayerEvent, showToast]
   );
 
   const handleDateChange = useCallback(

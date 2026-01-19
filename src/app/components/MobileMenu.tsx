@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import SearchBar from "./searchBar";
+import { getSession } from "@/app/lib/auth-client";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
@@ -37,15 +38,9 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
 
   useEffect(() => {
     let mounted = true;
-    let unsubscribe: (() => void) | undefined;
-
     const initAuth = async () => {
-      const { getAuth } = await import("@/app/lib/firebase-auth");
-      const { onAuthStateChanged } = await import("firebase/auth");
-      const auth = await getAuth();
-      unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (mounted) setIsUserSignedIn(!!user);
-      });
+      const session = await getSession();
+      if (mounted) setIsUserSignedIn(session.signedIn);
     };
 
     if ("requestIdleCallback" in window) {
@@ -56,17 +51,17 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
 
     return () => {
       mounted = false;
-      unsubscribe?.();
     };
   }, []);
 
-  useEffect(() => {
-    if (isUserSignedIn && pendingRedirect) {
+  const handleLoginSuccess = useCallback(() => {
+    setIsUserSignedIn(true);
+    if (pendingRedirect) {
       router.push(pendingRedirect);
       setPendingRedirect(null);
       setIsAuthModalOpen(false);
     }
-  }, [isUserSignedIn, pendingRedirect, router]);
+  }, [pendingRedirect, router]);
 
   const handleProtectedRoute = useCallback(
     (path: string, label: string) => {
@@ -128,6 +123,10 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
         isUserSignedIn={isUserSignedIn}
         setIsAuthModalOpen={setIsAuthModalOpen}
         onNavigate={closeMenu}
+        onRequireAuth={(path) => {
+          setPendingRedirect(path);
+          setIsAuthModalOpen(true);
+        }}
       />
 
       <nav className="grid w-full max-w-xs gap-4">
@@ -158,7 +157,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
-          onLoginSuccess={() => setIsUserSignedIn(true)}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
     </div>

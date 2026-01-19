@@ -7,11 +7,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-const getErrorCode = (err: unknown) =>
-  typeof err === "object" && err !== null && "code" in err
-    ? (err as { code: string }).code
-    : "";
-
 const inputClass = "w-full rounded-2xl bg-zinc-200 p-2 text-stone-900";
 
 export default function AuthModal({
@@ -62,20 +57,35 @@ export default function AuthModal({
 
       setIsLoading(true);
       try {
-        const [
-          { getAuth },
-          { createUserWithEmailAndPassword, signInWithEmailAndPassword },
-        ] = await Promise.all([
-          import("@/app/lib/firebase-auth"),
-          import("firebase/auth"),
-        ]);
+        const res = await fetch(`/api/auth/${isSignIn ? "login" : "signup"}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include",
+        });
+        const result = (await res.json()) as {
+          success?: boolean;
+          errorCode?: string;
+        };
 
-        const auth = await getAuth();
-
-        if (isSignIn) {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else {
-          await createUserWithEmailAndPassword(auth, email, password);
+        if (!res.ok || !result.success) {
+          const code = result.errorCode || "";
+          const msg =
+            code === "auth/email-already-in-use"
+              ? "Email already in use. Try signing in."
+              : [
+                    "auth/wrong-password",
+                    "auth/user-not-found",
+                    "auth/invalid-credential",
+                  ].includes(code)
+                ? "Invalid email or password."
+                : code === "auth/invalid-email"
+                  ? "Please enter a valid email address."
+                  : code === "auth/weak-password"
+                    ? "Password too weak (needs 8 chars, letter, number, symbol)."
+                    : "Authentication failed. Please try again.";
+          showToast(msg, "error");
+          return;
         }
 
         showToast(
@@ -86,19 +96,8 @@ export default function AuthModal({
         );
         onLoginSuccess?.();
         handleClose();
-      } catch (error) {
-        const code = getErrorCode(error);
-        const msg =
-          code === "auth/email-already-in-use"
-            ? "Email already in use. Try signing in."
-            : [
-                  "auth/wrong-password",
-                  "auth/user-not-found",
-                  "auth/invalid-credential",
-                ].includes(code)
-              ? "Invalid email or password."
-              : "Authentication failed. Please try again.";
-        showToast(msg, "error");
+      } catch {
+        showToast("Authentication failed. Please try again.", "error");
       } finally {
         setIsLoading(false);
       }
@@ -124,13 +123,27 @@ export default function AuthModal({
         ]);
 
       const auth = await getAuth();
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const idToken = await result.user.getIdToken();
+      const res = await fetch("/api/auth/session-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ idToken }),
+      });
+      const sessionResult = (await res.json()) as { success?: boolean };
+      if (!res.ok || !sessionResult.success) {
+        throw new Error("session-cookie-failed");
+      }
 
       showToast("Google sign-in successful!", "success");
       onLoginSuccess?.();
       handleClose();
     } catch (error) {
-      const code = getErrorCode(error);
+      const code =
+        typeof error === "object" && error !== null && "code" in error
+          ? (error as { code: string }).code
+          : "";
       if (code === "auth/popup-blocked")
         showToast("Popup blocked. Please allow popups.", "error");
       else if (code !== "auth/popup-closed-by-user")
