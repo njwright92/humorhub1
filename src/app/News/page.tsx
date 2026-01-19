@@ -57,7 +57,7 @@ async function NewsContent({
 }) {
   const { articles, error } = await fetchNewsArticles(
     resolvedCategory,
-    subcategory
+    subcategory,
   );
   return (
     <NewsClient

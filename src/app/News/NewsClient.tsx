@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import type { NewsArticle, NewsCategory } from "../lib/types";
 
@@ -8,26 +11,34 @@ function ArticleCard({
   article: NewsArticle;
   priority: boolean;
 }) {
+  const [hasImageError, setHasImageError] = useState(false);
+
   return (
     <article className="card-muted group grid h-full grid-rows-[auto_1fr] overflow-hidden transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full">
-        {article.image_url ? (
+        {article.image_url && !hasImageError ? (
           <Image
             src={article.image_url}
             alt={article.title}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-cover group-hover:scale-105"
+            className="object-cover"
             priority={priority}
             fetchPriority={priority ? "high" : "auto"}
             quality={70}
+            onError={() => setHasImageError(true)}
           />
         ) : (
           <div
-            className="grid h-full place-content-center bg-stone-800"
+            className="grid h-full place-items-center bg-linear-to-br from-stone-800 via-stone-900 to-black text-stone-300"
             aria-hidden="true"
           >
-            📰
+            <div className="grid place-items-center gap-2">
+              <span className="text-4xl">📰</span>
+              <span className="text-xs font-semibold tracking-widest text-stone-400 uppercase">
+                No image
+              </span>
+            </div>
           </div>
         )}
         <span className="absolute top-0 right-0 rounded-bl-xl bg-amber-700 px-3 py-1 text-sm font-bold text-stone-900">

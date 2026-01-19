@@ -23,7 +23,7 @@ export async function GET(request: Request): Promise<Response> {
         oneTimeEvents: [],
         allCityEvents: [],
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

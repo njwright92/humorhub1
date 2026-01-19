@@ -8,7 +8,7 @@ export type AuthResult =
   | { success: false; response: NextResponse };
 
 export async function authenticateRequest(
-  request: NextRequest
+  request: NextRequest,
 ): Promise<AuthResult> {
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   if (sessionCookie) {
@@ -30,7 +30,7 @@ export async function authenticateRequest(
           success: false,
           error: "Missing authorization header",
         } as ApiResponse,
-        { status: 401 }
+        { status: 401 },
       ),
     };
   }
@@ -42,7 +42,7 @@ export async function authenticateRequest(
       success: false,
       response: NextResponse.json(
         { success: false, error: "Invalid or expired token" } as ApiResponse,
-        { status: 401 }
+        { status: 401 },
       ),
     };
   }

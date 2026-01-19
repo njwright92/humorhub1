@@ -33,7 +33,7 @@ function toBoolean(value: unknown): boolean {
 export function buildEventFromData(
   id: string,
   data: EventData,
-  options: MapOptions = DEFAULT_OPTIONS
+  options: MapOptions = DEFAULT_OPTIONS,
 ): Event {
   const name = toString(data.name);
   const location = toString(data.location);

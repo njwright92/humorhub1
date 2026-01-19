@@ -83,15 +83,6 @@ const TAB_LABELS: Record<TabId, string> = {
   Other: "Music/All-Arts Mics",
 };
 
-async function sendGtmEvent(
-  event_name: string,
-  params: Record<string, unknown>
-) {
-  if (process.env.NODE_ENV !== "production") return;
-  const { sendGTMEvent } = await import("@next/third-parties/google");
-  sendGTMEvent({ event: event_name, ...params });
-}
-
 export default function MicFinderClient({
   initialCityCoordinates,
   initialCities,
@@ -122,20 +113,13 @@ export default function MicFinderClient({
 
   const [baseEvents, setBaseEvents] = useState(initialFilters.baseEvents);
   const [recurringEvents, setRecurringEvents] = useState(
-    initialFilters.recurringEvents
+    initialFilters.recurringEvents,
   );
   const [oneTimeEvents, setOneTimeEvents] = useState(
-    initialFilters.oneTimeEvents
+    initialFilters.oneTimeEvents,
   );
   const [allCityEvents, setAllCityEvents] = useState(
-    initialFilters.allCityEvents
-  );
-
-  const sendDataLayerEvent = useCallback(
-    (event_name: string, params: Record<string, unknown>) => {
-      void sendGtmEvent(event_name, params);
-    },
-    []
+    initialFilters.allCityEvents,
   );
 
   useEffect(() => {
@@ -146,14 +130,10 @@ export default function MicFinderClient({
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
       if (searchTerm.trim().length > 2) {
-        sendDataLayerEvent("search_city", {
-          event_category: "City Search",
-          event_label: searchTerm,
-        });
       }
     }, 300);
     return () => clearTimeout(handler);
-  }, [searchTerm, sendDataLayerEvent]);
+  }, [searchTerm]);
 
   const ensureSession = useCallback(async () => getSession(), []);
 
@@ -188,7 +168,7 @@ export default function MicFinderClient({
             latitude,
             longitude,
             coords.lat,
-            coords.lng
+            coords.lng,
           );
           if (dist < minDistance) {
             minDistance = dist;
@@ -204,7 +184,7 @@ export default function MicFinderClient({
           showToast("No supported cities found nearby", "info");
         }
       },
-      () => showToast("Location access denied", "error")
+      () => showToast("Location access denied", "error"),
     );
   }, [initialCityCoordinates, showToast]);
 
@@ -238,15 +218,11 @@ export default function MicFinderClient({
         if (!response.ok) throw new Error(result.error || "Failed to save");
 
         showToast("Event saved successfully!", "success");
-        sendDataLayerEvent("save_event", {
-          event_category: "Event Interaction",
-          event_label: event.name,
-        });
       } catch {
         showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [ensureSession, sendDataLayerEvent, showToast]
+    [ensureSession, showToast],
   );
 
   const handleDateChange = useCallback(
@@ -255,12 +231,12 @@ export default function MicFinderClient({
       const [year, month, day] = e.target.value.split("-").map(Number);
       setSelectedDate(new Date(year, month - 1, day));
     },
-    []
+    [],
   );
 
   const handleMapHover = useCallback(() => {
     setMapState((prev) =>
-      prev.hasMapInit ? prev : { ...prev, hasMapInit: true }
+      prev.hasMapInit ? prev : { ...prev, hasMapInit: true },
     );
   }, []);
 
@@ -315,7 +291,7 @@ export default function MicFinderClient({
 
       const response = await fetch(
         `/api/mic-finder/filter?${params.toString()}`,
-        { signal: controller.signal }
+        { signal: controller.signal },
       );
       if (!response.ok) return;
       const data: MicFinderFilterResult = await response.json();

@@ -14,7 +14,7 @@ export const NEWS_SUBCATEGORIES = [
   "travel",
 ] as const;
 
-const labelClass = "mb-2 text-xs sm:text-sm font-bold uppercase tracking-wide";
+const labelClass = "mb-1 text-xs font-bold uppercase text-center";
 const selectClass =
   "input-amber border-stone-600 bg-stone-900 text-zinc-200 cursor-pointer disabled:opacity-70 hover:border-amber-700";
 
@@ -37,17 +37,17 @@ export default function NewsFilters({
       aria-labelledby="filters-heading"
       method="get"
       action="/News"
-      className="card-base-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md"
+      className="card-base-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md lg:p-10"
     >
       <fieldset>
         <legend id="filters-heading" className="sr-only">
           Filter News
         </legend>
 
-        <div className="grid items-end gap-6 text-left md:grid-cols-3">
+        <div className="grid items-center gap-6 text-left md:grid-cols-3">
           <div className="grid">
             <label htmlFor="news-category" className={labelClass}>
-              All or Top Stories
+              feed
             </label>
             <select
               id="news-category"
@@ -65,7 +65,7 @@ export default function NewsFilters({
 
           <div className="grid">
             <label htmlFor="news-subcategory" className={labelClass}>
-              Topic
+              topic
             </label>
             <select
               id="news-subcategory"
@@ -83,7 +83,7 @@ export default function NewsFilters({
 
           <button
             type="submit"
-            className="btn-solid btn-stone-soft h-10 cursor-pointer border-2 border-stone-600 transition-colors hover:border-amber-700/50 disabled:opacity-70"
+            className="btn-outline-amber hover:scale-105 hover:shadow-lg"
           >
             Search
           </button>

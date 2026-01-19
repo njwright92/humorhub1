@@ -22,13 +22,13 @@ export async function POST(request: NextRequest) {
     if (!email || !password) {
       return jsonResponse(
         { success: false, error: "Email and password are required" },
-        400
+        400,
       );
     }
 
     const result = await callIdentityToolkit<SignInResponse>(
       "accounts:signInWithPassword",
-      { email, password, returnSecureToken: true }
+      { email, password, returnSecureToken: true },
     );
 
     const sessionCookie = await createSessionCookieFromIdToken(result.idToken);

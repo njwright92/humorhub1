@@ -30,7 +30,7 @@ const TOAST_CONFIG: Record<ToastType, { bg: string; icon: string }> = {
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<{ msg: string; type: ToastType } | null>(
-    null
+    null,
   );
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

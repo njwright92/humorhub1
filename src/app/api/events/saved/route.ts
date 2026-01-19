@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     console.error("❌ [API] Fetch saved events error:", error);
     return jsonResponse(
       { success: false, error: "Failed to fetch events" },
-      500
+      500,
     );
   }
 }

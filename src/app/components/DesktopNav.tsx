@@ -123,7 +123,7 @@ export default function DesktopNav() {
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [refreshSession, router, showToast]
+    [refreshSession, router, showToast],
   );
 
   const navItemClass =

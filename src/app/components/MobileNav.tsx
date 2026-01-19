@@ -4,7 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 
 const MobileMenu = dynamic<{ closeMenu: () => void }>(
-  () => import("./MobileMenu")
+  () => import("./MobileMenu"),
 );
 
 export default function MobileNav() {

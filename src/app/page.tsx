@@ -171,7 +171,10 @@ export default function Home() {
             </p>
           </div>
           <figure className="home-mic-figure">
-            <Link href="/about">
+            <Link
+              href="/about"
+              aria-label="About Humor Hub: mission, team, and tools"
+            >
               <RoundImage
                 src="/about.webp"
                 alt="About page placeholder"
@@ -184,7 +187,7 @@ export default function Home() {
             </Link>
           </figure>
           <Link href="/about" className="primary-cta">
-            Learn More
+            About Humor Hub
           </Link>
         </div>
       </SectionCard>

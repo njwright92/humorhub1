@@ -82,7 +82,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [refreshSession, router, showToast, closeMenu]
+    [refreshSession, router, showToast, closeMenu],
   );
 
   useEffect(() => {
@@ -154,7 +154,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
             >
               {label}
             </Link>
-          )
+          ),
         )}
       </nav>
 

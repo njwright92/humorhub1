@@ -31,7 +31,7 @@ function parseDateParam(dateParam?: string): Date | null {
 
 function buildFilterResult(
   eventsByTab: EventsByTab,
-  params: { tab?: string; city?: string; date?: string }
+  params: { tab?: string; city?: string; date?: string },
 ): MicFinderFilterResult {
   const tab = normalizeTab(params.tab);
   const city = (params.city ?? "").trim();
@@ -53,13 +53,13 @@ function buildFilterResult(
 
   const recurringEvents = isSpecificCity
     ? baseEvents.filter(
-        (event) => event.isRecurring && event.recurringDow === selectedDow
+        (event) => event.isRecurring && event.recurringDow === selectedDow,
       )
     : [];
 
   const oneTimeEvents = isSpecificCity
     ? baseEvents.filter(
-        (event) => !event.isRecurring && event.dateMs === dateCheckMs
+        (event) => !event.isRecurring && event.dateMs === dateCheckMs,
       )
     : [];
 
@@ -70,7 +70,7 @@ function buildFilterResult(
 
 export function getMicFinderFilters(
   eventsByTab: EventsByTab,
-  params: { tab?: string; city?: string; date?: string }
+  params: { tab?: string; city?: string; date?: string },
 ) {
   return buildFilterResult(eventsByTab, params);
 }
@@ -92,7 +92,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
           "isRecurring",
           "festival",
           "isMusic",
-          "googleTimestamp"
+          "googleTimestamp",
         )
         .get(),
       db.collection(COLLECTIONS.cities).select("city", "coordinates").get(),
@@ -175,7 +175,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
 const getCachedMicFinderData = unstable_cache(
   fetchFromFirestore,
   ["mic-finder-data"],
-  { revalidate: 30 }
+  { revalidate: 30 },
 );
 
 export const fetchMicFinderData = cache(getCachedMicFinderData);

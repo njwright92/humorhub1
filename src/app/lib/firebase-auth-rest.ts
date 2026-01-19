@@ -29,7 +29,7 @@ export function mapFirebaseAuthErrorCode(code?: string): string {
 
 export async function callIdentityToolkit<T>(
   endpoint: string,
-  body: Record<string, unknown>
+  body: Record<string, unknown>,
 ): Promise<T> {
   const apiKey = process.env.FIREBASE_API_KEY;
   if (!apiKey) {
@@ -42,7 +42,7 @@ export async function callIdentityToolkit<T>(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    }
+    },
   );
 
   if (!res.ok) {

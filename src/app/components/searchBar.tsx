@@ -68,7 +68,7 @@ export default function SearchBar({
       onNavigate?.();
       closeSearchBar();
     },
-    [router, onNavigate, closeSearchBar]
+    [router, onNavigate, closeSearchBar],
   );
 
   const handleToggleInput = useCallback(() => {
@@ -149,7 +149,7 @@ export default function SearchBar({
       setIsAuthModalOpen,
       showToast,
       closeSearchBar,
-    ]
+    ],
   );
 
   const handleSearch = useCallback(
@@ -189,7 +189,7 @@ export default function SearchBar({
       executeSuggestion,
       showToast,
       closeSearchBar,
-    ]
+    ],
   );
 
   const handleKeyDown = useCallback(
@@ -214,7 +214,7 @@ export default function SearchBar({
         actions[e.key]();
       }
     },
-    [suggestions, activeIndex, executeSuggestion, closeSearchBar]
+    [suggestions, activeIndex, executeSuggestion, closeSearchBar],
   );
 
   // Load Cities (Cached)

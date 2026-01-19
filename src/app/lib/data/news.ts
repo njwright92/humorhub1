@@ -16,13 +16,13 @@ const isNewsCategory = (value?: string): value is NewsCategory =>
   value === "top_stories" || value === "all_news";
 
 const hasRequiredFields = (
-  article: Record<string, unknown>
+  article: Record<string, unknown>,
 ): article is { title: string; description: string } =>
   Boolean(article.title && article.description);
 
 export async function fetchNewsArticles(
   category?: string,
-  subcategory?: string
+  subcategory?: string,
 ): Promise<{ articles: NewsArticle[]; error?: string }> {
   if (!NEWS_API_TOKEN) {
     return { articles: [], error: "Server API token missing" };

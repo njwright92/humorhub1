@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     if (typeof eventId !== "string" || eventId.length === 0) {
       return jsonResponse(
         { success: false, error: "Event ID is required" },
-        400
+        400,
       );
     }
 

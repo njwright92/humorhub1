@@ -155,7 +155,7 @@ export default function ProfileClient({
         showToast("Error uploading image.", "error");
       }
     },
-    [showToast]
+    [showToast],
   );
 
   const handleSubmit = useCallback(
@@ -185,7 +185,7 @@ export default function ProfileClient({
         showToast("Error saving profile.", "error");
       }
     },
-    [editForm, showToast]
+    [editForm, showToast],
   );
 
   const handleCancel = useCallback(() => {
@@ -224,7 +224,7 @@ export default function ProfileClient({
         setDeletingId(null);
       }
     },
-    [showToast]
+    [showToast],
   );
 
   const startEditing = useCallback(() => {
@@ -239,7 +239,7 @@ export default function ProfileClient({
     (field: "name" | "bio", value: string) => {
       setEditForm((prev) => ({ ...prev, [field]: value }));
     },
-    []
+    [],
   );
 
   if (isLoading) {

@@ -12,7 +12,7 @@ export async function GET() {
   if (!clientId || !redirectUri) {
     return NextResponse.json(
       { success: false, error: "Missing Google OAuth configuration" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -27,7 +27,7 @@ export async function GET() {
   });
 
   const response = NextResponse.redirect(
-    `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
+    `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`,
   );
 
   response.cookies.set(STATE_COOKIE, state, {

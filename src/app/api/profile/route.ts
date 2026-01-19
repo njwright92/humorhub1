@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     console.error("Fetch profile error:", error);
     return jsonResponse(
       { success: false, error: "Failed to fetch profile" },
-      500
+      500,
     );
   }
 }
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     console.error("Save profile error:", error);
     return jsonResponse(
       { success: false, error: "Failed to save profile" },
-      500
+      500,
     );
   }
 }

@@ -10,7 +10,7 @@ export function sanitizeHtml(html: string) {
     cleaned = cleaned.replace(/\sstyle\s*=\s*(['"]).*?\1/gi, "");
     cleaned = cleaned.replace(
       /\s(href|src)\s*=\s*(['"])\s*javascript:[^'"]*\2/gi,
-      ""
+      "",
     );
     return cleaned;
   }

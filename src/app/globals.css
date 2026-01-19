@@ -175,12 +175,12 @@
     @apply bg-stone-900 text-zinc-200 hover:bg-stone-800;
   }
 
-  .btn-stone-soft {
-    @apply bg-stone-700 text-white hover:bg-stone-600;
-  }
-
   .btn-outline-stone {
     @apply rounded-2xl border border-stone-400 font-bold text-stone-800 transition-colors hover:bg-stone-400;
+  }
+
+  .btn-outline-amber {
+    @apply rounded-2xl border border-amber-700 bg-transparent px-3 py-2 font-bold text-zinc-200 shadow-xl;
   }
 
   .input-amber {

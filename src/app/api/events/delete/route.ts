@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest) {
     if (!eventId) {
       return jsonResponse(
         { success: false, error: "Event ID is required" },
-        400
+        400,
       );
     }
 
@@ -30,7 +30,7 @@ export async function DELETE(request: NextRequest) {
     if (eventDoc.data()?.userId !== auth.uid) {
       return jsonResponse(
         { success: false, error: "Unauthorized to delete this event" },
-        403
+        403,
       );
     }
 
@@ -40,7 +40,7 @@ export async function DELETE(request: NextRequest) {
     console.error("Delete event error:", error);
     return jsonResponse(
       { success: false, error: "Failed to delete event" },
-      500
+      500,
     );
   }
 }

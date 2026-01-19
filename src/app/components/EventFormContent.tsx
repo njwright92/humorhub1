@@ -119,7 +119,7 @@ function buildSubmission(form: FormState): EventSubmission {
 
 async function sendEmailNotification(
   data: EventSubmission,
-  originalDate: Date | null
+  originalDate: Date | null,
 ) {
   const emailjs = (await import("@emailjs/browser")).default;
   await emailjs.send(
@@ -134,7 +134,7 @@ async function sendEmailNotification(
       isFestival: data.isFestival ? "Yes" : "No",
       user_email: data.email || "No email provided",
     },
-    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
   );
 }
 
@@ -157,7 +157,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
       const { name, value } = e.target;
       setForm((prev) => ({ ...prev, [name]: value }));
     },
-    []
+    [],
   );
 
   const handleRadioChange = useCallback((name: RadioName, value: boolean) => {
@@ -206,7 +206,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         if (!result.success) {
           showToast(
             result.error ?? "Submission failed. Please try again.",
-            "error"
+            "error",
           );
           return;
         }
@@ -223,7 +223,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         setIsSubmitting(false);
       }
     },
-    [form, isSubmitting, showToast, onClose]
+    [form, isSubmitting, showToast, onClose],
   );
 
   const dateValue = form.date?.toISOString().split("T")[0] ?? "";

@@ -29,7 +29,7 @@ function useVirtualizerInstance<
     ...options,
     onChange: (
       instance: Virtualizer<TScrollElement, TItemElement>,
-      sync: boolean
+      sync: boolean,
     ) => {
       rerender();
       options.onChange?.(instance, sync);
@@ -37,7 +37,7 @@ function useVirtualizerInstance<
   };
 
   const [instance] = useState(
-    () => new Virtualizer<TScrollElement, TItemElement>(resolvedOptions)
+    () => new Virtualizer<TScrollElement, TItemElement>(resolvedOptions),
   );
   instance.setOptions(resolvedOptions);
 

@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
   if (!code || !state || !storedState || state !== storedState) {
     const response = new NextResponse(
       buildPopupHtml(false, "auth/invalid-credential"),
-      { headers: { "Content-Type": "text/html; charset=utf-8" } }
+      { headers: { "Content-Type": "text/html; charset=utf-8" } },
     );
     response.cookies.set(STATE_COOKIE, "", {
       httpOnly: true,
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
   if (!clientId || !clientSecret || !redirectUri) {
     const response = new NextResponse(
       buildPopupHtml(false, "auth/operation-not-allowed"),
-      { headers: { "Content-Type": "text/html; charset=utf-8" } }
+      { headers: { "Content-Type": "text/html; charset=utf-8" } },
     );
     response.cookies.set(STATE_COOKIE, "", {
       httpOnly: true,
@@ -106,11 +106,11 @@ export async function GET(request: NextRequest) {
         postBody: `id_token=${tokenData.id_token}&providerId=google.com`,
         requestUri: redirectUri,
         returnSecureToken: true,
-      }
+      },
     );
 
     const sessionCookie = await createSessionCookieFromIdToken(
-      firebaseData.idToken
+      firebaseData.idToken,
     );
     const response = new NextResponse(buildPopupHtml(true), {
       headers: { "Content-Type": "text/html; charset=utf-8" },

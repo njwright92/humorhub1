@@ -45,7 +45,7 @@ export default function AuthModal({
       if (!isSignIn && !passwordRegex.test(password)) {
         showToast(
           "Password too weak (needs 8 chars, letter, number, symbol).",
-          "error"
+          "error",
         );
         return;
       }
@@ -92,7 +92,7 @@ export default function AuthModal({
           isSignIn
             ? "Sign-in successful! Welcome back."
             : "Sign-up successful! Welcome.",
-          "success"
+          "success",
         );
         onLoginSuccess?.();
         handleClose();
@@ -110,7 +110,7 @@ export default function AuthModal({
       handleClose,
       onLoginSuccess,
       showToast,
-    ]
+    ],
   );
 
   const handleGoogleSignIn = useCallback(async () => {

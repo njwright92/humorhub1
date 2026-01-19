@@ -44,7 +44,7 @@ function isValidSubmission(data: unknown): data is EventSubmission {
   >;
 
   const hasRequiredStrings = [name, location, details].every(
-    (field) => typeof field === "string" && field.trim() !== ""
+    (field) => typeof field === "string" && field.trim() !== "",
   );
 
   const hasValidDate =
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     if (!isValidSubmission(eventData)) {
       return jsonResponse(
         { success: false, error: "Invalid or missing required fields" },
-        400
+        400,
       );
     }
 
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     console.error("Event creation error:", error);
     return jsonResponse(
       { success: false, error: "Failed to create event" },
-      500
+      500,
     );
   }
 }

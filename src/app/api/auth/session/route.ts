@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const response = jsonResponse({ success: true, signedIn: false });
     response.headers.set(
       "Cache-Control",
-      "private, max-age=0, must-revalidate"
+      "private, max-age=0, must-revalidate",
     );
     return response;
   }
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     });
     response.headers.set(
       "Cache-Control",
-      "private, max-age=0, must-revalidate"
+      "private, max-age=0, must-revalidate",
     );
     return response;
   } catch {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     clearSessionCookie(response);
     response.headers.set(
       "Cache-Control",
-      "private, max-age=0, must-revalidate"
+      "private, max-age=0, must-revalidate",
     );
     return response;
   }

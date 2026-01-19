@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency,
       priority,
-    })
+    }),
   );
 
   let cityRoutes: MetadataRoute.Sitemap = [];

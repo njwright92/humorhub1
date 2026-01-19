@@ -30,7 +30,7 @@ export default function ContactForm() {
       const { name, value } = e.target;
       setFormState((prev) => ({ ...prev, [name]: value }));
     },
-    []
+    [],
   );
 
   const handleSubmit = useCallback(
@@ -58,7 +58,7 @@ export default function ContactForm() {
             email,
             message,
           },
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
         );
         showToast("Message sent! We'll get back to you soon.", "success");
         setFormState(INITIAL_FORM_STATE);
@@ -68,7 +68,7 @@ export default function ContactForm() {
         setIsSubmitting(false);
       }
     },
-    [formState, isSubmitting, showToast]
+    [formState, isSubmitting, showToast],
   );
 
   return (
