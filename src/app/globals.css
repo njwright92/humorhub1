@@ -134,14 +134,6 @@
     @apply bg-zinc-200 text-stone-900;
   }
 
-  .card-border {
-    @apply border;
-  }
-
-  .card-border-2 {
-    @apply border-2;
-  }
-
   .card-base {
     @apply rounded-2xl border shadow-xl;
   }
