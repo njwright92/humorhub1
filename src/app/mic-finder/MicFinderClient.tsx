@@ -37,6 +37,7 @@ interface MicFinderClientProps {
   initialCityCoordinates: CityCoordinates;
   initialCities: string[];
   initialFilters: MicFinderFilterResult;
+  initialDate: string | null;
 }
 
 const inputClass =
@@ -95,13 +96,17 @@ export default function MicFinderClient({
   initialCityCoordinates,
   initialCities,
   initialFilters,
+  initialDate,
 }: MicFinderClientProps) {
   const { showToast } = useToast();
+  const [locale, setLocale] = useState("en-US");
 
   const [selectedCity, setSelectedCity] = useState("");
-  // Initialize once to avoid a mount-only setState render.
   const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
-    return new Date(new Date().toDateString());
+    if (!initialDate) return null;
+    const [year, month, day] = initialDate.split("-").map(Number);
+    if (!year || !month || !day) return null;
+    return new Date(year, month - 1, day);
   });
   const [searchTerm, setSearchTerm] = useState("");
   // Single state update for map init/visibility to reduce render churn.
@@ -132,6 +137,10 @@ export default function MicFinderClient({
     },
     []
   );
+
+  useEffect(() => {
+    setLocale(navigator.language || "en-US");
+  }, []);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -271,13 +280,13 @@ export default function MicFinderClient({
     }
 
     return {
-      dayOfWeek: selectedDate.toLocaleDateString("en-US", { weekday: "long" }),
-      formattedDate: selectedDate.toLocaleDateString("en-US", {
+      dayOfWeek: selectedDate.toLocaleDateString(locale, { weekday: "long" }),
+      formattedDate: selectedDate.toLocaleDateString(locale, {
         month: "short",
         day: "numeric",
       }),
     };
-  }, [selectedDate]);
+  }, [selectedDate, locale]);
 
   const tabLabel = TAB_LABELS[selectedTab];
 

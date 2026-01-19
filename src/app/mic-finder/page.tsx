@@ -155,12 +155,20 @@ async function MicFinderContent() {
     oneTimeEvents: [],
     allCityEvents: [],
   };
+  const today = new Date();
+  const initialDate =
+    new Intl.DateTimeFormat("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(today) || null;
 
   return (
     <MicFinderClient
       initialCityCoordinates={cityCoordinates}
       initialCities={cities}
       initialFilters={initialFilters}
+      initialDate={initialDate}
     />
   );
 }
