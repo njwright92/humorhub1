@@ -33,7 +33,7 @@ export default function ProfileSidebar({
 }) {
   return (
     <aside className="lg:col-span-1">
-      <section className="card-shell card-border card-light sticky top-20 grid gap-4 border-stone-300 p-4">
+      <section className="card-base card-light sticky top-20 grid gap-4 border-stone-300 p-4">
         {!isEditing && (
           <p className="text-center text-2xl font-bold">
             {profile.name || "Anonymous Comic"}

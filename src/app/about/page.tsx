@@ -29,7 +29,7 @@ const FEATURES = [
     titleHoverClass: "hover:text-amber-600",
     borderHoverClass: "hover:border-amber-600/50",
     shadowHoverClass: "hover:shadow-amber-900/20",
-    linkTextClass: "text-amber-600 hover:text-amber-500",
+    linkTextClass: "text-amber-700 hover:text-amber-800",
   },
   {
     emoji: "📰",
@@ -49,7 +49,7 @@ const FEATURES = [
 ] as const;
 
 const FEATURE_CARD_BASE =
-  "group grid gap-2 rounded-2xl border border-stone-700 bg-stone-800/50 p-6 text-left transition-transform hover:-translate-y-1";
+  "card-muted group grid gap-2 p-6 text-left transition-transform hover:-translate-y-1";
 
 const FEATURE_TITLE_BASE = "text-xl transition-colors";
 
@@ -58,17 +58,17 @@ const FEATURE_LINK_BASE =
 
 export default function AboutPage() {
   return (
-    <main className="grid min-h-dvh content-start gap-12 p-4 pt-12 text-center md:ml-20">
+    <main className="page-shell gap-12 p-4 text-center">
       <header className="grid justify-items-center gap-6">
         <hgroup className="grid gap-2">
           <h1 className="page-title">About Us</h1>
-          <p className="text-lg font-semibold md:text-xl">
+          <h2 className="text-lg font-semibold lg:text-xl">
             Built for Comics by Comics
-          </p>
+          </h2>
         </hgroup>
-        <p className="max-w-2xl text-sm leading-relaxed text-stone-300 md:text-base">
-          “Humor Hub is a fast, friendly hub to help comedians find their next
-          gig and their next joke.”
+        <p className="text-sm leading-relaxed text-stone-300 lg:text-base">
+          Humor Hub is a fast, friendly hub to help comedians find their next
+          gig and joke!
         </p>
       </header>
 
@@ -111,19 +111,19 @@ export default function AboutPage() {
 
       <section
         aria-labelledby="cta-heading"
-        className="grid gap-6 border-t border-stone-800 pt-8"
+        className="section-divider grid gap-6 pt-8"
       >
         <h3 id="cta-heading" className="text-xl md:text-2xl">
           Ready to hit the stage?
         </h3>
 
-        <div className="grid grid-flow-col justify-center gap-3">
-          <Link href="/mic-finder" className="btn-amber hover:bg-amber-600">
+        <div className="cta-row">
+          <Link href="/mic-finder" className="btn-amber hover:bg-amber-800">
             Find Events
           </Link>
           <Link
             href="/"
-            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-600"
+            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-800"
           >
             Back Home
           </Link>

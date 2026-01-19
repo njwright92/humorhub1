@@ -87,14 +87,20 @@ export default function DesktopNav() {
     };
   }, []);
 
+  const refreshSession = useCallback(async () => {
+    const session = await getSession();
+    if (mountedRef.current) setIsUserSignedIn(session.signedIn);
+    return session.signedIn;
+  }, []);
+
   const ensureAuthListener = useCallback(() => {
     if (authInitPromiseRef.current) return;
 
     authInitPromiseRef.current = (async () => {
-      const session = await getSession();
-      if (mountedRef.current) setIsUserSignedIn(session.signedIn);
+      const signedIn = await refreshSession();
+      if (mountedRef.current) setIsUserSignedIn(signedIn);
     })();
-  }, []);
+  }, [refreshSession]);
 
   const handleLoginSuccess = useCallback(() => {
     setIsUserSignedIn(true);
@@ -105,21 +111,19 @@ export default function DesktopNav() {
     }
   }, [pendingRedirect, router]);
 
-  const handleProtectedRoute = useCallback(
+  const requireAuth = useCallback(
     async (path: string, label: string) => {
-      const session = await getSession();
-      if (session.signedIn) {
-        setIsUserSignedIn(true);
+      const signedIn = await refreshSession();
+      if (signedIn) {
         router.push(path);
         return;
       }
 
-      setIsUserSignedIn(false);
       showToast(`Please sign in to view ${label}`, "info");
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [router, showToast]
+    [refreshSession, router, showToast]
   );
 
   const navItemClass =
@@ -145,19 +149,7 @@ export default function DesktopNav() {
         <SearchBar
           isUserSignedIn={isUserSignedIn}
           setIsAuthModalOpen={setIsAuthModalOpen}
-          onRequireAuth={async (path, label) => {
-            const session = await getSession();
-            if (session.signedIn) {
-              setIsUserSignedIn(true);
-              router.push(path);
-              return;
-            }
-
-            setIsUserSignedIn(false);
-            showToast(`Please sign in to access ${label}`, "info");
-            setPendingRedirect(path);
-            setIsAuthModalOpen(true);
-          }}
+          onRequireAuth={requireAuth}
         />
 
         {NAV_ITEMS.map(({ href, label, icon, protected: protectedPath }) => {
@@ -174,7 +166,7 @@ export default function DesktopNav() {
               type="button"
               onMouseEnter={ensureAuthListener}
               onFocus={ensureAuthListener}
-              onClick={() => handleProtectedRoute(protectedPath, label)}
+              onClick={() => requireAuth(protectedPath, label)}
               aria-label={label}
               className={navItemClass}
             >

@@ -36,6 +36,12 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
+  const refreshSession = useCallback(async () => {
+    const session = await getSession();
+    setIsUserSignedIn(session.signedIn);
+    return session.signedIn;
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     const initAuth = async () => {
@@ -63,22 +69,20 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
     }
   }, [pendingRedirect, router]);
 
-  const handleProtectedRoute = useCallback(
+  const requireAuth = useCallback(
     async (path: string, label: string) => {
-      const session = await getSession();
-      if (session.signedIn) {
-        setIsUserSignedIn(true);
+      const signedIn = await refreshSession();
+      if (signedIn) {
         closeMenu();
         router.push(path);
         return;
       }
 
-      setIsUserSignedIn(false);
       showToast(`Please sign in to view ${label}`, "info");
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [router, showToast, closeMenu]
+    [refreshSession, router, showToast, closeMenu]
   );
 
   useEffect(() => {
@@ -127,20 +131,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
         isUserSignedIn={isUserSignedIn}
         setIsAuthModalOpen={setIsAuthModalOpen}
         onNavigate={closeMenu}
-        onRequireAuth={async (path, label) => {
-          const session = await getSession();
-          if (session.signedIn) {
-            setIsUserSignedIn(true);
-            closeMenu();
-            router.push(path);
-            return;
-          }
-
-          setIsUserSignedIn(false);
-          showToast(`Please sign in to access ${label}`, "info");
-          setPendingRedirect(path);
-          setIsAuthModalOpen(true);
-        }}
+        onRequireAuth={requireAuth}
       />
 
       <nav className="grid w-full max-w-xs gap-4">
@@ -149,7 +140,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
             <button
               key={href}
               type="button"
-              onClick={() => handleProtectedRoute(href, label)}
+              onClick={() => requireAuth(href, label)}
               className={menuItemClass}
             >
               {label}

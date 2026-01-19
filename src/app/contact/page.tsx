@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="grid min-h-dvh content-start gap-6 p-2 pt-12 text-center md:ml-20">
+    <main className="page-shell gap-6 text-center">
       <header className="grid gap-2">
         <h1 className="page-title">Contact Us</h1>
         <p className="text-sm text-stone-300 md:text-base">
@@ -32,12 +32,12 @@ export default function ContactPage() {
       <ContactForm />
       <section
         aria-labelledby="contact-cta-heading"
-        className="grid gap-4 border-t border-stone-800 pt-6"
+        className="section-divider grid gap-4 pt-6"
       >
         <h2 id="contact-cta-heading" className="text-lg md:text-xl">
           Want to keep exploring?
         </h2>
-        <div className="grid grid-flow-col justify-center gap-3">
+        <div className="cta-row">
           <Link href="/mic-finder" className="btn-amber hover:bg-amber-600">
             Find Events
           </Link>

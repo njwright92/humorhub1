@@ -101,6 +101,18 @@
     @apply mb-4;
   }
 
+  .page-shell {
+    @apply grid min-h-dvh content-start p-2 pt-12 md:ml-20;
+  }
+
+  .section-divider {
+    @apply border-t border-stone-800;
+  }
+
+  .cta-row {
+    @apply grid grid-flow-col justify-center gap-3;
+  }
+
   .section-title,
   .page-title {
     @apply text-3xl text-amber-700 md:text-4xl lg:text-5xl;
@@ -128,6 +140,18 @@
 
   .card-border-2 {
     @apply border-2;
+  }
+
+  .card-base {
+    @apply rounded-2xl border shadow-xl;
+  }
+
+  .card-base-2 {
+    @apply rounded-2xl border-2 shadow-xl;
+  }
+
+  .card-muted {
+    @apply rounded-2xl border border-stone-700 bg-stone-800/50;
   }
 
   .round-image {

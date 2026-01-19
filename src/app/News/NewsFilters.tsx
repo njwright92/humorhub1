@@ -1,5 +1,19 @@
 type Category = "top_stories" | "all_news";
 
+export const NEWS_CATEGORIES = ["top_stories", "all_news"] as const;
+export const NEWS_SUBCATEGORIES = [
+  "general",
+  "science",
+  "sports",
+  "business",
+  "health",
+  "entertainment",
+  "tech",
+  "politics",
+  "food",
+  "travel",
+] as const;
+
 const labelClass = "mb-2 text-xs sm:text-sm font-bold uppercase tracking-wide";
 const selectClass =
   "input-amber border-stone-600 bg-stone-900 text-zinc-200 cursor-pointer disabled:opacity-70 hover:border-amber-700";
@@ -23,7 +37,7 @@ export default function NewsFilters({
       aria-labelledby="filters-heading"
       method="get"
       action="/News"
-      className="card-shell card-border-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md"
+      className="card-base-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-6 shadow-amber-900/10 backdrop-blur-md"
     >
       <fieldset>
         <legend id="filters-heading" className="sr-only">

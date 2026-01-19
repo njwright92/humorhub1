@@ -74,7 +74,7 @@ export default function ContactForm() {
   return (
     <section
       aria-labelledby="contact-form-heading"
-      className="animate-slide-in card-shell card-border-2 card-dark mx-auto w-full max-w-4xl border-amber-700 p-2 backdrop-blur-md md:p-4 lg:p-6"
+      className="animate-slide-in card-base-2 card-dark mx-auto w-full max-w-4xl border-amber-700 p-2 backdrop-blur-md md:p-4 lg:p-6"
     >
       <h2 id="contact-form-heading" className="sr-only">
         Contact Form

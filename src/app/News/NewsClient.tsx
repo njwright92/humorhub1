@@ -1,20 +1,5 @@
 import Image from "next/image";
-import NewsFilters from "./NewsFilters";
 import type { NewsArticle, NewsCategory } from "../lib/types";
-
-const CATEGORIES: NewsCategory[] = ["top_stories", "all_news"];
-const SUBCATEGORIES = [
-  "general",
-  "science",
-  "sports",
-  "business",
-  "health",
-  "entertainment",
-  "tech",
-  "politics",
-  "food",
-  "travel",
-] as const;
 
 function ArticleCard({
   article,
@@ -24,7 +9,7 @@ function ArticleCard({
   priority: boolean;
 }) {
   return (
-    <article className="group grid h-full grid-rows-[auto_1fr] overflow-hidden rounded-2xl border border-stone-700 bg-stone-800/50 transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
+    <article className="card-muted group grid h-full grid-rows-[auto_1fr] overflow-hidden transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full">
         {article.image_url ? (
           <Image
@@ -102,13 +87,6 @@ export default function NewsClient({
           </a>
         </div>
       )}
-
-      <NewsFilters
-        selectedCategory={selectedCategory}
-        selectedSubcategory={selectedSubcategory}
-        categories={CATEGORIES}
-        subcategories={SUBCATEGORIES}
-      />
 
       <section aria-labelledby="results-heading">
         <h2 id="results-heading" className="sr-only">

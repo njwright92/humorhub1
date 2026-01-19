@@ -291,7 +291,7 @@ export default function SearchBar({
           id={POPOVER_ID}
           role="search"
           onSubmit={handleSearch}
-          className="card-shell card-border absolute top-0 left-1/2 z-50 grid w-72 -translate-x-1/2 gap-3 border-stone-400 bg-zinc-200 p-4 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
+          className="card-base absolute top-0 left-1/2 z-50 grid w-72 -translate-x-1/2 gap-3 border-stone-400 bg-zinc-200 p-4 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
         >
           <button
             type="button"

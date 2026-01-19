@@ -363,19 +363,19 @@ export default function MicFinderClient({
 
           {isCityDropdownOpen && (
             <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
-              <label htmlFor="city-search" className="sr-only">
+              <label className="sr-only">
                 Search cities
+                <input
+                  id="city-search"
+                  type="text"
+                  placeholder="Search city..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-hidden"
+                  autoComplete="off"
+                  autoFocus
+                />
               </label>
-              <input
-                id="city-search"
-                type="text"
-                placeholder="Search city..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-hidden"
-                autoComplete="off"
-                autoFocus
-              />
               <ul role="listbox" aria-label="Available cities">
                 <li
                   role="option"
@@ -530,7 +530,7 @@ export default function MicFinderClient({
       {/* Map */}
       <section
         aria-label="Event Map"
-        className="card-shell card-border-2 relative mt-6 mb-6 h-96 w-full border-amber-700 bg-stone-800"
+        className="card-base-2 relative mt-6 mb-6 h-96 w-full border-amber-700 bg-stone-800"
       >
         <button
           type="button"

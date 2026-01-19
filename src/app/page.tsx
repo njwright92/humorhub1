@@ -184,7 +184,7 @@ export default function Home() {
             </Link>
           </figure>
           <Link href="/about" className="primary-cta">
-            Learn About Us
+            Learn More
           </Link>
         </div>
       </SectionCard>

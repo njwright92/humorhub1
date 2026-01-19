@@ -17,7 +17,7 @@ const SavedEventCard = function SavedEventCard({
   return (
     <article
       role="listitem"
-      className="group card-shell card-border grid gap-4 border-stone-600 p-4 text-left hover:border-amber-700 sm:grid-cols-[1fr_auto]"
+      className="group card-base grid gap-4 border-stone-600 p-4 text-left hover:border-amber-700 sm:grid-cols-[1fr_auto]"
     >
       <div>
         <h3 className="mb-1 inline text-amber-600">{event.name}</h3>
@@ -79,7 +79,7 @@ function EventsSkeleton({ count = 3 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="card-shell card-border grid animate-pulse gap-2 border-stone-600 p-4"
+          className="card-base grid animate-pulse gap-2 border-stone-600 p-4"
         >
           <div className="h-5 w-1/2 rounded-2xl bg-stone-700" />
           <div className="h-4 w-3/4 rounded-2xl bg-stone-700" />
@@ -118,7 +118,7 @@ export default function SavedEventsPanel({
   onDelete: (id: string, name: string) => void;
 }) {
   return (
-    <section className="card-shell card-border card-dark min-h-125 border-stone-600 bg-stone-950/80 p-4 lg:col-span-2">
+    <section className="card-base min-h-125 border-stone-600 bg-stone-950/80 p-4 text-zinc-200 lg:col-span-2">
       <h2 className="mb-4 grid grid-flow-col place-content-center gap-2 text-xl md:place-content-start">
         <span aria-hidden="true">🎟️</span>
         Saved Events

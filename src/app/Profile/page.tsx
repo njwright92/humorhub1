@@ -54,7 +54,7 @@ function SignInPrompt() {
       </p>
       <Link
         href="/mic-finder"
-        className="cursor-pointer justify-self-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-xl transition-transform hover:scale-105"
+        className="justify-self-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-xl transition-transform hover:scale-105"
       >
         Go to MicFinder
       </Link>
@@ -67,7 +67,7 @@ export default function ProfilePage() {
     <>
       <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
       <link rel="preconnect" href="https://humorhub-73ff9.firebaseapp.com" />
-      <main className="grid min-h-dvh content-start gap-4 p-2 pt-12 text-center md:ml-20">
+      <main className="page-shell gap-4 text-center">
         <h1 className="page-title">Profile Management</h1>
         <p className="text-sm text-stone-300 md:text-lg">
           Manage your personal schedule

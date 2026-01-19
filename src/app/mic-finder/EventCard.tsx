@@ -10,7 +10,7 @@ export default function EventCard({
   const sanitizedDetails = event.sanitizedDetails ?? event.details;
 
   return (
-    <article className="card-shell card-border mb-4 grid justify-items-center gap-2 border-stone-600 p-2 text-center">
+    <article className="card-base mb-4 grid justify-items-center gap-2 border-stone-600 p-2 text-center">
       <h3 className="text-lg text-amber-600 md:text-xl">{event.name}</h3>
       <p className="text-sm">
         <span aria-hidden="true">📅 </span>

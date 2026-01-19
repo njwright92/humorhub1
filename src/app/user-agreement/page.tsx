@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function UserAgreementPage() {
   return (
-    <main className="grid min-h-dvh content-start gap-8 p-2 pt-12 md:ml-20">
+    <main className="page-shell gap-8">
       <h1 className="page-title text-center">User Agreement</h1>
       <section className="panel-light">
         <p className="border-b border-zinc-300 pb-4 text-sm text-zinc-600">
