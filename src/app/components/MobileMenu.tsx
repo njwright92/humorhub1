@@ -64,17 +64,21 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   }, [pendingRedirect, router]);
 
   const handleProtectedRoute = useCallback(
-    (path: string, label: string) => {
-      if (isUserSignedIn) {
+    async (path: string, label: string) => {
+      const session = await getSession();
+      if (session.signedIn) {
+        setIsUserSignedIn(true);
         closeMenu();
         router.push(path);
         return;
       }
+
+      setIsUserSignedIn(false);
       showToast(`Please sign in to view ${label}`, "info");
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [isUserSignedIn, router, showToast, closeMenu]
+    [router, showToast, closeMenu]
   );
 
   useEffect(() => {
@@ -123,7 +127,17 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
         isUserSignedIn={isUserSignedIn}
         setIsAuthModalOpen={setIsAuthModalOpen}
         onNavigate={closeMenu}
-        onRequireAuth={(path) => {
+        onRequireAuth={async (path, label) => {
+          const session = await getSession();
+          if (session.signedIn) {
+            setIsUserSignedIn(true);
+            closeMenu();
+            router.push(path);
+            return;
+          }
+
+          setIsUserSignedIn(false);
+          showToast(`Please sign in to access ${label}`, "info");
           setPendingRedirect(path);
           setIsAuthModalOpen(true);
         }}

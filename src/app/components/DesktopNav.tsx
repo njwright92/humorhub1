@@ -106,16 +106,20 @@ export default function DesktopNav() {
   }, [pendingRedirect, router]);
 
   const handleProtectedRoute = useCallback(
-    (path: string, label: string) => {
-      if (isUserSignedIn) {
+    async (path: string, label: string) => {
+      const session = await getSession();
+      if (session.signedIn) {
+        setIsUserSignedIn(true);
         router.push(path);
         return;
       }
+
+      setIsUserSignedIn(false);
       showToast(`Please sign in to view ${label}`, "info");
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [isUserSignedIn, router, showToast]
+    [router, showToast]
   );
 
   const navItemClass =
@@ -141,7 +145,16 @@ export default function DesktopNav() {
         <SearchBar
           isUserSignedIn={isUserSignedIn}
           setIsAuthModalOpen={setIsAuthModalOpen}
-          onRequireAuth={(path) => {
+          onRequireAuth={async (path, label) => {
+            const session = await getSession();
+            if (session.signedIn) {
+              setIsUserSignedIn(true);
+              router.push(path);
+              return;
+            }
+
+            setIsUserSignedIn(false);
+            showToast(`Please sign in to access ${label}`, "info");
             setPendingRedirect(path);
             setIsAuthModalOpen(true);
           }}
