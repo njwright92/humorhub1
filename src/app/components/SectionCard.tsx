@@ -19,7 +19,7 @@ export default function SectionCard({
 }: SectionCardProps) {
   const sectionClassName = [
     "section-card",
-    variant === "spaced" ? "section-card-spaced" : null,
+    variant === "spaced" ? "mb-4" : null,
     className,
   ]
     .filter(Boolean)

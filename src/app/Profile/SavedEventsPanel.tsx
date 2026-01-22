@@ -99,7 +99,7 @@ function EmptyEvents() {
       </span>
       <p className="text-lg font-semibold">No events saved yet</p>
       <p>Go find some mics to hit!</p>
-      <Link href="/mic-finder" className="btn-amber mt-2 justify-self-center">
+      <Link href="/mic-finder" className="btn-primary mt-2 justify-self-center">
         Go to MicFinder
       </Link>
     </div>

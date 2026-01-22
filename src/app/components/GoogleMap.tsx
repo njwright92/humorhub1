@@ -30,8 +30,7 @@ function EventPin({ color }: { color: string }) {
       width="28"
       height="28"
       viewBox="0 0 32 32"
-      className="cursor-pointer hover:scale-110"
-      style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.4))" }}
+      className="pin-drop-shadow cursor-pointer hover:scale-110"
       aria-hidden="true"
     >
       <circle

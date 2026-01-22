@@ -33,7 +33,7 @@ export default function ProfileSidebar({
 }) {
   return (
     <aside className="lg:col-span-1">
-      <section className="card-base card-light sticky top-20 grid gap-4 border-stone-300 p-4">
+      <section className="card-base sticky top-20 grid gap-4 border-stone-300 bg-zinc-200 p-4 text-stone-900">
         {!isEditing && (
           <p className="text-center text-2xl font-bold">
             {profile.name || "Anonymous Comic"}
@@ -115,16 +115,13 @@ export default function ProfileSidebar({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <button
-                type="submit"
-                className="btn-amber cursor-pointer px-4 py-2 text-sm"
-              >
+              <button type="submit" className="btn-primary px-4 py-2 text-sm">
                 Save
               </button>
               <button
                 type="button"
                 onClick={onCancel}
-                className="btn-outline-stone cursor-pointer py-2 text-sm"
+                className="cursor-pointer rounded-2xl border border-stone-400 py-2 text-sm font-bold text-stone-800 transition-colors hover:bg-stone-400"
               >
                 Cancel
               </button>
@@ -144,7 +141,7 @@ export default function ProfileSidebar({
               <button
                 type="button"
                 onClick={onEdit}
-                className="btn-solid btn-stone cursor-pointer py-2"
+                className="cursor-pointer rounded-2xl bg-stone-900 py-2 font-bold text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:bg-stone-800"
               >
                 Edit Profile
               </button>

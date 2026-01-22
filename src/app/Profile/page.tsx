@@ -54,7 +54,7 @@ function SignInPrompt() {
       </p>
       <Link
         href="/mic-finder"
-        className="justify-self-center rounded-2xl bg-amber-700 px-6 py-3 font-bold text-stone-900 shadow-xl transition-transform hover:scale-105"
+        className="btn-primary justify-self-center px-6 py-3"
       >
         Go to MicFinder
       </Link>

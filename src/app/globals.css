@@ -69,36 +69,8 @@
 }
 
 @layer components {
-  .home-main {
-    @apply grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20;
-  }
-
-  .home-hero-title {
-    @apply hidden text-5xl md:block md:text-6xl lg:text-7xl;
-  }
-
-  .home-mic-grid {
-    @apply grid gap-6 md:grid-cols-2 md:text-left;
-  }
-
-  .home-news-grid {
-    @apply grid gap-6 md:mr-4 md:grid-cols-2 md:text-right;
-  }
-
-  .home-mic-figure {
-    @apply row-span-3 grid place-items-center md:justify-items-end;
-  }
-
-  .home-news-figure {
-    @apply row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start;
-  }
-
   .section-card {
     @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2 shadow-xl;
-  }
-
-  .section-card-spaced {
-    @apply mb-4;
   }
 
   .page-shell {
@@ -130,10 +102,6 @@
     @apply bg-stone-800 text-zinc-200;
   }
 
-  .card-light {
-    @apply bg-zinc-200 text-stone-900;
-  }
-
   .card-base {
     @apply rounded-2xl border shadow-xl;
   }
@@ -144,6 +112,34 @@
 
   .card-muted {
     @apply rounded-2xl border border-stone-700 bg-stone-800/50;
+  }
+
+  .btn-primary {
+    @apply cursor-pointer rounded-2xl bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:outline hover:outline-white;
+  }
+
+  .btn-outline-amber {
+    @apply cursor-pointer rounded-2xl border-2 border-amber-700 bg-transparent px-3 py-2 text-center font-bold text-amber-700 shadow-xl transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900;
+  }
+
+  .btn-dark {
+    @apply cursor-pointer rounded-2xl bg-stone-700 px-4 py-2 text-center font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-800;
+  }
+
+  .form-label {
+    @apply text-xs font-bold uppercase;
+  }
+
+  .field-soft {
+    @apply w-full rounded-2xl border border-stone-400 bg-zinc-200 p-2 text-stone-900 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20;
+  }
+
+  .field-dark {
+    @apply w-full rounded-2xl border border-stone-600 bg-stone-900 p-3 text-zinc-200 shadow-xl placeholder:text-stone-400 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+  }
+
+  .pin-drop-shadow {
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4));
   }
 
   .round-image {
@@ -159,28 +155,7 @@
   }
 
   .primary-cta {
-    @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-2 py-1 text-center text-lg font-semibold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
-  }
-
-  .btn-amber,
-  .btn-solid {
-    @apply rounded-2xl font-bold shadow-xl transition-transform hover:scale-105;
-  }
-
-  .btn-amber {
-    @apply bg-amber-700 px-3 py-2 text-stone-900;
-  }
-
-  .btn-stone {
-    @apply bg-stone-900 text-zinc-200 hover:bg-stone-800;
-  }
-
-  .btn-outline-stone {
-    @apply rounded-2xl border border-stone-400 font-bold text-stone-800 transition-colors hover:bg-stone-400;
-  }
-
-  .btn-outline-amber {
-    @apply rounded-2xl border border-amber-700 bg-transparent px-3 py-2 font-bold text-zinc-200 shadow-xl;
+    @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-3 py-2 text-center text-lg font-semibold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
   }
 
   .input-amber {

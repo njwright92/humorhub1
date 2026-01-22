@@ -13,7 +13,7 @@ export default function EventForm() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-50 rounded-2xl border-2 border-amber-700 bg-transparent px-2 py-1 text-lg font-bold shadow-xl transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900"
+        className="btn-outline-amber w-50 text-lg"
       >
         Add Your Event
       </button>

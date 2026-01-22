@@ -34,10 +34,12 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="home-main">
-      <h1 className="home-hero-title">Humor Hub!</h1>
+    <main className="grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20">
+      <h1 className="hidden text-5xl md:block md:text-6xl lg:text-7xl">
+        Humor Hub!
+      </h1>
       <SectionCard id="micfinder-heading" title="Mic Finder!" variant="spaced">
-        <div className="home-mic-grid">
+        <div className="grid gap-6 md:grid-cols-2 md:text-left">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Looking for your next Mic?
@@ -49,7 +51,7 @@ export default function Home() {
               Explore 1,000s of listings and get on stage!
             </p>
           </div>
-          <figure className="home-mic-figure">
+          <figure className="row-span-3 grid place-items-center md:justify-items-end">
             <Link href="/mic-finder">
               <RoundImage
                 src="/favicon.ico"
@@ -70,7 +72,7 @@ export default function Home() {
         </div>
       </SectionCard>
       <SectionCard id="news-heading" title="Hub News!">
-        <div className="home-news-grid">
+        <div className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right">
           <div className="md:col-start-2">
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Your Source for Fresh Headlines!
@@ -81,7 +83,7 @@ export default function Home() {
               Check out the Hub News for the latest updates!
             </p>
           </div>
-          <figure className="home-news-figure">
+          <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
             <NewsButton className="border-0 bg-transparent">
               <RoundImage
                 src="/newsy.webp"
@@ -101,7 +103,7 @@ export default function Home() {
         </div>
       </SectionCard>
       <SectionCard id="profile-heading" title="Profile">
-        <div className="home-mic-grid">
+        <div className="grid gap-6 md:grid-cols-2 md:text-left">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Keep your comedy calling card fresh.
@@ -111,7 +113,7 @@ export default function Home() {
               you.
             </p>
           </div>
-          <figure className="home-mic-figure md:row-span-2">
+          <figure className="row-span-3 grid place-items-center md:row-span-2 md:justify-items-end">
             <ProfileButton className="contents">
               <RoundImage
                 src="/profile.webp"
@@ -130,7 +132,7 @@ export default function Home() {
         </div>
       </SectionCard>
       <SectionCard id="contact-heading" title="Contact">
-        <div className="home-news-grid">
+        <div className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               Questions, feedback, or collabs?
@@ -139,7 +141,7 @@ export default function Home() {
               Drop the Humor Hub team a note and we will get back to you.
             </p>
           </div>
-          <figure className="home-news-figure">
+          <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
             <Link href="/contact">
               <RoundImage
                 src="/contact.webp"
@@ -161,7 +163,7 @@ export default function Home() {
         </div>
       </SectionCard>
       <SectionCard id="about-heading" title="About">
-        <div className="home-mic-grid">
+        <div className="grid gap-6 md:grid-cols-2 md:text-left">
           <div>
             <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
               See what makes the Hub tick.
@@ -170,7 +172,7 @@ export default function Home() {
               Learn the mission, the tools, and the team behind the laughs.
             </p>
           </div>
-          <figure className="home-mic-figure">
+          <figure className="row-span-3 grid place-items-center md:justify-items-end">
             <Link
               href="/about"
               aria-label="About Humor Hub: mission, team, and tools"

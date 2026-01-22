@@ -7,7 +7,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-const inputClass = "w-full rounded-2xl bg-zinc-200 p-2 text-stone-900";
+const inputClass = "field-soft";
 
 export default function AuthModal({
   isOpen,

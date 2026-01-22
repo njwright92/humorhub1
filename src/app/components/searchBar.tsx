@@ -337,7 +337,7 @@ export default function SearchBar({
 
           <button
             type="submit"
-            className="btn-amber w-32 cursor-pointer justify-self-center py-1 text-sm hover:scale-105"
+            className="btn-primary w-32 justify-self-center py-1 text-sm"
           >
             Search
           </button>

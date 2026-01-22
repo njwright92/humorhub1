@@ -118,13 +118,10 @@ export default function AboutPage() {
         </h3>
 
         <div className="cta-row">
-          <Link href="/mic-finder" className="btn-amber hover:bg-amber-800">
+          <Link href="/mic-finder" className="btn-primary">
             Find Events
           </Link>
-          <Link
-            href="/"
-            className="rounded-2xl bg-stone-700 px-4 py-2 font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-800"
-          >
+          <Link href="/" className="btn-dark">
             Back Home
           </Link>
         </div>

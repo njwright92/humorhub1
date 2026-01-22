@@ -15,10 +15,9 @@ const INITIAL_FORM_STATE: FormState = {
   message: "",
 };
 
-const inputClass =
-  "input-amber border-stone-500 shadow-xl text-zinc-200 placeholder:text-zinc-400";
+const inputClass = "field-dark placeholder:text-zinc-400";
 
-const labelClass = "my-2 text-xs uppercase md:text-sm";
+const labelClass = "my-2 form-label md:text-sm";
 
 export default function ContactForm() {
   const { showToast } = useToast();
@@ -137,7 +136,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn-amber mx-auto w-72 cursor-pointer disabled:scale-100 disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-stone-400"
+          className="btn-primary mx-auto w-72 disabled:scale-100 disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-stone-400"
         >
           {isSubmitting ? "Sending…" : "Send Message"}
         </button>

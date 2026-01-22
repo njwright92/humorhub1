@@ -14,10 +14,6 @@ export const NEWS_SUBCATEGORIES = [
   "travel",
 ] as const;
 
-const labelClass = "mb-1 text-xs font-bold uppercase text-center";
-const selectClass =
-  "input-amber border-stone-600 bg-stone-900 text-zinc-200 cursor-pointer disabled:opacity-70 hover:border-amber-700";
-
 const formatText = (text: string) =>
   text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
@@ -46,14 +42,17 @@ export default function NewsFilters({
 
         <div className="grid items-center gap-6 text-left md:grid-cols-3">
           <div className="grid">
-            <label htmlFor="news-category" className={labelClass}>
+            <label
+              htmlFor="news-category"
+              className="form-label mb-1 text-center"
+            >
               feed
             </label>
             <select
               id="news-category"
               name="category"
               defaultValue={selectedCategory}
-              className={selectClass}
+              className="field-dark cursor-pointer hover:border-amber-700 disabled:opacity-70"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
@@ -64,14 +63,17 @@ export default function NewsFilters({
           </div>
 
           <div className="grid">
-            <label htmlFor="news-subcategory" className={labelClass}>
+            <label
+              htmlFor="news-subcategory"
+              className="form-label mb-1 text-center"
+            >
               topic
             </label>
             <select
               id="news-subcategory"
               name="subcategory"
               defaultValue={selectedSubcategory}
-              className={selectClass}
+              className="field-dark cursor-pointer hover:border-amber-700 disabled:opacity-70"
             >
               {subcategories.map((sub) => (
                 <option key={sub} value={sub}>
@@ -83,7 +85,7 @@ export default function NewsFilters({
 
           <button
             type="submit"
-            className="btn-outline-amber hover:scale-105 hover:shadow-lg"
+            className="rounded-2xl border border-amber-700 bg-transparent px-3 py-2 font-bold text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:shadow-lg"
           >
             Search
           </button>

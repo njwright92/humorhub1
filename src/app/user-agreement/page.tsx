@@ -68,7 +68,7 @@ export default function UserAgreementPage() {
           </p>
         </article>
         <div className="flex justify-center border-t border-stone-300 pt-6">
-          <Link href="/" className="btn-amber">
+          <Link href="/" className="btn-primary">
             Return Home
           </Link>
         </div>
