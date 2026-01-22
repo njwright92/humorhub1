@@ -144,7 +144,7 @@ export default function ProfileSidebar({
               <button
                 type="button"
                 onClick={onEdit}
-                className="btn-solid btn-stone cursor-pointer py-2.5"
+                className="btn-solid btn-stone cursor-pointer py-2"
               >
                 Edit Profile
               </button>
