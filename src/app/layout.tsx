@@ -2,16 +2,24 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Comic_Neue } from "next/font/google";
 import "./globals.css";
-import { ToastProvider } from "./components/ToastContext";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { Analytics } from "@vercel/analytics/react";
+import dynamic from "next/dynamic";
+
+const ToastProvider = dynamic(() =>
+  import("./components/ToastContext").then((mod) => mod.ToastProvider),
+);
+
+const Analytics = dynamic(() =>
+  import("@vercel/analytics/react").then((mod) => mod.Analytics),
+);
 
 const comicNeue = Comic_Neue({
   weight: ["700"],
   subsets: ["latin"],
   variable: "--font-comic-neue",
   display: "swap",
+  preload: true,
 });
 
 export const viewport: Viewport = {
