@@ -27,7 +27,12 @@ export async function GET(request: NextRequest) {
       const doc = snapshot.docs[i];
       const data = doc.data();
 
-      const event = buildEventFromData(doc.id, data);
+      const eventId =
+        typeof data.eventId === "string" && data.eventId.length > 0
+          ? data.eventId
+          : doc.id;
+
+      const event = buildEventFromData(eventId, data);
       event.sanitizedDetails = event.details ? sanitizeHtml(event.details) : "";
       events.push(event);
     }

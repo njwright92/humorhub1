@@ -20,21 +20,32 @@ export async function DELETE(request: NextRequest) {
     }
 
     const db = getServerDb();
-    const eventRef = db.collection(COLLECTIONS.savedEvents).doc(eventId);
-    const eventDoc = await eventRef.get();
+    const userEventId = `${auth.uid}_${eventId}`;
+    const savedEvents = db.collection(COLLECTIONS.savedEvents);
+
+    // Prefer the new per-user doc id, but fall back to legacy doc id for older saves.
+    const eventRef = savedEvents.doc(userEventId);
+    let eventDoc = await eventRef.get();
 
     if (!eventDoc.exists) {
-      return jsonResponse({ success: false, error: "Event not found" }, 404);
+      const legacyRef = savedEvents.doc(eventId);
+      const legacyDoc = await legacyRef.get();
+      if (legacyDoc.exists) {
+        eventDoc = legacyDoc;
+      } else {
+        return jsonResponse({ success: false, error: "Event not found" }, 404);
+      }
     }
 
-    if (eventDoc.data()?.userId !== auth.uid) {
+    const data = eventDoc.data();
+    if (data?.userId && data.userId !== auth.uid) {
       return jsonResponse(
         { success: false, error: "Unauthorized to delete this event" },
         403,
       );
     }
 
-    await eventRef.delete();
+    await eventDoc.ref.delete();
     return jsonResponse({ success: true });
   } catch (error) {
     console.error("Delete event error:", error);

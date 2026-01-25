@@ -20,8 +20,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Use a per-user document id so multiple users can save the same event.
+    const userEventId = `${auth.uid}_${eventId}`;
+
     const dataToSave: Record<string, unknown> = {
-      id: eventId,
+      // Keep the original mic/event id for display & dedupe on the client.
+      eventId,
       userId: auth.uid,
       savedAt: new Date().toISOString(),
     };
@@ -32,7 +36,10 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getServerDb();
-    await db.collection(COLLECTIONS.savedEvents).doc(eventId).set(dataToSave);
+    await db
+      .collection(COLLECTIONS.savedEvents)
+      .doc(userEventId)
+      .set(dataToSave);
 
     return jsonResponse({ success: true });
   } catch (error) {
