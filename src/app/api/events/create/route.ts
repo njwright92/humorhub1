@@ -7,6 +7,7 @@ import { COLLECTIONS, GEOCODE_API_URL } from "@/app/lib/constants";
 export const runtime = "nodejs";
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+const EMAILJS_ENDPOINT = "https://api.emailjs.com/api/v1.0/email/send";
 
 interface GeocodeResponse {
   status: string;
@@ -53,6 +54,49 @@ function isValidSubmission(data: unknown): data is EventSubmission {
   return hasRequiredStrings && hasValidDate;
 }
 
+async function sendEventNotification(eventData: EventSubmission) {
+  if (
+    !process.env.EMAILJS_SERVICE_ID ||
+    !process.env.EMAILJS_TEMPLATE_ID ||
+    !process.env.EMAILJS_PUBLIC_KEY ||
+    !process.env.EMAILJS_PRIVATE_KEY
+  ) {
+    console.warn("EmailJS env vars missing; skipping event notification.");
+    return;
+  }
+
+  const parsedDate = eventData.date ? new Date(eventData.date) : null;
+  const displayDate =
+    parsedDate && !Number.isNaN(parsedDate.valueOf())
+      ? parsedDate.toLocaleDateString("en-US")
+      : "N/A";
+
+  const response = await fetch(EMAILJS_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      service_id: process.env.EMAILJS_SERVICE_ID,
+      template_id: process.env.EMAILJS_TEMPLATE_ID,
+      user_id: process.env.EMAILJS_PUBLIC_KEY,
+      accessToken: process.env.EMAILJS_PRIVATE_KEY,
+      template_params: {
+        name: eventData.name,
+        location: eventData.location,
+        date: displayDate,
+        details: eventData.details,
+        isRecurring: eventData.isRecurring ? "Yes" : "No",
+        isFestival: eventData.isFestival ? "Yes" : "No",
+        user_email: eventData.email || "No email provided",
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(details || `EmailJS failed (${response.status})`);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { eventData?: unknown };
@@ -83,6 +127,12 @@ export async function POST(request: NextRequest) {
 
     const db = getServerDb();
     await db.collection(collection).add(storedEvent);
+
+    try {
+      await sendEventNotification(eventData);
+    } catch (error) {
+      console.warn("Event email failed:", error);
+    }
 
     return jsonResponse({ success: true });
   } catch (error) {

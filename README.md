@@ -100,34 +100,6 @@ Follow these steps to set up the environment locally.
 3.  **Environment Configuration**
     Create a `.env.local` file in the root directory. Add your credentials:
 
-    ```env
-    # Firebase (client)
-    NEXT_PUBLIC_FIREBASE_API_KEY=your_key
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
-    FIREBASE_PROJECT_ID=your_project_id
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
-
-    # Firebase Admin (server)
-    FIREBASE_CLIENT_EMAIL=your_client_email
-    FIREBASE_PRIVATE_KEY="your_private_key"
-
-    # Google Maps
-    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_key
-    GOOGLE_MAPS_API_KEY=your_key
-
-    # News API
-    NEWS_API=your_key
-
-    # EmailJS (optional)
-    NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-    NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1=your_template_id_alt
-    NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-    ```
-
 4.  **Launch Development Server**
 
     ```bash

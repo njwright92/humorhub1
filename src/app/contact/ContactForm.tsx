@@ -48,17 +48,24 @@ export default function ContactForm() {
       }
 
       try {
-        const emailjs = (await import("@emailjs/browser")).default;
-        await emailjs.send(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID1!,
-          {
-            name,
-            email,
-            message,
-          },
-          process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
-        );
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message }),
+        });
+        const result = (await response.json().catch(() => null)) as {
+          success?: boolean;
+          error?: string;
+        } | null;
+
+        if (!response.ok || !result?.success) {
+          showToast(
+            result?.error ?? "Something went wrong. Please try again.",
+            "error",
+          );
+          return;
+        }
+
         showToast("Message sent! We'll get back to you soon.", "success");
         setFormState(INITIAL_FORM_STATE);
       } catch {

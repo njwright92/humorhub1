@@ -117,27 +117,6 @@ function buildSubmission(form: FormState): EventSubmission {
   };
 }
 
-async function sendEmailNotification(
-  data: EventSubmission,
-  originalDate: Date | null,
-) {
-  const emailjs = (await import("@emailjs/browser")).default;
-  await emailjs.send(
-    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
-    {
-      name: data.name,
-      location: data.location,
-      date: originalDate?.toLocaleDateString() ?? "N/A",
-      details: data.details,
-      isRecurring: data.isRecurring ? "Yes" : "No",
-      isFestival: data.isFestival ? "Yes" : "No",
-      user_email: data.email || "No email provided",
-    },
-    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
-  );
-}
-
 export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -210,9 +189,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           );
           return;
         }
-
-        // Fire and forget - don't await
-        sendEmailNotification(submission, form.date).catch(() => {});
 
         showToast("Event submitted successfully!", "success");
         setForm(INITIAL_FORM_STATE);

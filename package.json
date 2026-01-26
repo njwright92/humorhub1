@@ -17,7 +17,6 @@
     "preview": "npm run format && next build && next start"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@tanstack/react-virtual": "^3.13.18",
     "@vis.gl/react-google-maps": "^1.7.1",
     "@vercel/analytics": "^1.5.0",

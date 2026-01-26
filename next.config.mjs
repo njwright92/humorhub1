@@ -12,7 +12,6 @@ const nextConfig = {
       "firebase",
       "@tanstack/react-virtual",
       "@vis.gl/react-google-maps",
-      "@emailjs/browser",
     ],
     cssChunking: true,
   },
