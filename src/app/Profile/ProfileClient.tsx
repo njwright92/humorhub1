@@ -10,9 +10,9 @@ import {
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useToast } from "../components/ToastContext";
-import type { FirebaseStorage } from "firebase/storage";
 import type { Event } from "@/app/lib/types";
-import { getSession } from "@/app/lib/auth-client";
+import { deleteSavedEvent } from "@/app/actions/events";
+import { updateProfile } from "@/app/actions/profile";
 
 const ProfileSidebar = dynamic(() => import("./ProfileSidebar"));
 const SavedEventsPanel = dynamic(() => import("./SavedEventsPanel"));
@@ -26,6 +26,9 @@ interface Profile {
 interface ProfileClientProps {
   skeleton: ReactNode;
   signInPrompt: ReactNode;
+  initialProfile: Profile;
+  initialSavedEvents: Event[];
+  initialUserId: string | null;
 }
 
 const EMPTY_PROFILE: Profile = { name: "", bio: "", profileImageUrl: "" };
@@ -33,20 +36,22 @@ const EMPTY_PROFILE: Profile = { name: "", bio: "", profileImageUrl: "" };
 export default function ProfileClient({
   skeleton,
   signInPrompt,
+  initialProfile,
+  initialSavedEvents,
+  initialUserId,
 }: ProfileClientProps) {
   const { showToast } = useToast();
   const router = useRouter();
 
-  const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
-  const [editForm, setEditForm] = useState<Profile>(EMPTY_PROFILE);
+  const [profile, setProfile] = useState<Profile>(initialProfile);
+  const [editForm, setEditForm] = useState<Profile>(initialProfile);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isEventsLoading, setIsEventsLoading] = useState(true);
-  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
+  const [isLoading] = useState(false);
+  const [isEventsLoading] = useState(false);
+  const [savedEvents, setSavedEvents] = useState<Event[]>(initialSavedEvents);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const storageRef = useRef<FirebaseStorage | null>(null);
-  const userIdRef = useRef<string | null>(null);
+  const userIdRef = useRef<string | null>(initialUserId);
   const previewUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -55,66 +60,9 @@ export default function ProfileClient({
     };
   }, []);
 
-  const fetchUserProfile = useCallback(async () => {
-    try {
-      const res = await fetch("/api/profile", {
-        credentials: "include",
-      });
-      const result = await res.json();
-
-      if (result.success && result.profile) {
-        const { name = "", bio = "", profileImageUrl = "" } = result.profile;
-        const newProfile = { name, bio, profileImageUrl };
-        setProfile(newProfile);
-        setEditForm(newProfile);
-      }
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-    }
-  }, []);
-
-  const fetchSavedEvents = useCallback(async () => {
-    setIsEventsLoading(true);
-    try {
-      const res = await fetch("/api/events/saved", {
-        credentials: "include",
-      });
-      const result = await res.json();
-
-      if (result.success) {
-        setSavedEvents(result.events || []);
-      }
-    } catch (err) {
-      console.error("Error fetching saved events:", err);
-    } finally {
-      setIsEventsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    const initAuth = async () => {
-      const [{ getStorage }, session] = await Promise.all([
-        import("@/app/lib/firebase-storage"),
-        getSession(),
-      ]);
-      storageRef.current = await getStorage();
-      userIdRef.current = session.signedIn ? (session.uid ?? null) : null;
-
-      if (session.signedIn) {
-        await fetchUserProfile();
-        setIsLoading(false);
-        fetchSavedEvents();
-      } else {
-        setSavedEvents([]);
-        setProfile(EMPTY_PROFILE);
-        setEditForm(EMPTY_PROFILE);
-        setIsLoading(false);
-        setIsEventsLoading(false);
-      }
-    };
-
-    initAuth();
-  }, [fetchUserProfile, fetchSavedEvents]);
+    userIdRef.current = initialUserId;
+  }, [initialUserId]);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -137,19 +85,31 @@ export default function ProfileClient({
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       const userId = userIdRef.current;
-      if (!file || !userId || !storageRef.current) return;
+      if (!file || !userId) return;
 
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
       previewUrlRef.current = URL.createObjectURL(file);
 
       try {
-        const { ref, uploadBytes, getDownloadURL } =
-          await import("firebase/storage");
-        const imageRef = ref(storageRef.current, `profileImages/${userId}`);
-        await uploadBytes(imageRef, file);
-        const url = await getDownloadURL(imageRef);
+        const formData = new FormData();
+        formData.append("file", file);
 
-        setEditForm((prev) => ({ ...prev, profileImageUrl: url }));
+        const res = await fetch("/api/profile/image", {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        });
+        const result = (await res.json()) as {
+          success?: boolean;
+          imageUrl?: string;
+          error?: string;
+        };
+
+        if (!res.ok || !result.success || !result.imageUrl) {
+          throw new Error(result.error || "Upload failed");
+        }
+
+        setEditForm((prev) => ({ ...prev, profileImageUrl: result.imageUrl! }));
         showToast("Image uploaded!", "success");
       } catch {
         showToast("Error uploading image.", "error");
@@ -163,16 +123,7 @@ export default function ProfileClient({
       e.preventDefault();
 
       try {
-        const res = await fetch("/api/profile", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(editForm),
-        });
-
-        const result = await res.json();
+        const result = await updateProfile(editForm);
 
         if (result.success) {
           setProfile(editForm);
@@ -200,16 +151,7 @@ export default function ProfileClient({
       setDeletingId(eventId);
 
       try {
-        const res = await fetch("/api/events/delete", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({ eventId }),
-        });
-
-        const result = await res.json();
+        const result = await deleteSavedEvent(eventId);
 
         if (result.success) {
           setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));

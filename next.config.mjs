@@ -46,11 +46,11 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://www.googletagmanager.com https://www.google.com https://apis.google.com https://*.firebaseapp.com https://*.gstatic.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://www.google.com https://apis.google.com https://*.firebaseapp.com https://*.gstatic.com https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://*.googleapis.com https://*.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.emailjs.com wss://*.firebaseio.com https://vercel.live https://*.vercel-insights.com",
+              "connect-src 'self' https://*.googleapis.com https://*.google.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.emailjs.com wss://*.firebaseio.com https://vitals.vercel-insights.com https://*.vercel-insights.com",
               "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com",
               "object-src 'none'",
               "base-uri 'self'",

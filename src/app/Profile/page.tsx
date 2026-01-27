@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import ProfileClient from "./ProfileClient";
+import { getServerAuth, getServerDb } from "@/app/lib/firebase-admin";
+import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
+import { COLLECTIONS, SAVED_EVENT_FIELDS } from "@/app/lib/constants";
+import { buildEventFromData } from "@/app/lib/event-mappers";
+import { sanitizeHtml } from "@/app/lib/sanitizeHtml";
+import type { Event } from "@/app/lib/types";
 
 export const metadata: Metadata = {
   title: "Your Profile - Manage Your Humor Hub Account",
@@ -62,7 +69,77 @@ function SignInPrompt() {
   );
 }
 
+type Profile = {
+  name: string;
+  bio: string;
+  profileImageUrl: string;
+};
+
+const EMPTY_PROFILE: Profile = { name: "", bio: "", profileImageUrl: "" };
+
+async function loadProfileData() {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
+  if (!sessionCookie) {
+    return {
+      signedIn: false,
+      uid: null,
+      profile: EMPTY_PROFILE,
+      savedEvents: [] as Event[],
+    };
+  }
+
+  try {
+    const decoded = await getServerAuth().verifySessionCookie(sessionCookie);
+    const uid = decoded.uid;
+    const db = getServerDb();
+
+    const [userDoc, savedSnapshot] = await Promise.all([
+      db.collection(COLLECTIONS.users).doc(uid).get(),
+      db
+        .collection(COLLECTIONS.savedEvents)
+        .where("userId", "==", uid)
+        .select(...SAVED_EVENT_FIELDS)
+        .get(),
+    ]);
+
+    const userData = userDoc.exists ? userDoc.data() : undefined;
+    const profile = {
+      name: userData?.name || "",
+      bio: userData?.bio || "",
+      profileImageUrl: userData?.profileImageUrl || "",
+    };
+
+    const savedEvents: Event[] = [];
+
+    for (let i = 0; i < savedSnapshot.docs.length; i++) {
+      const doc = savedSnapshot.docs[i];
+      const data = doc.data();
+      const eventId =
+        typeof data.eventId === "string" && data.eventId.length > 0
+          ? data.eventId
+          : doc.id;
+      const event = buildEventFromData(eventId, data);
+      event.sanitizedDetails = event.details ? sanitizeHtml(event.details) : "";
+      savedEvents.push(event);
+    }
+
+    return { signedIn: true, uid, profile, savedEvents };
+  } catch (error) {
+    console.error("Profile server load error:", error);
+    return {
+      signedIn: false,
+      uid: null,
+      profile: EMPTY_PROFILE,
+      savedEvents: [] as Event[],
+    };
+  }
+}
+
 export default function ProfilePage() {
+  const dataPromise = loadProfileData();
+
   return (
     <>
       <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
@@ -72,11 +149,26 @@ export default function ProfilePage() {
         <p className="text-sm text-stone-300 md:text-lg">
           Manage your personal schedule
         </p>
-        <ProfileClient
-          skeleton={<ProfileSkeleton />}
-          signInPrompt={<SignInPrompt />}
-        />
+        <ProfileClientWrapper dataPromise={dataPromise} />
       </main>
     </>
+  );
+}
+
+async function ProfileClientWrapper({
+  dataPromise,
+}: {
+  dataPromise: ReturnType<typeof loadProfileData>;
+}) {
+  const data = await dataPromise;
+
+  return (
+    <ProfileClient
+      skeleton={<ProfileSkeleton />}
+      signInPrompt={<SignInPrompt />}
+      initialProfile={data.profile}
+      initialSavedEvents={data.savedEvents}
+      initialUserId={data.uid}
+    />
   );
 }

@@ -4,10 +4,15 @@ import {
   getFirestore as getAdminFirestore,
   type Firestore,
 } from "firebase-admin/firestore";
+import {
+  getStorage as getAdminStorage,
+  type Storage,
+} from "firebase-admin/storage";
 
 let adminApp: App | undefined;
 let adminAuth: Auth | undefined;
 let adminDb: Firestore | undefined;
+let adminStorage: Storage | undefined;
 
 function getAdminApp(): App {
   if (adminApp) return adminApp;
@@ -50,6 +55,12 @@ export function getServerDb(): Firestore {
   if (adminDb) return adminDb;
   adminDb = getAdminFirestore(getAdminApp());
   return adminDb;
+}
+
+export function getServerStorage(): Storage {
+  if (adminStorage) return adminStorage;
+  adminStorage = getAdminStorage(getAdminApp());
+  return adminStorage;
 }
 
 export async function verifyIdToken(token: string) {

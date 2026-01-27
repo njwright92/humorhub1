@@ -19,6 +19,7 @@ import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
 import { getSession } from "@/app/lib/auth-client";
+import { saveEvent } from "@/app/actions/events";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
@@ -205,17 +206,12 @@ export default function MicFinderClient({
         }
         if (!event.id) throw new Error("Invalid state");
 
-        const response = await fetch("/api/events/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(event),
-        });
-
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "Failed to save");
+        const payload = JSON.parse(JSON.stringify(event)) as Record<
+          string,
+          unknown
+        >;
+        const result = await saveEvent(payload);
+        if (!result.success) throw new Error(result.error || "Failed to save");
 
         showToast("Event saved successfully!", "success");
       } catch {
@@ -282,23 +278,28 @@ export default function MicFinderClient({
 
     const controller = new AbortController();
     const fetchFilters = async () => {
-      const params = new URLSearchParams();
-      params.set("tab", selectedTab);
-      if (selectedCity) params.set("city", selectedCity);
-      if (selectedDate) {
-        params.set("date", selectedDate.toLocaleDateString("en-CA"));
-      }
+      try {
+        const params = new URLSearchParams();
+        params.set("tab", selectedTab);
+        if (selectedCity) params.set("city", selectedCity);
+        if (selectedDate) {
+          params.set("date", selectedDate.toLocaleDateString("en-CA"));
+        }
 
-      const response = await fetch(
-        `/api/mic-finder/filter?${params.toString()}`,
-        { signal: controller.signal },
-      );
-      if (!response.ok) return;
-      const data: MicFinderFilterResult = await response.json();
-      setBaseEvents(data.baseEvents);
-      setRecurringEvents(data.recurringEvents);
-      setOneTimeEvents(data.oneTimeEvents);
-      setAllCityEvents(data.allCityEvents);
+        const response = await fetch(
+          `/api/mic-finder/filter?${params.toString()}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) return;
+        const data: MicFinderFilterResult = await response.json();
+        setBaseEvents(data.baseEvents);
+        setRecurringEvents(data.recurringEvents);
+        setOneTimeEvents(data.oneTimeEvents);
+        setAllCityEvents(data.allCityEvents);
+      } catch (error) {
+        if ((error as Error)?.name === "AbortError") return;
+        console.error("Filter fetch failed:", error);
+      }
     };
 
     void fetchFilters();
