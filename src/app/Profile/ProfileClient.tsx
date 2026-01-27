@@ -13,6 +13,7 @@ import { useToast } from "../components/ToastContext";
 import type { Event } from "@/app/lib/types";
 import { deleteSavedEvent } from "@/app/actions/events";
 import { updateProfile } from "@/app/actions/profile";
+import { useSession } from "@/app/components/SessionContext";
 
 const ProfileSidebar = dynamic(() => import("./ProfileSidebar"));
 const SavedEventsPanel = dynamic(() => import("./SavedEventsPanel"));
@@ -42,6 +43,7 @@ export default function ProfileClient({
 }: ProfileClientProps) {
   const { showToast } = useToast();
   const router = useRouter();
+  const { setSignedIn } = useSession();
 
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const [editForm, setEditForm] = useState<Profile>(initialProfile);
@@ -70,6 +72,7 @@ export default function ProfileClient({
         method: "POST",
         credentials: "include",
       });
+      setSignedIn(false);
       userIdRef.current = null;
       setSavedEvents([]);
       setProfile(EMPTY_PROFILE);
@@ -79,7 +82,7 @@ export default function ProfileClient({
     } catch {
       showToast("Error signing out", "error");
     }
-  }, [showToast, router]);
+  }, [setSignedIn, showToast, router]);
 
   const handleImageChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {

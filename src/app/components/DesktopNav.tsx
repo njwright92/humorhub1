@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useToast } from "./ToastContext";
-import { getSession } from "@/app/lib/auth-client";
+import { useSession } from "./SessionContext";
 
 const SearchBar = dynamic(() => import("./searchBar"));
 const AuthModal = dynamic(() => import("./authModal"));
@@ -73,48 +73,32 @@ function NavIcon({ icon }: { icon: string }) {
 export default function DesktopNav() {
   const { showToast } = useToast();
   const router = useRouter();
+  const { session, refreshSession, setSignedIn } = useSession();
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  const authInitPromiseRef = useRef<Promise<void> | null>(null);
-  const mountedRef = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-
-  const refreshSession = useCallback(async () => {
-    const session = await getSession();
-    if (mountedRef.current) setIsUserSignedIn(session.signedIn);
-    return session.signedIn;
-  }, []);
-
   const ensureAuthListener = useCallback(() => {
-    if (authInitPromiseRef.current) return;
-
-    authInitPromiseRef.current = (async () => {
-      const signedIn = await refreshSession();
-      if (mountedRef.current) setIsUserSignedIn(signedIn);
-    })();
-  }, [refreshSession]);
+    void import("./authModal");
+    if (session.status === "loading") {
+      void refreshSession();
+    }
+  }, [refreshSession, session.status]);
 
   const handleLoginSuccess = useCallback(() => {
-    setIsUserSignedIn(true);
+    setSignedIn(true);
     if (pendingRedirect) {
       router.push(pendingRedirect);
       setPendingRedirect(null);
       setIsAuthModalOpen(false);
     }
-  }, [pendingRedirect, router]);
+  }, [pendingRedirect, router, setSignedIn]);
 
   const requireAuth = useCallback(
     async (path: string, label: string) => {
-      const signedIn = await refreshSession();
-      if (signedIn) {
+      const current =
+        session.status === "ready" ? session : await refreshSession();
+      if (current.signedIn) {
         router.push(path);
         return;
       }
@@ -123,7 +107,7 @@ export default function DesktopNav() {
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [refreshSession, router, showToast],
+    [refreshSession, router, session, showToast],
   );
 
   const navItemClass =
@@ -147,7 +131,7 @@ export default function DesktopNav() {
         </Link>
 
         <SearchBar
-          isUserSignedIn={isUserSignedIn}
+          isUserSignedIn={session.signedIn}
           setIsAuthModalOpen={setIsAuthModalOpen}
           onRequireAuth={requireAuth}
         />

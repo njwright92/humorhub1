@@ -18,8 +18,8 @@ import type {
 import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
 import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
-import { getSession } from "@/app/lib/auth-client";
 import { saveEvent } from "@/app/actions/events";
+import { useSession } from "@/app/components/SessionContext";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
@@ -91,6 +91,7 @@ export default function MicFinderClient({
   initialDate,
 }: MicFinderClientProps) {
   const { showToast } = useToast();
+  const { session, refreshSession } = useSession();
   const [locale, setLocale] = useState("en-US");
 
   const [selectedCity, setSelectedCity] = useState("");
@@ -135,8 +136,6 @@ export default function MicFinderClient({
     }, 300);
     return () => clearTimeout(handler);
   }, [searchTerm]);
-
-  const ensureSession = useCallback(async () => getSession(), []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -199,8 +198,9 @@ export default function MicFinderClient({
   const handleEventSave = useCallback(
     async (event: Event) => {
       try {
-        const session = await ensureSession();
-        if (!session.signedIn) {
+        const current =
+          session.status === "ready" ? session : await refreshSession();
+        if (!current.signedIn) {
           showToast("Please sign in to save events.", "info");
           return;
         }
@@ -218,7 +218,7 @@ export default function MicFinderClient({
         showToast("Failed to save event. Please try again.", "error");
       }
     },
-    [ensureSession, showToast],
+    [refreshSession, session, showToast],
   );
 
   const handleDateChange = useCallback(

@@ -4,7 +4,7 @@ import { useState, useCallback, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
-import { getSession } from "@/app/lib/auth-client";
+import { useSession } from "./SessionContext";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
@@ -22,17 +22,18 @@ export default function ProtectedRouteButton({
   const { showToast } = useToast();
   const router = useRouter();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { session, refreshSession, setSignedIn } = useSession();
 
   const preload = useCallback(() => {
     void import("./authModal");
-    void getSession();
     router.prefetch?.(route);
   }, [router, route]);
 
   const handleClick = useCallback(async () => {
     try {
-      const user = await getSession();
-      if (user.signedIn) {
+      const current =
+        session.status === "ready" ? session : await refreshSession();
+      if (current.signedIn) {
         router.push(route);
         return;
       }
@@ -42,7 +43,7 @@ export default function ProtectedRouteButton({
     } catch {
       setIsAuthModalOpen(true);
     }
-  }, [label, router, route, showToast]);
+  }, [label, refreshSession, router, route, session, showToast]);
 
   return (
     <>
@@ -64,6 +65,7 @@ export default function ProtectedRouteButton({
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
           onLoginSuccess={() => {
+            setSignedIn(true);
             setIsAuthModalOpen(false);
             router.push(route);
           }}

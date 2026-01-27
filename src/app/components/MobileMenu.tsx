@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import SearchBar from "./searchBar";
-import { getSession } from "@/app/lib/auth-client";
+import { useSession } from "./SessionContext";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
@@ -31,48 +31,25 @@ const menuItemClass =
 export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   const { showToast } = useToast();
   const router = useRouter();
+  const { session, refreshSession, setSignedIn } = useSession();
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 
-  const refreshSession = useCallback(async () => {
-    const session = await getSession();
-    setIsUserSignedIn(session.signedIn);
-    return session.signedIn;
-  }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    const initAuth = async () => {
-      const session = await getSession();
-      if (mounted) setIsUserSignedIn(session.signedIn);
-    };
-
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(initAuth);
-    } else {
-      setTimeout(initAuth, 100);
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   const handleLoginSuccess = useCallback(() => {
-    setIsUserSignedIn(true);
+    setSignedIn(true);
     if (pendingRedirect) {
       router.push(pendingRedirect);
       setPendingRedirect(null);
       setIsAuthModalOpen(false);
     }
-  }, [pendingRedirect, router]);
+  }, [pendingRedirect, router, setSignedIn]);
 
   const requireAuth = useCallback(
     async (path: string, label: string) => {
-      const signedIn = await refreshSession();
-      if (signedIn) {
+      const current =
+        session.status === "ready" ? session : await refreshSession();
+      if (current.signedIn) {
         closeMenu();
         router.push(path);
         return;
@@ -82,7 +59,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
       setPendingRedirect(path);
       setIsAuthModalOpen(true);
     },
-    [refreshSession, router, showToast, closeMenu],
+    [refreshSession, router, session, showToast, closeMenu],
   );
 
   useEffect(() => {
@@ -128,7 +105,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
       </Link>
 
       <SearchBar
-        isUserSignedIn={isUserSignedIn}
+        isUserSignedIn={session.signedIn}
         setIsAuthModalOpen={setIsAuthModalOpen}
         onNavigate={closeMenu}
         onRequireAuth={requireAuth}
