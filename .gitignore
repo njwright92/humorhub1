@@ -2,29 +2,14 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
 firebase-admin
 
-/backend/__pycache__
-/backend/venv
-/backend/=0.2.90
-/backend/=0.30.6
-/backend/=0.114.2
-/backend/models/
-/backend/models/comic-mistral-v4.2.gguf
 # testing
 .vscode/
 /coverage
-/backend
 
 # next.js
 /.next/
-/out/
-
-# production
-/build
 
 # misc
 .DS_Store
@@ -32,8 +17,6 @@ firebase-admin
 
 # debug
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # local env files
 .env*.local
@@ -44,23 +27,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-package-lock.json
-src/app/components/guide.tsx
-# firebase
-firebase-debug.log
-.firebase/hosting.cHVibGlj.cache
-humorhub-73ff9-firebase-adminsdk-oyk79-495a37af9e.json
 
-
-uploadToFirestore.js
-citiesToFirestore.js
-cities.json
-eventsToCities.js
-new_cities.json
-updated_events.json
-events.json
-backend/.env
-backend/new_events.json
 .prettierrc
 .nvmrc
-scripts/analyze-bundles.mjs
+
