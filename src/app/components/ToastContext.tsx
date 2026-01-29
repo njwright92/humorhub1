@@ -11,9 +11,35 @@ import {
 } from "react";
 
 type ToastType = "success" | "error" | "info";
+type ToastActionVariant = "primary" | "danger" | "ghost";
+
+type ToastAction = {
+  label: string;
+  onClick?: () => void | Promise<void>;
+  variant?: ToastActionVariant;
+};
+
+type ToastOptions = {
+  durationMs?: number | null;
+  actions?: ToastAction[];
+};
+
+type ToastState = {
+  msg: string;
+  type: ToastType;
+  actions: ToastAction[];
+  durationMs: number | null;
+};
 
 const ToastContext = createContext<
-  { showToast: (message: string, type: ToastType) => void } | undefined
+  | {
+      showToast: (
+        message: string,
+        type: ToastType,
+        options?: ToastOptions,
+      ) => void;
+    }
+  | undefined
 >(undefined);
 
 export function useToast() {
@@ -28,10 +54,11 @@ const TOAST_CONFIG: Record<ToastType, { bg: string; icon: string }> = {
   info: { bg: "bg-blue-700", icon: "ⓘ" },
 };
 
+const DEFAULT_DURATION = 3000;
+const ACTION_DURATION = 8000;
+
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toast, setToast] = useState<{ msg: string; type: ToastType } | null>(
-    null,
-  );
+  const [toast, setToast] = useState<ToastState | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -40,11 +67,50 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const showToast = useCallback((msg: string, type: ToastType) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setToast({ msg, type });
-    timeoutRef.current = setTimeout(() => setToast(null), 3000);
+  const clearExistingTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, []);
+
+  const showToast = useCallback(
+    (msg: string, type: ToastType, options: ToastOptions = {}) => {
+      clearExistingTimeout();
+
+      const actions = options.actions ?? [];
+      const durationMs =
+        options.durationMs === 0
+          ? null
+          : (options.durationMs ??
+            (actions.length > 0 ? ACTION_DURATION : DEFAULT_DURATION));
+
+      setToast({ msg, type, actions, durationMs });
+
+      if (durationMs) {
+        timeoutRef.current = setTimeout(() => setToast(null), durationMs);
+      }
+    },
+    [clearExistingTimeout],
+  );
+
+  const handleActionClick = useCallback(
+    async (action: ToastAction) => {
+      clearExistingTimeout();
+      setToast(null);
+      try {
+        await action.onClick?.();
+      } catch (error) {
+        console.error("Toast action error:", error);
+      }
+    },
+    [clearExistingTimeout],
+  );
+
+  const dismiss = useCallback(() => {
+    clearExistingTimeout();
+    setToast(null);
+  }, [clearExistingTimeout]);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
@@ -53,16 +119,53 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <div
           role="status"
           aria-live="polite"
-          className="animate-slide-in fixed top-24 left-1/2 z-50 -translate-x-1/2"
+          className="animate-slide-in fixed top-24 left-1/2 z-50 w-[min(90vw,420px)] -translate-x-1/2"
         >
           <div
-            className={`grid grid-flow-col items-center gap-2 rounded-2xl px-4 py-3 font-semibold whitespace-nowrap text-zinc-200 shadow-xl ${TOAST_CONFIG[toast.type].bg}`}
+            className={`grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl px-4 py-3 font-semibold text-zinc-200 shadow-xl ${TOAST_CONFIG[toast.type].bg}`}
           >
-            <span aria-hidden="true">{TOAST_CONFIG[toast.type].icon}</span>
-            <span>{toast.msg}</span>
+            <div className="grid gap-2">
+              <div className="grid auto-cols-max grid-flow-col items-center gap-2">
+                <span aria-hidden="true">{TOAST_CONFIG[toast.type].icon}</span>
+                <span>{toast.msg}</span>
+              </div>
+              {toast.actions.length > 0 && (
+                <div className="grid auto-cols-max grid-flow-col gap-2">
+                  {toast.actions.map((action, idx) => (
+                    <button
+                      key={`${action.label}-${idx}`}
+                      type="button"
+                      onClick={() => void handleActionClick(action)}
+                      className={`rounded-xl px-3 py-1 text-sm font-semibold transition-colors ${getActionClass(action.variant)}`}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              aria-label="Dismiss notification"
+              onClick={dismiss}
+              className="rounded-full px-2 py-1 text-lg leading-none text-zinc-200 transition-colors hover:bg-black/20"
+            >
+              ×
+            </button>
           </div>
         </div>
       )}
     </ToastContext.Provider>
   );
+}
+
+function getActionClass(variant: ToastActionVariant = "primary") {
+  switch (variant) {
+    case "danger":
+      return "bg-red-600 text-white hover:bg-red-500";
+    case "ghost":
+      return "border border-zinc-300 text-zinc-200 hover:border-white hover:text-white";
+    default:
+      return "bg-amber-500 text-stone-900 hover:bg-amber-400";
+  }
 }

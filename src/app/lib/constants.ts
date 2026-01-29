@@ -15,6 +15,7 @@ export const COLLECTIONS = {
   users: "users",
   events: "events",
   eventsManualReview: "events_manual_review",
+  polls: "polls",
 } as const;
 
 export const FEATURED_CITY = "Spokane WA";

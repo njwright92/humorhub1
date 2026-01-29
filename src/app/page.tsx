@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import EventForm from "./components/EventForm";
+import HomepagePoll from "./components/HomepagePoll";
 import NewsButton from "./components/newsButton";
 import ProfileButton from "./components/ProfileButton";
 import RoundImage from "./components/RoundImage";
@@ -35,6 +36,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20">
+      <div className="pointer-events-none fixed top-20 right-2 z-40 w-[min(340px,calc(100vw-1.5rem))] md:right-8">
+        <HomepagePoll />
+      </div>
       <h1 className="hidden text-5xl md:block md:text-6xl lg:text-7xl">
         Humor Hub!
       </h1>

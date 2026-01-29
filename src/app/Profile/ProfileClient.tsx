@@ -147,10 +147,8 @@ export default function ProfileClient({
     setIsEditing(false);
   }, [profile]);
 
-  const handleDeleteEvent = useCallback(
+  const performDeleteEvent = useCallback(
     async (eventId: string, eventName: string) => {
-      if (!confirm(`Remove "${eventName}" from your saved events?`)) return;
-
       setDeletingId(eventId);
 
       try {
@@ -158,7 +156,7 @@ export default function ProfileClient({
 
         if (result.success) {
           setSavedEvents((prev) => prev.filter((e) => e.id !== eventId));
-          showToast("Event removed!", "success");
+          showToast(`Removed "${eventName}"`, "success");
         } else {
           throw new Error(result.error);
         }
@@ -170,6 +168,23 @@ export default function ProfileClient({
       }
     },
     [showToast],
+  );
+
+  const handleDeleteEvent = useCallback(
+    (eventId: string, eventName: string) => {
+      showToast(`Remove "${eventName}" from your saved events?`, "info", {
+        durationMs: 9000,
+        actions: [
+          { label: "Cancel", variant: "ghost" },
+          {
+            label: "Remove",
+            variant: "danger",
+            onClick: () => performDeleteEvent(eventId, eventName),
+          },
+        ],
+      });
+    },
+    [performDeleteEvent, showToast],
   );
 
   const startEditing = useCallback(() => {
