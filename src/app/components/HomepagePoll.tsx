@@ -88,20 +88,20 @@ export default function HomepagePoll() {
   if (!visible) return null;
 
   return (
-    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-md gap-3 border-stone-700 bg-stone-950/90 p-4 text-left text-zinc-200 shadow-2xl">
+    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-60 gap-2 rounded-2xl border-stone-700 bg-stone-800/90 p-2 text-left text-zinc-200 shadow-2xl sm:max-w-md sm:gap-3 sm:p-3">
       <button
         type="button"
         aria-label="Close poll"
         onClick={handleClose}
-        className="absolute top-2 right-2 rounded-full px-2 py-1 text-lg font-bold text-zinc-200 transition-colors hover:bg-black/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-500"
+        className="absolute top-2 right-2 rounded-full px-2 py-1 text-lg font-bold text-zinc-200 transition-colors hover:text-white"
       >
         ×
       </button>
       <div className="grid gap-1">
-        <p className="mb-1 text-center text-xs font-semibold tracking-wide text-amber-700">
+        <p className="mb-1 text-center text-sm font-semibold tracking-wide text-amber-700 sm:text-xs">
           Quick pulse
         </p>
-        <h3 className="text-base leading-tight font-bold md:text-lg">
+        <h3 className="text-sm leading-tight font-bold sm:text-base md:text-lg">
           Do you think AI knows it's artificial?
         </h3>
       </div>
@@ -111,7 +111,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("yes")}
-          className="rounded-2xl bg-amber-700 px-4 py-2 text-center text-sm font-bold text-stone-900 shadow-xl transition-all duration-200 hover:scale-[1.02] focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl bg-amber-700 px-3 py-2 text-center text-xs font-bold text-stone-900 shadow-xl transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:text-sm"
         >
           Yes
         </button>
@@ -119,7 +119,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("no")}
-          className="rounded-2xl border border-stone-600 bg-stone-900 px-4 py-2 text-center text-sm font-bold text-zinc-200 shadow-xl transition-all duration-200 hover:scale-[1.02] hover:border-amber-700 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl border border-stone-600 bg-stone-900 px-3 py-2 text-center text-xs font-bold text-zinc-200 shadow-xl transition-all duration-200 hover:scale-105 hover:border-amber-700 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:text-sm"
         >
           No
         </button>
@@ -130,7 +130,7 @@ export default function HomepagePoll() {
       )}
 
       {showResults ? (
-        <div className="grid gap-3 rounded-2xl bg-stone-900/80 p-3">
+        <div className="grid gap-2 rounded-2xl bg-stone-900/80 p-2 sm:gap-3">
           <ResultRow
             label="Yes"
             percent={loading ? null : yesPercent}
@@ -145,8 +145,8 @@ export default function HomepagePoll() {
           />
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-stone-700 bg-stone-900/50 p-3 text-xs text-stone-200">
-          Vote to see how everyone else answered.
+        <div className="rounded-2xl border border-dashed border-stone-700 bg-stone-900/50 p-2 text-xs text-stone-200">
+          Vote to see the general consensus.
         </div>
       )}
     </div>
