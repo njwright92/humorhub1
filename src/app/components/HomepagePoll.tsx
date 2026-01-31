@@ -93,7 +93,7 @@ export default function HomepagePoll() {
         type="button"
         aria-label="Close poll"
         onClick={handleClose}
-        className="absolute top-2 right-2 rounded-full px-2 py-1 text-lg font-bold text-zinc-200 transition-colors hover:text-white"
+        className="absolute top-1 right-1 rounded-full px-2 py-1 text-lg font-bold text-zinc-200 transition-colors hover:text-white"
       >
         ×
       </button>
@@ -102,7 +102,7 @@ export default function HomepagePoll() {
           Quick pulse
         </p>
         <h3 className="text-sm leading-tight font-bold sm:text-base md:text-lg">
-          Do you think AI knows it's artificial?
+          Do you think AI knows it&apos;s artificial?
         </h3>
       </div>
 

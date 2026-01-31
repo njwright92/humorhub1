@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20">
-      <div className="fixed top-20 right-8 z-10">
+      <div className="pointer-events-none fixed bottom-6 left-6 z-10 md:top-20 md:left-22">
         <HomepagePoll />
       </div>
       <h1 className="hidden text-5xl md:block md:text-6xl lg:text-7xl">
