@@ -3,7 +3,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { COLLECTIONS } from "@/app/lib/constants";
 
-const DEFAULT_POLL_ID = "homepage_v2";
+const DEFAULT_POLL_ID = "homepage_v3";
 
 type PollCounts = {
   yesCount: number;
