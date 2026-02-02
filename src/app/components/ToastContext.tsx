@@ -107,11 +107,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [clearExistingTimeout],
   );
 
-  const dismiss = useCallback(() => {
-    clearExistingTimeout();
-    setToast(null);
-  }, [clearExistingTimeout]);
-
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
@@ -119,10 +114,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <div
           role="status"
           aria-live="polite"
-          className="animate-slide-in fixed top-24 left-1/2 z-50 w-[min(90vw,420px)] -translate-x-1/2"
+          className="animate-slide-in fixed top-6 left-1/2 z-50 w-fit max-w-[92vw] -translate-x-1/2"
         >
           <div
-            className={`grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl px-4 py-3 font-semibold text-zinc-200 shadow-xl ${TOAST_CONFIG[toast.type].bg}`}
+            className={`grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl px-2 py-1 text-center font-semibold text-zinc-200 shadow-xl ${TOAST_CONFIG[toast.type].bg}`}
           >
             <div className="grid gap-2">
               <div className="grid auto-cols-max grid-flow-col items-center gap-2">
@@ -144,14 +139,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              aria-label="Dismiss notification"
-              onClick={dismiss}
-              className="rounded-full px-2 py-1 text-lg leading-none text-zinc-200 transition-colors hover:bg-black/20"
-            >
-              ×
-            </button>
           </div>
         </div>
       )}

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { getServerDb } from "@/app/lib/firebase-admin";
-import { COLLECTIONS } from "@/app/lib/constants";
+import { COLLECTIONS, DEFAULT_POLL_ID } from "@/app/lib/constants";
 
-const DEFAULT_POLL_ID = "homepage_v3";
+export const runtime = "nodejs";
 
 type PollCounts = {
   yesCount: number;

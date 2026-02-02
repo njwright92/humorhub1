@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DEFAULT_POLL_ID } from "@/app/lib/constants";
 
 type ApiResponse<T> = {
   success: boolean;
@@ -14,7 +15,6 @@ type PollCounts = {
   totalCount: number;
 };
 
-const POLL_ID = "homepage_v3";
 const HIDE_AFTER_MS = 3000;
 
 export default function HomepagePoll() {
@@ -33,9 +33,7 @@ export default function HomepagePoll() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`/api/poll?id=${POLL_ID}`, {
-          cache: "no-store",
-        });
+        const res = await fetch(`/api/poll?id=${DEFAULT_POLL_ID}`);
         const data = (await res.json()) as ApiResponse<PollCounts>;
         if (!cancelled && data.success && data.data) setCounts(data.data);
       } catch (error) {
@@ -62,7 +60,7 @@ export default function HomepagePoll() {
       const res = await fetch("/api/poll", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pollId: POLL_ID, answer }),
+        body: JSON.stringify({ pollId: DEFAULT_POLL_ID, answer }),
       });
       const data = (await res.json()) as ApiResponse<PollCounts>;
 
@@ -87,22 +85,19 @@ export default function HomepagePoll() {
   if (!visible) return null;
 
   return (
-    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-60 gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-2 text-left text-zinc-200 shadow-2xl sm:max-w-md sm:gap-3 sm:p-3">
+    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-80 gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-3 shadow-2xl sm:max-w-lg sm:gap-3">
       <button
         type="button"
         aria-label="Close poll"
         onClick={() => setVisible(false)}
-        className="absolute top-1 right-1 rounded-full px-2 py-1 text-lg font-bold text-white transition-colors hover:text-white"
+        className="absolute top-1 right-1 rounded-full text-lg font-bold text-zinc-200 transition-colors hover:text-white"
       >
         ×
       </button>
       <div className="grid gap-1">
-        <p className="mb-1 text-center text-sm font-semibold tracking-wide text-amber-700 sm:text-xs">
-          Quick pulse
-        </p>
-        <h3 className="text-sm leading-tight font-bold sm:text-base md:text-lg">
-          Do you think AI knows it&apos;s artificial?
-        </h3>
+        <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-xl">
+          Does AI know it&apos;s artificial?
+        </h1>
       </div>
 
       <div className="grid auto-cols-fr grid-flow-col gap-2">
@@ -110,7 +105,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("yes")}
-          className="rounded-2xl bg-amber-700 px-3 py-2 text-center text-xs font-bold text-stone-900 shadow-xl transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:text-sm"
+          className="rounded-2xl bg-amber-700 px-2 py-1.5 text-center font-bold text-stone-900 shadow-2xl transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
         >
           Yes
         </button>
@@ -118,7 +113,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("no")}
-          className="rounded-2xl border border-stone-600 bg-stone-900 px-3 py-2 text-center text-xs font-bold text-white shadow-xl transition-all duration-200 hover:scale-105 hover:border-amber-700 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:text-sm"
+          className="rounded-2xl border border-stone-600 bg-stone-900 px-2 py-1.5 text-center font-bold text-zinc-200 shadow-2xl transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
         >
           No
         </button>
@@ -129,7 +124,7 @@ export default function HomepagePoll() {
       )}
 
       {showResults ? (
-        <div className="grid gap-2 rounded-2xl bg-stone-900/80 p-2 sm:gap-3">
+        <div className="grid gap-2 rounded-2xl bg-stone-900/80 p-2 shadow-2xl sm:gap-3">
           <ResultRow
             label="Yes"
             percent={loading ? null : yesPercent}
@@ -144,7 +139,7 @@ export default function HomepagePoll() {
           />
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-stone-600 bg-stone-900/50 p-2 text-xs text-zinc-200">
+        <div className="rounded-2xl border border-dashed border-stone-600 bg-stone-900/50 p-2 text-sm text-zinc-200 shadow-2xl">
           Vote to see the general consensus.
         </div>
       )}
@@ -169,7 +164,7 @@ function ResultRow({
         <span>{label}</span>
         <span>
           {percent === null ? "…" : `${Math.max(0, Math.min(100, percent))}%`}{" "}
-          <span className="text-xs font-normal text-stone-400">
+          <span className="text-xs font-normal text-stone-300">
             ({count.toLocaleString()})
           </span>
         </span>

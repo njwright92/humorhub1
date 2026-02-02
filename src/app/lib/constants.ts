@@ -22,6 +22,7 @@ export const FEATURED_CITY = "Spokane WA";
 export const SPOKANE_COMEDY_CLUB = "Spokane Comedy Club";
 export const ALL_CITIES_LABEL = "all cities";
 export const CITIES_CACHE_KEY = "hh_cities";
+export const DEFAULT_POLL_ID = "homepage_v3";
 
 export const NEWS_API_DEFAULTS = {
   locale: "us,ca",
