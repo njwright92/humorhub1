@@ -114,7 +114,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <div
           role="status"
           aria-live="polite"
-          className="animate-slide-in fixed top-6 left-1/2 z-50 w-fit max-w-[92vw] -translate-x-1/2"
+          className="animate-slide-in fixed top-6 left-1/2 z-50 w-fit -translate-x-1/2"
         >
           <div
             className={`grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl px-2 py-1 text-center font-semibold text-zinc-200 shadow-xl ${TOAST_CONFIG[toast.type].bg}`}
@@ -131,7 +131,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                       key={`${action.label}-${idx}`}
                       type="button"
                       onClick={() => void handleActionClick(action)}
-                      className={`rounded-xl px-3 py-1 text-sm font-semibold transition-colors ${getActionClass(action.variant)}`}
+                      className={`rounded-2xl px-2 py-1 font-semibold transition-colors ${getActionClass(action.variant)}`}
                     >
                       {action.label}
                     </button>
