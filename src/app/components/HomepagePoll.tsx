@@ -2,18 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { DEFAULT_POLL_ID } from "@/app/lib/constants";
-
-type ApiResponse<T> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
-
-type PollCounts = {
-  yesCount: number;
-  noCount: number;
-  totalCount: number;
-};
+import type { ApiResponse, PollCounts } from "@/app/lib/types";
 
 const HIDE_AFTER_MS = 3000;
 
@@ -85,7 +74,7 @@ export default function HomepagePoll() {
   if (!visible) return null;
 
   return (
-    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-80 gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-3 shadow-2xl sm:max-w-lg sm:gap-3">
+    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-md gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-3 shadow-2xl sm:gap-3">
       <button
         type="button"
         aria-label="Close poll"

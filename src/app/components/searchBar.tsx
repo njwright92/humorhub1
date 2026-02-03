@@ -153,7 +153,7 @@ export default function SearchBar({
   );
 
   const handleSearch = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    (e: React.SubmitEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const q = searchTerm.trim().toLowerCase();

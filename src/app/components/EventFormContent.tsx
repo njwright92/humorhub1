@@ -6,7 +6,7 @@ import {
   useEffect,
   memo,
   type ChangeEvent,
-  type FormEvent,
+  type SubmitEvent,
 } from "react";
 import { useToast } from "./ToastContext";
 import type { EventSubmission, ApiResponse } from "../lib/types";
@@ -152,7 +152,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   }, []);
 
   const handleSubmit = useCallback(
-    async (e: FormEvent) => {
+    async (e: SubmitEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (isSubmitting) return;
 

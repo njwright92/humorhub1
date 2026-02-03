@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useToast } from "../components/ToastContext";
-import type { Event } from "@/app/lib/types";
+import type { Event, ProfileData } from "@/app/lib/types";
 import { deleteSavedEvent } from "@/app/actions/events";
 import { updateProfile } from "@/app/actions/profile";
 import { useSession } from "@/app/components/SessionContext";
@@ -18,24 +18,21 @@ import { useSession } from "@/app/components/SessionContext";
 const ProfileSidebar = dynamic(() => import("./ProfileSidebar"));
 const SavedEventsPanel = dynamic(() => import("./SavedEventsPanel"));
 
-interface Profile {
-  name: string;
-  bio: string;
-  profileImageUrl: string;
-}
-
 interface ProfileClientProps {
-  skeleton: ReactNode;
   signInPrompt: ReactNode;
-  initialProfile: Profile;
+  initialProfile: ProfileData;
   initialSavedEvents: Event[];
   initialUserId: string | null;
 }
 
-const EMPTY_PROFILE: Profile = { name: "", bio: "", profileImageUrl: "" };
+type PendingDelete = {
+  eventId: string;
+  eventName: string;
+};
+
+const EMPTY_PROFILE: ProfileData = { name: "", bio: "", profileImageUrl: "" };
 
 export default function ProfileClient({
-  skeleton,
   signInPrompt,
   initialProfile,
   initialSavedEvents,
@@ -45,13 +42,14 @@ export default function ProfileClient({
   const router = useRouter();
   const { setSignedIn } = useSession();
 
-  const [profile, setProfile] = useState<Profile>(initialProfile);
-  const [editForm, setEditForm] = useState<Profile>(initialProfile);
+  const [profile, setProfile] = useState<ProfileData>(initialProfile);
+  const [editForm, setEditForm] = useState<ProfileData>(initialProfile);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading] = useState(false);
-  const [isEventsLoading] = useState(false);
   const [savedEvents, setSavedEvents] = useState<Event[]>(initialSavedEvents);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(
+    null,
+  );
 
   const userIdRef = useRef<string | null>(initialUserId);
   const previewUrlRef = useRef<string | null>(null);
@@ -122,7 +120,7 @@ export default function ProfileClient({
   );
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.SubmitEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       try {
@@ -172,20 +170,34 @@ export default function ProfileClient({
 
   const handleDeleteEvent = useCallback(
     (eventId: string, eventName: string) => {
-      showToast(`Remove "${eventName}" from your saved events?`, "info", {
-        durationMs: 9000,
-        actions: [
-          { label: "Cancel", variant: "ghost" },
-          {
-            label: "Remove",
-            variant: "danger",
-            onClick: () => performDeleteEvent(eventId, eventName),
-          },
-        ],
-      });
+      setPendingDelete({ eventId, eventName });
     },
-    [performDeleteEvent, showToast],
+    [],
   );
+
+  const closeDeleteConfirm = useCallback(() => {
+    setPendingDelete(null);
+  }, []);
+
+  const confirmDeleteEvent = useCallback(() => {
+    if (!pendingDelete) return;
+    const { eventId, eventName } = pendingDelete;
+    setPendingDelete(null);
+    void performDeleteEvent(eventId, eventName);
+  }, [pendingDelete, performDeleteEvent]);
+
+  useEffect(() => {
+    if (!pendingDelete) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setPendingDelete(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [pendingDelete]);
 
   const startEditing = useCallback(() => {
     setIsEditing(true);
@@ -201,37 +213,73 @@ export default function ProfileClient({
     },
     [],
   );
-
-  if (isLoading) {
-    return skeleton;
-  }
+  const isDeletingPendingEvent =
+    pendingDelete != null && deletingId === pendingDelete.eventId;
 
   if (!userIdRef.current) {
     return signInPrompt;
   }
 
   return (
-    <div className="animate-slide-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
-      <ProfileSidebar
-        profile={profile}
-        editForm={editForm}
-        isEditing={isEditing}
-        displayImageUrl={displayImageUrl}
-        editImageUrl={editImageUrl}
-        onImageChange={handleImageChange}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        onEdit={startEditing}
-        onSignOut={handleSignOut}
-        onFieldChange={handleFieldChange}
-      />
+    <>
+      <div className="animate-slide-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
+        <ProfileSidebar
+          profile={profile}
+          editForm={editForm}
+          isEditing={isEditing}
+          displayImageUrl={displayImageUrl}
+          editImageUrl={editImageUrl}
+          onImageChange={handleImageChange}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          onEdit={startEditing}
+          onSignOut={handleSignOut}
+          onFieldChange={handleFieldChange}
+        />
 
-      <SavedEventsPanel
-        savedEvents={savedEvents}
-        isEventsLoading={isEventsLoading}
-        deletingId={deletingId}
-        onDelete={handleDeleteEvent}
-      />
-    </div>
+        <SavedEventsPanel
+          savedEvents={savedEvents}
+          deletingId={deletingId}
+          onDelete={handleDeleteEvent}
+        />
+      </div>
+
+      {pendingDelete && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Confirm remove saved event"
+          className="fixed inset-0 z-50 grid place-items-center p-2 backdrop-blur-sm"
+          onClick={closeDeleteConfirm}
+        >
+          <div
+            className="card-base grid w-full max-w-sm gap-4 border-stone-600 bg-stone-900/90 p-4 text-center text-zinc-200 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-sm font-semibold">
+              Remove &quot;{pendingDelete.eventName}&quot; from your saved
+              events?
+            </p>
+            <div className="flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={closeDeleteConfirm}
+                className="rounded-2xl border border-zinc-300 px-4 py-1.5 text-sm font-semibold transition-colors hover:border-white hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteEvent}
+                disabled={isDeletingPendingEvent}
+                className="rounded-2xl bg-red-700 px-4 py-1.5 text-sm font-semibold transition-colors hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isDeletingPendingEvent ? "Removing..." : "Remove"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

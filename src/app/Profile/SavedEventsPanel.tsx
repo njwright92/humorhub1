@@ -73,24 +73,6 @@ const SavedEventCard = function SavedEventCard({
   );
 };
 
-function EventsSkeleton({ count = 3 }: { count?: number }) {
-  return (
-    <div role="status" className="grid gap-4">
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          className="card-base grid animate-pulse gap-2 border-stone-600 p-4"
-        >
-          <div className="h-5 w-1/2 rounded-2xl bg-stone-700" />
-          <div className="h-4 w-3/4 rounded-2xl bg-stone-700" />
-          <div className="h-4 w-1/4 rounded-2xl bg-stone-700" />
-        </div>
-      ))}
-      <span className="sr-only">Loading events...</span>
-    </div>
-  );
-}
-
 function EmptyEvents() {
   return (
     <div className="grid h-64 place-content-center gap-2 rounded-2xl border-2 border-dashed border-stone-600 text-center text-stone-400">
@@ -108,12 +90,10 @@ function EmptyEvents() {
 
 export default function SavedEventsPanel({
   savedEvents,
-  isEventsLoading,
   deletingId,
   onDelete,
 }: {
   savedEvents: Event[];
-  isEventsLoading: boolean;
   deletingId: string | null;
   onDelete: (id: string, name: string) => void;
 }) {
@@ -122,16 +102,12 @@ export default function SavedEventsPanel({
       <h2 className="mb-4 grid grid-flow-col place-content-center gap-2 text-xl md:place-content-start">
         <span aria-hidden="true">🎟️</span>
         Saved Events
-        {!isEventsLoading && (
-          <span className="rounded-full bg-stone-800 px-2 py-1 text-xs">
-            {savedEvents.length}
-          </span>
-        )}
+        <span className="rounded-full bg-stone-800 px-2 py-1 text-xs">
+          {savedEvents.length}
+        </span>
       </h2>
 
-      {isEventsLoading ? (
-        <EventsSkeleton />
-      ) : savedEvents.length > 0 ? (
+      {savedEvents.length > 0 ? (
         <div role="list" className="grid gap-4">
           {savedEvents.map((event) => (
             <SavedEventCard

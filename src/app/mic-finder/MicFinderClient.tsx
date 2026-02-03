@@ -131,8 +131,6 @@ export default function MicFinderClient({
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-      if (searchTerm.trim().length > 2) {
-      }
     }, 300);
     return () => clearTimeout(handler);
   }, [searchTerm]);

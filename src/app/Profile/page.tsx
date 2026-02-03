@@ -5,9 +5,8 @@ import ProfileClient from "./ProfileClient";
 import { getServerAuth, getServerDb } from "@/app/lib/firebase-admin";
 import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
 import { COLLECTIONS, SAVED_EVENT_FIELDS } from "@/app/lib/constants";
-import { buildEventFromData } from "@/app/lib/event-mappers";
-import { sanitizeHtml } from "@/app/lib/sanitizeHtml";
-import type { Event } from "@/app/lib/types";
+import { mapSavedEventDocs } from "@/app/lib/saved-events";
+import type { Event, ProfileData } from "@/app/lib/types";
 
 export const metadata: Metadata = {
   title: "Your Profile - Manage Your Humor Hub Account",
@@ -35,20 +34,6 @@ export const metadata: Metadata = {
   },
 };
 
-function ProfileSkeleton() {
-  return (
-    <div className="grid flex-1 place-content-center" role="status">
-      <div className="grid w-64 animate-pulse gap-4">
-        <div className="h-8 rounded-2xl bg-stone-700" />
-        <div className="mx-auto size-36 rounded-full bg-stone-700" />
-        <div className="h-4 rounded-2xl bg-stone-700" />
-        <div className="mx-auto h-4 w-1/2 rounded-2xl bg-stone-700" />
-      </div>
-      <span className="sr-only">Loading profile...</span>
-    </div>
-  );
-}
-
 function SignInPrompt() {
   return (
     <section className="mx-auto mt-10 grid max-w-md gap-4 rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
@@ -69,13 +54,7 @@ function SignInPrompt() {
   );
 }
 
-type Profile = {
-  name: string;
-  bio: string;
-  profileImageUrl: string;
-};
-
-const EMPTY_PROFILE: Profile = { name: "", bio: "", profileImageUrl: "" };
+const EMPTY_PROFILE: ProfileData = { name: "", bio: "", profileImageUrl: "" };
 
 async function loadProfileData() {
   const cookieStore = await cookies();
@@ -83,7 +62,6 @@ async function loadProfileData() {
 
   if (!sessionCookie) {
     return {
-      signedIn: false,
       uid: null,
       profile: EMPTY_PROFILE,
       savedEvents: [] as Event[],
@@ -111,25 +89,12 @@ async function loadProfileData() {
       profileImageUrl: userData?.profileImageUrl || "",
     };
 
-    const savedEvents: Event[] = [];
+    const savedEvents: Event[] = mapSavedEventDocs(savedSnapshot.docs);
 
-    for (let i = 0; i < savedSnapshot.docs.length; i++) {
-      const doc = savedSnapshot.docs[i];
-      const data = doc.data();
-      const eventId =
-        typeof data.eventId === "string" && data.eventId.length > 0
-          ? data.eventId
-          : doc.id;
-      const event = buildEventFromData(eventId, data);
-      event.sanitizedDetails = event.details ? sanitizeHtml(event.details) : "";
-      savedEvents.push(event);
-    }
-
-    return { signedIn: true, uid, profile, savedEvents };
+    return { uid, profile, savedEvents };
   } catch (error) {
     console.error("Profile server load error:", error);
     return {
-      signedIn: false,
       uid: null,
       profile: EMPTY_PROFILE,
       savedEvents: [] as Event[],
@@ -164,7 +129,6 @@ async function ProfileClientWrapper({
 
   return (
     <ProfileClient
-      skeleton={<ProfileSkeleton />}
       signInPrompt={<SignInPrompt />}
       initialProfile={data.profile}
       initialSavedEvents={data.savedEvents}

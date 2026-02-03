@@ -1,6 +1,6 @@
 import type { Event, EventData, GoogleTimestamp } from "./types";
 import { DAY_MAP, SPOKANE_COMEDY_CLUB } from "./constants";
-import { normalizeCityName, parseTimestampToMs } from "./utils";
+import { normalizeCityName, parseEventDate, parseTimestampToMs } from "./utils";
 
 type MapOptions = {
   includeNormalizedCity: boolean;
@@ -57,11 +57,7 @@ export function buildEventFromData(
     }
 
     if (!isRecurring && date) {
-      const parsed = new Date(date);
-      if (!Number.isNaN(parsed.getTime())) {
-        parsed.setHours(0, 0, 0, 0);
-        dateMs = parsed.getTime();
-      }
+      dateMs = parseEventDate(date)?.getTime() ?? null;
     }
   }
 

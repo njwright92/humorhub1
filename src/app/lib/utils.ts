@@ -67,7 +67,3 @@ export function parseTimestampToMs(value: unknown): number {
 
   return 0;
 }
-
-export function extractCityFromLocation(location: string): string {
-  return location.split(",")[1]?.trim() || "";
-}

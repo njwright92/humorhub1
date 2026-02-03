@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useToast } from "./ToastContext";
 import SearchBar from "./searchBar";
 import { useSession } from "./SessionContext";
+import { useProtectedNavigation } from "./useProtectedNavigation";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
@@ -29,38 +28,15 @@ const menuItemClass =
   "grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:bg-stone-700";
 
 export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
-  const { showToast } = useToast();
-  const router = useRouter();
-  const { session, refreshSession, setSignedIn } = useSession();
-
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
-
-  const handleLoginSuccess = useCallback(() => {
-    setSignedIn(true);
-    if (pendingRedirect) {
-      router.push(pendingRedirect);
-      setPendingRedirect(null);
-      setIsAuthModalOpen(false);
-    }
-  }, [pendingRedirect, router, setSignedIn]);
-
-  const requireAuth = useCallback(
-    async (path: string, label: string) => {
-      const current =
-        session.status === "ready" ? session : await refreshSession();
-      if (current.signedIn) {
-        closeMenu();
-        router.push(path);
-        return;
-      }
-
-      showToast(`Please sign in to view ${label}`, "info");
-      setPendingRedirect(path);
-      setIsAuthModalOpen(true);
-    },
-    [refreshSession, router, session, showToast, closeMenu],
-  );
+  const { session } = useSession();
+  const {
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    requireAuth,
+    handleLoginSuccess,
+  } = useProtectedNavigation({
+    onAuthorized: closeMenu,
+  });
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -117,7 +93,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
             <button
               key={href}
               type="button"
-              onClick={() => requireAuth(href, label)}
+              onClick={() => void requireAuth(href, label)}
               className={menuItemClass}
             >
               {label}

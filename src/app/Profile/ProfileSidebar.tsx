@@ -1,10 +1,5 @@
 import Image from "next/image";
-
-type Profile = {
-  name: string;
-  bio: string;
-  profileImageUrl: string;
-};
+import type { ProfileData } from "@/app/lib/types";
 
 export default function ProfileSidebar({
   profile,
@@ -19,13 +14,13 @@ export default function ProfileSidebar({
   onSignOut,
   onFieldChange,
 }: {
-  profile: Profile;
-  editForm: Profile;
+  profile: ProfileData;
+  editForm: ProfileData;
   isEditing: boolean;
   displayImageUrl: string;
   editImageUrl: string;
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
   onCancel: () => void;
   onEdit: () => void;
   onSignOut: () => void;

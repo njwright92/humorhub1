@@ -33,7 +33,7 @@ export default function ContactForm() {
   );
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.SubmitEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (isSubmitting) return;
       setIsSubmitting(true);

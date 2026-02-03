@@ -2,14 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { COLLECTIONS, DEFAULT_POLL_ID } from "@/app/lib/constants";
+import type { PollCounts } from "@/app/lib/types";
 
 export const runtime = "nodejs";
-
-type PollCounts = {
-  yesCount: number;
-  noCount: number;
-  totalCount: number;
-};
 
 function normalizeCounts(data: Partial<PollCounts> | undefined) {
   const yesCount = Math.max(0, Number(data?.yesCount) || 0);

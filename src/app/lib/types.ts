@@ -42,6 +42,18 @@ export interface Event {
   sanitizedDetails?: string;
 }
 
+export interface ProfileData {
+  name: string;
+  bio: string;
+  profileImageUrl: string;
+}
+
+export interface PollCounts {
+  yesCount: number;
+  noCount: number;
+  totalCount: number;
+}
+
 export interface ApiResponse<T = undefined> {
   success: boolean;
   data?: T;
@@ -62,11 +74,6 @@ export interface MicFinderData {
   events: Event[];
   cityCoordinates: CityCoordinates;
   eventsByTab: EventsByTab;
-}
-
-export interface SavedEvent extends Event {
-  userId: string;
-  savedAt: string;
 }
 
 export type GoogleTimestamp =

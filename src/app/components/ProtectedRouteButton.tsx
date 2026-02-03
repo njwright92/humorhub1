@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback, type ReactNode } from "react";
+import { useCallback, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useToast } from "./ToastContext";
-import { useSession } from "./SessionContext";
+import { useProtectedNavigation } from "./useProtectedNavigation";
 
 const AuthModal = dynamic(() => import("./authModal"));
 
@@ -19,31 +18,21 @@ export default function ProtectedRouteButton({
   className: string;
   children: ReactNode;
 }) {
-  const { showToast } = useToast();
   const router = useRouter();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const { session, refreshSession, setSignedIn } = useSession();
+  const {
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    requireAuth,
+    handleLoginSuccess,
+    preloadAuthModal,
+  } = useProtectedNavigation({
+    buildToastMessage: (text) => `Please sign in to view ${text}.`,
+  });
 
   const preload = useCallback(() => {
-    void import("./authModal");
+    preloadAuthModal();
     router.prefetch?.(route);
-  }, [router, route]);
-
-  const handleClick = useCallback(async () => {
-    try {
-      const current =
-        session.status === "ready" ? session : await refreshSession();
-      if (current.signedIn) {
-        router.push(route);
-        return;
-      }
-
-      showToast(`Please sign in to view ${label}.`, "info");
-      setIsAuthModalOpen(true);
-    } catch {
-      setIsAuthModalOpen(true);
-    }
-  }, [label, refreshSession, router, route, session, showToast]);
+  }, [preloadAuthModal, router, route]);
 
   return (
     <>
@@ -52,7 +41,7 @@ export default function ProtectedRouteButton({
         onPointerEnter={preload}
         onFocus={preload}
         onTouchStart={preload}
-        onClick={handleClick}
+        onClick={() => void requireAuth(route, label)}
         className={className}
         aria-haspopup="dialog"
         aria-expanded={isAuthModalOpen}
@@ -64,11 +53,7 @@ export default function ProtectedRouteButton({
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
-          onLoginSuccess={() => {
-            setSignedIn(true);
-            setIsAuthModalOpen(false);
-            router.push(route);
-          }}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
     </>

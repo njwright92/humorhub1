@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useToast } from "./ToastContext";
 import { useSession } from "./SessionContext";
+import { useProtectedNavigation } from "./useProtectedNavigation";
 
 const SearchBar = dynamic(() => import("./searchBar"));
 const AuthModal = dynamic(() => import("./authModal"));
@@ -71,44 +70,21 @@ function NavIcon({ icon }: { icon: string }) {
 }
 
 export default function DesktopNav() {
-  const { showToast } = useToast();
-  const router = useRouter();
-  const { session, refreshSession, setSignedIn } = useSession();
-
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
+  const { session, refreshSession } = useSession();
+  const {
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    requireAuth,
+    handleLoginSuccess,
+    preloadAuthModal,
+  } = useProtectedNavigation();
 
   const ensureAuthListener = useCallback(() => {
-    void import("./authModal");
+    preloadAuthModal();
     if (session.status === "loading") {
       void refreshSession();
     }
-  }, [refreshSession, session.status]);
-
-  const handleLoginSuccess = useCallback(() => {
-    setSignedIn(true);
-    if (pendingRedirect) {
-      router.push(pendingRedirect);
-      setPendingRedirect(null);
-      setIsAuthModalOpen(false);
-    }
-  }, [pendingRedirect, router, setSignedIn]);
-
-  const requireAuth = useCallback(
-    async (path: string, label: string) => {
-      const current =
-        session.status === "ready" ? session : await refreshSession();
-      if (current.signedIn) {
-        router.push(path);
-        return;
-      }
-
-      showToast(`Please sign in to view ${label}`, "info");
-      setPendingRedirect(path);
-      setIsAuthModalOpen(true);
-    },
-    [refreshSession, router, session, showToast],
-  );
+  }, [preloadAuthModal, refreshSession, session.status]);
 
   const navItemClass =
     "group relative cursor-pointer transition hover:scale-110 hover:rotate-3";
@@ -150,7 +126,7 @@ export default function DesktopNav() {
               type="button"
               onMouseEnter={ensureAuthListener}
               onFocus={ensureAuthListener}
-              onClick={() => requireAuth(protectedPath, label)}
+              onClick={() => void requireAuth(protectedPath, label)}
               aria-label={label}
               className={navItemClass}
             >
