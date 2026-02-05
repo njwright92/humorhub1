@@ -74,7 +74,7 @@ export default function HomepagePoll() {
   if (!visible) return null;
 
   return (
-    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-md gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-3 shadow-2xl sm:gap-3">
+    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-md gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-3 shadow-2xl">
       <button
         type="button"
         aria-label="Close poll"
@@ -84,7 +84,7 @@ export default function HomepagePoll() {
         ×
       </button>
       <div className="grid gap-1">
-        <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-xl">
+        <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">
           Does AI know it&apos;s artificial?
         </h1>
       </div>
