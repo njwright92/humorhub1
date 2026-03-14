@@ -16,8 +16,8 @@ export default function Header() {
             width={60}
             height={60}
             className="rounded-full shadow-xl"
-            priority
             quality={70}
+            loading="eager"
           />
         </Link>
         <h1 className="text-center text-4xl whitespace-nowrap text-stone-900">

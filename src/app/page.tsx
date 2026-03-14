@@ -65,7 +65,6 @@ export default function Home() {
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
-                priority
               />
             </Link>
           </figure>

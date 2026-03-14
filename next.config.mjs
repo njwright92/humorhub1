@@ -8,12 +8,16 @@ const nextConfig = {
   },
 
   experimental: {
+    inlineCss: true,
+
     optimizePackageImports: [
       "firebase",
+      "firebase-admin",
       "@tanstack/react-virtual",
       "@vis.gl/react-google-maps",
     ],
-    cssChunking: true,
+
+    cssChunking: "strict",
   },
 
   images: {
