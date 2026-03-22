@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import EventForm from "./components/EventForm";
-import HomepagePoll from "./components/HomepagePoll";
 import NewsButton from "./components/newsButton";
 import ProfileButton from "./components/ProfileButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
+import dynamic from "next/dynamic";
+
+const HomepagePoll = dynamic(() => import("./components/HomepagePoll"), {
+  loading: () => null,
+});
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",

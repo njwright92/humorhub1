@@ -20,7 +20,7 @@ export default function HomepagePoll() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    const id = setTimeout(async () => {
       try {
         const res = await fetch(`/api/poll?id=${DEFAULT_POLL_ID}`);
         const data = (await res.json()) as ApiResponse<PollCounts>;
@@ -30,9 +30,10 @@ export default function HomepagePoll() {
       } finally {
         if (!cancelled) setLoading(false);
       }
-    })();
+    }, 1000);
     return () => {
       cancelled = true;
+      clearTimeout(id);
     };
   }, []);
 
