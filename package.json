@@ -2,6 +2,11 @@
   "name": "humorhub",
   "version": "0.1.0",
   "private": true,
+  "overrides": {
+    "typescript-eslint": {
+      "typescript": "$typescript"
+    }
+  },
   "browserslist": [
     "last 2 versions",
     "not dead",
@@ -41,8 +46,8 @@
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "eslint --fix",
