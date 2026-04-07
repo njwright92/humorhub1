@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import dynamic from "next/dynamic";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useToast } from "@/app/components/ToastContext";
 import type {
   Event,
@@ -20,6 +21,24 @@ import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
 import { saveEvent } from "@/app/actions/events";
 import { useSession } from "@/app/components/SessionContext";
+
+// --- UTILITIES & HOOKS ---
+const parseLocalDate = (dateStr?: string | null) => {
+  if (!dateStr) return null;
+  const [year, month, day] = dateStr.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+};
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+}
+// -------------------------
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
@@ -43,10 +62,8 @@ interface MicFinderClientProps {
 
 const inputClass =
   "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-xl outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
-
 const sectionHeadingClass =
   "mb-4 w-full rounded-2xl border-b-4 pb-2 text-center text-xl sm:text-2xl";
-
 const emptyStateClass = "py-4 text-center text-stone-400";
 
 const TABS = [
@@ -92,53 +109,37 @@ export default function MicFinderClient({
 }: MicFinderClientProps) {
   const { showToast } = useToast();
   const { session, refreshSession } = useSession();
-  const [locale, setLocale] = useState("en-US");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
+  const [locale, setLocale] = useState("en-US");
   const [selectedCity, setSelectedCity] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
-    if (!initialDate) return null;
-    const [year, month, day] = initialDate.split("-").map(Number);
-    if (!year || !month || !day) return null;
-    return new Date(year, month - 1, day);
-  });
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
+    parseLocalDate(initialDate),
+  );
   const [searchTerm, setSearchTerm] = useState("");
-  // Single state update for map init/visibility to reduce render churn.
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
   const [mapState, setMapState] = useState({
     isMapVisible: false,
     hasMapInit: false,
   });
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState<TabId>("Mics");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const { isMapVisible, hasMapInit } = mapState;
-
-  const [baseEvents, setBaseEvents] = useState(initialFilters.baseEvents);
-  const [recurringEvents, setRecurringEvents] = useState(
-    initialFilters.recurringEvents,
-  );
-  const [oneTimeEvents, setOneTimeEvents] = useState(
-    initialFilters.oneTimeEvents,
-  );
-  const [allCityEvents, setAllCityEvents] = useState(
-    initialFilters.allCityEvents,
-  );
+  // Refactor: Consolidated event state
+  const [eventData, setEventData] =
+    useState<MicFinderFilterResult>(initialFilters);
 
   useEffect(() => {
     setLocale(navigator.language || "en-US");
   }, []);
 
+  // Refactor: Replaced Vanilla window objects with Next.js router APIs
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const city = params.get("city");
-    const term = params.get("searchTerm");
+    const city = searchParams.get("city");
+    const term = searchParams.get("searchTerm");
 
     if (city) {
       const normalized = normalizeCityName(city);
@@ -147,15 +148,17 @@ export default function MicFinderClient({
     } else if (term) {
       setSearchTerm(term);
     }
+
     if (city || term) {
-      window.history.replaceState({}, "", window.location.pathname);
+      router.replace(pathname, { scroll: false });
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
 
   const fetchUserLocation = useCallback(() => {
-    if (!navigator.geolocation) {
+    if (!navigator.geolocation)
       return showToast("Geolocation not supported", "error");
-    }
+
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         let closestCity: string | null = null;
@@ -221,9 +224,7 @@ export default function MicFinderClient({
 
   const handleDateChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.value) return;
-      const [year, month, day] = e.target.value.split("-").map(Number);
-      setSelectedDate(new Date(year, month - 1, day));
+      setSelectedDate(parseLocalDate(e.target.value));
     },
     [],
   );
@@ -242,13 +243,7 @@ export default function MicFinderClient({
   }, []);
 
   const { dayOfWeek, formattedDate } = useMemo(() => {
-    if (!selectedDate) {
-      return {
-        dayOfWeek: "",
-        formattedDate: "",
-      };
-    }
-
+    if (!selectedDate) return { dayOfWeek: "", formattedDate: "" };
     return {
       dayOfWeek: selectedDate.toLocaleDateString(locale, { weekday: "long" }),
       formattedDate: selectedDate.toLocaleDateString(locale, {
@@ -280,20 +275,20 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         if (selectedCity) params.set("city", selectedCity);
-        if (selectedDate) {
+        if (selectedDate)
           params.set("date", selectedDate.toLocaleDateString("en-CA"));
-        }
 
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
-          { signal: controller.signal },
+          {
+            signal: controller.signal,
+          },
         );
         if (!response.ok) return;
+
+        // Refactor: Single state update execution
         const data: MicFinderFilterResult = await response.json();
-        setBaseEvents(data.baseEvents);
-        setRecurringEvents(data.recurringEvents);
-        setOneTimeEvents(data.oneTimeEvents);
-        setAllCityEvents(data.allCityEvents);
+        setEventData(data);
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
         console.error("Filter fetch failed:", error);
@@ -317,8 +312,6 @@ export default function MicFinderClient({
         };
   }, [selectedCity, initialCityCoordinates]);
 
-  const eventsForMap = baseEvents;
-
   return (
     <>
       <div className="relative z-20 mt-2 grid justify-center gap-3 sm:flex sm:gap-4">
@@ -327,21 +320,16 @@ export default function MicFinderClient({
             type="text"
             placeholder="Select or Search City..."
             value={searchTerm}
-            onFocus={() => {
-              setIsCityDropdownOpen(true);
-              // Optional: Clear search on focus so they see all options immediately
-              // setSearchTerm("");
-            }}
+            onFocus={() => setIsCityDropdownOpen(true)}
             onBlur={() =>
               setTimeout(() => {
                 setIsCityDropdownOpen(false);
-                // If they click away without selecting, snap the text back to the actual selected city
                 setSearchTerm(selectedCity);
               }, 200)
             }
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
-            onChange={(e) => setSearchTerm(e.target.value)} // Only update the text, not the search
+            onChange={(e) => setSearchTerm(e.target.value)}
             className={inputClass}
             autoComplete="off"
           />
@@ -375,7 +363,6 @@ export default function MicFinderClient({
                   <span aria-hidden="true">🌎</span> All Cities
                 </li>
 
-                {/* If user backspaces everything, show all cities. Otherwise, show filtered. */}
                 {(searchTerm === "" ? initialCities : dropdownCities).map(
                   (city) => (
                     <li
@@ -419,6 +406,7 @@ export default function MicFinderClient({
           />
         </div>
       </div>
+
       <nav
         aria-label="Event type filter"
         role="tablist"
@@ -441,6 +429,7 @@ export default function MicFinderClient({
           </button>
         ))}
       </nav>
+
       <section
         aria-labelledby="recurring-heading"
         className="card-shell my-6 w-full"
@@ -461,9 +450,9 @@ export default function MicFinderClient({
           <p className="animate-pulse py-6 text-center text-lg font-bold text-amber-700">
             👇 Scroll to the bottom to see all {tabLabel.toLowerCase()}!
           </p>
-        ) : recurringEvents.length > 0 ? (
+        ) : eventData.recurringEvents.length > 0 ? (
           <div role="list" className="grid gap-4">
-            {recurringEvents.map((event) => (
+            {eventData.recurringEvents.map((event) => (
               <EventCard
                 key={event.id}
                 event={event}
@@ -478,6 +467,7 @@ export default function MicFinderClient({
           </p>
         )}
       </section>
+
       <section
         aria-labelledby="onetime-heading"
         className="card-shell my-6 w-full"
@@ -498,9 +488,9 @@ export default function MicFinderClient({
           <p className="animate-pulse py-6 text-center text-lg font-bold text-purple-700">
             👇 Scroll to the bottom to see all {tabLabel.toLowerCase()}!
           </p>
-        ) : oneTimeEvents.length > 0 ? (
+        ) : eventData.oneTimeEvents.length > 0 ? (
           <div role="list" className="grid gap-4">
-            {oneTimeEvents.map((event) => (
+            {eventData.oneTimeEvents.map((event) => (
               <EventCard
                 key={event.id}
                 event={event}
@@ -515,6 +505,7 @@ export default function MicFinderClient({
           </p>
         )}
       </section>
+
       {/* Map */}
       <section
         aria-label="Event Map"
@@ -527,26 +518,28 @@ export default function MicFinderClient({
           onTouchStart={handleMapHover}
           onFocus={handleMapHover}
           className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${
-            !isMapVisible
+            !mapState.isMapVisible
               ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-base text-stone-900 sm:text-lg"
               : "bottom-4 left-4 bg-stone-900 text-sm"
           }`}
         >
-          {isMapVisible ? "Hide Map" : "Show Map"}
+          {mapState.isMapVisible ? "Hide Map" : "Show Map"}
         </button>
 
-        {hasMapInit && (
+        {mapState.hasMapInit && (
           <div
             className={`size-full transition-opacity duration-100 ${
-              isMapVisible ? "visible opacity-100" : "invisible opacity-0"
+              mapState.isMapVisible
+                ? "visible opacity-100"
+                : "invisible opacity-0"
             }`}
-            aria-hidden={!isMapVisible}
+            aria-hidden={!mapState.isMapVisible}
           >
             <GoogleMap
               lat={mapConfig.lat}
               lng={mapConfig.lng}
               zoom={mapConfig.zoom}
-              events={eventsForMap}
+              events={eventData.baseEvents}
             />
           </div>
         )}
@@ -568,7 +561,7 @@ export default function MicFinderClient({
           <p className={emptyStateClass}>
             Select a city to see all {tabLabel.toLowerCase()}.
           </p>
-        ) : allCityEvents.length === 0 ? (
+        ) : eventData.allCityEvents.length === 0 ? (
           <p className={emptyStateClass}>
             No {tabLabel.toLowerCase()} found
             {selectedCity && selectedCity !== "All Cities"
@@ -578,10 +571,10 @@ export default function MicFinderClient({
           </p>
         ) : (
           <VirtualizedEventList
-            events={allCityEvents}
+            events={eventData.allCityEvents}
             onSave={handleEventSave}
             className="h-96 w-full overflow-auto rounded-2xl border border-stone-600 contain-strict sm:h-125 md:h-150"
-            ariaLabel={`${allCityEvents.length} ${tabLabel.toLowerCase()}`}
+            ariaLabel={`${eventData.allCityEvents.length} ${tabLabel.toLowerCase()}`}
           />
         )}
       </section>

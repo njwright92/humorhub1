@@ -176,11 +176,11 @@ async function MicFinderContent() {
 export default function MicFinderPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
+      />
       <main className="grid min-h-dvh justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
-        />
         <aside className="rounded-2xl border border-amber-800 bg-zinc-100 p-2 text-xs font-medium text-amber-800 shadow-xl lg:text-base">
           <p>
             <span aria-hidden="true">📢 </span>

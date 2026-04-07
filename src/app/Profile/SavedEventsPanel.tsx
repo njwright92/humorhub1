@@ -1,125 +1,71 @@
 import Link from "next/link";
 import type { Event } from "@/app/lib/types";
 
-const SavedEventCard = function SavedEventCard({
+function SavedEventCard({
   event,
-  isDeleting,
   onDelete,
 }: {
   event: Event;
-  isDeleting: boolean;
   onDelete: (id: string, name: string) => void;
 }) {
+  // Logic: "Business, City" logic is baked into the storage, but we ensure the link is clean
   const city = event.location.split(",")[1]?.trim() || "";
   const mapHref = `/mic-finder?city=${encodeURIComponent(city)}`;
-  const sanitizedDetails = event.sanitizedDetails ?? event.details;
 
   return (
-    <article
-      role="listitem"
-      className="group card-base grid gap-4 border-stone-600 p-4 text-left hover:border-amber-700 sm:grid-cols-[1fr_auto]"
-    >
-      <div>
-        <h3 className="mb-1 inline text-amber-600">{event.name}</h3>
-
-        {event.isFestival && (
-          <span className="ml-2 inline-block rounded-2xl bg-purple-900 px-2 py-0.5 align-middle text-xs font-bold text-purple-200 uppercase">
-            Festival
-          </span>
-        )}
-
-        {event.isMusic && (
-          <span className="ml-2 inline-block rounded-2xl bg-blue-900 px-2 py-0.5 align-middle text-xs font-bold text-blue-200 uppercase">
-            Music
-          </span>
-        )}
-
-        <p className="mt-1 text-sm">
-          <span aria-hidden="true">📍</span> {event.location}
-        </p>
-
-        <p className="mb-3 text-xs">
-          <span aria-hidden="true">📅</span> {event.date}
-          {event.isRecurring && " (Recurring)"}
-        </p>
-
-        {event.details && (
-          <div
-            className="line-clamp-2 text-sm group-hover:line-clamp-none"
-            dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
-          />
-        )}
+    <article className="card-base group flex items-start justify-between border-stone-600 bg-stone-900/50 p-4 transition-colors hover:border-amber-700">
+      <div className="text-left">
+        <h3 className="font-bold text-amber-600">{event.name}</h3>
+        <p className="mt-1 text-sm text-stone-300">📍 {event.location}</p>
+        <p className="mt-1 text-xs text-stone-500">📅 {event.date}</p>
       </div>
-
-      <div className="grid auto-cols-auto grid-flow-col items-end justify-between gap-2 sm:grid-flow-row sm:justify-items-end">
+      <div className="flex flex-col items-end gap-3">
         <Link
-          prefetch={false}
           href={mapHref}
-          className="text-sm underline transition-colors hover:text-amber-700"
+          className="text-xs text-stone-400 underline hover:text-white"
         >
-          Find on Map
+          View on Map
         </Link>
-
         <button
-          type="button"
           onClick={() => onDelete(event.id, event.name)}
-          disabled={isDeleting}
-          className="cursor-pointer rounded-2xl border border-red-500 px-3 py-1 text-sm font-semibold text-red-400 transition-colors hover:bg-red-900/50 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded border border-red-900/50 px-2 py-1 text-xs font-bold text-red-400 hover:bg-red-900/20"
         >
-          {isDeleting ? "Removing..." : "Remove"}
+          Remove
         </button>
       </div>
     </article>
-  );
-};
-
-function EmptyEvents() {
-  return (
-    <div className="grid h-64 place-content-center gap-2 rounded-2xl border-2 border-dashed border-stone-600 text-center text-stone-400">
-      <span className="text-4xl" aria-hidden="true">
-        📭
-      </span>
-      <p className="text-lg font-semibold">No events saved yet</p>
-      <p>Go find some mics to hit!</p>
-      <Link href="/mic-finder" className="btn-primary mt-2 justify-self-center">
-        Go to MicFinder
-      </Link>
-    </div>
   );
 }
 
 export default function SavedEventsPanel({
   savedEvents,
-  deletingId,
   onDelete,
 }: {
   savedEvents: Event[];
-  deletingId: string | null;
   onDelete: (id: string, name: string) => void;
 }) {
   return (
-    <section className="card-base min-h-125 border-stone-600 bg-stone-950/80 p-4 text-zinc-200 lg:col-span-2">
-      <h2 className="mb-4 grid grid-flow-col place-content-center gap-2 text-xl md:place-content-start">
-        <span aria-hidden="true">🎟️</span>
-        Saved Events
+    <section className="card-base min-h-125 border-stone-600 bg-stone-950/80 p-6 lg:col-span-2">
+      <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-zinc-200">
+        <span>🎟️</span> Saved Events
         <span className="rounded-full bg-stone-800 px-2 py-1 text-xs">
           {savedEvents.length}
         </span>
       </h2>
 
       {savedEvents.length > 0 ? (
-        <div role="list" className="grid gap-4">
+        <div className="grid gap-4">
           {savedEvents.map((event) => (
-            <SavedEventCard
-              key={event.id}
-              event={event}
-              isDeleting={deletingId === event.id}
-              onDelete={onDelete}
-            />
+            <SavedEventCard key={event.id} event={event} onDelete={onDelete} />
           ))}
         </div>
       ) : (
-        <EmptyEvents />
+        <div className="grid h-64 place-content-center rounded-2xl border-2 border-dashed border-stone-700 text-stone-500">
+          <p>No gigs saved yet.</p>
+          <Link href="/mic-finder" className="mt-2 text-amber-600 underline">
+            Go find a stage
+          </Link>
+        </div>
       )}
     </section>
   );

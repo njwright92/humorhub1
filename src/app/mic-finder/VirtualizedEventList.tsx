@@ -1,51 +1,9 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
-import {
-  Virtualizer,
-  elementScroll,
-  observeElementOffset,
-  observeElementRect,
-  type VirtualizerOptions,
-} from "@tanstack/virtual-core";
+import { useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import type { Event } from "../lib/types";
 import EventCard from "./EventCard";
-
-const useIsomorphicLayoutEffect =
-  typeof document !== "undefined" ? useLayoutEffect : useEffect;
-
-function useVirtualizerInstance<
-  TScrollElement extends Element,
-  TItemElement extends Element,
->(options: VirtualizerOptions<TScrollElement, TItemElement>) {
-  const rerender = useReducer(() => ({}), {})[1];
-  const resolvedOptions = {
-    ...options,
-    onChange: (
-      instance: Virtualizer<TScrollElement, TItemElement>,
-      sync: boolean,
-    ) => {
-      rerender();
-      options.onChange?.(instance, sync);
-    },
-  };
-
-  const [instance] = useState(
-    () => new Virtualizer<TScrollElement, TItemElement>(resolvedOptions),
-  );
-  instance.setOptions(resolvedOptions);
-
-  useIsomorphicLayoutEffect(() => instance._didMount(), [instance]);
-  useIsomorphicLayoutEffect(() => instance._willUpdate(), [instance]);
-
-  return instance;
-}
 
 export default function VirtualizedEventList({
   events,
@@ -60,14 +18,11 @@ export default function VirtualizedEventList({
 }) {
   const parentRef = useRef<HTMLDivElement>(null);
 
-  const rowVirtualizer = useVirtualizerInstance<HTMLDivElement, HTMLElement>({
+  const rowVirtualizer = useVirtualizer({
     count: events.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 150,
     overscan: 5,
-    observeElementRect,
-    observeElementOffset,
-    scrollToFn: elementScroll,
   });
 
   return (

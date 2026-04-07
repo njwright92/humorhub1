@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import React, { Suspense } from "react";
 import ProfileClient from "./ProfileClient";
 import { getServerAuth, getServerDb } from "@/app/lib/firebase-admin";
 import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
@@ -34,39 +35,13 @@ export const metadata: Metadata = {
   },
 };
 
-function SignInPrompt() {
-  return (
-    <section className="mx-auto mt-10 grid max-w-md gap-4 rounded-2xl border border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
-      <span className="text-6xl" aria-hidden="true">
-        🔐
-      </span>
-      <h2 className="text-2xl text-amber-700">Sign In Required</h2>
-      <p className="text-stone-400">
-        Please sign in to view your profile and saved events.
-      </p>
-      <Link
-        href="/mic-finder"
-        className="btn-primary justify-self-center px-6 py-3"
-      >
-        Go to MicFinder
-      </Link>
-    </section>
-  );
-}
-
 const EMPTY_PROFILE: ProfileData = { name: "", bio: "", profileImageUrl: "" };
 
 async function loadProfileData() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
-  if (!sessionCookie) {
-    return {
-      uid: null,
-      profile: EMPTY_PROFILE,
-      savedEvents: [] as Event[],
-    };
-  }
+  if (!sessionCookie)
+    return { uid: null, profile: EMPTY_PROFILE, savedEvents: [] };
 
   try {
     const decoded = await getServerAuth().verifySessionCookie(sessionCookie);
@@ -82,57 +57,74 @@ async function loadProfileData() {
         .get(),
     ]);
 
-    const userData = userDoc.exists ? userDoc.data() : undefined;
-    const profile = {
-      name: userData?.name || "",
-      bio: userData?.bio || "",
-      profileImageUrl: userData?.profileImageUrl || "",
-    };
-
-    const savedEvents: Event[] = mapSavedEventDocs(savedSnapshot.docs);
-
-    return { uid, profile, savedEvents };
-  } catch (error) {
-    console.error("Profile server load error:", error);
+    const userData = userDoc.data();
     return {
-      uid: null,
-      profile: EMPTY_PROFILE,
-      savedEvents: [] as Event[],
+      uid,
+      profile: {
+        name: userData?.name || "",
+        bio: userData?.bio || "",
+        profileImageUrl: userData?.profileImageUrl || "",
+      },
+      savedEvents: mapSavedEventDocs(savedSnapshot.docs),
     };
+  } catch (error) {
+    return { uid: null, profile: EMPTY_PROFILE, savedEvents: [] };
   }
+}
+
+function SignInPrompt() {
+  return (
+    <section className="card-base mx-auto mt-10 max-w-md border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
+      <span className="text-6xl" aria-hidden="true">
+        🔐
+      </span>
+      <h2 className="mt-4 text-2xl text-amber-700">Sign In Required</h2>
+      <p className="mb-6 text-stone-400">
+        Please sign in to view your profile and saved events.
+      </p>
+      <Link href="/mic-finder" className="btn-primary inline-block px-6 py-3">
+        Go to MicFinder
+      </Link>
+    </section>
+  );
 }
 
 export default function ProfilePage() {
   const dataPromise = loadProfileData();
 
   return (
-    <>
-      <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
-      <link rel="preconnect" href="https://humorhub-73ff9.firebaseapp.com" />
-      <main className="page-shell gap-4 text-center">
-        <h1 className="page-title">Profile Management</h1>
-        <p className="text-sm text-stone-300 md:text-lg">
-          Manage your personal schedule
-        </p>
+    <main className="page-shell gap-4 text-center">
+      <h1 className="page-title">Profile Management</h1>
+      <p className="text-sm text-stone-300 md:text-lg">
+        Manage your personal schedule
+      </p>
+
+      <Suspense
+        fallback={
+          <div className="mt-10 animate-pulse text-stone-500">
+            Syncing with the Hub...
+          </div>
+        }
+      >
         <ProfileClientWrapper dataPromise={dataPromise} />
-      </main>
-    </>
+      </Suspense>
+    </main>
   );
 }
 
 async function ProfileClientWrapper({
   dataPromise,
 }: {
-  dataPromise: ReturnType<typeof loadProfileData>;
+  dataPromise: Promise<any>;
 }) {
-  const data = await dataPromise;
+  const { uid, profile, savedEvents } = await dataPromise;
+  if (!uid) return <SignInPrompt />;
 
   return (
     <ProfileClient
-      signInPrompt={<SignInPrompt />}
-      initialProfile={data.profile}
-      initialSavedEvents={data.savedEvents}
-      initialUserId={data.uid}
+      initialProfile={profile}
+      initialSavedEvents={savedEvents}
+      userId={uid}
     />
   );
 }
