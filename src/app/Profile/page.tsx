@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import ProfileClient from "./ProfileClient";
+import AuthGatePrompt from "../components/AuthGatePrompt";
 import { getServerAuth, getServerDb } from "@/app/lib/firebase-admin";
 import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
 import { COLLECTIONS, SAVED_EVENT_FIELDS } from "@/app/lib/constants";
@@ -80,18 +80,7 @@ async function loadProfileData(): Promise<ProfilePageData> {
 
 function SignInPrompt() {
   return (
-    <section className="card-base mx-auto mt-10 max-w-md border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
-      <span className="text-6xl" aria-hidden="true">
-        🔐
-      </span>
-      <h2 className="mt-4 text-2xl text-amber-700">Sign In Required</h2>
-      <p className="mb-6 text-stone-400">
-        Please sign in to view your profile and saved events.
-      </p>
-      <Link href="/mic-finder" className="btn-primary inline-block px-6 py-3">
-        Go to MicFinder
-      </Link>
-    </section>
+    <AuthGatePrompt message="Please sign in to view your profile and saved events." />
   );
 }
 

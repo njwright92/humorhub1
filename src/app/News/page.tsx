@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import NewsClient from "./NewsClient";
+import AuthGatePrompt from "../components/AuthGatePrompt";
 import { fetchNewsArticles } from "@/app/lib/data/news";
 import type { NewsCategory } from "@/app/lib/types";
 import { getServerAuth } from "@/app/lib/firebase-admin";
@@ -66,20 +66,7 @@ async function canAccessNews(): Promise<boolean> {
 }
 
 function SignInPrompt() {
-  return (
-    <section className="card-base mx-auto mt-10 max-w-md border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
-      <span className="text-6xl" aria-hidden="true">
-        🔐
-      </span>
-      <h2 className="mt-4 text-2xl text-amber-700">Sign In Required</h2>
-      <p className="mb-6 text-stone-400">
-        Please sign in to view the Hub News.
-      </p>
-      <Link href="/mic-finder" className="btn-primary inline-block px-6 py-3">
-        Go to MicFinder
-      </Link>
-    </section>
-  );
+  return <AuthGatePrompt message="Please sign in to view the Hub News." />;
 }
 
 async function NewsContent({
