@@ -116,7 +116,7 @@ export default function NewsClient({
             ))}
           </ul>
         ) : (
-          <p className="py-20 text-xl text-stone-500">
+          <p className="py-20 text-xl text-zinc-200">
             No articles found for this category.
           </p>
         )}
