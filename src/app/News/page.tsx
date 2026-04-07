@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import NewsClient from "./NewsClient";
 import { fetchNewsArticles } from "@/app/lib/data/news";
 import type { NewsCategory } from "@/app/lib/types";
+import { getServerAuth } from "@/app/lib/firebase-admin";
+import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
 import NewsFilters, {
   NEWS_CATEGORIES,
   NEWS_SUBCATEGORIES,
@@ -48,6 +52,36 @@ function NewsSkeleton() {
   );
 }
 
+async function canAccessNews(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  if (!sessionCookie) return false;
+
+  try {
+    await getServerAuth().verifySessionCookie(sessionCookie);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function SignInPrompt() {
+  return (
+    <section className="card-base mx-auto mt-10 max-w-md border-stone-700 bg-stone-800 p-8 text-center shadow-xl">
+      <span className="text-6xl" aria-hidden="true">
+        🔐
+      </span>
+      <h2 className="mt-4 text-2xl text-amber-700">Sign In Required</h2>
+      <p className="mb-6 text-stone-400">
+        Please sign in to view the Hub News.
+      </p>
+      <Link href="/mic-finder" className="btn-primary inline-block px-6 py-3">
+        Go to MicFinder
+      </Link>
+    </section>
+  );
+}
+
 async function NewsContent({
   resolvedCategory,
   subcategory,
@@ -74,11 +108,31 @@ export default async function NewsPage({
 }: {
   searchParams?: Promise<{ category?: string; subcategory?: string }>;
 }) {
+  const hasAccess = await canAccessNews();
+  if (!hasAccess) {
+    return (
+      <main className="page-shell gap-4 text-center">
+        <h1 className="page-title">Hub News</h1>
+        <p className="text-sm text-stone-300 md:text-lg">
+          Curated stories from around the world. Stay informed with the latest
+          updates.
+        </p>
+        <SignInPrompt />
+      </main>
+    );
+  }
+
   const resolvedParams = searchParams ? await searchParams : undefined;
   const category = resolvedParams?.category;
-  const subcategory = resolvedParams?.subcategory ?? "general";
+  const requestedSubcategory = resolvedParams?.subcategory;
+  const subcategory = NEWS_SUBCATEGORIES.includes(
+    requestedSubcategory as (typeof NEWS_SUBCATEGORIES)[number],
+  )
+    ? requestedSubcategory!
+    : "general";
   const resolvedCategory: NewsCategory =
     category === "top_stories" ? "top_stories" : "all_news";
+  const newsKey = `${resolvedCategory}:${subcategory}`;
 
   return (
     <main className="page-shell gap-4 text-center">
@@ -88,13 +142,15 @@ export default async function NewsPage({
         updates.
       </p>
       <NewsFilters
+        key={`filters:${newsKey}`}
         selectedCategory={resolvedCategory}
         selectedSubcategory={subcategory}
         categories={NEWS_CATEGORIES}
         subcategories={NEWS_SUBCATEGORIES}
       />
-      <Suspense fallback={<NewsSkeleton />}>
+      <Suspense key={newsKey} fallback={<NewsSkeleton />}>
         <NewsContent
+          key={newsKey}
           resolvedCategory={resolvedCategory}
           subcategory={subcategory}
         />

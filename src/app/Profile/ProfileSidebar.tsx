@@ -21,10 +21,13 @@ export default function ProfileSidebar({
 }) {
   const [form, setForm] = useState(profile);
 
-  // Sync internal form if external profile changes (like after an image upload)
   useEffect(() => {
-    setForm(profile);
-  }, [profile]);
+    setForm((prev) =>
+      isEditing
+        ? { ...prev, profileImageUrl: profile.profileImageUrl }
+        : profile,
+    );
+  }, [isEditing, profile]);
 
   return (
     <aside className="lg:col-span-1">
@@ -49,7 +52,7 @@ export default function ProfileSidebar({
               <input
                 type="file"
                 className="sr-only"
-                accept="image/*"
+                accept="image/avif,image/gif,image/jpeg,image/png,image/webp"
                 onChange={(e) =>
                   e.target.files?.[0] && onImageUpload(e.target.files[0])
                 }

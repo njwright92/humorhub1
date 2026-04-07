@@ -1,5 +1,6 @@
 import type { NewsArticle, NewsCategory } from "../types";
 import { NEWS_API_DEFAULTS } from "../constants";
+import { toSafeHttpUrl } from "../utils";
 
 const NEWS_API_TOKEN = process.env.NEWS_API;
 
@@ -62,19 +63,18 @@ export async function fetchNewsArticles(
       const raw = article as Record<string, unknown>;
       const title = String(raw.title);
       const description = String(raw.description);
-      const urlValue = raw.url ? String(raw.url) : "#";
+      const safeArticleUrl = toSafeHttpUrl(raw.url);
+      const safeImageUrl = toSafeHttpUrl(raw.image_url);
       const uuid = raw.uuid
         ? String(raw.uuid)
-        : raw.url
-          ? String(raw.url)
-          : `${title}-${index}`;
+        : (safeArticleUrl ?? `${title}-${index}`);
 
       return {
         uuid,
         title,
         description,
-        url: urlValue,
-        image_url: raw.image_url ? String(raw.image_url) : undefined,
+        url: safeArticleUrl,
+        image_url: safeImageUrl,
         source: raw.source ? String(raw.source) : undefined,
       };
     });

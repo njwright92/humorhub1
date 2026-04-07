@@ -30,6 +30,15 @@ const parseLocalDate = (dateStr?: string | null) => {
   return new Date(year, month - 1, day);
 };
 
+const formatDateInputValue = (date: Date | null) => {
+  if (!date) return "";
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   useEffect(() => {
@@ -152,8 +161,7 @@ export default function MicFinderClient({
     if (city || term) {
       router.replace(pathname, { scroll: false });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run on mount
+  }, [pathname, router, searchParams]);
 
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation)
@@ -276,7 +284,7 @@ export default function MicFinderClient({
         params.set("tab", selectedTab);
         if (selectedCity) params.set("city", selectedCity);
         if (selectedDate)
-          params.set("date", selectedDate.toLocaleDateString("en-CA"));
+          params.set("date", formatDateInputValue(selectedDate));
 
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
@@ -397,11 +405,15 @@ export default function MicFinderClient({
           <input
             id="event-date-picker"
             type="date"
-            value={selectedDate ? selectedDate.toLocaleDateString("en-CA") : ""}
+            value={formatDateInputValue(selectedDate)}
             onChange={handleDateChange}
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
-            onClick={(e) => e.currentTarget.showPicker()}
+            onClick={(e) => {
+              if ("showPicker" in e.currentTarget) {
+                e.currentTarget.showPicker();
+              }
+            }}
             className={`${inputClass} cursor-pointer`}
           />
         </div>

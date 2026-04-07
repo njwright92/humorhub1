@@ -16,11 +16,9 @@ const SavedEventsPanel = dynamic(() => import("./SavedEventsPanel"));
 export default function ProfileClient({
   initialProfile,
   initialSavedEvents,
-  userId,
 }: {
   initialProfile: ProfileData;
   initialSavedEvents: Event[];
-  userId: string;
 }) {
   const { showToast } = useToast();
   const router = useRouter();
@@ -44,24 +42,47 @@ export default function ProfileClient({
         credentials: "include",
         body: formData,
       });
-      const result = await res.json();
+      const result = (await res.json().catch(() => null)) as {
+        success?: boolean;
+        imageUrl?: string;
+        error?: string;
+      } | null;
 
-      if (result.success && result.imageUrl) {
-        setProfile((prev) => ({ ...prev, profileImageUrl: result.imageUrl }));
+      if (
+        res.ok &&
+        result?.success &&
+        typeof result.imageUrl === "string" &&
+        result.imageUrl.length > 0
+      ) {
+        const imageUrl = result.imageUrl;
+        setProfile((prev) => ({ ...prev, profileImageUrl: imageUrl }));
         showToast("Image updated!", "success");
+        return;
       }
+
+      showToast(result?.error ?? "Upload failed", "error");
     } catch {
       showToast("Upload failed", "error");
     }
   };
 
   const handleSaveProfile = async (formData: ProfileData) => {
-    const result = await updateProfile(formData);
+    const nextProfile: ProfileData = {
+      ...profile,
+      ...formData,
+      name: formData.name.trim(),
+      bio: formData.bio.trim(),
+      profileImageUrl: profile.profileImageUrl || formData.profileImageUrl,
+    };
+    const result = await updateProfile(nextProfile);
     if (result.success) {
-      setProfile(formData);
+      setProfile(nextProfile);
       setIsEditing(false);
       showToast("Profile updated!", "success");
+      return;
     }
+
+    showToast(result.error ?? "Failed to save profile", "error");
   };
 
   const handleSignOut = async () => {
@@ -93,8 +114,11 @@ export default function ProfileClient({
           onClose={() => setPendingDelete(null)}
           onConfirm={async () => {
             const res = await deleteSavedEvent(pendingDelete.id);
-            if (res.success)
+            if (res.success) {
               setSavedEvents((s) => s.filter((e) => e.id !== pendingDelete.id));
+            } else {
+              showToast(res.error ?? "Failed to remove saved event", "error");
+            }
             setPendingDelete(null);
           }}
         />

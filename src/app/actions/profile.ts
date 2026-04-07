@@ -14,8 +14,8 @@ export async function updateProfile(payload: {
   if (!uid) return { success: false, error: "Not signed in" };
 
   const update: Record<string, string> = {};
-  if (typeof payload.name === "string") update.name = payload.name;
-  if (typeof payload.bio === "string") update.bio = payload.bio;
+  if (typeof payload.name === "string") update.name = payload.name.trim();
+  if (typeof payload.bio === "string") update.bio = payload.bio.trim();
   if (typeof payload.profileImageUrl === "string") {
     update.profileImageUrl = payload.profileImageUrl;
   }

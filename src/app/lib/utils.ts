@@ -19,7 +19,17 @@ export function getDistanceFromLatLonInKm(
 }
 
 export function normalizeCityName(name: string): string {
-  return name.trim();
+  return name.trim().replace(/\s+/g, " ");
+}
+
+export function extractCityFromLocation(location: string): string {
+  const segments = location
+    .split(",")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+
+  if (segments.length < 2) return "";
+  return normalizeCityName(segments[1]);
 }
 
 export function parseEventDate(dateStr: string): Date | undefined {
@@ -66,4 +76,21 @@ export function parseTimestampToMs(value: unknown): number {
   }
 
   return 0;
+}
+
+export function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+export function toSafeHttpUrl(value: unknown): string | undefined {
+  if (typeof value !== "string" || value.trim().length === 0) return undefined;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
 }

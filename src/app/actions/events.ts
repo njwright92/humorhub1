@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { COLLECTIONS, SAVED_EVENT_ALLOWED_FIELDS } from "@/app/lib/constants";
+import { extractCityFromLocation } from "@/app/lib/utils";
 import { requireUserId, type ActionResult } from "./shared";
 
 export async function saveEvent(
@@ -25,6 +26,15 @@ export async function saveEvent(
   for (const field of SAVED_EVENT_ALLOWED_FIELDS) {
     const value = eventData[field];
     if (value != null) dataToSave[field] = value;
+  }
+
+  if (
+    typeof dataToSave.normalizedCity !== "string" ||
+    dataToSave.normalizedCity.trim().length === 0
+  ) {
+    dataToSave.normalizedCity = extractCityFromLocation(
+      typeof eventData.location === "string" ? eventData.location : "",
+    );
   }
 
   try {

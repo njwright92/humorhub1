@@ -55,6 +55,20 @@ export default function HomepagePoll() {
       const data = (await res.json()) as ApiResponse<PollCounts>;
 
       if (!data.success || !data.data) {
+        if (data.error === "You already voted recently.") {
+          const countsRes = await fetch(`/api/poll?id=${DEFAULT_POLL_ID}`, {
+            cache: "no-store",
+          });
+          const countsData =
+            (await countsRes.json()) as ApiResponse<PollCounts>;
+          if (countsData.success && countsData.data) {
+            setCounts(countsData.data);
+            setShowResults(true);
+            setErrorMsg(data.error);
+            return;
+          }
+        }
+
         throw new Error(data.error || "Unable to record vote");
       }
 
@@ -62,7 +76,11 @@ export default function HomepagePoll() {
       setShowResults(true);
     } catch (error) {
       console.error("Poll submit error", error);
-      setErrorMsg("Couldn't record your vote. Please try again.");
+      setErrorMsg(
+        error instanceof Error
+          ? error.message
+          : "Couldn't record your vote. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }

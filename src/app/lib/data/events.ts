@@ -108,7 +108,6 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
       if (!data.name || !data.location) continue;
 
       const event = buildEventFromData(doc.id, data, {
-        includeNormalizedCity: true,
         includeDerivedDates: true,
       });
       event.sanitizedDetails = sanitizeHtml(event.details);
@@ -148,7 +147,14 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
       const city = data.city;
       const coordinates = data.coordinates;
 
-      if (city && coordinates?.lat && coordinates?.lng) {
+      if (
+        typeof city === "string" &&
+        city.trim().length > 0 &&
+        typeof coordinates?.lat === "number" &&
+        Number.isFinite(coordinates.lat) &&
+        typeof coordinates?.lng === "number" &&
+        Number.isFinite(coordinates.lng)
+      ) {
         cityCoordinates[city] = coordinates;
         cities.push(city);
       }

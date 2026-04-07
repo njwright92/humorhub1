@@ -1,7 +1,5 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { NewsArticle, NewsCategory } from "../lib/types";
 
 function ArticleCard({
@@ -11,12 +9,10 @@ function ArticleCard({
   article: NewsArticle;
   priority: boolean;
 }) {
-  const [hasImageError, setHasImageError] = useState(false);
-
   return (
     <article className="card-muted group grid h-full grid-rows-[auto_1fr] overflow-hidden transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
       <figure className="relative h-48 w-full">
-        {article.image_url && !hasImageError ? (
+        {article.image_url ? (
           <Image
             src={article.image_url}
             alt={article.title}
@@ -26,7 +22,6 @@ function ArticleCard({
             priority={priority}
             fetchPriority={priority ? "high" : "auto"}
             quality={70}
-            onError={() => setHasImageError(true)}
           />
         ) : (
           <div
@@ -52,16 +47,22 @@ function ArticleCard({
         <p className="line-clamp-3 self-start text-sm text-stone-400">
           {article.description}
         </p>
-        <a
-          href={article.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Read full story: ${article.title}`}
-          className="grid grid-flow-col place-content-center gap-1 rounded-2xl border border-stone-700 py-2.5 text-sm font-semibold text-stone-300 transition-all hover:border-amber-700 hover:bg-amber-700 hover:text-stone-900"
-        >
-          Read Full Story
-          <span aria-hidden="true">→</span>
-        </a>
+        {article.url ? (
+          <a
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Read full story: ${article.title}`}
+            className="grid grid-flow-col place-content-center gap-1 rounded-2xl border border-stone-700 py-2.5 text-sm font-semibold text-stone-300 transition-all hover:border-amber-700 hover:bg-amber-700 hover:text-stone-900"
+          >
+            Read Full Story
+            <span aria-hidden="true">→</span>
+          </a>
+        ) : (
+          <span className="grid place-content-center rounded-2xl border border-stone-700 py-2.5 text-sm font-semibold text-stone-500">
+            Story Link Unavailable
+          </span>
+        )}
       </div>
     </article>
   );
@@ -90,12 +91,12 @@ export default function NewsClient({
           className="mx-auto mb-8 max-w-2xl rounded-2xl border border-red-500/50 bg-red-900 p-4 text-center"
         >
           <p className="font-semibold text-red-200">{error}</p>
-          <a
+          <Link
             href={`/News?category=${selectedCategory}&subcategory=${selectedSubcategory}`}
             className="mt-2 cursor-pointer text-sm text-red-300 underline shadow-xl transition-colors hover:text-white"
           >
             Try Again
-          </a>
+          </Link>
         </div>
       )}
 

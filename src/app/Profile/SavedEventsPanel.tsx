@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Event } from "@/app/lib/types";
+import { extractCityFromLocation } from "@/app/lib/utils";
 
 function SavedEventCard({
   event,
@@ -8,9 +9,10 @@ function SavedEventCard({
   event: Event;
   onDelete: (id: string, name: string) => void;
 }) {
-  // Logic: "Business, City" logic is baked into the storage, but we ensure the link is clean
-  const city = event.location.split(",")[1]?.trim() || "";
-  const mapHref = `/mic-finder?city=${encodeURIComponent(city)}`;
+  const city = event.normalizedCity || extractCityFromLocation(event.location);
+  const mapHref = city
+    ? `/mic-finder?city=${encodeURIComponent(city)}`
+    : "/mic-finder";
 
   return (
     <article className="card-base group flex items-start justify-between border-stone-600 bg-stone-900/50 p-4 transition-colors hover:border-amber-700">
@@ -24,7 +26,7 @@ function SavedEventCard({
           href={mapHref}
           className="text-xs text-stone-400 underline hover:text-white"
         >
-          View on Map
+          {city ? "View on Map" : "Browse Mic Finder"}
         </Link>
         <button
           onClick={() => onDelete(event.id, event.name)}

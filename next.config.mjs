@@ -26,7 +26,10 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
     qualities: [70, 75],
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [{ protocol: "https", hostname: "**" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "**" },
+      { protocol: "http", hostname: "**" },
+    ],
   },
 
   async headers() {
@@ -50,7 +53,7 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://www.google.com https://apis.google.com https://*.firebaseapp.com https://*.gstatic.com https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://www.google.com https://apis.google.com https://*.firebaseapp.com https://*.gstatic.com https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
               "font-src 'self' https://fonts.gstatic.com",

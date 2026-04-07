@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { authenticateRequest, jsonResponse } from "@/app/lib/auth-helpers";
-import { getServerStorage } from "@/app/lib/firebase-admin";
+import { getServerDb, getServerStorage } from "@/app/lib/firebase-admin";
+import { COLLECTIONS } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/avif",
+  "image/gif",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
 
 function buildImageUrl(bucket: string, path: string, token: string) {
   const encodedPath = encodeURIComponent(path);
@@ -27,9 +35,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!file.type.startsWith("image/")) {
+    if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
       return jsonResponse(
-        { success: false, error: "Only image uploads are allowed" },
+        {
+          success: false,
+          error: "Upload a PNG, JPG, WEBP, GIF, or AVIF image",
+        },
         400,
       );
     }
@@ -65,9 +76,16 @@ export async function POST(request: NextRequest) {
         },
       });
 
+    const imageUrl = buildImageUrl(bucketName, filePath, token);
+
+    await getServerDb()
+      .collection(COLLECTIONS.users)
+      .doc(auth.uid)
+      .set({ profileImageUrl: imageUrl }, { merge: true });
+
     return NextResponse.json({
       success: true,
-      imageUrl: buildImageUrl(bucketName, filePath, token),
+      imageUrl,
     });
   } catch (error) {
     console.error("Profile image upload error:", error);

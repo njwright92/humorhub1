@@ -81,7 +81,7 @@ export default function DesktopNav() {
 
   const ensureAuthListener = useCallback(() => {
     preloadAuthModal();
-    if (session.status === "loading") {
+    if (session.status === "unknown") {
       void refreshSession();
     }
   }, [preloadAuthModal, refreshSession, session.status]);
@@ -108,6 +108,7 @@ export default function DesktopNav() {
 
         <SearchBar
           isUserSignedIn={session.signedIn}
+          sessionStatus={session.status}
           setIsAuthModalOpen={setIsAuthModalOpen}
           onRequireAuth={requireAuth}
         />

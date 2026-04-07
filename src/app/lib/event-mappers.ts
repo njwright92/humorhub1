@@ -1,14 +1,16 @@
 import type { Event, EventData, GoogleTimestamp } from "./types";
 import { DAY_MAP, SPOKANE_COMEDY_CLUB } from "./constants";
-import { normalizeCityName, parseEventDate, parseTimestampToMs } from "./utils";
+import {
+  extractCityFromLocation,
+  parseEventDate,
+  parseTimestampToMs,
+} from "./utils";
 
 type MapOptions = {
-  includeNormalizedCity: boolean;
   includeDerivedDates: boolean;
 };
 
 const DEFAULT_OPTIONS: MapOptions = {
-  includeNormalizedCity: false,
   includeDerivedDates: false,
 };
 
@@ -42,11 +44,7 @@ export function buildEventFromData(
 
   const locationLower = location.toLowerCase();
   const isSpokaneClub = location.includes(SPOKANE_COMEDY_CLUB);
-
-  const cityPart = location.split(",")[1]?.trim() ?? "";
-  const normalizedCity = options.includeNormalizedCity
-    ? normalizeCityName(cityPart)
-    : "";
+  const normalizedCity = extractCityFromLocation(location);
 
   let recurringDow: number | null = null;
   let dateMs: number | null = null;
@@ -72,7 +70,7 @@ export function buildEventFromData(
     lng: toNumber(data.lng),
     details: toString(data.details),
     isRecurring,
-    isFestival: toBoolean(data.festival),
+    isFestival: toBoolean(data.isFestival ?? data.festival),
     isMusic: toBoolean(data.isMusic),
     numericTimestamp: parseTimestampToMs(googleTimestamp),
     googleTimestamp,

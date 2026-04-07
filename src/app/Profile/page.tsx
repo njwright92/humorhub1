@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import ProfileClient from "./ProfileClient";
 import { getServerAuth, getServerDb } from "@/app/lib/firebase-admin";
 import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
@@ -37,7 +37,13 @@ export const metadata: Metadata = {
 
 const EMPTY_PROFILE: ProfileData = { name: "", bio: "", profileImageUrl: "" };
 
-async function loadProfileData() {
+type ProfilePageData = {
+  uid: string | null;
+  profile: ProfileData;
+  savedEvents: Event[];
+};
+
+async function loadProfileData(): Promise<ProfilePageData> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!sessionCookie)
@@ -67,7 +73,7 @@ async function loadProfileData() {
       },
       savedEvents: mapSavedEventDocs(savedSnapshot.docs),
     };
-  } catch (error) {
+  } catch {
     return { uid: null, profile: EMPTY_PROFILE, savedEvents: [] };
   }
 }
@@ -115,16 +121,12 @@ export default function ProfilePage() {
 async function ProfileClientWrapper({
   dataPromise,
 }: {
-  dataPromise: Promise<any>;
+  dataPromise: Promise<ProfilePageData>;
 }) {
   const { uid, profile, savedEvents } = await dataPromise;
   if (!uid) return <SignInPrompt />;
 
   return (
-    <ProfileClient
-      initialProfile={profile}
-      initialSavedEvents={savedEvents}
-      userId={uid}
-    />
+    <ProfileClient initialProfile={profile} initialSavedEvents={savedEvents} />
   );
 }

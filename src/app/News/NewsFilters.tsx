@@ -40,7 +40,7 @@ export default function NewsFilters({
           Filter News
         </legend>
 
-        <div className="grid items-center gap-6 text-left md:grid-cols-3">
+        <div className="grid gap-6 text-left md:grid-cols-3">
           <div className="grid">
             <label
               htmlFor="news-category"
@@ -83,12 +83,20 @@ export default function NewsFilters({
             </select>
           </div>
 
-          <button
-            type="submit"
-            className="rounded-2xl border border-amber-700 bg-transparent px-3 py-2 font-bold text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:shadow-lg"
-          >
-            Search
-          </button>
+          <div className="grid">
+            <span
+              aria-hidden="true"
+              className="form-label invisible mb-1 text-center"
+            >
+              action
+            </span>
+            <button
+              type="submit"
+              className="field-dark border-amber-700 bg-transparent px-3 py-3 font-bold text-zinc-200 transition-transform hover:scale-105 hover:shadow-lg"
+            >
+              Search
+            </button>
+          </div>
         </div>
       </fieldset>
     </form>

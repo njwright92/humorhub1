@@ -3,11 +3,17 @@ import { getServerDb } from "@/app/lib/firebase-admin";
 import { jsonResponse } from "@/app/lib/auth-helpers";
 import type { LatLng, EventSubmission, StoredEvent } from "@/app/lib/types";
 import { COLLECTIONS, GEOCODE_API_URL } from "@/app/lib/constants";
+import { checkRateLimit, hasTrustedOrigin } from "@/app/lib/request-guards";
 
 export const runtime = "nodejs";
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const EMAILJS_ENDPOINT = "https://api.emailjs.com/api/v1.0/email/send";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_NAME_LENGTH = 160;
+const MAX_LOCATION_LENGTH = 240;
+const MAX_DETAILS_LENGTH = 4000;
+const MAX_EMAIL_LENGTH = 254;
 
 interface GeocodeResponse {
   status: string;
@@ -39,19 +45,34 @@ async function geocodeAddress(address: string): Promise<LatLng> {
 function isValidSubmission(data: unknown): data is EventSubmission {
   if (typeof data !== "object" || data === null) return false;
 
-  const { name, location, details, date, timestamp } = data as Record<
+  const { name, location, details, date, timestamp, email } = data as Record<
     string,
     unknown
   >;
 
-  const hasRequiredStrings = [name, location, details].every(
-    (field) => typeof field === "string" && field.trim() !== "",
-  );
+  const trimmedName = typeof name === "string" ? name.trim() : "";
+  const trimmedLocation = typeof location === "string" ? location.trim() : "";
+  const trimmedDetails = typeof details === "string" ? details.trim() : "";
+  const trimmedEmail = typeof email === "string" ? email.trim() : "";
+
+  const hasRequiredStrings =
+    trimmedName.length > 0 &&
+    trimmedName.length <= MAX_NAME_LENGTH &&
+    trimmedLocation.length > 0 &&
+    trimmedLocation.length <= MAX_LOCATION_LENGTH &&
+    trimmedDetails.length > 0 &&
+    trimmedDetails.length <= MAX_DETAILS_LENGTH;
 
   const hasValidDate =
-    typeof date === "string" || typeof timestamp === "string";
+    (typeof date === "string" && date.trim().length > 0) ||
+    (typeof timestamp === "string" && timestamp.trim().length > 0);
 
-  return hasRequiredStrings && hasValidDate;
+  const hasValidEmail =
+    trimmedEmail.length === 0 ||
+    (trimmedEmail.length <= MAX_EMAIL_LENGTH &&
+      EMAIL_PATTERN.test(trimmedEmail));
+
+  return hasRequiredStrings && hasValidDate && hasValidEmail;
 }
 
 async function sendEventNotification(eventData: EventSubmission) {
@@ -99,6 +120,34 @@ async function sendEventNotification(eventData: EventSubmission) {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!hasTrustedOrigin(request)) {
+      return jsonResponse(
+        { success: false, error: "Invalid request origin" },
+        403,
+      );
+    }
+
+    const rateLimit = checkRateLimit(request, {
+      key: "event-submission",
+      windowMs: 30 * 60 * 1000,
+      maxRequests: 5,
+    });
+
+    if (!rateLimit.allowed) {
+      const response = jsonResponse(
+        {
+          success: false,
+          error: "Too many event submissions. Please try again later.",
+        },
+        429,
+      );
+      response.headers.set(
+        "Retry-After",
+        String(Math.ceil(rateLimit.retryAfterMs / 1000)),
+      );
+      return response;
+    }
+
     const body = (await request.json()) as { eventData?: unknown };
     const eventData = body.eventData;
 
@@ -121,6 +170,10 @@ export async function POST(request: NextRequest) {
 
     const storedEvent: StoredEvent = {
       ...eventData,
+      name: eventData.name.trim(),
+      location: eventData.location.trim(),
+      details: eventData.details.trim(),
+      email: typeof eventData.email === "string" ? eventData.email.trim() : "",
       ...coords,
       submissionDate: new Date().toISOString(),
     };

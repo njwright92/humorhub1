@@ -82,6 +82,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
 
       <SearchBar
         isUserSignedIn={session.signedIn}
+        sessionStatus={session.status}
         setIsAuthModalOpen={setIsAuthModalOpen}
         onNavigate={closeMenu}
         onRequireAuth={requireAuth}

@@ -37,11 +37,13 @@ type Suggestion =
 
 export default function SearchBar({
   isUserSignedIn,
+  sessionStatus,
   setIsAuthModalOpen,
   onNavigate,
   onRequireAuth,
 }: {
   isUserSignedIn: boolean;
+  sessionStatus: "unknown" | "ready";
   setIsAuthModalOpen: (open: boolean) => void;
   onNavigate?: () => void;
   onRequireAuth?: (path: string, label: string) => void;
@@ -130,6 +132,16 @@ export default function SearchBar({
 
       if (s.type === "page") {
         if (s.page.requiresAuth && !isUserSignedIn) {
+          if (sessionStatus !== "ready") {
+            if (onRequireAuth) {
+              onRequireAuth(s.page.route, s.page.label);
+            } else {
+              setIsAuthModalOpen(true);
+            }
+            closeSearchBar();
+            return;
+          }
+
           showToast(`Please sign in to access ${s.page.label}`, "info");
           if (onRequireAuth) {
             onRequireAuth(s.page.route, s.page.label);
@@ -145,6 +157,7 @@ export default function SearchBar({
     [
       navigateTo,
       isUserSignedIn,
+      sessionStatus,
       onRequireAuth,
       setIsAuthModalOpen,
       showToast,
