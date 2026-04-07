@@ -323,39 +323,37 @@ export default function MicFinderClient({
     <>
       <div className="relative z-20 mt-2 grid justify-center gap-3 sm:flex sm:gap-4">
         <div className="relative w-80 sm:w-64">
-          <button
-            type="button"
-            aria-haspopup="listbox"
-            aria-expanded={isCityDropdownOpen}
-            aria-label="Select a City"
+          <input
+            type="text"
+            placeholder="Select or Search City..."
+            value={searchTerm}
+            onFocus={() => {
+              setIsCityDropdownOpen(true);
+              // Optional: Clear search on focus so they see all options immediately
+              // setSearchTerm("");
+            }}
+            onBlur={() =>
+              setTimeout(() => {
+                setIsCityDropdownOpen(false);
+                // If they click away without selecting, snap the text back to the actual selected city
+                setSearchTerm(selectedCity);
+              }, 200)
+            }
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
-            onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+            onChange={(e) => setSearchTerm(e.target.value)} // Only update the text, not the search
             className={inputClass}
-          >
-            {selectedCity || "Select a City"}
-          </button>
+            autoComplete="off"
+          />
 
           {isCityDropdownOpen && (
             <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
-              <label className="sr-only">
-                Search cities
-                <input
-                  id="city-search"
-                  type="text"
-                  placeholder="Search city..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full border-b-2 bg-zinc-200 px-3 py-2 text-stone-900 outline-hidden"
-                  autoComplete="off"
-                  autoFocus
-                />
-              </label>
               <ul role="listbox" aria-label="Available cities">
                 <li
                   role="option"
                   aria-selected={false}
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
                     fetchUserLocation();
                     setIsCityDropdownOpen(false);
                   }}
@@ -366,25 +364,40 @@ export default function MicFinderClient({
                 <li
                   role="option"
                   aria-selected={selectedCity === "All Cities"}
-                  onClick={() => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
                     setSelectedCity("All Cities");
+                    setSearchTerm("All Cities");
                     setIsCityDropdownOpen(false);
                   }}
-                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700 hover:text-stone-900"
+                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
                 >
                   <span aria-hidden="true">🌎</span> All Cities
                 </li>
-                {dropdownCities.map((city) => (
-                  <li
-                    key={city}
-                    role="option"
-                    aria-selected={selectedCity === city}
-                    onClick={() => handleCitySelect(city)}
-                    className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
-                  >
-                    {city}
+
+                {/* If user backspaces everything, show all cities. Otherwise, show filtered. */}
+                {(searchTerm === "" ? initialCities : dropdownCities).map(
+                  (city) => (
+                    <li
+                      key={city}
+                      role="option"
+                      aria-selected={selectedCity === city}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleCitySelect(city);
+                      }}
+                      className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
+                    >
+                      {city}
+                    </li>
+                  ),
+                )}
+
+                {searchTerm !== "" && dropdownCities.length === 0 && (
+                  <li className="px-4 py-2 text-center text-stone-500">
+                    No cities found
                   </li>
-                ))}
+                )}
               </ul>
             </div>
           )}

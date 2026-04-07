@@ -2,11 +2,6 @@
   "name": "humorhub",
   "version": "0.1.0",
   "private": true,
-  "overrides": {
-    "typescript-eslint": {
-      "typescript": "$typescript"
-    }
-  },
   "browserslist": [
     "last 2 versions",
     "not dead",
@@ -25,10 +20,10 @@
     "@tanstack/react-virtual": "^3.13.23",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "@vis.gl/react-google-maps": "^1.8.1",
+    "@vis.gl/react-google-maps": "^1.8.2",
     "firebase": "^12.11.0",
     "firebase-admin": "^13.7.0",
-    "next": "^16.2.1",
+    "next": "^16.2.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
@@ -36,10 +31,10 @@
     "@eslint/js": "^10.0.1",
     "@tailwindcss/cli": "^4.2.2",
     "@tailwindcss/postcss": "^4.2.2",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.1.0",
+    "eslint": "^10.2.0",
     "globals": "^17.4.0",
     "lint-staged": "^16.4.0",
     "postcss": "^8.5.8",
@@ -47,7 +42,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.57.2"
+    "typescript-eslint": "^8.58.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "eslint --fix",

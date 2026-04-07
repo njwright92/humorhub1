@@ -181,7 +181,7 @@ export default function MicFinderPage() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
         />
-        <aside className="rounded-2xl border border-red-800 bg-zinc-200 p-2 text-xs font-medium text-red-800 shadow-xl lg:text-base">
+        <aside className="rounded-2xl border border-amber-800 bg-zinc-100 p-2 text-xs font-medium text-amber-800 shadow-xl lg:text-base">
           <p>
             <span aria-hidden="true">📢 </span>
             Note: Open mic events evolve quickly. See something outdated?{" "}
