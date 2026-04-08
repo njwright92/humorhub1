@@ -122,7 +122,7 @@ export default function ProfileSidebar({
               </button>
               <button
                 onClick={onSignOut}
-                className="mx-auto w-1/2 text-xs font-bold text-red-600 hover:underline"
+                className="mx-auto w-1/2 text-xs font-bold text-red-800 hover:text-red-900 hover:underline "
               >
                 Sign Out
               </button>
