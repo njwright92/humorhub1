@@ -53,17 +53,21 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://www.google.com https://apis.google.com https://*.firebaseapp.com https://*.gstatic.com https://va.vercel-scripts.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              // We keep unsafe-inline because Next.js needs it without a Nonce
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://maps.googleapis.com https://apis.google.com",
+              "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
-              "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://*.googleapis.com https://*.google.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.emailjs.com wss://*.firebaseio.com https://vitals.vercel-insights.com https://*.vercel-insights.com",
+              "font-src 'self' data:",
+              "connect-src 'self' https: wss:", // Simplified: Allows all secure connections
               "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
               "frame-ancestors 'self'",
               "upgrade-insecure-requests",
+              // THIS FIXES THE TRUSTED TYPES WARNING
+              "require-trusted-types-for 'script'",
+              "trusted-types nextjs nextjs#app-pages-react-hydrator default *",
             ].join("; "),
           },
         ],

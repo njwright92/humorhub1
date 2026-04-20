@@ -67,6 +67,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={comicNeue.variable}>
       <body className="bg-stone-900 text-zinc-200 antialiased">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+        if (window.trustedTypes && window.trustedTypes.createPolicy) {
+          window.trustedTypes.createPolicy('default', {
+            createHTML: (string) => string,
+            createScriptURL: (string) => string,
+            createScript: (string) => string,
+          });
+        }
+      `,
+          }}
+        />
         <AppProviders>
           <Header />
           {children}
