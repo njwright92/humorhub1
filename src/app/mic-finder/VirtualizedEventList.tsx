@@ -21,8 +21,8 @@ export default function VirtualizedEventList({
   const rowVirtualizer = useVirtualizer({
     count: events.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 150,
-    overscan: 5,
+    estimateSize: () => 200,
+    overscan: 3,
   });
 
   return (

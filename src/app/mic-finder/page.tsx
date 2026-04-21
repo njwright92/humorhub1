@@ -184,9 +184,17 @@ export default function MicFinderPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
       />
-      <main className="grid min-h-dvh justify-items-center gap-4 p-2 text-center md:ml-20 md:gap-6">
-        <aside className="rounded-2xl border border-amber-800 bg-zinc-100 p-2 text-xs font-medium text-amber-800 shadow-xl lg:text-base">
-          <p>
+      <main className="grid min-h-dvh justify-items-center gap-10 px-4 py-12 text-center md:ml-20 md:gap-12 md:px-8 md:py-20">
+        {/* OPTIMIZED ASIDE */}
+        <aside
+          className="-mt-8 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-100 p-2 text-xs font-medium text-amber-800 shadow-md lg:text-base"
+          style={{
+            contain: "content",
+            minHeight: "2.75rem",
+            lineHeight: "1.2",
+          }}
+        >
+          <p className="m-0">
             <span aria-hidden="true">📢 </span>
             Note: Open mic events evolve quickly. See something outdated?{" "}
             <Link
@@ -199,23 +207,25 @@ export default function MicFinderPage() {
           </p>
         </aside>
 
-        <header className="space-y-3">
+        <header className="space-y-4">
           <h1 className="page-title">Mic Finder</h1>
           <p className="text-lg font-bold sm:text-xl md:text-2xl lg:text-3xl">
             Discover Mics and Festivals Near You!
           </p>
         </header>
 
-        <p className="text-sm text-stone-300 lg:text-lg">
+        <p className="max-w-2xl text-sm text-stone-300 lg:text-lg">
           Find a Mic tonight or list yours, built by comics for comics. Use Mic
           Finder to connect with your community!
         </p>
 
         <EventForm />
 
-        <p className="mb-2 text-sm font-semibold text-stone-400 md:text-base">
-          Find your next show or night out. Pick a city and date!
-        </p>
+        <div className="space-y-2">
+          <p className="text-sm font-semibold text-stone-400 md:text-base">
+            Pick a city and date!
+          </p>
+        </div>
 
         <Suspense fallback={<MicFinderSkeleton />}>
           <MicFinderContent />
