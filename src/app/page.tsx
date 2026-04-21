@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import EventForm from "./components/EventForm";
 import NewsButton from "./components/newsButton";
 import ProfileButton from "./components/ProfileButton";
 import RoundImage from "./components/RoundImage";
@@ -8,6 +7,10 @@ import SectionCard from "./components/SectionCard";
 import dynamic from "next/dynamic";
 
 const HomepagePoll = dynamic(() => import("./components/HomepagePoll"), {
+  loading: () => null,
+});
+
+const EventForm = dynamic(() => import("./components/EventForm"), {
   loading: () => null,
 });
 
@@ -40,10 +43,10 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20">
-      <div className="pointer-events-none fixed bottom-2 left-4 z-10 lg:top-2 lg:left-22">
+      <div className="pointer-events-none fixed bottom-2 left-4 z-10 min-h-12.5 min-w-12.5 lg:top-2 lg:left-22">
         <HomepagePoll />
       </div>
-      <h1 className="hidden text-5xl md:block md:text-6xl lg:text-7xl">
+      <h1 className="text-5xl opacity-0 transition-opacity md:text-6xl md:opacity-100 lg:text-7xl">
         Humor Hub!
       </h1>
       <SectionCard id="micfinder-heading" title="Mic Finder!" variant="spaced">
@@ -69,6 +72,7 @@ export default function Home() {
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
+                priority
               />
             </Link>
           </figure>

@@ -71,6 +71,7 @@
 @layer components {
   .section-card {
     @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2 shadow-xl;
+    content-visibility: auto;
   }
 
   .page-shell {
