@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useRef,
   useTransition,
+  useDeferredValue, // Added for INP fix
 } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -38,15 +39,6 @@ const formatDateInputValue = (date: Date | null) => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
-
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-  return debouncedValue;
-}
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
@@ -125,8 +117,10 @@ export default function MicFinderClient({
   const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
     parseLocalDate(initialDate),
   );
+
+  // FIX INP: Separating input state from heavy filtering logic
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const [mapState, setMapState] = useState({
     isMapVisible: false,
@@ -238,11 +232,12 @@ export default function MicFinderClient({
     };
   }, [selectedDate, locale]);
 
+  // FIX INP: Uses deferred value so typing doesn't wait for the filter calculation
   const dropdownCities = useMemo(() => {
-    if (!debouncedSearchTerm) return initialCities;
-    const term = debouncedSearchTerm.toLowerCase();
+    if (!deferredSearchTerm) return initialCities;
+    const term = deferredSearchTerm.toLowerCase();
     return initialCities.filter((c) => c.toLowerCase().startsWith(term));
-  }, [initialCities, debouncedSearchTerm]);
+  }, [initialCities, deferredSearchTerm]);
 
   const initialLoadRef = useRef(true);
 
@@ -282,18 +277,19 @@ export default function MicFinderClient({
       : null;
     return cityCoords
       ? { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM }
-      : {
-          lat: DEFAULT_US_CENTER.lat,
-          lng: DEFAULT_US_CENTER.lng,
-          zoom: DEFAULT_ZOOM,
-        };
+      : { lat: DEFAULT_US_CENTER.lat, lng: DEFAULT_ZOOM, zoom: DEFAULT_ZOOM };
   }, [selectedCity, initialCityCoordinates]);
 
   return (
     <>
       <div className="relative z-20 mt-2 grid w-full justify-center gap-3 sm:flex sm:gap-4">
         <div className="relative w-80 sm:w-64">
+          <label htmlFor="city-search" className="sr-only">
+            Search by City
+          </label>
           <input
+            id="city-search"
+            name="city-search"
             type="text"
             placeholder="Select or Search City..."
             value={searchTerm}
@@ -334,31 +330,39 @@ export default function MicFinderClient({
                 >
                   <span aria-hidden="true">🌎</span> All Cities
                 </li>
-                {(searchTerm === "" ? initialCities : dropdownCities).map(
-                  (city) => (
-                    <li
-                      key={city}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        handleCitySelect(city);
-                      }}
-                      className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
-                    >
-                      {city}
-                    </li>
-                  ),
-                )}
+                {dropdownCities.map((city) => (
+                  <li
+                    key={city}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleCitySelect(city);
+                    }}
+                    className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
+                  >
+                    {city}
+                  </li>
+                ))}
               </ul>
             </div>
           )}
         </div>
         <div className="relative w-80 sm:w-48">
+          <label htmlFor="event-date-picker" className="sr-only">
+            Select Event Date
+          </label>
           <input
+            id="event-date-picker"
+            name="event-date"
             type="date"
             value={formatDateInputValue(selectedDate)}
             onChange={handleDateChange}
             onMouseEnter={handleMapHover}
             onTouchStart={handleMapHover}
+            onClick={(e) => {
+              if ("showPicker" in e.currentTarget) {
+                e.currentTarget.showPicker();
+              }
+            }}
             className={`${inputClass} cursor-pointer`}
           />
         </div>
@@ -375,34 +379,23 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => setSelectedTab(tab.id)}
-            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-xl transition-all sm:text-base ${
-              selectedTab === tab.id
-                ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
-                : tab.inactiveClass
-            }`}
+            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-xl transition-all sm:text-base ${selectedTab === tab.id ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200` : tab.inactiveClass}`}
           >
             {tab.label}
           </button>
         ))}
       </nav>
 
-      {/* FIXED WRAPPER: Added w-full and removed excessive my-6 margins */}
       <div
         className={`grid w-full transition-opacity duration-200 ${isPending ? "opacity-60" : "opacity-100"}`}
       >
-        <section
-          aria-labelledby="recurring-heading"
-          className="card-shell my-2"
-        >
-          <h2
-            id="recurring-heading"
-            className={`${sectionHeadingClass} border-amber-700`}
-          >
+        <section className="card-shell my-2 min-h-62.5 w-full">
+          <h2 className={`${sectionHeadingClass} border-amber-700`}>
             {dayOfWeek} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
           </h2>
           {!selectedCity ? (
-            <p className="py-4 text-center text-base sm:text-lg">
+            <p className="py-4 text-center">
               Select a city to see weekly events.
             </p>
           ) : eventData.recurringEvents.length > 0 ? (
@@ -422,16 +415,13 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section aria-labelledby="onetime-heading" className="card-shell my-2">
-          <h2
-            id="onetime-heading"
-            className={`${sectionHeadingClass} border-purple-700`}
-          >
+        <section className="card-shell my-2 min-h-62.5 w-full">
+          <h2 className={`${sectionHeadingClass} border-purple-700`}>
             {formattedDate} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
           </h2>
           {!selectedCity ? (
-            <p className="py-4 text-center text-base sm:text-lg">
+            <p className="py-4 text-center">
               Select a city to see one-time events.
             </p>
           ) : eventData.oneTimeEvents.length > 0 ? (
@@ -452,7 +442,6 @@ export default function MicFinderClient({
         </section>
 
         <section
-          aria-label="Event Map"
           className="card-base-2 relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800"
           style={{ contain: "paint" }}
         >
@@ -460,11 +449,7 @@ export default function MicFinderClient({
             type="button"
             onClick={toggleMapVisibility}
             onMouseEnter={handleMapHover}
-            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${
-              !mapState.isMapVisible
-                ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900"
-                : "bottom-4 left-4 bg-stone-900 text-sm text-white"
-            }`}
+            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${!mapState.isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
           >
             {mapState.isMapVisible ? "Hide Map" : "Show Map"}
           </button>
@@ -482,14 +467,8 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section
-          aria-labelledby="all-events-heading"
-          className="card-shell relative z-10 my-2 grid min-h-100 w-full justify-items-center gap-4 p-2"
-        >
-          <h2
-            id="all-events-heading"
-            className={`${sectionHeadingClass} border-amber-700`}
-          >
+        <section className="card-shell relative z-10 my-2 grid min-h-100 w-full justify-items-center gap-4 p-2">
+          <h2 className={`${sectionHeadingClass} border-amber-700`}>
             All {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
           </h2>
