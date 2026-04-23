@@ -135,40 +135,47 @@ const InnerMap = memo(function InnerMap({
         <InfoWindow
           position={{ lat: selectedEvent.lat, lng: selectedEvent.lng }}
           onCloseClick={clearSelection}
-          maxWidth={250}
+          // Set this slightly larger than your internal div
+          maxWidth={280}
           pixelOffset={[0, -30]}
           headerDisabled
         >
-          <article className="relative grid gap-1 p-2 pr-4 text-center text-stone-900">
+          {/* Removed transform-gpu and fixed the width to 230px */}
+          <article className="relative w-57 bg-white p-3 pt-6 text-center text-stone-900">
+            {/* Small, clean close button */}
             <button
               onClick={clearSelection}
-              className="absolute top-0 right-0 grid size-5 cursor-pointer place-items-center rounded-full bg-zinc-200 text-stone-900 shadow-xl hover:scale-105"
+              className="absolute top-1 right-1 grid size-5 cursor-pointer place-items-center rounded-full bg-stone-100 text-stone-800 transition-colors hover:bg-stone-200 hover:text-stone-900"
               aria-label="Close"
               type="button"
             >
-              <svg
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="size-4"
-                aria-hidden="true"
-              >
+              <svg viewBox="0 0 20 20" fill="currentColor" className="size-3.5">
                 <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
               </svg>
             </button>
-            <h2>{selectedEvent.name}</h2>
-            <p className="text-sm">
-              <span aria-hidden="true">📍</span>
-              <span className="sr-only">Location:</span>{" "}
-              {selectedEvent.location}
-            </p>
-            <p className="text-sm text-stone-600">
-              <span aria-hidden="true">📅</span>
-              <span className="sr-only">Date:</span> {selectedEvent.date}
-            </p>
-            {selectedEvent.details && (
-              <p className="text-left text-sm whitespace-pre-wrap">
-                {selectedEvent.details}
+
+            {/* break-words is the key to preventing horizontal scrolling */}
+            <h2 className="break-word mb-1 text-sm leading-tight font-bold">
+              {selectedEvent.name}
+            </h2>
+
+            <div className="space-y-1 text-xs text-stone-600">
+              <p className="break-word">
+                <span aria-hidden="true">📍</span> {selectedEvent.location}
               </p>
+              <p>
+                <span aria-hidden="true">📅</span> {selectedEvent.date}
+              </p>
+            </div>
+
+            {selectedEvent.details && (
+              <div className="mt-2 border-t border-stone-100 pt-2">
+                <p className="text-left text-[11px] leading-relaxed whitespace-pre-wrap text-stone-500">
+                  {selectedEvent.details.length > 120
+                    ? `${selectedEvent.details.substring(0, 120)}...`
+                    : selectedEvent.details}
+                </p>
+              </div>
             )}
           </article>
         </InfoWindow>
