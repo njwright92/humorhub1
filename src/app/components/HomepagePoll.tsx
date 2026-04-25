@@ -100,7 +100,7 @@ export default function HomepagePoll() {
         onClick={() => setVisible(false)}
         className="absolute top-1 right-1 rounded-full text-lg font-bold text-zinc-200 transition-colors hover:text-white"
       >
-        ×
+        x
       </button>
       <div className="grid gap-1">
         <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">

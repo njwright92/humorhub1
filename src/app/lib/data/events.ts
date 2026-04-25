@@ -65,7 +65,12 @@ function buildFilterResult(
 
   const allCityEvents = isAnyCity ? baseEvents : [];
 
-  return { baseEvents, recurringEvents, oneTimeEvents, allCityEvents };
+  return {
+    baseEvents,
+    recurringEvents,
+    oneTimeEvents,
+    allCityEvents,
+  };
 }
 
 export function getMicFinderFilters(

@@ -6,8 +6,9 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  memo,
   useTransition,
-  useDeferredValue, // Added for INP fix
+  useDeferredValue,
 } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -60,11 +61,20 @@ interface MicFinderClientProps {
   initialDate: string | null;
 }
 
+interface CitySelectorProps {
+  initialCities: string[];
+  selectedCity: string;
+  initialSearchTerm: string;
+  onCitySelect: (city: string) => void;
+  onUseLocation: () => void;
+}
+
 const inputClass =
   "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-xl outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 const sectionHeadingClass =
   "mb-4 w-full rounded-2xl border-b-4 pb-2 text-center text-xl sm:text-2xl";
 const emptyStateClass = "py-4 text-center text-stone-400";
+const MAX_CITY_RESULTS = 40;
 
 const TABS = [
   {
@@ -99,6 +109,104 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Other: "Music/All-Arts Mics",
 };
 
+const CitySelector = memo(function CitySelector({
+  initialCities,
+  selectedCity,
+  initialSearchTerm,
+  onCitySelect,
+  onUseLocation,
+}: CitySelectorProps) {
+  const [searchTerm, setSearchTerm] = useState(
+    initialSearchTerm || selectedCity,
+  );
+  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
+  useEffect(() => {
+    setSearchTerm(initialSearchTerm || selectedCity);
+  }, [initialSearchTerm, selectedCity]);
+
+  const dropdownCities = useMemo(() => {
+    const term = deferredSearchTerm.trim().toLowerCase();
+    const matches = term
+      ? initialCities.filter((city) => city.toLowerCase().startsWith(term))
+      : initialCities;
+
+    return {
+      items: matches.slice(0, MAX_CITY_RESULTS),
+      hiddenCount: Math.max(0, matches.length - MAX_CITY_RESULTS),
+    };
+  }, [deferredSearchTerm, initialCities]);
+
+  return (
+    <div className="relative w-80 sm:w-64">
+      <label htmlFor="city-search" className="sr-only">
+        Search by City
+      </label>
+      <input
+        id="city-search"
+        name="city-search"
+        type="text"
+        placeholder="Select or Search City..."
+        value={searchTerm}
+        onFocus={() => setIsCityDropdownOpen(true)}
+        onBlur={() =>
+          setTimeout(() => {
+            setIsCityDropdownOpen(false);
+            setSearchTerm(selectedCity);
+          }, 200)
+        }
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className={inputClass}
+        autoComplete="off"
+      />
+      {isCityDropdownOpen && (
+        <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
+          <ul role="listbox">
+            <li
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onUseLocation();
+                setIsCityDropdownOpen(false);
+              }}
+              className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+            >
+              <span aria-hidden="true">📍</span> Use My Location
+            </li>
+            <li
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onCitySelect("All Cities");
+                setIsCityDropdownOpen(false);
+              }}
+              className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+            >
+              <span aria-hidden="true">🌎</span> All Cities
+            </li>
+            {dropdownCities.items.map((city) => (
+              <li
+                key={city}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  onCitySelect(city);
+                }}
+                className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
+              >
+                {city}
+              </li>
+            ))}
+          </ul>
+          {dropdownCities.hiddenCount > 0 && (
+            <p className="border-t border-stone-300 px-3 py-2 text-center text-xs font-semibold text-stone-600">
+              Keep typing to narrow {dropdownCities.hiddenCount} more cities.
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+});
+
 export default function MicFinderClient({
   initialCityCoordinates,
   initialCities,
@@ -114,19 +222,11 @@ export default function MicFinderClient({
   const [isPending, startTransition] = useTransition();
   const [locale, setLocale] = useState("en-US");
   const [selectedCity, setSelectedCity] = useState("");
+  const [citySearchTerm, setCitySearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
     parseLocalDate(initialDate),
   );
-
-  // FIX INP: Separating input state from heavy filtering logic
-  const [searchTerm, setSearchTerm] = useState("");
-  const deferredSearchTerm = useDeferredValue(searchTerm);
-
-  const [mapState, setMapState] = useState({
-    isMapVisible: false,
-    hasMapInit: false,
-  });
-  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
     useState<MicFinderFilterResult>(initialFilters);
@@ -141,12 +241,37 @@ export default function MicFinderClient({
     if (city) {
       const normalized = normalizeCityName(city);
       setSelectedCity(normalized);
-      setSearchTerm(normalized);
+      setCitySearchTerm(normalized);
     } else if (term) {
-      setSearchTerm(term);
+      setCitySearchTerm(term);
     }
     if (city || term) router.replace(pathname, { scroll: false });
   }, [pathname, router, searchParams]);
+
+  useEffect(() => {
+    const preloadModules = () => {
+      void import("@/app/components/GoogleMap");
+      void import("./VirtualizedEventList");
+    };
+
+    const browserGlobals = globalThis as typeof globalThis & {
+      requestIdleCallback?: (
+        callback: IdleRequestCallback,
+        options?: IdleRequestOptions,
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    if (typeof browserGlobals.requestIdleCallback === "function") {
+      const idleId = browserGlobals.requestIdleCallback(preloadModules, {
+        timeout: 1500,
+      });
+      return () => browserGlobals.cancelIdleCallback?.(idleId);
+    }
+
+    const timeoutId = globalThis.setTimeout(preloadModules, 1200);
+    return () => globalThis.clearTimeout(timeoutId);
+  }, []);
 
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation)
@@ -170,7 +295,7 @@ export default function MicFinderClient({
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
           setSelectedCity(normalized);
-          setSearchTerm(normalized);
+          setCitySearchTerm(normalized);
         }
       },
       () => showToast("Location access denied", "error"),
@@ -178,10 +303,9 @@ export default function MicFinderClient({
   }, [initialCityCoordinates, showToast]);
 
   const handleCitySelect = useCallback((city: string) => {
-    setIsCityDropdownOpen(false);
     const normalized = normalizeCityName(city);
     setSelectedCity(normalized);
-    setSearchTerm(normalized);
+    setCitySearchTerm(normalized);
   }, []);
 
   const handleEventSave = useCallback(
@@ -208,17 +332,8 @@ export default function MicFinderClient({
     [],
   );
 
-  const handleMapHover = useCallback(() => {
-    setMapState((prev) =>
-      prev.hasMapInit ? prev : { ...prev, hasMapInit: true },
-    );
-  }, []);
-
   const toggleMapVisibility = useCallback(() => {
-    setMapState((prev) => ({
-      hasMapInit: true,
-      isMapVisible: !prev.isMapVisible,
-    }));
+    setIsMapVisible((prev) => !prev);
   }, []);
 
   const { dayOfWeek, formattedDate } = useMemo(() => {
@@ -231,13 +346,6 @@ export default function MicFinderClient({
       }),
     };
   }, [selectedDate, locale]);
-
-  // FIX INP: Uses deferred value so typing doesn't wait for the filter calculation
-  const dropdownCities = useMemo(() => {
-    if (!deferredSearchTerm) return initialCities;
-    const term = deferredSearchTerm.toLowerCase();
-    return initialCities.filter((c) => c.toLowerCase().startsWith(term));
-  }, [initialCities, deferredSearchTerm]);
 
   const initialLoadRef = useRef(true);
 
@@ -277,75 +385,22 @@ export default function MicFinderClient({
       : null;
     return cityCoords
       ? { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM }
-      : { lat: DEFAULT_US_CENTER.lat, lng: DEFAULT_ZOOM, zoom: DEFAULT_ZOOM };
+      : {
+          lat: DEFAULT_US_CENTER.lat,
+          lng: DEFAULT_US_CENTER.lng,
+          zoom: DEFAULT_ZOOM,
+        };
   }, [selectedCity, initialCityCoordinates]);
-
   return (
     <>
       <div className="relative z-20 mt-2 grid w-full justify-center gap-3 sm:flex sm:gap-4">
-        <div className="relative w-80 sm:w-64">
-          <label htmlFor="city-search" className="sr-only">
-            Search by City
-          </label>
-          <input
-            id="city-search"
-            name="city-search"
-            type="text"
-            placeholder="Select or Search City..."
-            value={searchTerm}
-            onFocus={() => setIsCityDropdownOpen(true)}
-            onBlur={() =>
-              setTimeout(() => {
-                setIsCityDropdownOpen(false);
-                setSearchTerm(selectedCity);
-              }, 200)
-            }
-            onMouseEnter={handleMapHover}
-            onTouchStart={handleMapHover}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={inputClass}
-            autoComplete="off"
-          />
-          {isCityDropdownOpen && (
-            <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
-              <ul role="listbox">
-                <li
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    fetchUserLocation();
-                    setIsCityDropdownOpen(false);
-                  }}
-                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
-                >
-                  <span aria-hidden="true">📍</span> Use My Location
-                </li>
-                <li
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    setSelectedCity("All Cities");
-                    setSearchTerm("All Cities");
-                    setIsCityDropdownOpen(false);
-                  }}
-                  className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
-                >
-                  <span aria-hidden="true">🌎</span> All Cities
-                </li>
-                {dropdownCities.map((city) => (
-                  <li
-                    key={city}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleCitySelect(city);
-                    }}
-                    className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
-                  >
-                    {city}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+        <CitySelector
+          initialCities={initialCities}
+          selectedCity={selectedCity}
+          initialSearchTerm={citySearchTerm}
+          onCitySelect={handleCitySelect}
+          onUseLocation={fetchUserLocation}
+        />
         <div className="relative w-80 sm:w-48">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
@@ -356,8 +411,6 @@ export default function MicFinderClient({
             type="date"
             value={formatDateInputValue(selectedDate)}
             onChange={handleDateChange}
-            onMouseEnter={handleMapHover}
-            onTouchStart={handleMapHover}
             onClick={(e) => {
               if ("showPicker" in e.currentTarget) {
                 e.currentTarget.showPicker();
@@ -448,15 +501,12 @@ export default function MicFinderClient({
           <button
             type="button"
             onClick={toggleMapVisibility}
-            onMouseEnter={handleMapHover}
-            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${!mapState.isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
+            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${!isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
           >
-            {mapState.isMapVisible ? "Hide Map" : "Show Map"}
+            {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
-          {mapState.hasMapInit && (
-            <div
-              className={`size-full transition-opacity duration-100 ${mapState.isMapVisible ? "visible opacity-100" : "invisible opacity-0"}`}
-            >
+          {isMapVisible && (
+            <div className="size-full">
               <GoogleMap
                 lat={mapConfig.lat}
                 lng={mapConfig.lng}

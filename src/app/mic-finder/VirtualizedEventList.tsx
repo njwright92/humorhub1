@@ -1,13 +1,9 @@
 "use client";
 
-import { useRef, memo } from "react"; // Added memo
+import { useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { Event } from "../lib/types";
 import EventCard from "./EventCard";
-
-// FIX INP: Memoizing the card prevents React from re-drawing it every time
-// the user scrolls if the data hasn't changed.
-const MemoizedEventCard = memo(EventCard);
 
 export default function VirtualizedEventList({
   events,
@@ -53,7 +49,7 @@ export default function VirtualizedEventList({
               className="absolute top-0 left-0 w-full"
               style={{ transform: `translateY(${virtualItem.start}px)` }}
             >
-              <MemoizedEventCard event={event} onSave={onSave} />
+              <EventCard event={event} onSave={onSave} />
             </div>
           );
         })}

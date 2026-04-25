@@ -1,6 +1,7 @@
+import { memo } from "react";
 import type { Event } from "../lib/types";
 
-export default function EventCard({
+function EventCard({
   event,
   onSave,
 }: {
@@ -43,3 +44,5 @@ export default function EventCard({
     </article>
   );
 }
+
+export default memo(EventCard);
