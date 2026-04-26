@@ -16,6 +16,12 @@ type SessionContextValue = {
   session: SessionState;
   refreshSession: () => Promise<SessionState>;
   setSignedIn: (signedIn: boolean, info?: Partial<SessionInfo>) => void;
+
+  // NEW: auth modal control
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: (open: boolean) => void;
+  pendingRedirect: string | null;
+  setPendingRedirect: (path: string | null) => void;
 };
 
 const SessionContext = createContext<SessionContextValue | undefined>(
@@ -35,12 +41,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     signedIn: false,
     status: "unknown",
   });
+
+  // NEW GLOBAL AUTH MODAL STATE
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
+
   const inFlightRef = useRef<Promise<SessionState> | null>(null);
 
   const refreshSession = useCallback(async () => {
-    if (inFlightRef.current) {
-      return inFlightRef.current;
-    }
+    if (inFlightRef.current) return inFlightRef.current;
 
     const request = getSession()
       .then((data) => {
@@ -75,7 +84,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <SessionContext.Provider value={{ session, refreshSession, setSignedIn }}>
+    <SessionContext.Provider
+      value={{
+        session,
+        refreshSession,
+        setSignedIn,
+
+        isAuthModalOpen,
+        setIsAuthModalOpen,
+        pendingRedirect,
+        setPendingRedirect,
+      }}
+    >
       {children}
     </SessionContext.Provider>
   );

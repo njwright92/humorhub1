@@ -5,6 +5,7 @@ import ProfileButton from "./components/ProfileButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
 import dynamic from "next/dynamic";
+import AuthModalHost from "./components/authModalHost";
 
 const HomepagePoll = dynamic(() => import("./components/HomepagePoll"), {
   loading: () => null,
@@ -204,6 +205,7 @@ export default function Home() {
           </Link>
         </div>
       </SectionCard>
+      <AuthModalHost />
     </main>
   );
 }

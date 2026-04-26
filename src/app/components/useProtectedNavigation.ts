@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "./SessionContext";
 import { useToast } from "./ToastContext";
@@ -19,10 +19,16 @@ export function useProtectedNavigation({
 }: UseProtectedNavigationOptions = {}) {
   const { showToast } = useToast();
   const router = useRouter();
-  const { session, refreshSession, setSignedIn } = useSession();
 
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
+  const {
+    session,
+    refreshSession,
+    setSignedIn,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    pendingRedirect,
+    setPendingRedirect,
+  } = useSession();
 
   const requireAuth = useCallback(
     async (path: string, label: string) => {
@@ -51,6 +57,8 @@ export function useProtectedNavigation({
       router,
       session,
       showToast,
+      setIsAuthModalOpen,
+      setPendingRedirect,
     ],
   );
 
@@ -64,7 +72,14 @@ export function useProtectedNavigation({
     }
 
     setIsAuthModalOpen(false);
-  }, [onAuthorized, pendingRedirect, router, setSignedIn]);
+  }, [
+    onAuthorized,
+    pendingRedirect,
+    router,
+    setSignedIn,
+    setPendingRedirect,
+    setIsAuthModalOpen,
+  ]);
 
   const preloadAuthModal = useCallback(() => {
     void import("./authModal");

@@ -65,8 +65,6 @@ const nextConfig = {
               "form-action 'self'",
               "frame-ancestors 'self'",
               "upgrade-insecure-requests",
-              // THIS FIXES THE TRUSTED TYPES WARNING
-              "require-trusted-types-for 'script'",
               "trusted-types nextjs nextjs#app-pages-react-hydrator default *",
             ].join("; "),
           },
