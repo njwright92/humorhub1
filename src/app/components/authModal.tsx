@@ -157,7 +157,7 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40"
       onClick={handleClose}
       role="dialog"
       aria-modal="true"
