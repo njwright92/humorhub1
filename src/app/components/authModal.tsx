@@ -157,7 +157,7 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 grid cursor-pointer backdrop-blur-lg"
+      className="fixed inset-0 z-50"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-title"
