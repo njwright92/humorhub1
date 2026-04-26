@@ -157,12 +157,18 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center backdrop-blur-lg"
+      className="fixed inset-0 z-50 grid cursor-pointer place-items-center backdrop-blur-lg"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-title"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
     >
-      <div className="card-shell relative grid w-full max-w-sm gap-3 bg-stone-300 p-4">
+      <div
+        className="card-shell relative grid w-full max-w-sm cursor-auto gap-3 bg-stone-300 p-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={handleClose}
           className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-700"

@@ -39,6 +39,7 @@ export default function ProfileSidebar({
               alt="Profile"
               fill
               className="object-cover"
+              sizes="(min-width: 768px) 168px, 128px"
             />
           ) : (
             <span className="grid size-full place-content-center text-4xl">
