@@ -157,18 +157,11 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-50"
+      className="fixed inset-0 z-50 grid cursor-pointer backdrop-blur-lg"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-title"
     >
-      <button
-        type="button"
-        aria-label="Close modal"
-        onClick={handleClose}
-        className="absolute inset-0 bg-black/20 backdrop-blur-lg"
-      />
-
       <div className="pointer-events-none relative z-10 grid min-h-full place-items-center p-4">
         <div className="card-shell pointer-events-auto relative grid w-full max-w-sm gap-3 bg-stone-300 p-4">
           <button
