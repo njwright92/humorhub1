@@ -157,151 +157,157 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 grid cursor-pointer place-items-center backdrop-blur-lg"
+      className="fixed inset-0 z-50 grid cursor-pointer backdrop-blur-lg"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-title"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
     >
-      <div
-        className="card-shell relative grid w-full max-w-sm cursor-auto gap-3 bg-stone-300 p-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={handleClose}
-          className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-700"
-          aria-label="Close modal"
-          disabled={isLoading}
-          type="button"
-        >
-          <svg
-            className="size-8"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
+      <button
+        type="button"
+        aria-label="Close modal"
+        onClick={handleClose}
+        className="absolute inset-0 bg-black/20 backdrop-blur-lg"
+      />
+
+      <div className="pointer-events-none relative z-10 grid min-h-full place-items-center p-4">
+        <div className="card-shell pointer-events-auto relative grid w-full max-w-sm gap-3 bg-stone-300 p-4">
+          <button
+            onClick={handleClose}
+            className="absolute top-2 right-2 p-2 text-stone-900 transition-colors hover:text-stone-700"
+            aria-label="Close modal"
+            disabled={isLoading}
+            type="button"
           >
-            <path
-              fillRule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
+            <svg
+              className="size-8"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
 
-        <h2 id="auth-title" className="text-center text-2xl text-stone-900">
-          {isSignIn ? "Sign In" : "Sign Up"}
-        </h2>
+          <h2 id="auth-title" className="text-center text-2xl text-stone-900">
+            {isSignIn ? "Sign In" : "Sign Up"}
+          </h2>
 
-        <form onSubmit={handleAuth} className="mb-2 grid gap-3" noValidate>
-          <div className="grid gap-1">
-            <label htmlFor="auth-email" className="text-sm text-stone-900">
-              Email
-            </label>
-            <input
-              type="email"
-              id="auth-email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className={inputClass}
-              autoComplete="email"
-              disabled={isLoading}
-              required
-            />
-          </div>
-
-          <div className="grid gap-1">
-            <label htmlFor="auth-password" className="text-sm text-stone-900">
-              Password
-            </label>
-            <input
-              type="password"
-              id="auth-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className={inputClass}
-              autoComplete={isSignIn ? "current-password" : "new-password"}
-              disabled={isLoading}
-              required
-            />
-          </div>
-
-          {!isSignIn && (
+          <form onSubmit={handleAuth} className="mb-2 grid gap-3" noValidate>
             <div className="grid gap-1">
-              <label htmlFor="auth-confirm" className="text-sm text-stone-900">
-                Confirm Password
+              <label htmlFor="auth-email" className="text-sm text-stone-900">
+                Email
               </label>
               <input
-                type="password"
-                id="auth-confirm"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
+                type="email"
+                id="auth-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
                 className={inputClass}
-                autoComplete="new-password"
+                autoComplete="email"
                 disabled={isLoading}
                 required
               />
             </div>
-          )}
+
+            <div className="grid gap-1">
+              <label htmlFor="auth-password" className="text-sm text-stone-900">
+                Password
+              </label>
+              <input
+                type="password"
+                id="auth-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className={inputClass}
+                autoComplete={isSignIn ? "current-password" : "new-password"}
+                disabled={isLoading}
+                required
+              />
+            </div>
+
+            {!isSignIn && (
+              <div className="grid gap-1">
+                <label
+                  htmlFor="auth-confirm"
+                  className="text-sm text-stone-900"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  id="auth-confirm"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className={inputClass}
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  required
+                />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full rounded-2xl py-2 font-semibold text-white shadow-xl transition-colors disabled:opacity-50 ${isSignIn ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}`}
+            >
+              {isLoading ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
+            </button>
+
+            <p className="text-center text-sm text-stone-900">
+              {isSignIn ? "Need an account? " : "Already have an account? "}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSignIn((p) => !p);
+                  setConfirmPassword("");
+                }}
+                disabled={isLoading}
+                className="font-medium text-blue-600 underline"
+              >
+                {isSignIn ? "Sign Up" : "Sign In"}
+              </button>
+            </p>
+          </form>
+
+          <p className="text-center text-sm text-stone-900" aria-hidden="true">
+            OR
+          </p>
 
           <button
-            type="submit"
+            type="button"
+            onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className={`w-full rounded-2xl py-2 font-semibold text-white shadow-xl transition-colors disabled:opacity-50 ${isSignIn ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"}`}
+            className="grid grid-flow-col items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-xl transition-colors hover:bg-zinc-300 disabled:opacity-50"
           >
-            {isLoading ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
+            <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"
+                fill="#4285F4"
+              />
+              <path
+                d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"
+                fill="#34A853"
+              />
+              <path
+                d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"
+                fill="#EA4335"
+              />
+            </svg>
+            {isLoading ? "Loading..." : "Sign in with Google"}
           </button>
-
-          <p className="text-center text-sm text-stone-900">
-            {isSignIn ? "Need an account? " : "Already have an account? "}
-            <button
-              type="button"
-              onClick={() => {
-                setIsSignIn((p) => !p);
-                setConfirmPassword("");
-              }}
-              disabled={isLoading}
-              className="font-medium text-blue-600 underline"
-            >
-              {isSignIn ? "Sign Up" : "Sign In"}
-            </button>
-          </p>
-        </form>
-
-        <p className="text-center text-sm text-stone-900" aria-hidden="true">
-          OR
-        </p>
-
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={isLoading}
-          className="grid grid-flow-col items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-xl transition-colors hover:bg-zinc-300 disabled:opacity-50"
-        >
-          <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true">
-            <path
-              d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"
-              fill="#4285F4"
-            />
-            <path
-              d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"
-              fill="#34A853"
-            />
-            <path
-              d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"
-              fill="#EA4335"
-            />
-          </svg>
-          {isLoading ? "Loading..." : "Sign in with Google"}
-        </button>
+        </div>
       </div>
     </div>
   );
