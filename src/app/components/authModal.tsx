@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { useToast } from "./ToastContext";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth } from "@/app/lib/firebase-auth";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
@@ -113,44 +115,45 @@ export default function AuthModal({
     ],
   );
 
-  const handleGoogleSignIn = useCallback(async () => {
+  const handleGoogleSignIn = useCallback(() => {
     setIsLoading(true);
-    try {
-      const [{ getAuth }, { GoogleAuthProvider, signInWithPopup }] =
-        await Promise.all([
-          import("@/app/lib/firebase-auth"),
-          import("firebase/auth"),
-        ]);
 
-      const auth = await getAuth();
-      const result = await signInWithPopup(auth, new GoogleAuthProvider());
-      const idToken = await result.user.getIdToken();
-      const res = await fetch("/api/auth/session-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ idToken }),
-      });
-      const sessionResult = (await res.json()) as { success?: boolean };
-      if (!res.ok || !sessionResult.success) {
-        throw new Error("session-cookie-failed");
+    void (async () => {
+      try {
+        const auth = await getAuth();
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const idToken = await result.user.getIdToken();
+        const res = await fetch("/api/auth/session-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ idToken }),
+        });
+
+        const sessionResult = await res.json();
+        if (!res.ok || !sessionResult.success) {
+          throw new Error("session-cookie-failed");
+        }
+
+        showToast("Google sign-in successful!", "success");
+        onLoginSuccess?.();
+        handleClose();
+      } catch (error: any) {
+        const code = error?.code ?? "";
+
+        if (code === "auth/popup-blocked") {
+          showToast(
+            "Popup blocked. Enable popups in Safari settings.",
+            "error",
+          );
+        } else if (code !== "auth/popup-closed-by-user") {
+          showToast("Google sign-in failed.", "error");
+        }
+      } finally {
+        setIsLoading(false);
       }
-
-      showToast("Google sign-in successful!", "success");
-      onLoginSuccess?.();
-      handleClose();
-    } catch (error) {
-      const code =
-        typeof error === "object" && error !== null && "code" in error
-          ? (error as { code: string }).code
-          : "";
-      if (code === "auth/popup-blocked")
-        showToast("Popup blocked. Please allow popups.", "error");
-      else if (code !== "auth/popup-closed-by-user")
-        showToast("Google sign-in failed.", "error");
-    } finally {
-      setIsLoading(false);
-    }
+    })();
   }, [handleClose, onLoginSuccess, showToast]);
 
   if (!isOpen) return null;
