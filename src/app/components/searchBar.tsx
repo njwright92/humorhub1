@@ -240,8 +240,10 @@ export default function SearchBar({
         const cached = sessionStorage.getItem(CITIES_CACHE_KEY);
         if (cached) {
           const parsed = JSON.parse(cached);
-          if (mounted && Array.isArray(parsed)) setCities(parsed);
-          return;
+          if (mounted && Array.isArray(parsed) && parsed.length > 0) {
+            setCities(parsed);
+            return;
+          }
         }
 
         const res = await fetch("/api/cities");
@@ -251,7 +253,9 @@ export default function SearchBar({
         if (mounted && Array.isArray(data)) {
           const valid = data.filter((c): c is string => typeof c === "string");
           setCities(valid);
-          sessionStorage.setItem(CITIES_CACHE_KEY, JSON.stringify(valid));
+          if (valid.length > 0) {
+            sessionStorage.setItem(CITIES_CACHE_KEY, JSON.stringify(valid));
+          }
         }
       } catch (err) {
         console.error("Error fetching cities:", err);
