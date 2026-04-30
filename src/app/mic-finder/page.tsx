@@ -3,11 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { fetchMicFinderData } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
-import dynamic from "next/dynamic";
-
-const EventForm = dynamic(() => import("../components/EventForm"), {
-  loading: () => null,
-});
+import EventForm from "@/app/components/EventForm";
 
 export const metadata: Metadata = {
   title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",

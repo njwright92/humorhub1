@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, type FormEvent } from "react";
 import { useToast } from "./ToastContext";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getAuth } from "@/app/lib/firebase-auth";
@@ -10,6 +10,18 @@ const passwordRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 const inputClass = "field-soft";
+
+function getFirebaseErrorCode(error: unknown): string {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    typeof (error as { code?: unknown }).code === "string"
+  ) {
+    return (error as { code: string }).code;
+  }
+  return "";
+}
 
 export default function AuthModal({
   isOpen,
@@ -36,7 +48,7 @@ export default function AuthModal({
   }, [onClose]);
 
   const handleAuth = useCallback(
-    async (e: React.SubmitEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       if (!emailRegex.test(email)) {
@@ -131,7 +143,7 @@ export default function AuthModal({
           body: JSON.stringify({ idToken }),
         });
 
-        const sessionResult = await res.json();
+        const sessionResult = (await res.json()) as { success?: boolean };
         if (!res.ok || !sessionResult.success) {
           throw new Error("session-cookie-failed");
         }
@@ -139,8 +151,8 @@ export default function AuthModal({
         showToast("Google sign-in successful!", "success");
         onLoginSuccess?.();
         handleClose();
-      } catch (error: any) {
-        const code = error?.code ?? "";
+      } catch (error: unknown) {
+        const code = getFirebaseErrorCode(error);
 
         if (code === "auth/popup-blocked") {
           showToast(

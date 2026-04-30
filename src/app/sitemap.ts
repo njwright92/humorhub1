@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
+import { unstable_cache } from "next/cache";
 import { getServerDb } from "@/app/lib/firebase-admin";
 import { COLLECTIONS } from "@/app/lib/constants";
 
-export const revalidate = 86400;
+export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const BASE_URL = "https://www.thehumorhub.com";
@@ -20,6 +21,19 @@ const STATIC_ROUTES: Array<{
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "monthly" },
 ];
 
+const getCachedCities = unstable_cache(
+  async () => {
+    const db = getServerDb();
+    const snapshot = await db.collection(COLLECTIONS.cities).get();
+
+    return snapshot.docs
+      .map((doc) => doc.data()?.city as string | undefined)
+      .filter((city): city is string => Boolean(city));
+  },
+  ["sitemap-cities"],
+  { revalidate: 86400 },
+);
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
@@ -35,18 +49,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let cityRoutes: MetadataRoute.Sitemap = [];
 
   try {
-    const db = getServerDb();
-    const snapshot = await db.collection(COLLECTIONS.cities).get();
+    const cities = await getCachedCities();
 
-    cityRoutes = snapshot.docs
-      .map((doc) => doc.data()?.city as string | undefined)
-      .filter((city): city is string => Boolean(city))
-      .map((city) => ({
-        url: `${BASE_URL}/mic-finder?city=${encodeURIComponent(city)}`,
-        lastModified: now,
-        changeFrequency: "daily" as const,
-        priority: 0.85,
-      }));
+    cityRoutes = cities.map((city) => ({
+      url: `${BASE_URL}/mic-finder?city=${encodeURIComponent(city)}`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+    }));
   } catch (error) {
     console.error("Sitemap: Failed to fetch cities:", error);
   }

@@ -186,7 +186,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
 const getCachedMicFinderData = unstable_cache(
   fetchFromFirestore,
   ["mic-finder-data"],
-  { revalidate: 30 },
+  { revalidate: 300 },
 );
 
 export const fetchMicFinderData = cache(getCachedMicFinderData);

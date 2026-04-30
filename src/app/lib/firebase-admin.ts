@@ -1,7 +1,7 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getAuth as getAdminAuth, type Auth } from "firebase-admin/auth";
 import {
-  getFirestore as getAdminFirestore,
+  initializeFirestore, // <- CHANGED from getFirestore as getAdminFirestore
   type Firestore,
 } from "firebase-admin/firestore";
 import {
@@ -53,7 +53,10 @@ export function getServerAuth(): Auth {
 
 export function getServerDb(): Firestore {
   if (adminDb) return adminDb;
-  adminDb = getAdminFirestore(getAdminApp());
+  adminDb = initializeFirestore(getAdminApp(), {
+    // <- CHANGED
+    preferRest: true, // <- ADDED
+  });
   return adminDb;
 }
 

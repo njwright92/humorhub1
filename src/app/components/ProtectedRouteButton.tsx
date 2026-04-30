@@ -48,6 +48,12 @@ export default function ProtectedRouteButton({
       >
         {children}
       </button>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </>
   );
 }
