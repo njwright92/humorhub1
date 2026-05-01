@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-zinc-200: #f0efeb;
-  --color-amber-700: #dd9e64;
-  --color-stone-900: #211e1c;
+  --color-zinc-200: #f0efeb; /* Cloud Dancer */
+  --color-amber-700: #c4714d; /* Raw Sienna */
+  --color-stone-900: #231a16; /* Black Bean */
   --animate-slide-in: slide-in 0.3s forwards;
   --font-heading:
     var(--font-comic-neue), "Chalkboard SE", "Ink Free", "Segoe Print";
@@ -22,7 +22,7 @@
   }
 
   :is(a, button):focus-visible {
-    outline: 2px solid #e4e4e7;
+    outline: 2px solid var(--color-zinc-200);
     outline-offset: 2px;
   }
 
@@ -47,11 +47,8 @@
     font-family: var(--font-heading);
     font-weight: 700;
     letter-spacing: 0.025em;
-    --tw-text-shadow-color: rgb(104 64 24);
-    text-shadow:
-      0 1px 0 var(--tw-text-shadow-color),
-      0 1px 1px var(--tw-text-shadow-color),
-      0 2px 2px var(--tw-text-shadow-color);
+    --tw-text-shadow-color: rgba(0, 0, 0, 0.7);
+    text-shadow: 1.5px 1.5px 0px var(--tw-text-shadow-color);
   }
 
   select,
@@ -70,7 +67,8 @@
 
 @layer components {
   .section-card {
-    @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2 shadow-xl;
+    @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2;
+    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.4);
   }
 
   .page-shell {
@@ -78,7 +76,7 @@
   }
 
   .section-divider {
-    @apply border-t border-stone-800;
+    @apply border-t border-white/10;
   }
 
   .cta-row {
@@ -91,7 +89,8 @@
   }
 
   .panel-light {
-    @apply mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-400 bg-zinc-200 p-4 leading-relaxed text-stone-900 shadow-xl;
+    @apply mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-400 bg-zinc-200 p-4 leading-relaxed text-stone-900;
+    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.2);
   }
 
   .card-shell {
@@ -99,7 +98,7 @@
   }
 
   .card-dark {
-    @apply bg-stone-800 text-zinc-200;
+    @apply rounded-2xl border border-white/5 bg-stone-900/80 p-4 text-zinc-200;
   }
 
   .card-base {
@@ -111,19 +110,21 @@
   }
 
   .card-muted {
-    @apply rounded-2xl border border-stone-700 bg-stone-800/50;
+    @apply rounded-2xl border border-white/10 bg-stone-900/50 p-4;
   }
 
   .btn-primary {
-    @apply cursor-pointer rounded-2xl bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:outline hover:outline-white;
+    @apply cursor-pointer rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 transition-transform hover:scale-105 hover:outline hover:outline-white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   }
 
   .btn-outline-amber {
-    @apply cursor-pointer rounded-2xl border-2 border-amber-700 bg-transparent px-3 py-2 text-center font-bold text-amber-700 shadow-xl transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900;
+    @apply cursor-pointer rounded-2xl border-2 border-amber-700 bg-transparent px-3 py-2 text-center font-bold text-amber-700 shadow-lg transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900;
   }
 
   .btn-dark {
-    @apply cursor-pointer rounded-2xl bg-stone-700 px-4 py-2 text-center font-bold text-white shadow-xl transition-transform hover:scale-105 hover:bg-stone-800;
+    @apply cursor-pointer rounded-2xl border border-white/10 bg-stone-900 px-4 py-2 text-center font-bold text-zinc-200 transition-transform hover:scale-105;
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.4);
   }
 
   .form-label {
@@ -135,7 +136,8 @@
   }
 
   .field-dark {
-    @apply w-full rounded-2xl border border-stone-600 bg-stone-900 p-3 text-zinc-200 shadow-xl placeholder:text-stone-400 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    @apply w-full rounded-2xl border border-white/10 bg-stone-900 p-3 text-zinc-200 placeholder:text-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2);
   }
 
   .pin-drop-shadow {
@@ -143,7 +145,7 @@
   }
 
   .round-image {
-    @apply h-32 w-32 rounded-full border-2 border-zinc-700 object-contain shadow-xl hover:border-amber-700 md:h-42 md:w-42;
+    @apply h-32 w-32 rounded-xl border-2 border-zinc-700 object-contain shadow-lg hover:border-amber-700 md:h-42 md:w-42;
   }
 
   .round-image-interactive {
@@ -155,11 +157,13 @@
   }
 
   .primary-cta {
-    @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-3 py-2 text-center text-lg font-semibold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
+    @apply mb-2 w-72 justify-self-center rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center text-lg font-semibold text-stone-900 transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   }
 
   .menu-item {
-    @apply grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:bg-stone-700;
+    @apply grid place-items-center rounded-2xl border border-white/5 bg-stone-900/80 p-3 text-2xl text-zinc-200 transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900;
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.3);
   }
 
   .nav-item {
@@ -167,7 +171,8 @@
   }
 
   .nav-tooltip {
-    @apply pointer-events-none absolute top-1/2 left-16 z-50 -translate-y-1/2 rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold whitespace-nowrap text-amber-700 opacity-0 shadow-xl transition-opacity;
+    @apply pointer-events-none absolute top-1/2 left-16 z-50 -translate-y-1/2 rounded-2xl border border-amber-700/50 bg-stone-900 px-2 py-1 text-sm font-bold whitespace-nowrap text-amber-700 opacity-0 transition-opacity;
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.3);
   }
 
   .nav-item:hover .nav-tooltip,
@@ -176,7 +181,7 @@
   }
 
   .input-amber {
-    @apply w-full rounded-2xl border-2 px-4 py-3 text-stone-900 transition-colors focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    @apply w-full rounded-2xl border-2 border-stone-400 px-4 py-3 text-stone-900 transition-colors focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
   }
 
   .input-amber-soft {

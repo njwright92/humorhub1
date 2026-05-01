@@ -101,11 +101,11 @@ export default function HomepagePoll() {
         onClick={() => setVisible(false)}
         className="absolute top-1 right-1"
       >
-        <CloseIcon className="size-5" />
+        <CloseIcon className="size-4" />
       </button>
       <div className="grid gap-1">
         <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">
-          Does AI know it&apos;s artificial?
+          Is crowdwork real stand-up?
         </h1>
       </div>
 
