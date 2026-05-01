@@ -6,6 +6,7 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import dynamic from "next/dynamic";
 import AppProviders from "./components/AppProviders";
+import AuthModalHost from "./components/authModalHost";
 
 const Analytics = dynamic(() =>
   import("@vercel/analytics/react").then((mod) => mod.Analytics),
@@ -82,6 +83,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <AppProviders>
           <Header />
+          <AuthModalHost />
           {children}
           <Footer />
         </AppProviders>

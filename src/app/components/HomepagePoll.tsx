@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { DEFAULT_POLL_ID } from "@/app/lib/constants";
 import type { ApiResponse, PollCounts } from "@/app/lib/types";
+import CloseIcon from "./CloseIcon";
 
 const HIDE_AFTER_MS = 3000;
 
@@ -98,9 +99,9 @@ export default function HomepagePoll() {
         type="button"
         aria-label="Close poll"
         onClick={() => setVisible(false)}
-        className="absolute top-1 right-1 rounded-full text-lg font-bold text-zinc-200 transition-colors hover:text-white"
+        className="absolute top-1 right-1"
       >
-        x
+        <CloseIcon className="size-5" />
       </button>
       <div className="grid gap-1">
         <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">

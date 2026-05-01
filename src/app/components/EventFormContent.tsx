@@ -6,9 +6,10 @@ import {
   useEffect,
   memo,
   type ChangeEvent,
-  type SubmitEvent,
+  type FormEvent,
 } from "react";
 import { useToast } from "./ToastContext";
+import CloseIcon from "./CloseIcon";
 import type { EventSubmission, ApiResponse } from "../lib/types";
 
 interface FormState {
@@ -83,25 +84,6 @@ const RadioGroup = memo(function RadioGroup({
   );
 });
 
-function CloseIcon() {
-  return (
-    <svg
-      className="size-8"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-      aria-hidden="true"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  );
-}
-
 function buildSubmission(form: FormState): EventSubmission {
   const dateIso = form.date?.toISOString() ?? "";
   return {
@@ -131,6 +113,15 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
+  // Prevent background scroll while modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -152,7 +143,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   }, []);
 
   const handleSubmit = useCallback(
-    async (e: SubmitEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (isSubmitting) return;
 
@@ -206,7 +197,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center p-2 backdrop-blur-md"
+      className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-2 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -224,7 +215,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           className="absolute top-4 right-4 text-stone-900"
           aria-label="Close modal"
         >
-          <CloseIcon />
+          <CloseIcon className="size-6" />
         </button>
 
         {formError && (
@@ -290,7 +281,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleRadioChange}
           />
           <RadioGroup
-            label="isFestival"
+            label="Festival?"
             name="isFestival"
             value={form.isFestival}
             onChange={handleRadioChange}

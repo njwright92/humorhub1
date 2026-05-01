@@ -2,13 +2,11 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import SearchBar from "./searchBar";
+import CloseIcon from "./CloseIcon";
 import { useSession } from "./SessionContext";
 import { useProtectedNavigation } from "./useProtectedNavigation";
-
-const AuthModal = dynamic(() => import("./authModal"));
 
 type NavItem = {
   href: string;
@@ -24,17 +22,9 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/about", label: "About" },
 ];
 
-const menuItemClass =
-  "grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:bg-stone-700";
-
 export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   const { session } = useSession();
-  const {
-    isAuthModalOpen,
-    setIsAuthModalOpen,
-    requireAuth,
-    handleLoginSuccess,
-  } = useProtectedNavigation({
+  const { requireAuth } = useProtectedNavigation({
     onAuthorized: closeMenu,
   });
 
@@ -49,23 +39,14 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   }, [closeMenu]);
 
   return (
-    <div className="animate-slide-in fixed inset-0 z-50 grid content-start justify-items-center gap-4 p-2 backdrop-blur-lg">
+    <div className="animate-slide-in fixed inset-0 z-40 grid content-start justify-items-center gap-4 p-2 backdrop-blur-lg">
       <button
         onClick={closeMenu}
         className="justify-self-end p-1 text-stone-900"
         aria-label="Close menu"
         type="button"
       >
-        <svg
-          className="size-8"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          aria-hidden="true"
-        >
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        <CloseIcon />
       </button>
 
       <Link href="/" onClick={closeMenu} aria-label="Humor Hub Home">
@@ -83,7 +64,6 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
       <SearchBar
         isUserSignedIn={session.signedIn}
         sessionStatus={session.status}
-        setIsAuthModalOpen={setIsAuthModalOpen}
         onNavigate={closeMenu}
         onRequireAuth={requireAuth}
       />
@@ -95,7 +75,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
               key={href}
               type="button"
               onClick={() => void requireAuth(href, label)}
-              className={menuItemClass}
+              className="menu-item"
             >
               {label}
             </button>
@@ -104,21 +84,13 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
               key={href}
               href={href}
               onClick={closeMenu}
-              className={menuItemClass}
+              className="menu-item"
             >
               {label}
             </Link>
           ),
         )}
       </nav>
-
-      {isAuthModalOpen && (
-        <AuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-          onLoginSuccess={handleLoginSuccess}
-        />
-      )}
     </div>
   );
 }

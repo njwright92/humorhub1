@@ -3,6 +3,8 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
+import { useSession } from "./SessionContext";
+import CloseIcon from "./CloseIcon";
 import { CITIES_CACHE_KEY } from "../lib/constants";
 
 const INPUT_ID = "search-input";
@@ -38,17 +40,16 @@ type Suggestion =
 export default function SearchBar({
   isUserSignedIn,
   sessionStatus,
-  setIsAuthModalOpen,
   onNavigate,
   onRequireAuth,
 }: {
   isUserSignedIn: boolean;
   sessionStatus: "unknown" | "ready";
-  setIsAuthModalOpen: (open: boolean) => void;
   onNavigate?: () => void;
   onRequireAuth?: (path: string, label: string) => void;
 }) {
   const { showToast } = useToast();
+  const { setIsAuthModalOpen } = useSession();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -316,14 +317,7 @@ export default function SearchBar({
             className="inset absolute top-0 right-0 cursor-pointer p-1 text-stone-900 transition-transform hover:scale-105"
             aria-label="Close search"
           >
-            <svg
-              className="size-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-            </svg>
+            <CloseIcon className="size-5" />
           </button>
 
           <label htmlFor={INPUT_ID} className="sr-only">

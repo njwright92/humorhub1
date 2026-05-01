@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/app/lib/cn";
 
 type SectionCardProps = {
   id: string;
@@ -17,16 +18,12 @@ export default function SectionCard({
   titleClassName,
   variant = "default",
 }: SectionCardProps) {
-  const sectionClassName = [
+  const sectionClassName = cn(
     "section-card",
-    variant === "spaced" ? "mb-4" : null,
+    variant === "spaced" && "mb-4",
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  const headingClassName = ["section-title", titleClassName]
-    .filter(Boolean)
-    .join(" ");
+  );
+  const headingClassName = cn("section-title", titleClassName);
 
   return (
     <section aria-labelledby={id} className={sectionClassName}>

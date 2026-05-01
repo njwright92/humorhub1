@@ -53,42 +53,21 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              // We keep unsafe-inline because Next.js needs it without a Nonce
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://maps.googleapis.com https://apis.google.com",
-              "style-src 'self' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' data: https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
-              "font-src 'self' data:",
-              "connect-src 'self' https: wss:", // Simplified: Allows all secure connections
+              "connect-src 'self' https: wss:",
               "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
               "frame-ancestors 'self'",
               "upgrade-insecure-requests",
-              "trusted-types nextjs nextjs#app-pages-react-hydrator default *",
+              "trusted-types nextjs nextjs#app-pages-react-hydrator default * 'allow-duplicates'",
             ].join("; "),
           },
         ],
-      },
-    ];
-  },
-
-  async redirects() {
-    return [
-      {
-        source: "/MicFinder",
-        destination: "/mic-finder",
-        permanent: true,
-      },
-      {
-        source: "/privacyPolicy",
-        destination: "/privacy-policy",
-        permanent: true,
-      },
-      {
-        source: "/userAgreement",
-        destination: "/user-agreement",
-        permanent: true,
       },
     ];
   },

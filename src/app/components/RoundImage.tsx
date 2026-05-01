@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/app/lib/cn";
 
 type RoundImageProps = {
   src: string;
@@ -25,14 +26,12 @@ export default function RoundImage({
   quality,
   priority = false,
 }: RoundImageProps) {
-  const mergedClassName = [
+  const mergedClassName = cn(
     "round-image",
-    interactive ? "round-image-interactive" : null,
-    variant === "news" ? "round-image-news" : null,
+    interactive && "round-image-interactive",
+    variant === "news" && "round-image-news",
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  );
 
   return (
     <Image

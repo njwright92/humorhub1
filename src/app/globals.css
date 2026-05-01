@@ -71,7 +71,6 @@
 @layer components {
   .section-card {
     @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2 shadow-xl;
-    content-visibility: auto;
   }
 
   .page-shell {
@@ -157,6 +156,23 @@
 
   .primary-cta {
     @apply mb-2 w-72 justify-self-center rounded-2xl bg-amber-700 px-3 py-2 text-center text-lg font-semibold text-stone-900 shadow-xl transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
+  }
+
+  .menu-item {
+    @apply grid place-items-center rounded-2xl bg-stone-800 p-3 text-2xl text-zinc-200 shadow-xl transition-transform hover:scale-105 hover:bg-stone-700;
+  }
+
+  .nav-item {
+    @apply relative cursor-pointer transition hover:scale-110 hover:rotate-3;
+  }
+
+  .nav-tooltip {
+    @apply pointer-events-none absolute top-1/2 left-16 z-50 -translate-y-1/2 rounded-2xl bg-stone-800 px-2 py-1 text-sm font-bold whitespace-nowrap text-amber-700 opacity-0 shadow-xl transition-opacity;
+  }
+
+  .nav-item:hover .nav-tooltip,
+  .nav-item:focus .nav-tooltip {
+    @apply opacity-100;
   }
 
   .input-amber {

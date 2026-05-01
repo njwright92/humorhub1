@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import NewsButton from "./components/newsButton";
-import ProfileButton from "./components/ProfileButton";
+import ProtectedRouteButton from "./components/ProtectedRouteButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
-import dynamic from "next/dynamic";
-import AuthModalHost from "./components/authModalHost";
-
-const HomepagePoll = dynamic(() => import("./components/HomepagePoll"), {
-  loading: () => null,
-});
-
-const EventForm = dynamic(() => import("./components/EventForm"), {
-  loading: () => null,
-});
+import HomepagePoll from "./components/HomepagePoll";
+import EventForm from "./components/EventForm";
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
@@ -96,7 +87,11 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
-            <NewsButton className="border-0 bg-transparent">
+            <ProtectedRouteButton
+              route="/News"
+              label="News"
+              className="border-0 bg-transparent"
+            >
               <RoundImage
                 src="/newsy.webp"
                 alt="Hub News - Latest comedy headlines"
@@ -107,10 +102,16 @@ export default function Home() {
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
               />
-            </NewsButton>
+            </ProtectedRouteButton>
           </figure>
           <div className="md:col-start-2 md:justify-self-end">
-            <NewsButton />
+            <ProtectedRouteButton
+              route="/News"
+              label="News"
+              className="btn-primary w-72 justify-self-center text-lg md:w-80 md:justify-self-end"
+            >
+              Check It Out
+            </ProtectedRouteButton>
           </div>
         </div>
       </SectionCard>
@@ -126,7 +127,11 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:row-span-2 md:justify-items-end">
-            <ProfileButton className="contents">
+            <ProtectedRouteButton
+              route="/Profile"
+              label="Profile"
+              className="contents"
+            >
               <RoundImage
                 src="/profile.webp"
                 alt="Profile page placeholder"
@@ -136,11 +141,15 @@ export default function Home() {
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
               />
-            </ProfileButton>
+            </ProtectedRouteButton>
           </figure>
-          <ProfileButton className="primary-cta md:self-start">
+          <ProtectedRouteButton
+            route="/Profile"
+            label="Profile"
+            className="primary-cta md:self-start"
+          >
             Visit Your Profile
-          </ProfileButton>
+          </ProtectedRouteButton>
         </div>
       </SectionCard>
       <SectionCard id="contact-heading" title="Contact">
@@ -205,7 +214,6 @@ export default function Home() {
           </Link>
         </div>
       </SectionCard>
-      <AuthModalHost />
     </main>
   );
 }
