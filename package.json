@@ -8,7 +8,7 @@
     "fully supports es6-module"
   ],
   "overrides": {
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.13",
     "uuid": "^14.0.0",
     "@tootallnate/once": "^3.0.1"
   },
@@ -39,10 +39,10 @@
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.2.1",
-    "globals": "^17.5.0",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
     "lint-staged": "^16.4.0",
-    "postcss": "^8.5.12",
+    "postcss": "^8.5.13",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4.2.4",
