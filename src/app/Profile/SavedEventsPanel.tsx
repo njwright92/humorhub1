@@ -19,12 +19,12 @@ function SavedEventCard({
       <div className="text-left">
         <h3 className="font-bold text-amber-700">{event.name}</h3>
         <p className="mt-1 text-sm text-stone-300">📍 {event.location}</p>
-        <p className="mt-1 text-xs text-stone-500">📅 {event.date}</p>
+        <p className="mt-1 text-xs text-zinc-200">📅 {event.date}</p>
       </div>
       <div className="flex flex-col items-end gap-3">
         <Link
           href={mapHref}
-          className="text-xs text-stone-400 underline hover:text-white"
+          className="text-xs text-green-600 underline hover:text-green-800"
         >
           {city ? "View on Map" : "Browse Mic Finder"}
         </Link>

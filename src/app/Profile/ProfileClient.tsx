@@ -2,16 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { useToast } from "../components/ToastContext";
 import { deleteSavedEvent } from "@/app/actions/events";
 import { updateProfile } from "@/app/actions/profile";
 import { useSession } from "@/app/components/SessionContext";
 import type { Event, ProfileData } from "@/app/lib/types";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-
-const ProfileSidebar = dynamic(() => import("./ProfileSidebar"));
-const SavedEventsPanel = dynamic(() => import("./SavedEventsPanel"));
+import ProfileSidebar from "./ProfileSidebar";
+import SavedEventsPanel from "./SavedEventsPanel";
 
 export default function ProfileClient({
   initialProfile,
@@ -92,7 +90,7 @@ export default function ProfileClient({
   };
 
   return (
-    <div className="animate-slide-in mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-3">
+    <div className="page-content animate-slide-in gap-8 lg:grid-cols-3">
       <ProfileSidebar
         profile={profile}
         isEditing={isEditing}

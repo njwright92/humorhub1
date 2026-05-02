@@ -44,7 +44,7 @@ const formatDateInputValue = (date: Date | null) => {
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
   loading: () => (
-    <span className="size-full items-center justify-center text-stone-300">
+    <span className="grid size-full place-content-center text-stone-300">
       Loading Map...
     </span>
   ),
@@ -70,9 +70,9 @@ interface CitySelectorProps {
 }
 
 const inputClass =
-  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 const sectionHeadingClass =
-  "mb-4 w-full rounded-2xl border-b-4 pb-2 text-center text-xl sm:text-2xl";
+  "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-center text-xl leading-tight sm:min-h-12 sm:text-2xl";
 const emptyStateClass = "py-4 text-center text-stone-400";
 const MAX_CITY_RESULTS = 40;
 
@@ -139,7 +139,7 @@ const CitySelector = memo(function CitySelector({
   }, [deferredSearchTerm, initialCities]);
 
   return (
-    <div className="relative h-11 w-80 sm:w-64">
+    <div className="relative h-11 w-full max-w-80 sm:w-64">
       <label htmlFor="city-search" className="sr-only">
         Search by City
       </label>
@@ -393,10 +393,7 @@ export default function MicFinderClient({
   }, [selectedCity, initialCityCoordinates]);
   return (
     <>
-      <div
-        className="relative z-20 mt-2 grid w-full justify-center gap-3 sm:flex sm:gap-4"
-        style={{ minHeight: "3rem", alignItems: "center" }}
-      >
+      <div className="relative z-20 mt-2 grid min-h-12 w-full items-center justify-items-center gap-3 sm:flex sm:justify-center sm:gap-4">
         <CitySelector
           initialCities={initialCities}
           selectedCity={selectedCity}
@@ -404,7 +401,7 @@ export default function MicFinderClient({
           onCitySelect={handleCitySelect}
           onUseLocation={fetchUserLocation}
         />
-        <div className="relative h-11 w-80 sm:w-48">
+        <div className="relative h-11 w-full max-w-80 sm:w-48">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
@@ -426,7 +423,7 @@ export default function MicFinderClient({
 
       <nav
         role="tablist"
-        className="my-2 grid min-h-12 w-full auto-cols-auto grid-flow-col justify-center gap-2"
+        className="my-2 grid min-h-12 w-full auto-cols-auto grid-flow-col justify-center gap-1 sm:gap-2"
       >
         {TABS.map((tab) => (
           <button
@@ -435,7 +432,7 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => setSelectedTab(tab.id)}
-            className={`rounded-2xl px-3 py-2 text-sm font-bold whitespace-nowrap transition-all sm:text-base ${selectedTab === tab.id ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200` : tab.inactiveClass}`}
+            className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:px-3 sm:text-base ${selectedTab === tab.id ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200` : tab.inactiveClass}`}
           >
             {tab.label}
           </button>
@@ -497,18 +494,11 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section
-          className="card-base-2 relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800"
-          style={{
-            contain: "paint",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
-        >
+        <section className="card-base-2 shadow-soft relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800 contain-paint">
           <button
             type="button"
             onClick={toggleMapVisibility}
-            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold transition-all ${!isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
-            style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
+            className={`shadow-soft absolute z-10 rounded-2xl px-4 py-2 font-bold transition-all ${!isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>

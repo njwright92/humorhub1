@@ -84,6 +84,20 @@ function SignInPrompt() {
   );
 }
 
+function ProfileSkeleton() {
+  return (
+    <div
+      role="status"
+      aria-label="Loading profile"
+      className="page-content mt-4 animate-pulse gap-8 lg:grid-cols-3"
+    >
+      <div className="card-base min-h-80 border-stone-700 bg-stone-800" />
+      <div className="card-base min-h-125 border-stone-700 bg-stone-800 lg:col-span-2" />
+      <span className="sr-only">Loading profile...</span>
+    </div>
+  );
+}
+
 export default function ProfilePage() {
   const dataPromise = loadProfileData();
 
@@ -96,13 +110,7 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <Suspense
-        fallback={
-          <div className="mt-10 animate-pulse text-stone-500">
-            Syncing with the Hub...
-          </div>
-        }
-      >
+      <Suspense fallback={<ProfileSkeleton />}>
         <ProfileClientWrapper dataPromise={dataPromise} />
       </Suspense>
     </main>

@@ -20,7 +20,7 @@ const comicNeue = Comic_Neue({
   weight: ["700"],
   subsets: ["latin"],
   variable: "--font-comic-neue",
-  display: "swap",
+  display: "optional",
   preload: true,
 });
 

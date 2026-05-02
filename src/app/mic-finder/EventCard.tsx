@@ -11,10 +11,7 @@ function EventCard({
   const sanitizedDetails = event.sanitizedDetails ?? event.details;
 
   return (
-    <article
-      className="card-base mb-4 grid justify-items-center gap-2 border-stone-700 p-2 text-center"
-      style={{ contain: "content" }}
-    >
+    <article className="card-base mb-4 grid justify-items-center gap-2 border-stone-700 p-2 text-center contain-content">
       <h3 className="text-lg leading-tight text-amber-700 md:text-xl">
         {event.name}
       </h3>

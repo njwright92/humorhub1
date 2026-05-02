@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, memo } from "react";
+import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import {
   APIProvider,
   Map,
@@ -99,6 +99,13 @@ const InnerMap = memo(function InnerMap({
 }) {
   const apiIsLoaded = useApiIsLoaded();
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const markerEvents = useMemo(
+    () =>
+      events.filter(
+        (event) => !Number.isNaN(event.lat) && !Number.isNaN(event.lng),
+      ),
+    [events],
+  );
 
   const handleMarkerClick = useCallback((event: Event) => {
     setSelectedEvent(event);
@@ -123,12 +130,14 @@ const InnerMap = memo(function InnerMap({
       mapId="ac1223"
       disableDefaultUI={false}
       clickableIcons={false}
+      gestureHandling="cooperative"
+      reuseMaps
       className="size-full"
       onClick={clearSelection}
     >
       <MapHandler lat={lat} lng={lng} zoom={zoom} />
 
-      {events.map((event) => (
+      {markerEvents.map((event) => (
         <EventMarker key={event.id} event={event} onClick={handleMarkerClick} />
       ))}
 
@@ -136,14 +145,11 @@ const InnerMap = memo(function InnerMap({
         <InfoWindow
           position={{ lat: selectedEvent.lat, lng: selectedEvent.lng }}
           onCloseClick={clearSelection}
-          // Set this slightly larger than your internal div
           maxWidth={280}
           pixelOffset={[0, -30]}
           headerDisabled
         >
-          {/* Removed transform-gpu and fixed the width to 230px */}
           <article className="relative w-57 bg-zinc-200 p-2 pt-4 text-center text-zinc-900">
-            {/* Small, clean close button */}
             <button
               onClick={clearSelection}
               className="absolute top-1 right-1 grid cursor-pointer place-items-center"
@@ -153,7 +159,6 @@ const InnerMap = memo(function InnerMap({
               <CloseIcon className="size-3" />
             </button>
 
-            {/* break-words is the key to preventing horizontal scrolling */}
             <p className="break-word mb-1 text-base leading-tight font-bold text-amber-700">
               {selectedEvent.name}
             </p>

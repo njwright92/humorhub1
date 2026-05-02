@@ -8,18 +8,14 @@ const DesktopNav = dynamic(() => import("./DesktopNav"));
 export default function Header() {
   return (
     <>
-      <header
-        className="sticky top-0 z-50 grid h-20 grid-cols-[auto_1fr_auto] items-center bg-amber-700 p-2 sm:hidden"
-        style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
-      >
+      <header className="shadow-soft sticky top-0 z-50 grid h-20 grid-cols-[auto_1fr_auto] items-center bg-amber-700 p-2 sm:hidden">
         <Link href="/" aria-label="Humor Hub Home">
           <Image
             src="/logo.webp"
             alt=""
             width={60}
             height={60}
-            className="rounded-full"
-            style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
+            className="shadow-soft rounded-full"
             quality={70}
             loading="eager"
           />

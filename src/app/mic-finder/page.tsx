@@ -182,15 +182,7 @@ export default function MicFinderPage() {
       />
       <main className="grid min-h-dvh justify-items-center gap-10 px-4 py-12 text-center md:ml-20 md:gap-12 md:px-8 md:py-20">
         {/* OPTIMIZED ASIDE */}
-        <aside
-          className="-mt-8 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-100 p-1 text-xs font-medium text-amber-800 lg:text-base"
-          style={{
-            contain: "content",
-            minHeight: "2.75rem",
-            lineHeight: "1.2",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.08)",
-          }}
-        >
+        <aside className="shadow-soft -mt-8 min-h-11 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-100 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base">
           <p className="m-0 leading-snug">
             <span aria-hidden="true">📢 </span>
             Note: Open mic events evolve quickly. See something outdated?{" "}
@@ -224,9 +216,11 @@ export default function MicFinderPage() {
           </p>
         </div>
 
-        <Suspense fallback={<MicFinderSkeleton />}>
-          <MicFinderContent />
-        </Suspense>
+        <div className="page-content gap-2">
+          <Suspense fallback={<MicFinderSkeleton />}>
+            <MicFinderContent />
+          </Suspense>
+        </div>
       </main>
     </>
   );

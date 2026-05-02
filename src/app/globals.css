@@ -11,12 +11,6 @@
 }
 
 @layer base {
-  img,
-  svg,
-  iframe {
-    vertical-align: unset;
-  }
-
   button {
     cursor: pointer;
   }
@@ -59,10 +53,6 @@
   option {
     color: var(--color-stone-900);
   }
-
-  option[value=""][disabled] {
-    display: box;
-  }
 }
 
 @layer components {
@@ -73,7 +63,10 @@
 
   .page-shell {
     @apply grid min-h-dvh content-start p-2 pt-12 md:ml-20;
-    contain: layout style;
+  }
+
+  .page-content {
+    @apply mx-auto grid w-full max-w-6xl gap-4;
   }
 
   .section-divider {
@@ -112,6 +105,22 @@
   .card-base-2 {
     @apply rounded-2xl border-2;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-soft {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-panel {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .contain-content {
+    contain: content;
+  }
+
+  .contain-paint {
+    contain: paint;
   }
 
   .card-muted {

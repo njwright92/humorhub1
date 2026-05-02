@@ -1,9 +1,6 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getAuth as getAdminAuth, type Auth } from "firebase-admin/auth";
-import {
-  initializeFirestore,
-  type Firestore,
-} from "firebase-admin/firestore";
+import { initializeFirestore, type Firestore } from "firebase-admin/firestore";
 import {
   getStorage as getAdminStorage,
   type Storage,
@@ -54,8 +51,7 @@ export function getServerAuth(): Auth {
 export function getServerDb(): Firestore {
   if (adminDb) return adminDb;
   adminDb = initializeFirestore(getAdminApp(), {
-    // <- CHANGED
-    preferRest: true, // <- ADDED
+    preferRest: true,
   });
   return adminDb;
 }
