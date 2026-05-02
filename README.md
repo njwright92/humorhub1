@@ -51,12 +51,12 @@ A curated content stream tailored for comedic professionals.
 
 ## 🛠️ Architecture & Tech Stack
 
-This project utilizes **Next.js 16.1** with **React 19**, leveraging server-side rendering and static generation for performance and SEO. The codebase is strictly typed with **TypeScript 5.8** and formatted with **Prettier 3** for consistency.
+This project utilizes **Next.js 16** with **React 19**, leveraging server-side rendering and static generation for performance and SEO. The codebase is strictly typed with **TypeScript 6** and formatted with **Prettier 3** for consistency.
 
 | Domain             | Technology                                      |
 | :----------------- | :---------------------------------------------- |
-| **Core Framework** | Next.js 16.1, React 19, Node.js                 |
-| **Language**       | TypeScript 5.8                                  |
+| **Core Framework** | Next.js 16, React 19, Node.js.                  |
+| **Language**       | TypeScript 6                                    |
 | **Styling & UI**   | Tailwind CSS 4, PostCSS                         |
 | **Backend & Auth** | Firebase Auth (client), Firebase Admin (server) |
 | **Database**       | Cloud Firestore                                 |
@@ -65,7 +65,7 @@ This project utilizes **Next.js 16.1** with **React 19**, leveraging server-side
 | **Performance**    | `@tanstack/react-virtual` (list virtualization) |
 | **Communication**  | EmailJS (`@emailjs/browser`)                    |
 | **Observability**  | Vercel Speed Insights                           |
-| **Code Quality**   | ESLint 9, Prettier 3, lint-staged               |
+| **Code Quality**   | ESLint 10, Prettier 3, lint-staged              |
 | **Deployment**     | Vercel                                          |
 
 ---
@@ -76,7 +76,7 @@ Follow these steps to set up the environment locally.
 
 ### Prerequisites
 
-- **Node.js** (v24.12.0)
+- **Node.js**
 - **npm**
 - A configured **Firebase** project
 - A **Google Maps API** key
@@ -126,13 +126,11 @@ Follow these steps to set up the environment locally.
 
 Contributions are a vital part of the open-source community. We welcome issues and pull requests to help make Humor Hub better.
 
-1.  **Fork** the Project.
+1.  Fork the Project.
 2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3.  **Commit** your Changes (`git commit -m 'Add some AmazingFeature'`).
-4.  **Push** to the Branch (`git push origin feature/AmazingFeature`).
-5.  Open a **Pull Request**.
-
-> **Note:** This project uses lint-staged to automatically lint and format staged files on commit.
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push\*to the Branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
 
 ---
 
