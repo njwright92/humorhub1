@@ -10,11 +10,12 @@ import {
   useApiIsLoaded,
 } from "@vis.gl/react-google-maps";
 import type { Event } from "../lib/types";
+import CloseIcon from "./CloseIcon";
 
 const PIN_COLORS = {
   festival: "#7e22ce",
   music: "#15803d",
-  default: "#bb4d00",
+  default: "#c4714d",
 } as const;
 
 const getPinColor = (event: Event) =>
@@ -41,7 +42,7 @@ function EventPin({ color }: { color: string }) {
         stroke="#fff"
         strokeWidth={4}
       />
-      <circle cx="16" cy="16" r="4" fill="#f0eee9" />
+      <circle cx="16" cy="16" r="4" fill="#f0efeb" />
     </svg>
   );
 }
@@ -141,25 +142,23 @@ const InnerMap = memo(function InnerMap({
           headerDisabled
         >
           {/* Removed transform-gpu and fixed the width to 230px */}
-          <article className="relative w-57 bg-white p-3 pt-6 text-center text-stone-900">
+          <article className="relative w-57 bg-zinc-200 p-2 pt-4 text-center text-zinc-900">
             {/* Small, clean close button */}
             <button
               onClick={clearSelection}
-              className="absolute top-1 right-1 grid size-5 cursor-pointer place-items-center rounded-full bg-stone-100 text-stone-800 transition-colors hover:bg-stone-200 hover:text-stone-900"
+              className="absolute top-1 right-1 grid cursor-pointer place-items-center"
               aria-label="Close"
               type="button"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="size-3.5">
-                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-              </svg>
+              <CloseIcon className="size-3" />
             </button>
 
             {/* break-words is the key to preventing horizontal scrolling */}
-            <h2 className="break-word mb-1 text-sm leading-tight font-bold">
+            <p className="break-word mb-1 text-base leading-tight font-bold text-amber-700">
               {selectedEvent.name}
-            </h2>
+            </p>
 
-            <div className="space-y-1 text-xs text-stone-600">
+            <div className="space-y-1 text-sm">
               <p className="break-word">
                 <span aria-hidden="true">📍</span> {selectedEvent.location}
               </p>
@@ -170,7 +169,7 @@ const InnerMap = memo(function InnerMap({
 
             {selectedEvent.details && (
               <div className="mt-2 border-t border-stone-100 pt-2">
-                <p className="text-left text-[11px] leading-relaxed whitespace-pre-wrap text-stone-500">
+                <p className="text-left text-[11px] leading-relaxed whitespace-pre-wrap">
                   {selectedEvent.details.length > 120
                     ? `${selectedEvent.details.substring(0, 120)}...`
                     : selectedEvent.details}

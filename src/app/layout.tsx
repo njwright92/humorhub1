@@ -25,7 +25,7 @@ const comicNeue = Comic_Neue({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#18181b",
+  themeColor: "#231a16",
   width: "device-width",
   initialScale: 1,
 };

@@ -68,11 +68,12 @@
 @layer components {
   .section-card {
     @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2;
-    box-shadow: 5px 5px 0px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.25);
   }
 
   .page-shell {
     @apply grid min-h-dvh content-start p-2 pt-12 md:ml-20;
+    contain: layout style;
   }
 
   .section-divider {
@@ -86,15 +87,17 @@
   .section-title,
   .page-title {
     @apply text-3xl text-amber-700 md:text-4xl lg:text-5xl;
+    line-height: 1.1;
   }
 
   .panel-light {
     @apply mx-auto grid max-w-4xl gap-6 rounded-2xl border border-stone-400 bg-zinc-200 p-4 leading-relaxed text-stone-900;
-    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.15);
   }
 
   .card-shell {
-    @apply rounded-2xl shadow-xl;
+    @apply rounded-2xl;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .card-dark {
@@ -102,11 +105,13 @@
   }
 
   .card-base {
-    @apply rounded-2xl border shadow-xl;
+    @apply rounded-2xl border;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
 
   .card-base-2 {
-    @apply rounded-2xl border-2 shadow-xl;
+    @apply rounded-2xl border-2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
 
   .card-muted {
@@ -114,17 +119,32 @@
   }
 
   .btn-primary {
-    @apply cursor-pointer rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 transition-transform hover:scale-105 hover:outline hover:outline-white;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    @apply cursor-pointer rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 transition-all hover:outline hover:outline-white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    line-height: 1.25;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .btn-outline-amber {
-    @apply cursor-pointer rounded-2xl border-2 border-amber-700 bg-transparent px-3 py-2 text-center font-bold text-amber-700 shadow-lg transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900;
+    @apply cursor-pointer rounded-2xl border-2 border-amber-700 bg-transparent px-3 py-2 text-center font-bold text-amber-700 transition-all;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    line-height: 1.25;
+  }
+  .btn-outline-amber:hover {
+    @apply bg-amber-700 text-stone-900;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   .btn-dark {
-    @apply cursor-pointer rounded-2xl border border-white/10 bg-stone-900 px-4 py-2 text-center font-bold text-zinc-200 transition-transform hover:scale-105;
-    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.4);
+    @apply cursor-pointer rounded-2xl border border-zinc-200 bg-stone-900 px-4 py-2 text-center font-bold text-zinc-200 transition-all;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.25);
+    line-height: 1.25;
+  }
+  .btn-dark:hover {
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.35);
   }
 
   .form-label {
@@ -133,11 +153,15 @@
 
   .field-soft {
     @apply w-full rounded-2xl border border-stone-400 bg-zinc-200 p-2 text-stone-900 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20;
+    min-height: 2.5rem;
+    line-height: 1.25;
   }
 
   .field-dark {
-    @apply w-full rounded-2xl border border-white/10 bg-stone-900 p-3 text-zinc-200 placeholder:text-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
-    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.2);
+    @apply w-full rounded-2xl border border-zinc-200 bg-stone-900 p-3 text-zinc-200 placeholder:text-stone-500 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.15);
+    min-height: 2.75rem;
+    line-height: 1.25;
   }
 
   .pin-drop-shadow {
@@ -145,11 +169,18 @@
   }
 
   .round-image {
-    @apply h-32 w-32 rounded-xl border-2 border-zinc-700 object-contain shadow-lg hover:border-amber-700 md:h-42 md:w-42;
+    @apply h-32 w-32 rounded-xl border-2 border-zinc-700 object-contain md:h-42 md:w-42;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .round-image:hover {
+    @apply border-amber-700;
   }
 
   .round-image-interactive {
-    @apply transition-transform hover:scale-105 hover:rotate-3;
+    @apply transition-all;
+  }
+  .round-image-interactive:hover {
+    transform: scale(1.05);
   }
 
   .round-image-news {
@@ -157,22 +188,34 @@
   }
 
   .primary-cta {
-    @apply mb-2 w-72 justify-self-center rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center text-lg font-semibold text-stone-900 transition-transform hover:scale-105 hover:outline hover:outline-white md:w-80 md:justify-self-start;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    @apply mb-2 w-72 justify-self-center rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center text-lg font-semibold text-stone-900 transition-all hover:outline hover:outline-white md:w-80 md:justify-self-start;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    line-height: 1.25;
+  }
+  .primary-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
   }
 
   .menu-item {
-    @apply grid place-items-center rounded-2xl border border-white/5 bg-stone-900/80 p-3 text-2xl text-zinc-200 transition-transform hover:scale-105 hover:bg-amber-700 hover:text-stone-900;
-    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.3);
+    @apply grid place-items-center rounded-2xl border border-zinc-200 bg-stone-900/80 p-3 text-2xl text-zinc-200 transition-colors;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.2);
+    line-height: 1.2;
+  }
+  .menu-item:hover {
+    @apply bg-amber-700 text-stone-900;
   }
 
   .nav-item {
-    @apply relative cursor-pointer transition hover:scale-110 hover:rotate-3;
+    @apply relative cursor-pointer transition;
+  }
+  .nav-item:hover {
+    transform: scale(1.05);
   }
 
   .nav-tooltip {
     @apply pointer-events-none absolute top-1/2 left-16 z-50 -translate-y-1/2 rounded-2xl border border-amber-700/50 bg-stone-900 px-2 py-1 text-sm font-bold whitespace-nowrap text-amber-700 opacity-0 transition-opacity;
-    box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.2);
   }
 
   .nav-item:hover .nav-tooltip,
@@ -182,14 +225,20 @@
 
   .input-amber {
     @apply w-full rounded-2xl border-2 border-stone-400 px-4 py-3 text-stone-900 transition-colors focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    min-height: 2.75rem;
+    line-height: 1.25;
   }
 
   .input-amber-soft {
     @apply w-full rounded-2xl border border-stone-400 bg-white p-2 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/20;
+    min-height: 2.5rem;
+    line-height: 1.25;
   }
 
   .input-green {
     @apply w-full rounded-2xl border-2 border-stone-400 p-2 text-stone-900 focus:border-green-600 focus:ring-2 focus:ring-green-600;
+    min-height: 2.75rem;
+    line-height: 1.25;
   }
 }
 

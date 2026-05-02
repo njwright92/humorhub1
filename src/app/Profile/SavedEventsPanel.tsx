@@ -17,7 +17,7 @@ function SavedEventCard({
   return (
     <article className="card-base group flex items-start justify-between border-stone-600 bg-stone-900/50 p-4 transition-colors hover:border-amber-700">
       <div className="text-left">
-        <h3 className="font-bold text-amber-600">{event.name}</h3>
+        <h3 className="font-bold text-amber-700">{event.name}</h3>
         <p className="mt-1 text-sm text-stone-300">📍 {event.location}</p>
         <p className="mt-1 text-xs text-stone-500">📅 {event.date}</p>
       </div>

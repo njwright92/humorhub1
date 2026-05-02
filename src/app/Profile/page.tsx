@@ -89,10 +89,12 @@ export default function ProfilePage() {
 
   return (
     <main className="page-shell gap-4 text-center">
-      <h1 className="page-title">Profile Management</h1>
-      <p className="text-sm text-stone-300 md:text-lg">
-        Manage your personal schedule
-      </p>
+      <div className="min-h-fit space-y-2">
+        <h1 className="page-title">Profile Management</h1>
+        <p className="text-sm text-stone-300 md:text-lg">
+          Manage your personal schedule
+        </p>
+      </div>
 
       <Suspense
         fallback={

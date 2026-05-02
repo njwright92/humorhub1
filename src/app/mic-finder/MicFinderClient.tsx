@@ -70,7 +70,7 @@ interface CitySelectorProps {
 }
 
 const inputClass =
-  "flex h-full w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 shadow-xl outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
 const sectionHeadingClass =
   "mb-4 w-full rounded-2xl border-b-4 pb-2 text-center text-xl sm:text-2xl";
 const emptyStateClass = "py-4 text-center text-stone-400";
@@ -139,7 +139,7 @@ const CitySelector = memo(function CitySelector({
   }, [deferredSearchTerm, initialCities]);
 
   return (
-    <div className="relative w-80 sm:w-64">
+    <div className="relative h-11 w-80 sm:w-64">
       <label htmlFor="city-search" className="sr-only">
         Search by City
       </label>
@@ -393,7 +393,10 @@ export default function MicFinderClient({
   }, [selectedCity, initialCityCoordinates]);
   return (
     <>
-      <div className="relative z-20 mt-2 grid w-full justify-center gap-3 sm:flex sm:gap-4">
+      <div
+        className="relative z-20 mt-2 grid w-full justify-center gap-3 sm:flex sm:gap-4"
+        style={{ minHeight: "3rem", alignItems: "center" }}
+      >
         <CitySelector
           initialCities={initialCities}
           selectedCity={selectedCity}
@@ -401,7 +404,7 @@ export default function MicFinderClient({
           onCitySelect={handleCitySelect}
           onUseLocation={fetchUserLocation}
         />
-        <div className="relative w-80 sm:w-48">
+        <div className="relative h-11 w-80 sm:w-48">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
@@ -423,7 +426,7 @@ export default function MicFinderClient({
 
       <nav
         role="tablist"
-        className="my-2 grid w-full auto-cols-auto grid-flow-col justify-center gap-2"
+        className="my-2 grid min-h-12 w-full auto-cols-auto grid-flow-col justify-center gap-2"
       >
         {TABS.map((tab) => (
           <button
@@ -432,7 +435,7 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => setSelectedTab(tab.id)}
-            className={`rounded-2xl px-3 py-2 text-sm font-bold shadow-xl transition-all sm:text-base ${selectedTab === tab.id ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200` : tab.inactiveClass}`}
+            className={`rounded-2xl px-3 py-2 text-sm font-bold whitespace-nowrap transition-all sm:text-base ${selectedTab === tab.id ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200` : tab.inactiveClass}`}
           >
             {tab.label}
           </button>
@@ -442,7 +445,7 @@ export default function MicFinderClient({
       <div
         className={`grid w-full transition-opacity duration-200 ${isPending ? "opacity-60" : "opacity-100"}`}
       >
-        <section className="card-shell my-2 min-h-62.5 w-full">
+        <section className="card-shell my-2 w-full">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             {dayOfWeek} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
@@ -468,7 +471,7 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section className="card-shell my-2 min-h-62.5 w-full">
+        <section className="card-shell my-2 w-full">
           <h2 className={`${sectionHeadingClass} border-purple-700`}>
             {formattedDate} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
@@ -496,12 +499,16 @@ export default function MicFinderClient({
 
         <section
           className="card-base-2 relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800"
-          style={{ contain: "paint" }}
+          style={{
+            contain: "paint",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
         >
           <button
             type="button"
             onClick={toggleMapVisibility}
-            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold shadow-xl transition-transform hover:scale-105 ${!isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
+            className={`absolute z-10 rounded-2xl px-4 py-2 font-bold transition-all ${!isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
+            style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
@@ -517,7 +524,7 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section className="card-shell relative z-10 my-2 grid min-h-100 w-full justify-items-center gap-4 p-2">
+        <section className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-4 p-2">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             All {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}

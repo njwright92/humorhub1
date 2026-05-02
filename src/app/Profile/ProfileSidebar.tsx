@@ -31,8 +31,14 @@ export default function ProfileSidebar({
 
   return (
     <aside className="lg:col-span-1">
-      <section className="card-base sticky top-20 border-stone-300 bg-zinc-200 p-6 text-stone-900 shadow-2xl">
-        <figure className="group relative mx-auto mb-4 size-32 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300 shadow-xl">
+      <section
+        className="card-base sticky top-20 border-stone-300 bg-zinc-200 p-6 text-stone-900"
+        style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
+      >
+        <figure
+          className="group relative mx-auto mb-4 size-32 overflow-hidden rounded-full border-2 border-zinc-900 bg-zinc-200"
+          style={{ flexShrink: 0, aspectRatio: "1" }}
+        >
           {profile.profileImageUrl ? (
             <Image
               src={profile.profileImageUrl}
@@ -40,6 +46,7 @@ export default function ProfileSidebar({
               fill
               className="object-cover"
               sizes="(min-width: 768px) 168px, 128px"
+              priority={false}
             />
           ) : (
             <span className="grid size-full place-content-center text-4xl">
@@ -75,7 +82,7 @@ export default function ProfileSidebar({
                 Stage Name
               </label>
               <input
-                className="input-amber-soft mt-1 w-full"
+                className="input-amber-soft mt-1 min-h-10 w-full"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
@@ -86,7 +93,7 @@ export default function ProfileSidebar({
                 Bio
               </label>
               <textarea
-                className="input-amber-soft mt-1 w-full resize-none text-sm"
+                className="input-amber-soft mt-1 min-h-24 w-full resize-none text-sm"
                 rows={4}
                 value={form.bio}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}

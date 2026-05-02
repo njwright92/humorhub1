@@ -11,25 +11,30 @@ function EventCard({
   const sanitizedDetails = event.sanitizedDetails ?? event.details;
 
   return (
-    <article className="card-base mb-4 grid justify-items-center gap-2 border-stone-600 p-2 text-center">
-      <h3 className="text-lg text-amber-600 md:text-xl">{event.name}</h3>
-      <p className="text-sm">
+    <article
+      className="card-base mb-4 grid justify-items-center gap-2 border-stone-700 p-2 text-center"
+      style={{ contain: "content" }}
+    >
+      <h3 className="text-lg leading-tight text-amber-700 md:text-xl">
+        {event.name}
+      </h3>
+      <p className="text-sm leading-snug">
         <span aria-hidden="true">📅 </span>
         <span className="sr-only">Date: </span>
         {event.date}
       </p>
-      <p className="text-sm">
+      <p className="text-sm leading-snug">
         <span aria-hidden="true">📍 </span>
         <span className="sr-only">Location: </span>
         {event.location}
       </p>
       <div className="w-full px-2 text-sm">
-        <span className="mb-1 block font-bold">
+        <span className="mb-1 block leading-snug font-bold">
           <span aria-hidden="true">ℹ️ </span>
           Details:
         </span>
         <div
-          className="wrap-break-word [&_a]:text-blue-400"
+          className="leading-relaxed wrap-break-word [&_a]:text-blue-400"
           dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
         />
       </div>
