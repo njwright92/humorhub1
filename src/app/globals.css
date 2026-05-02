@@ -31,7 +31,7 @@
     min-height: 2.75rem;
     display: block;
     width: 100%;
-    background-color: white;
+    background-color: var(--color-zinc-100);
   }
 
   input[type="date"]:invalid::-webkit-datetime-edit {
@@ -48,7 +48,7 @@
     font-weight: 700;
     letter-spacing: 0.025em;
     --tw-text-shadow-color: rgba(0, 0, 0, 0.7);
-    text-shadow: 1.5px 1.5px 0px var(--tw-text-shadow-color);
+    text-shadow: 1px 1px 0px var(--tw-text-shadow-color);
   }
 
   select,
@@ -61,13 +61,13 @@
   }
 
   option[value=""][disabled] {
-    display: none;
+    display: box;
   }
 }
 
 @layer components {
   .section-card {
-    @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/90 p-2;
+    @apply mx-auto grid w-full gap-8 rounded-xl bg-stone-900/90 p-2;
     box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.25);
   }
 
@@ -77,7 +77,7 @@
   }
 
   .section-divider {
-    @apply border-t border-white/10;
+    @apply border-t border-zinc-200/80;
   }
 
   .cta-row {
@@ -96,7 +96,7 @@
   }
 
   .card-shell {
-    @apply rounded-2xl;
+    @apply rounded-xl;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
