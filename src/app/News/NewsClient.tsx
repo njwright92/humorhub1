@@ -10,7 +10,7 @@ function ArticleCard({
   priority: boolean;
 }) {
   return (
-    <article className="card-muted group grid h-full grid-rows-[auto_1fr] overflow-hidden transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900/20">
+    <article className="card-muted group grid h-full grid-rows-[auto_1fr] overflow-hidden transition-all hover:-translate-y-1 hover:border-amber-700 hover:shadow-xl hover:shadow-amber-900">
       <figure className="relative h-48 w-full">
         {article.image_url ? (
           <Image
@@ -68,20 +68,18 @@ function ArticleCard({
   );
 }
 
+// after
 export default function NewsClient({
   articles,
   error,
-  selectedCategory: initialCategory,
-  selectedSubcategory: initialSubcategory,
+  selectedCategory,
+  selectedSubcategory,
 }: {
   articles: NewsArticle[];
   error?: string;
   selectedCategory: NewsCategory;
   selectedSubcategory: string;
 }) {
-  const selectedCategory = initialCategory;
-  const selectedSubcategory = initialSubcategory;
-
   return (
     <>
       {error && (

@@ -65,6 +65,7 @@ export default function Home() {
                 sizes="(min-width: 768px) 168px, 128px"
                 quality={70}
                 priority
+                className="bg-white p-1"
               />
             </Link>
           </figure>
@@ -96,7 +97,7 @@ export default function Home() {
                 src="/newsy.webp"
                 alt="Hub News - Latest comedy headlines"
                 interactive
-                variant="news"
+                className="bg-white p-1"
                 width={168}
                 height={168}
                 sizes="(min-width: 768px) 168px, 128px"

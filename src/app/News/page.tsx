@@ -28,6 +28,18 @@ export const metadata: Metadata = {
   },
 };
 
+function NewsHeader() {
+  return (
+    <>
+      <h1 className="page-title">Hub News</h1>
+      <p className="text-sm text-stone-300 md:text-lg">
+        Curated stories from around the world. Stay informed with the latest
+        updates.
+      </p>
+    </>
+  );
+}
+
 function NewsSkeleton() {
   return (
     <div
@@ -65,10 +77,6 @@ async function canAccessNews(): Promise<boolean> {
   }
 }
 
-function SignInPrompt() {
-  return <AuthGatePrompt message="Please sign in to view the Hub News." />;
-}
-
 async function NewsContent({
   resolvedCategory,
   subcategory,
@@ -96,15 +104,12 @@ export default async function NewsPage({
   searchParams?: Promise<{ category?: string; subcategory?: string }>;
 }) {
   const hasAccess = await canAccessNews();
+
   if (!hasAccess) {
     return (
       <main className="page-shell gap-4 text-center">
-        <h1 className="page-title">Hub News</h1>
-        <p className="text-sm text-stone-300 md:text-lg">
-          Curated stories from around the world. Stay informed with the latest
-          updates.
-        </p>
-        <SignInPrompt />
+        <NewsHeader />
+        <AuthGatePrompt message="Please sign in to view the Hub News." />
       </main>
     );
   }
@@ -123,11 +128,7 @@ export default async function NewsPage({
 
   return (
     <main className="page-shell gap-4 text-center">
-      <h1 className="page-title">Hub News</h1>
-      <p className="text-sm text-stone-300 md:text-lg">
-        Curated stories from around the world. Stay informed with the latest
-        updates.
-      </p>
+      <NewsHeader />
       <NewsFilters
         key={`filters:${newsKey}`}
         selectedCategory={resolvedCategory}
@@ -137,7 +138,6 @@ export default async function NewsPage({
       />
       <Suspense key={newsKey} fallback={<NewsSkeleton />}>
         <NewsContent
-          key={newsKey}
           resolvedCategory={resolvedCategory}
           subcategory={subcategory}
         />
