@@ -58,6 +58,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
           className="rounded-full shadow-xl"
           priority
           quality={70}
+          sizes="(min-width: 768px) 168px, 128px"
         />
       </Link>
 

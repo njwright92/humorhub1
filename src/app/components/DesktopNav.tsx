@@ -2,12 +2,10 @@
 
 import { useCallback } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useSession } from "./SessionContext";
 import { useProtectedNavigation } from "./useProtectedNavigation";
-
-const SearchBar = dynamic(() => import("./searchBar"));
+import SearchBar from "./searchBar";
 
 type NavItem = {
   href?: string;
@@ -90,6 +88,7 @@ export default function DesktopNav() {
             height={80}
             className="my-2 rounded-full shadow-xl"
             priority
+            sizes="(min-width: 768px) 168px, 128px"
             quality={70}
           />
         </Link>

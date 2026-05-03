@@ -123,8 +123,7 @@ export default function Home() {
               Keep your comedy calling card fresh.
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
-              Update your bio, avatar, and favorites so other comics can find
-              you.
+              Update your avatar, and save mics for easy access on the road.
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:row-span-2 md:justify-items-end">

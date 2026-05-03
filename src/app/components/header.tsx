@@ -17,7 +17,8 @@ export default function Header() {
             height={60}
             className="shadow-soft rounded-full"
             quality={70}
-            loading="eager"
+            priority
+            sizes="(min-width: 768px) 168px, 128px"
           />
         </Link>
         <h1 className="text-center text-4xl leading-none whitespace-nowrap text-stone-900">
