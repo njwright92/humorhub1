@@ -39,7 +39,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
   }, [closeMenu]);
 
   return (
-    <div className="animate-slide-in fixed inset-0 z-40 grid content-start justify-items-center gap-4 p-2 backdrop-blur-lg">
+    <div className="animate-slide-in fixed inset-0 z-40 grid content-start justify-items-center gap-4 pt-10 backdrop-blur-lg">
       <button
         onClick={closeMenu}
         className="justify-self-end p-1 text-stone-900"
@@ -48,19 +48,6 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
       >
         <CloseIcon />
       </button>
-
-      <Link href="/" onClick={closeMenu} aria-label="Humor Hub Home">
-        <Image
-          src="/logo.webp"
-          alt=""
-          width={70}
-          height={70}
-          className="rounded-full shadow-xl"
-          priority
-          quality={70}
-          sizes="(min-width: 768px) 168px, 128px"
-        />
-      </Link>
 
       <SearchBar
         isUserSignedIn={session.signedIn}

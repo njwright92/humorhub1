@@ -105,7 +105,7 @@ export default function HomepagePoll() {
       </button>
       <div className="grid gap-1">
         <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">
-          Is crowdwork real stand-up?
+          Is crowd work real stand-up?
         </h1>
       </div>
 
@@ -137,13 +137,11 @@ export default function HomepagePoll() {
           <ResultRow
             label="Yes"
             percent={loading ? null : yesPercent}
-            count={counts.yesCount}
             barColor="bg-amber-700"
           />
           <ResultRow
             label="No"
             percent={loading ? null : noPercent}
-            count={counts.noCount}
             barColor="bg-stone-300"
           />
         </div>
@@ -159,12 +157,10 @@ export default function HomepagePoll() {
 function ResultRow({
   label,
   percent,
-  count,
   barColor,
 }: {
   label: string;
   percent: number | null;
-  count: number;
   barColor: string;
 }) {
   return (
@@ -173,9 +169,7 @@ function ResultRow({
         <span>{label}</span>
         <span>
           {percent === null ? "…" : `${Math.max(0, Math.min(100, percent))}%`}{" "}
-          <span className="text-xs font-normal text-stone-300">
-            ({count.toLocaleString()})
-          </span>
+          <span className="text-xs font-normal text-stone-300"></span>
         </span>
       </div>
       <div className="h-2 rounded-full bg-stone-800">
