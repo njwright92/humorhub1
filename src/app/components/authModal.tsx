@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, type FormEvent } from "react";
+import { useState, useCallback, type SubmitEvent } from "react";
 import { useToast } from "./ToastContext";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getAuth } from "@/app/lib/firebase-auth";
@@ -48,7 +48,7 @@ export default function AuthModal({
   }, [onClose]);
 
   const handleAuth = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
+    async (e: SubmitEvent) => {
       e.preventDefault();
 
       if (!emailRegex.test(email)) {

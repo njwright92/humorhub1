@@ -6,7 +6,7 @@ import {
   useEffect,
   memo,
   type ChangeEvent,
-  type FormEvent,
+  type SubmitEvent,
 } from "react";
 import { useToast } from "./ToastContext";
 import CloseIcon from "./CloseIcon";
@@ -143,7 +143,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   }, []);
 
   const handleSubmit = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
+    async (e: SubmitEvent) => {
       e.preventDefault();
       if (isSubmitting) return;
 

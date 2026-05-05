@@ -5,7 +5,7 @@ import ScrollToTop from "./ScrollToTop";
 const SOCIALS = [
   { label: "X (Twitter)", href: "https://twitter.com/naterbug321" },
   { label: "Facebook", href: "https://www.facebook.com/nate_wrigh" },
-  { label: "Instagram", href: "https://www.instagram.com/nate_wright3" },
+  { label: "Instagram", href: "https://www.instagram.com/natewrightcomedy" },
   { label: "GitHub", href: "https://github.com/njwright92" },
 ];
 
