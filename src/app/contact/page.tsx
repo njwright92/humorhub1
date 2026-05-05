@@ -9,12 +9,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.thehumorhub.com/contact",
   },
-  openGraph: {
-    title: "Contact Us | Humor Hub",
-    description: "Contact Humor Hub for inquiries, feedback, or support.",
-    url: "https://www.thehumorhub.com/contact",
-    type: "website",
-  },
 };
 
 export default function ContactPage() {
