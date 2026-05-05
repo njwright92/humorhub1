@@ -24,11 +24,11 @@ export const metadata: Metadata = {
     title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
     description:
       "Your ultimate comedy destination. Find open mics, discover jokes, and connect with the comedy community.",
-    url: "https://www.thehumorhub.com/",
+    url: "/",
     type: "website",
   },
   alternates: {
-    canonical: "https://www.thehumorhub.com/",
+    canonical: "/",
   },
 };
 

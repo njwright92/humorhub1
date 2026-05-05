@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Humor Hub - The Go-To Platform for Everything Comedy",
     description:
       "Discover the ultimate destination for everything comedy. Explore open mic events, and more at Humor Hub.",
-    url: "https://www.thehumorhub.com/",
+    url: "/",
     siteName: "Humor Hub",
     type: "website",
     locale: "en_US",

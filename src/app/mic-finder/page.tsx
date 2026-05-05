@@ -10,13 +10,13 @@ export const metadata: Metadata = {
   description:
     "Discover the best comedy open mics near you. Search by city, view our interactive map, and join the community. The ultimate directory for stand-up comedians.",
   alternates: {
-    canonical: "https://www.thehumorhub.com/mic-finder",
+    canonical: "/mic-finder",
   },
   openGraph: {
     title: "MicFinder - Find Comedy Open Mics in the USA and Worldwide",
     description:
       "Search 1,000's of stand-up comedy, music, and all-arts open mics by city or date on our interactive map. Add your event and connect with the comedy community.",
-    url: "https://www.thehumorhub.com/mic-finder",
+    url: "/mic-finder",
     siteName: "Humor Hub",
     type: "website",
   },

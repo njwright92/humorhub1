@@ -20,13 +20,13 @@ export const metadata: Metadata = {
     "comedy account",
   ],
   alternates: {
-    canonical: "https://www.thehumorhub.com/Profile",
+    canonical: "/Profile",
   },
   openGraph: {
     title: "Your Profile - Manage Your Humor Hub Account",
     description:
       "Access and manage your Humor Hub profile. Update your information, preferences, and view your favorite content.",
-    url: "https://www.thehumorhub.com/Profile",
+    url: "/Profile",
     type: "website",
   },
   robots: {

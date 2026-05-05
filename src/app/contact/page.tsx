@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Have questions or feedback? Contact the Humor Hub team for support and inquiries.",
   alternates: {
-    canonical: "https://www.thehumorhub.com/contact",
+    canonical: "/contact",
   },
 };
 
