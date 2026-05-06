@@ -9,6 +9,8 @@ const ENDPOINTS = {
   all: "https://api.thenewsapi.com/v1/news/all",
 } as const;
 
+const FETCH_TIMEOUT_MS = 5000; // 5 seconds
+
 interface NewsApiResponse {
   data?: Array<Record<string, unknown>>;
 }
@@ -33,7 +35,6 @@ export async function fetchNewsArticles(
     ? category
     : "all_news";
   const resolvedSubcategory = subcategory || "general";
-
   const endpoint =
     resolvedCategory === "top_stories" ? ENDPOINTS.top : ENDPOINTS.all;
 
@@ -45,20 +46,27 @@ export async function fetchNewsArticles(
     categories: resolvedSubcategory,
   });
 
-  try {
-    const url = new URL(endpoint);
-    url.search = params.toString();
+  const url = new URL(endpoint);
+  url.search = params.toString();
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
     const response = await fetch(url, {
-      next: { revalidate: 30 },
+      next: { revalidate: 700 },
       headers: { Accept: "application/json" },
+      signal: controller.signal,
     });
+
+    clearTimeout(timeout);
 
     if (!response.ok) {
       throw new Error(`News API error: ${response.status}`);
     }
 
     const { data = [] }: NewsApiResponse = await response.json();
+
     const articles = data.filter(hasRequiredFields).map((article, index) => {
       const raw = article as Record<string, unknown>;
       const title = String(raw.title);
@@ -81,6 +89,15 @@ export async function fetchNewsArticles(
 
     return { articles };
   } catch (error) {
+    clearTimeout(timeout);
+
+    if (error instanceof Error && error.name === "AbortError") {
+      return {
+        articles: [],
+        error: "News took too long to load. Please try again.",
+      };
+    }
+
     console.error("News fetch failed:", error);
     return { articles: [], error: "Failed to fetch news" };
   }
