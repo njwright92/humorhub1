@@ -1,10 +1,12 @@
+import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import Link from "next/link";
 import ProtectedRouteButton from "./components/ProtectedRouteButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
-import HomepagePoll from "./components/HomepagePoll";
-import EventForm from "./components/EventForm";
+
+const HomepagePoll = dynamic(() => import("./components/HomepagePoll"));
+const EventForm = dynamic(() => import("./components/EventForm"));
 
 export const metadata: Metadata = {
   title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
@@ -32,19 +34,30 @@ export const metadata: Metadata = {
   },
 };
 
+const IMAGE_PROPS = {
+  interactive: true,
+  width: 168,
+  height: 168,
+  sizes: "(min-width: 768px) 168px, 128px",
+  quality: 70,
+  className: "bg-white p-1",
+} as const;
+
 export default function Home() {
   return (
     <main className="grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20">
-      <div className="pointer-events-none fixed top-21 left-2 z-10 min-h-12.5 min-w-12.5 shadow-lg lg:top-2 lg:left-22">
+      <div className="fixed top-21 left-2 z-1 lg:top-2 lg:left-22">
         <HomepagePoll />
       </div>
+
       <h1 className="text-5xl opacity-0 transition-opacity md:text-6xl md:opacity-100 lg:text-7xl">
         Humor Hub!
       </h1>
+
       <SectionCard id="micfinder-heading" title="Mic Finder!" variant="spaced">
         <div className="grid gap-6 md:grid-cols-2 md:text-left">
           <div>
-            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:text-xl">
               Looking for your next Mic?
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
@@ -59,13 +72,8 @@ export default function Home() {
               <RoundImage
                 src="/favicon.ico"
                 alt="Mic Finder - Find open mics near you"
-                interactive
-                width={168}
-                height={168}
-                sizes="(min-width: 768px) 168px, 128px"
-                quality={70}
+                {...IMAGE_PROPS}
                 priority
-                className="bg-white p-1"
               />
             </Link>
           </figure>
@@ -75,10 +83,15 @@ export default function Home() {
           </Link>
         </div>
       </SectionCard>
+
       <SectionCard id="news-heading" title="Hub News!">
-        <div className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right">
+        <ProtectedRouteButton
+          route="/News"
+          label="News"
+          className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right"
+        >
           <div className="md:col-start-2">
-            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:text-xl">
               Your Source for Fresh Headlines!
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
@@ -88,38 +101,26 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
-            <ProtectedRouteButton
-              route="/News"
-              label="News"
-              className="border-0 bg-transparent"
-            >
-              <RoundImage
-                src="/newsy.webp"
-                alt="Hub News - Latest comedy headlines"
-                interactive
-                className="bg-white p-1"
-                width={168}
-                height={168}
-                sizes="(min-width: 768px) 168px, 128px"
-                quality={70}
-              />
-            </ProtectedRouteButton>
+            <RoundImage
+              src="/newsy.webp"
+              alt="Hub News - Latest comedy headlines"
+              {...IMAGE_PROPS}
+            />
           </figure>
-          <div className="md:col-start-2 md:justify-self-end">
-            <ProtectedRouteButton
-              route="/News"
-              label="News"
-              className="btn-primary w-72 justify-self-center text-lg md:w-80 md:justify-self-end"
-            >
-              Check It Out
-            </ProtectedRouteButton>
-          </div>
-        </div>
+          <span className="btn-primary w-72 self-start justify-self-center text-lg md:col-start-2 md:w-80 md:justify-self-end">
+            Check It Out
+          </span>
+        </ProtectedRouteButton>
       </SectionCard>
+
       <SectionCard id="profile-heading" title="Profile">
-        <div className="grid gap-6 md:grid-cols-2 md:text-left">
+        <ProtectedRouteButton
+          route="/Profile"
+          label="Profile"
+          className="grid gap-6 md:grid-cols-2 md:text-left"
+        >
           <div>
-            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:text-xl">
               Keep your comedy calling card fresh.
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
@@ -127,35 +128,23 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:row-span-2 md:justify-items-end">
-            <ProtectedRouteButton
-              route="/Profile"
-              label="Profile"
-              className="contents"
-            >
-              <RoundImage
-                src="/profile.webp"
-                alt="Profile page placeholder"
-                interactive
-                width={168}
-                height={168}
-                sizes="(min-width: 768px) 168px, 128px"
-                quality={70}
-              />
-            </ProtectedRouteButton>
+            <RoundImage
+              src="/profile.webp"
+              alt="Profile page placeholder"
+              {...IMAGE_PROPS}
+            />
           </figure>
-          <ProtectedRouteButton
-            route="/Profile"
-            label="Profile"
-            className="primary-cta md:self-start"
-          >
-            Visit Your Profile
-          </ProtectedRouteButton>
-        </div>
+          <span className="primary-cta md:self-start">Visit Your Profile</span>
+        </ProtectedRouteButton>
       </SectionCard>
+
       <SectionCard id="contact-heading" title="Contact">
-        <div className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right">
+        <Link
+          href="/contact"
+          className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right"
+        >
           <div>
-            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:text-xl">
               Questions, feedback, or collabs?
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
@@ -163,30 +152,26 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
-            <Link href="/contact">
-              <RoundImage
-                src="/contact.webp"
-                alt="Contact page placeholder"
-                interactive
-                width={168}
-                height={168}
-                sizes="(min-width: 768px) 168px, 128px"
-                quality={70}
-              />
-            </Link>
+            <RoundImage
+              src="/contact.webp"
+              alt="Contact page placeholder"
+              {...IMAGE_PROPS}
+            />
           </figure>
-          <Link
-            href="/contact"
-            className="primary-cta md:self-start md:justify-self-end"
-          >
+          <span className="primary-cta md:self-start md:justify-self-end">
             Contact Us
-          </Link>
-        </div>
+          </span>
+        </Link>
       </SectionCard>
+
       <SectionCard id="about-heading" title="About">
-        <div className="grid gap-6 md:grid-cols-2 md:text-left">
+        <Link
+          href="/about"
+          className="grid gap-6 md:grid-cols-2 md:text-left"
+          aria-label="About Humor Hub: mission, team, and tools"
+        >
           <div>
-            <h3 className="mb-1 text-lg md:col-start-2 md:text-xl">
+            <h3 className="mb-1 text-lg md:text-xl">
               See what makes the Hub tick.
             </h3>
             <p className="text-sm leading-relaxed md:text-base">
@@ -194,25 +179,14 @@ export default function Home() {
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:justify-items-end">
-            <Link
-              href="/about"
-              aria-label="About Humor Hub: mission, team, and tools"
-            >
-              <RoundImage
-                src="/about.webp"
-                alt="About page placeholder"
-                interactive
-                width={168}
-                height={168}
-                sizes="(min-width: 768px) 168px, 128px"
-                quality={70}
-              />
-            </Link>
+            <RoundImage
+              src="/about.webp"
+              alt="About page placeholder"
+              {...IMAGE_PROPS}
+            />
           </figure>
-          <Link href="/about" className="primary-cta">
-            About Humor Hub
-          </Link>
-        </div>
+          <span className="primary-cta">About Humor Hub</span>
+        </Link>
       </SectionCard>
     </main>
   );

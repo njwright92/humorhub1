@@ -1,18 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { DEFAULT_POLL_ID } from "@/app/lib/constants";
 import type { ApiResponse, PollCounts } from "@/app/lib/types";
 import CloseIcon from "./CloseIcon";
 
 const HIDE_AFTER_MS = 3000;
+const FETCH_DELAY_MS = 1000;
+
+const INITIAL_COUNTS: PollCounts = {
+  yesCount: 0,
+  noCount: 0,
+  totalCount: 0,
+};
+
+async function fetchCounts(): Promise<PollCounts | null> {
+  const res = await fetch(`/api/poll?id=${DEFAULT_POLL_ID}`);
+  const data = (await res.json()) as ApiResponse<PollCounts>;
+  return data.success && data.data ? data.data : null;
+}
 
 export default function HomepagePoll() {
-  const [counts, setCounts] = useState<PollCounts>({
-    yesCount: 0,
-    noCount: 0,
-    totalCount: 0,
-  });
+  const [counts, setCounts] = useState<PollCounts>(INITIAL_COUNTS);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
@@ -21,17 +30,18 @@ export default function HomepagePoll() {
 
   useEffect(() => {
     let cancelled = false;
+
     const id = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/poll?id=${DEFAULT_POLL_ID}`);
-        const data = (await res.json()) as ApiResponse<PollCounts>;
-        if (!cancelled && data.success && data.data) setCounts(data.data);
-      } catch (error) {
-        console.error("Failed to load poll results", error);
+        const data = await fetchCounts();
+        if (!cancelled && data) setCounts(data);
+      } catch {
+        // silently fail — poll is non-critical
       } finally {
         if (!cancelled) setLoading(false);
       }
-    }, 1000);
+    }, FETCH_DELAY_MS);
+
     return () => {
       cancelled = true;
       clearTimeout(id);
@@ -44,57 +54,56 @@ export default function HomepagePoll() {
     return () => clearTimeout(timer);
   }, [showResults, loading]);
 
-  const submitResponse = async (answer: "yes" | "no") => {
-    setSubmitting(true);
-    setErrorMsg(null);
-    try {
-      const res = await fetch("/api/poll", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pollId: DEFAULT_POLL_ID, answer }),
-      });
-      const data = (await res.json()) as ApiResponse<PollCounts>;
+  const submitResponse = useCallback(
+    async (answer: "yes" | "no") => {
+      if (submitting || showResults) return;
+      setSubmitting(true);
+      setErrorMsg(null);
 
-      if (!data.success || !data.data) {
-        if (data.error === "You already voted recently.") {
-          const countsRes = await fetch(`/api/poll?id=${DEFAULT_POLL_ID}`, {
-            cache: "no-store",
-          });
-          const countsData =
-            (await countsRes.json()) as ApiResponse<PollCounts>;
-          if (countsData.success && countsData.data) {
-            setCounts(countsData.data);
-            setShowResults(true);
-            setErrorMsg(data.error);
-            return;
+      try {
+        const res = await fetch("/api/poll", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pollId: DEFAULT_POLL_ID, answer }),
+        });
+        const data = (await res.json()) as ApiResponse<PollCounts>;
+
+        if (!data.success || !data.data) {
+          if (data.error === "You already voted recently.") {
+            const freshCounts = await fetchCounts();
+            if (freshCounts) {
+              setCounts(freshCounts);
+              setShowResults(true);
+              setErrorMsg(data.error);
+              return;
+            }
           }
+          throw new Error(data.error || "Unable to record vote");
         }
 
-        throw new Error(data.error || "Unable to record vote");
+        setCounts(data.data);
+        setShowResults(true);
+      } catch (error) {
+        setErrorMsg(
+          error instanceof Error
+            ? error.message
+            : "Couldn't record your vote. Please try again.",
+        );
+      } finally {
+        setSubmitting(false);
       }
+    },
+    [submitting, showResults],
+  );
 
-      setCounts(data.data);
-      setShowResults(true);
-    } catch (error) {
-      console.error("Poll submit error", error);
-      setErrorMsg(
-        error instanceof Error
-          ? error.message
-          : "Couldn't record your vote. Please try again.",
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  if (!visible) return null;
 
   const total = counts.totalCount;
   const yesPercent = total ? Math.round((counts.yesCount / total) * 100) : 0;
   const noPercent = total ? 100 - yesPercent : 0;
 
-  if (!visible) return null;
-
   return (
-    <div className="card-base animate-slide-in pointer-events-auto relative grid w-full max-w-md gap-2 rounded-2xl border-stone-600 bg-stone-800/90 p-3 shadow-2xl">
+    <div className="animate-slide-in relative grid w-full max-w-md gap-2 rounded-2xl border border-stone-600 bg-stone-800/80 p-3 shadow-xl">
       <button
         type="button"
         aria-label="Close poll"
@@ -103,18 +112,17 @@ export default function HomepagePoll() {
       >
         <CloseIcon className="size-4" />
       </button>
-      <div className="grid gap-1">
-        <h1 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">
-          Is crowd work real stand-up?
-        </h1>
-      </div>
+
+      <h2 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">
+        Is crowd work real stand-up?
+      </h2>
 
       <div className="grid auto-cols-fr grid-flow-col gap-2">
         <button
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("yes")}
-          className="rounded-2xl bg-amber-700 px-2 py-1.5 text-center font-bold text-stone-900 shadow-2xl transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+          className="rounded-2xl bg-amber-700 px-2 py-1.5 font-bold text-stone-900 transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
         >
           Yes
         </button>
@@ -122,7 +130,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("no")}
-          className="rounded-2xl border border-stone-600 bg-stone-900 px-2 py-1.5 text-center font-bold text-zinc-200 shadow-2xl transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-amber-500 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+          className="rounded-2xl border border-stone-600 bg-stone-900 px-2 py-1.5 font-bold text-zinc-200 transition-colors hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
         >
           No
         </button>
@@ -133,48 +141,47 @@ export default function HomepagePoll() {
       )}
 
       {showResults ? (
-        <div className="grid gap-2 rounded-2xl bg-stone-900/80 p-2 shadow-2xl sm:gap-3">
-          <ResultRow
+        <div className="grid gap-2 rounded-2xl bg-stone-900/90 p-2 sm:gap-3">
+          <ResultBar
             label="Yes"
             percent={loading ? null : yesPercent}
-            barColor="bg-amber-700"
+            color="bg-amber-700"
           />
-          <ResultRow
+          <ResultBar
             label="No"
             percent={loading ? null : noPercent}
-            barColor="bg-stone-300"
+            color="bg-stone-300"
           />
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-stone-600 bg-stone-900/50 p-2 text-sm text-zinc-200 shadow-2xl">
+        <p className="rounded-2xl border border-dashed border-stone-600 bg-stone-800/90 p-2 text-sm text-zinc-200">
           Vote to see the general consensus.
-        </div>
+        </p>
       )}
     </div>
   );
 }
 
-function ResultRow({
+function ResultBar({
   label,
   percent,
-  barColor,
+  color,
 }: {
   label: string;
   percent: number | null;
-  barColor: string;
+  color: string;
 }) {
+  const display = percent === null ? "…" : `${percent}%`;
+
   return (
     <div className="grid gap-1">
       <div className="flex items-center justify-between text-sm font-semibold text-zinc-200">
         <span>{label}</span>
-        <span>
-          {percent === null ? "…" : `${Math.max(0, Math.min(100, percent))}%`}{" "}
-          <span className="text-xs font-normal text-stone-300"></span>
-        </span>
+        <span>{display}</span>
       </div>
-      <div className="h-2 rounded-full bg-stone-800">
+      <div className="h-2 rounded-full bg-stone-800/90">
         <div
-          className={`h-full rounded-full ${barColor} transition-[width] duration-500 ease-out motion-reduce:transition-none`}
+          className={`h-full rounded-full ${color} transition-[width] duration-500 ease-out motion-reduce:transition-none`}
           style={{ width: `${percent ?? 0}%` }}
           aria-hidden="true"
         />
