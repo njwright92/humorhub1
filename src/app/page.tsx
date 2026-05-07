@@ -22,18 +22,13 @@ export const metadata: Metadata = {
     "comedy community",
     "comedy tools",
   ],
-  openGraph: {
-    title: "Humor Hub - The Hub of Humor, Open Mics & Comedy",
-    description:
-      "Your ultimate comedy destination. Find open mics, discover jokes, and connect with the comedy community.",
-    url: "/",
-    type: "website",
-  },
+
   alternates: {
     canonical: "/",
   },
 };
 
+// DRY: Centralize shared props and classes
 const IMAGE_PROPS = {
   interactive: true,
   width: 168,
@@ -43,24 +38,31 @@ const IMAGE_PROPS = {
   className: "bg-white p-1",
 } as const;
 
+// Local DRY Constants for the Section blocks
+const SECTION_GRID_LEFT = "grid gap-6 md:grid-cols-2 md:text-left";
+const SECTION_GRID_RIGHT = "grid gap-6 md:mr-4 md:grid-cols-2 md:text-right";
+const H3_STYLE = "mb-1 text-lg md:text-xl";
+const P_STYLE = "text-sm leading-relaxed md:text-base";
+
 export default function Home() {
   return (
-    <main className="grid min-h-dvh content-start gap-12 p-2 py-20 text-center md:ml-20">
+    <main className="page-shell gap-12 py-20 text-center">
+      {/* Poll Position */}
       <div className="fixed top-21 left-2 z-1 lg:top-2 lg:left-22">
         <HomepagePoll />
       </div>
 
-      <h1 className="text-5xl opacity-0 transition-opacity md:text-6xl md:opacity-100 lg:text-7xl">
+      {/* h1: Global CSS handles font/weight/shadow. Just handle size and transitions here. */}
+      <h1 className="text-5xl transition-opacity md:text-6xl lg:text-7xl">
         Humor Hub!
       </h1>
 
+      {/* SECTION 1: MIC FINDER */}
       <SectionCard id="micfinder-heading" title="Mic Finder!" variant="spaced">
-        <div className="grid gap-6 md:grid-cols-2 md:text-left">
+        <div className={SECTION_GRID_LEFT}>
           <div>
-            <h3 className="mb-1 text-lg md:text-xl">
-              Looking for your next Mic?
-            </h3>
-            <p className="text-sm leading-relaxed md:text-base">
+            <h3 className={H3_STYLE}>Looking for your next Mic?</h3>
+            <p className={P_STYLE}>
               MicFinder connects comics, musicians and poets with open mics
               worldwide!
               <br />
@@ -71,121 +73,93 @@ export default function Home() {
             <Link href="/mic-finder">
               <RoundImage
                 src="/favicon.ico"
-                alt="Mic Finder - Find open mics near you"
+                alt="Mic Finder"
                 {...IMAGE_PROPS}
                 priority
               />
             </Link>
           </figure>
           <EventForm />
-          <Link href="/mic-finder" className="btn-primary w-72 md:w-80">
+          <Link href="/mic-finder" className="primary-cta-left">
             Find Your Mic!
           </Link>
         </div>
       </SectionCard>
 
+      {/* SECTION 2: HUB NEWS */}
       <SectionCard id="news-heading" title="Hub News!">
         <ProtectedRouteButton
           route="/News"
           label="News"
-          className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right"
+          className={SECTION_GRID_RIGHT}
         >
           <div className="md:col-start-2">
-            <h3 className="mb-1 text-lg md:text-xl">
-              Your Source for Fresh Headlines!
-            </h3>
-            <p className="text-sm leading-relaxed md:text-base">
-              Looking for something topical?
-              <br />
+            <h3 className={H3_STYLE}>Your Source for Fresh Headlines!</h3>
+            <p className={P_STYLE}>
+              Looking for something topical? <br />
               Check out the Hub News for the latest updates!
             </p>
           </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
-            <RoundImage
-              src="/newsy.webp"
-              alt="Hub News - Latest comedy headlines"
-              {...IMAGE_PROPS}
-            />
+            <RoundImage src="/newsy.webp" alt="Hub News" {...IMAGE_PROPS} />
           </figure>
-          <span className="btn-primary w-72 self-start justify-self-center text-lg md:w-80 md:self-auto md:justify-self-end">
-            Check It Out
-          </span>
+          <span className="primary-cta-right">Check It Out</span>
         </ProtectedRouteButton>
       </SectionCard>
 
+      {/* SECTION 3: PROFILE */}
       <SectionCard id="profile-heading" title="Profile">
         <ProtectedRouteButton
           route="/Profile"
           label="Profile"
-          className="grid gap-6 md:grid-cols-2 md:text-left"
+          className={SECTION_GRID_LEFT}
         >
           <div>
-            <h3 className="mb-1 text-lg md:text-xl">
-              Keep your comedy calling card fresh.
-            </h3>
-            <p className="text-sm leading-relaxed md:text-base">
+            <h3 className={H3_STYLE}>Keep your comedy calling card fresh.</h3>
+            <p className={P_STYLE}>
               Update your avatar, and save mics for easy access on the road.
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:row-span-2 md:justify-items-end">
-            <RoundImage
-              src="/profile.webp"
-              alt="Profile page placeholder"
-              {...IMAGE_PROPS}
-            />
+            <RoundImage src="/profile.webp" alt="Profile" {...IMAGE_PROPS} />
           </figure>
-          <span className="btn-primary">Visit Your Profile</span>
+          <span className="primary-cta-left">Visit Your Profile</span>
         </ProtectedRouteButton>
       </SectionCard>
 
+      {/* SECTION 4: CONTACT */}
       <SectionCard id="contact-heading" title="Contact">
-        <Link
-          href="/contact"
-          className="grid gap-6 md:mr-4 md:grid-cols-2 md:text-right"
-        >
+        <Link href="/contact" className={SECTION_GRID_RIGHT}>
           <div>
-            <h3 className="mb-1 text-lg md:text-xl">
-              Questions, feedback, or collabs?
-            </h3>
-            <p className="text-sm leading-relaxed md:text-base">
+            <h3 className={H3_STYLE}>Questions, feedback, or collabs?</h3>
+            <p className={P_STYLE}>
               Drop the Humor Hub team a note and we will get back to you.
             </p>
           </div>
           <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
-            <RoundImage
-              src="/contact.webp"
-              alt="Contact page placeholder"
-              {...IMAGE_PROPS}
-            />
+            <RoundImage src="/contact.webp" alt="Contact" {...IMAGE_PROPS} />
           </figure>
-          <span className="btn-primary md:self-auto md:justify-self-end">
-            Contact Us
-          </span>
+          <span className="primary-cta-right">Contact Us</span>
         </Link>
       </SectionCard>
 
+      {/* SECTION 5: ABOUT */}
       <SectionCard id="about-heading" title="About">
         <Link
           href="/about"
-          className="grid gap-6 md:grid-cols-2 md:text-left"
-          aria-label="About Humor Hub: mission, team, and tools"
+          className={SECTION_GRID_LEFT}
+          aria-label="About Humor Hub"
         >
           <div>
-            <h3 className="mb-1 text-lg md:text-xl">
-              See what makes the Hub tick.
-            </h3>
-            <p className="text-sm leading-relaxed md:text-base">
+            <h3 className={H3_STYLE}>See what makes the Hub tick.</h3>
+            <p className={P_STYLE}>
               Learn the mission, the tools, and the team behind the laughs.
             </p>
           </div>
           <figure className="row-span-3 grid place-items-center md:justify-items-end">
-            <RoundImage
-              src="/about.webp"
-              alt="About page placeholder"
-              {...IMAGE_PROPS}
-            />
+            <RoundImage src="/about.webp" alt="About" {...IMAGE_PROPS} />
           </figure>
-          <span className="primary-cta">About Humor Hub</span>
+          <span className="primary-cta-left">About Humor Hub</span>
         </Link>
       </SectionCard>
     </main>

@@ -149,14 +149,34 @@
     @apply rounded-2xl border border-white/10 bg-stone-900/50 p-4;
   }
 
-  .btn-primary {
-    @apply cursor-pointer rounded-2xl border-b-2 border-black/20 bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 transition-all hover:outline hover:outline-white;
+  /* Grouped Base Button Styles for Tailwind v4 Compatibility */
+  .btn-primary,
+  .primary-cta-left,
+  .primary-cta-right {
+    @apply cursor-pointer rounded-2xl border-b-2 border-stone-900/20 bg-amber-700 px-3 py-2 text-center font-bold text-stone-900 transition-all hover:outline hover:outline-zinc-200;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     line-height: 1.25;
   }
-  .btn-primary:hover {
+
+  .btn-primary:hover,
+  .primary-cta-left:hover,
+  .primary-cta-right:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Specific Layout Sizing for Homepage CTAs */
+  .primary-cta-left,
+  .primary-cta-right {
+    @apply w-72 self-start justify-self-center text-lg md:w-80;
+  }
+
+  .primary-cta-left {
+    @apply md:justify-self-start;
+  }
+
+  .primary-cta-right {
+    @apply md:justify-self-end;
   }
 
   .btn-outline-amber {
@@ -170,7 +190,7 @@
   }
 
   .btn-dark {
-    @apply cursor-pointer rounded-2xl border border-zinc-200 bg-stone-900 px-4 py-2 text-center font-bold text-zinc-200 transition-all;
+    @apply cursor-pointer rounded-2xl border border-zinc-200 bg-stone-900 px-3 py-2 text-center font-bold text-zinc-200 transition-all;
     box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.25);
     line-height: 1.25;
   }

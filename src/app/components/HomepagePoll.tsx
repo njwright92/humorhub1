@@ -103,17 +103,19 @@ export default function HomepagePoll() {
   const noPercent = total ? 100 - yesPercent : 0;
 
   return (
-    <div className="animate-slide-in relative grid w-full max-w-md gap-2 rounded-2xl border border-stone-600 bg-stone-900/90 p-3 shadow-xl">
+    /* card-dark handles rounded, border, bg, and text color */
+    <div className="animate-slide-in card-dark relative grid w-full max-w-md gap-2">
       <button
         type="button"
         aria-label="Close poll"
         onClick={() => setVisible(false)}
-        className="absolute top-1 right-1"
+        className="absolute top-1 right-1 cursor-pointer"
       >
         <CloseIcon className="size-4" />
       </button>
 
-      <h2 className="mt-2 text-center font-bold whitespace-nowrap text-amber-700 lg:text-lg">
+      {/* h2 global handles font and weight */}
+      <h2 className="mt-2 text-center whitespace-nowrap text-amber-700 lg:text-lg">
         Is crowd work real stand-up?
       </h2>
 
@@ -122,7 +124,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("yes")}
-          className="rounded-2xl bg-amber-700 px-2 py-1.5 font-bold text-stone-900 transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+          className="btn-primary py-1 disabled:opacity-60 sm:text-sm"
         >
           Yes
         </button>
@@ -130,7 +132,7 @@ export default function HomepagePoll() {
           type="button"
           disabled={submitting || showResults}
           onClick={() => submitResponse("no")}
-          className="rounded-2xl border border-stone-600 bg-stone-900 px-2 py-1.5 font-bold text-zinc-200 transition-colors hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+          className="btn-dark py-1 disabled:opacity-60 sm:text-sm"
         >
           No
         </button>
@@ -141,7 +143,7 @@ export default function HomepagePoll() {
       )}
 
       {showResults ? (
-        <div className="grid gap-2 rounded-2xl bg-stone-900/90 p-2 sm:gap-3">
+        <div className="grid gap-2 rounded-2xl bg-stone-900/50 p-2 sm:gap-3">
           <ResultBar
             label="Yes"
             percent={loading ? null : yesPercent}
@@ -150,11 +152,11 @@ export default function HomepagePoll() {
           <ResultBar
             label="No"
             percent={loading ? null : noPercent}
-            color="bg-stone-300"
+            color="bg-zinc-400"
           />
         </div>
       ) : (
-        <p className="rounded-2xl border border-dashed border-stone-600 bg-stone-800/90 p-2 text-sm text-zinc-200">
+        <p className="rounded-2xl border border-dashed border-stone-600 bg-stone-800/50 p-2 text-sm text-stone-400">
           Vote to see the general consensus.
         </p>
       )}
@@ -175,13 +177,13 @@ function ResultBar({
 
   return (
     <div className="grid gap-1">
-      <div className="flex items-center justify-between text-sm font-semibold text-zinc-200">
+      <div className="flex items-center justify-between text-sm font-semibold">
         <span>{label}</span>
         <span>{display}</span>
       </div>
-      <div className="h-2 rounded-full bg-stone-800/90">
+      <div className="h-2 rounded-full bg-stone-800">
         <div
-          className={`h-full rounded-full ${color} transition-[width] duration-500 ease-out motion-reduce:transition-none`}
+          className={`h-full rounded-full ${color} transition-[width] duration-500 ease-out`}
           style={{ width: `${percent ?? 0}%` }}
           aria-hidden="true"
         />

@@ -46,7 +46,7 @@ function NavIcon({ icon }: { icon: string }) {
   const parts = icon.split("|");
   return (
     <svg
-      className="size-10 text-stone-900 transition-colors hover:text-zinc-700"
+      className="size-10 transition-colors hover:text-stone-700"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

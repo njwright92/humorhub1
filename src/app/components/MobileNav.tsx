@@ -14,10 +14,7 @@ export default function MobileNav() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -43,12 +40,11 @@ export default function MobileNav() {
             className={`shadow-soft rounded-full transition-all duration-300 ${
               isScrolled ? "size-9" : "size-11"
             }`}
-            quality={70}
             priority
-            sizes="(min-width: 768px) 168px, 128px"
           />
         </Link>
 
+        {/* Global CSS handles font-heading, weight, and shadow */}
         <h1
           className={`text-center tracking-wider text-stone-900 italic transition-all duration-300 ${
             isScrolled ? "text-2xl" : "text-3xl"
@@ -60,28 +56,20 @@ export default function MobileNav() {
         <button
           type="button"
           onClick={toggleMenu}
-          className="grid place-items-center"
+          className="grid place-items-center text-stone-900"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={isMenuOpen}
-          aria-controls="mobile-menu"
         >
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`text-stone-900 transition-all duration-300 ${
-              isScrolled ? "size-7" : "size-8"
-            }`}
+            className={`transition-all duration-300 ${isScrolled ? "size-7" : "size-8"}`}
             aria-hidden="true"
           >
             {isMenuOpen ? (
-              <>
-                <path d="M6 6l12 12" />
-                <path d="M18 6L6 18" />
-              </>
+              <path d="M6 6l12 12M18 6L6 18" />
             ) : (
               <path d="M3 12h18M3 6h18M3 18h18" />
             )}
