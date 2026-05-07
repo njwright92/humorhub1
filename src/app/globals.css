@@ -21,15 +21,17 @@
   }
 
   input[type="date"] {
-    appearance: none;
+    -webkit-appearance: auto;
+    appearance: auto;
     min-height: 2.75rem;
     display: block;
     width: 100%;
-    background-color: var(--color-zinc-100);
+    background-color: var(--color-zinc-200);
+    color: var(--color-stone-900);
   }
 
-  input[type="date"]:invalid::-webkit-datetime-edit {
-    color: #9ca3af;
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 1;
   }
 
   h1,
@@ -41,7 +43,7 @@
     font-family: var(--font-heading);
     font-weight: 700;
     letter-spacing: 0.025em;
-    --tw-text-shadow-color: rgba(0, 0, 0, 0.7);
+    --tw-text-shadow-color: rgba(35, 26, 20, 0.7);
     text-shadow: 1px 1px 0px var(--tw-text-shadow-color);
   }
 
