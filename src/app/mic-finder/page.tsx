@@ -180,9 +180,9 @@ export default function MicFinderPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
       />
-      <main className="grid min-h-dvh justify-items-center gap-10 px-4 py-12 text-center md:ml-20 md:gap-12 md:px-8 md:py-20">
+      <main className="grid min-h-dvh justify-items-center gap-10 px-2 py-12 text-center md:ml-20 md:gap-12 md:px-6 md:py-20">
         {/* OPTIMIZED ASIDE */}
-        <aside className="shadow-soft -mt-8 min-h-11 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-100 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base">
+        <aside className="shadow-soft -mt-8 min-h-11 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-200 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base">
           <p className="m-0 leading-snug">
             <span aria-hidden="true">📢 </span>
             Note: Open mic events evolve quickly. See something outdated?{" "}

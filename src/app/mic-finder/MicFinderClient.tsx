@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   useState,
   useEffect,
   useCallback,
@@ -30,7 +30,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
   loading: () => (
-    <span className="grid size-full place-content-center text-stone-300">
+    <span className="grid size-full place-content-center text-stone-500">
       Loading Map...
     </span>
   ),
@@ -182,11 +182,6 @@ const CitySelector = memo(function CitySelector({
               </li>
             ))}
           </ul>
-          {dropdownCities.hiddenCount > 0 && (
-            <p className="border-t border-stone-300 px-3 py-2 text-center text-xs font-semibold text-stone-600">
-              Keep typing to narrow {dropdownCities.hiddenCount} more cities.
-            </p>
-          )}
         </div>
       )}
     </div>
@@ -206,7 +201,6 @@ export default function MicFinderClient({
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
-  const [locale, setLocale] = useState("en-US");
   const [selectedCity, setSelectedCity] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
@@ -218,10 +212,6 @@ export default function MicFinderClient({
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
     useState<MicFinderFilterResult>(initialFilters);
-
-  useEffect(() => {
-    setLocale(navigator.language || "en-US");
-  }, []);
 
   useEffect(() => {
     const city = searchParams.get("city");
@@ -317,6 +307,7 @@ export default function MicFinderClient({
     setSelectedDate(date);
   }, []);
 
+  // FIXED: Using the declared function
   const toggleMapVisibility = useCallback(() => {
     setIsMapVisible((prev) => !prev);
   }, []);
@@ -324,13 +315,13 @@ export default function MicFinderClient({
   const { dayOfWeek, formattedDate } = useMemo(() => {
     if (!selectedDate) return { dayOfWeek: "", formattedDate: "" };
     return {
-      dayOfWeek: selectedDate.toLocaleDateString(locale, { weekday: "long" }),
-      formattedDate: selectedDate.toLocaleDateString(locale, {
+      dayOfWeek: selectedDate.toLocaleDateString("en-US", { weekday: "long" }),
+      formattedDate: selectedDate.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
       }),
     };
-  }, [selectedDate, locale]);
+  }, [selectedDate]);
 
   const initialLoadRef = useRef(true);
 
@@ -385,6 +376,7 @@ export default function MicFinderClient({
           zoom: DEFAULT_ZOOM,
         };
   }, [selectedCity, initialCityCoordinates]);
+
   return (
     <>
       <div className="relative z-20 mt-2 grid min-h-12 w-full items-center justify-items-center gap-3 sm:flex sm:justify-center sm:gap-4">
@@ -437,7 +429,7 @@ export default function MicFinderClient({
       </nav>
 
       <div
-        className={`grid w-full transition-opacity duration-200 ${isPending ? "opacity-60" : "opacity-100"}`}
+        className={`grid w-full transition-opacity duration-300 ${isPending ? "opacity-60" : "opacity-100"}`}
       >
         <section className="card-shell my-2 w-full">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
@@ -491,15 +483,15 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section className="card-base shadow-soft relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800 contain-paint">
+        <section className="card-base relative my-8 h-96 w-full overflow-hidden border-amber-700 bg-stone-900/10 shadow-xl contain-paint">
           <button
             type="button"
-            onClick={toggleMapVisibility}
-            className={`shadow-soft absolute z-10 rounded-2xl px-4 py-2 font-bold transition-all ${!isMapVisible ? "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-700 text-stone-900" : "bottom-4 left-4 bg-stone-900 text-sm text-white"}`}
+            onClick={toggleMapVisibility} // FIXED: Using function constant
+            className="btn-primary absolute bottom-6 left-6 z-10 px-3 py-2 text-sm"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
-          {isMapVisible && (
+          {isMapVisible ? (
             <div className="size-full">
               <GoogleMap
                 lat={mapConfig.lat}
@@ -507,6 +499,10 @@ export default function MicFinderClient({
                 zoom={mapConfig.zoom}
                 events={eventData.baseEvents}
               />
+            </div>
+          ) : (
+            <div className="grid size-full place-content-center opacity-20">
+              <span className="text-8xl">🗺️</span>
             </div>
           )}
         </section>

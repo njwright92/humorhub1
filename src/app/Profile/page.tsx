@@ -22,13 +22,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/Profile",
   },
-  openGraph: {
-    title: "Your Profile - Manage Your Humor Hub Account",
-    description:
-      "Access and manage your Humor Hub profile. Update your information, preferences, and view your favorite content.",
-    url: "/Profile",
-    type: "website",
-  },
   robots: {
     index: false,
     follow: true,
@@ -88,12 +81,10 @@ function ProfileSkeleton() {
   return (
     <div
       role="status"
-      aria-label="Loading profile"
       className="page-content mt-4 animate-pulse gap-8 lg:grid-cols-3"
     >
-      <div className="card-base min-h-80 border-stone-700 bg-stone-800" />
-      <div className="card-base min-h-125 border-stone-700 bg-stone-800 lg:col-span-2" />
-      <span className="sr-only">Loading profile...</span>
+      <div className="panel-light min-h-80 border-transparent bg-stone-800/20" />
+      <div className="card-dark min-h-125 lg:col-span-2" />
     </div>
   );
 }
@@ -103,12 +94,12 @@ export default function ProfilePage() {
 
   return (
     <main className="page-shell gap-4 text-center">
-      <div className="min-h-fit space-y-2">
+      <header className="space-y-2">
         <h1 className="page-title">Profile Management</h1>
-        <p className="text-sm text-stone-300 md:text-lg">
+        <p className="text-stone-400 md:text-lg">
           Manage your personal schedule
         </p>
-      </div>
+      </header>
 
       <Suspense fallback={<ProfileSkeleton />}>
         <ProfileClientWrapper dataPromise={dataPromise} />

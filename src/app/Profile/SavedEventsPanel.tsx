@@ -15,22 +15,23 @@ function SavedEventCard({
     : "/mic-finder";
 
   return (
-    <article className="card-base group flex items-start justify-between border-stone-600 bg-stone-900/50 p-4 transition-colors hover:border-amber-700">
+    /* card-muted: Standardized for dark items */
+    <article className="card-muted group flex items-start justify-between transition-all hover:border-amber-700/50">
       <div className="text-left">
-        <h3 className="font-bold text-amber-700">{event.name}</h3>
-        <p className="mt-1 text-sm text-stone-300">📍 {event.location}</p>
-        <p className="mt-1 text-xs text-zinc-200">📅 {event.date}</p>
+        <h3 className="text-lg text-amber-700">{event.name}</h3>
+        <p className="text-sm opacity-80">📍 {event.location}</p>
+        <p className="mt-1 text-xs opacity-60">📅 {event.date}</p>
       </div>
-      <div className="flex flex-col items-end gap-3">
+      <div className="flex flex-col items-end gap-4">
         <Link
           href={mapHref}
-          className="text-xs text-green-600 underline hover:text-green-800"
+          className="text-xs font-bold text-green-500 underline hover:text-green-400"
         >
-          {city ? "View on Map" : "Browse Mic Finder"}
+          View on Map
         </Link>
         <button
           onClick={() => onDelete(event.id, event.name)}
-          className="rounded border border-red-900/50 px-2 py-1 text-xs font-bold text-red-400 hover:bg-red-900/20"
+          className="text-xs font-bold text-red-500/70 hover:text-red-500 hover:underline"
         >
           Remove
         </button>
@@ -47,13 +48,15 @@ export default function SavedEventsPanel({
   onDelete: (id: string, name: string) => void;
 }) {
   return (
-    <section className="card-base min-h-125 border-stone-600 bg-stone-950/80 p-6 lg:col-span-2">
-      <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-zinc-200">
-        <span>🎟️</span> Saved Events
-        <span className="rounded-full bg-stone-800 px-2 py-1 text-xs">
+    <section className="card-dark min-h-125 lg:col-span-2">
+      <header className="mb-6 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-xl">
+          <span>🎟️</span> Saved Events
+        </h2>
+        <span className="rounded-full bg-stone-800 px-3 py-1 font-mono text-xs">
           {savedEvents.length}
         </span>
-      </h2>
+      </header>
 
       {savedEvents.length > 0 ? (
         <div className="grid gap-4">
@@ -62,9 +65,9 @@ export default function SavedEventsPanel({
           ))}
         </div>
       ) : (
-        <div className="grid h-64 place-content-center rounded-2xl border-2 border-dashed border-stone-700 text-stone-500">
+        <div className="grid h-64 place-content-center rounded-2xl border-2 border-dashed border-stone-800 text-stone-500">
           <p>No gigs saved yet.</p>
-          <Link href="/mic-finder" className="mt-2 text-amber-600 underline">
+          <Link href="/mic-finder" className="mt-2 text-amber-700 underline">
             Go find a stage
           </Link>
         </div>

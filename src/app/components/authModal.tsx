@@ -179,7 +179,7 @@ export default function AuthModal({
       aria-labelledby="auth-title"
     >
       <div
-        className="card-shell relative w-full max-w-sm space-y-3 bg-stone-300 p-4"
+        className="card-shell relative w-full max-w-sm space-y-3 bg-zinc-200 p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -297,27 +297,32 @@ export default function AuthModal({
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-zinc-200 p-2 text-stone-900 shadow-xl transition-colors hover:bg-zinc-300 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-stone-300 bg-white p-2.5 text-sm font-bold text-stone-900 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
         >
-          <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 48 48"
+            className="size-5 shrink-0"
+            aria-hidden="true"
+          >
             <path
-              d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"
-              fill="#4285F4"
-            />
-            <path
-              d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"
-              fill="#34A853"
-            />
-            <path
-              d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"
               fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+            />
+            <path
+              fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+            />
+            <path
+              fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
             />
           </svg>
-          {isLoading ? "Loading..." : "Sign in with Google"}
+          <span>{isLoading ? "Signing in..." : "Sign in with Google"}</span>
         </button>
       </div>
     </div>
