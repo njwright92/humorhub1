@@ -107,7 +107,7 @@ export default function Home() {
               {...IMAGE_PROPS}
             />
           </figure>
-          <span className="btn-primary w-72 self-start justify-self-center text-lg md:w-80 md:justify-self-end md:self-auto">
+          <span className="btn-primary w-72 self-start justify-self-center text-lg md:w-80 md:self-auto md:justify-self-end">
             Check It Out
           </span>
         </ProtectedRouteButton>
@@ -158,7 +158,7 @@ export default function Home() {
               {...IMAGE_PROPS}
             />
           </figure>
-          <span className="btn-primary md:justify-self-end md:self-auto">
+          <span className="btn-primary md:self-auto md:justify-self-end">
             Contact Us
           </span>
         </Link>

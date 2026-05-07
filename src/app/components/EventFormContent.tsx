@@ -11,6 +11,8 @@ import {
 import { useToast } from "./ToastContext";
 import CloseIcon from "./CloseIcon";
 import type { EventSubmission, ApiResponse } from "../lib/types";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface FormState {
   name: string;
@@ -25,7 +27,7 @@ interface FormState {
 const INITIAL_FORM_STATE: FormState = {
   name: "",
   location: "",
-  date: null,
+  date: new Date(),
   details: "",
   isRecurring: false,
   isFestival: false,
@@ -49,11 +51,13 @@ const RadioGroup = memo(function RadioGroup({
   onChange: (name: RadioName, value: boolean) => void;
 }) {
   const id = `${name}-label`;
+
   return (
     <div className="grid gap-2 rounded-2xl border border-stone-300 bg-zinc-200 p-2 text-center">
       <span className="text-sm font-bold text-stone-900" id={id}>
         {label}
       </span>
+
       <div
         className="grid grid-flow-col justify-center gap-4"
         role="radiogroup"
@@ -69,6 +73,7 @@ const RadioGroup = memo(function RadioGroup({
           />
           Yes
         </label>
+
         <label className="grid grid-flow-col items-center gap-1 text-sm font-medium text-stone-800">
           <input
             type="radio"
@@ -86,6 +91,7 @@ const RadioGroup = memo(function RadioGroup({
 
 function buildSubmission(form: FormState): EventSubmission {
   const dateIso = form.date?.toISOString() ?? "";
+
   return {
     id: crypto.randomUUID(),
     name: form.name.trim(),
@@ -101,6 +107,7 @@ function buildSubmission(form: FormState): EventSubmission {
 
 export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const { showToast } = useToast();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE);
   const [formError, setFormError] = useState("");
@@ -109,14 +116,19 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+
     document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [onClose]);
 
-  // Prevent background scroll while modal is open
   useEffect(() => {
     const prev = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
+
     return () => {
       document.body.style.overflow = prev;
     };
@@ -125,26 +137,26 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      setForm((prev) => ({ ...prev, [name]: value }));
+
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     },
     [],
   );
 
   const handleRadioChange = useCallback((name: RadioName, value: boolean) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }, []);
-
-  const handleDateChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const dateStr = e.target.value;
     setForm((prev) => ({
       ...prev,
-      date: dateStr ? new Date(`${dateStr}T12:00:00`) : null,
+      [name]: value,
     }));
   }, []);
 
   const handleSubmit = useCallback(
     async (e: SubmitEvent) => {
       e.preventDefault();
+
       if (isSubmitting) return;
 
       const missing = [
@@ -167,8 +179,12 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
         const response = await fetch("/api/events/create", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ eventData: submission }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            eventData: submission,
+          }),
         });
 
         const result: ApiResponse = await response.json();
@@ -178,11 +194,14 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             result.error ?? "Submission failed. Please try again.",
             "error",
           );
+
           return;
         }
 
         showToast("Event submitted successfully!", "success");
+
         setForm(INITIAL_FORM_STATE);
+
         onClose();
       } catch {
         showToast("Submission failed. Please try again.", "error");
@@ -192,8 +211,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
     },
     [form, isSubmitting, showToast, onClose],
   );
-
-  const dateValue = form.date?.toISOString().split("T")[0] ?? "";
 
   return (
     <div
@@ -231,6 +248,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           <h1 id="event-form-title" className="text-3xl text-stone-900">
             Event Form
           </h1>
+
           <p className="text-sm font-semibold text-red-600" aria-hidden="true">
             * Required fields
           </p>
@@ -241,6 +259,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             Event Name <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
+
           <input
             type="text"
             id="event-name"
@@ -259,6 +278,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             Location (Full Address) <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
+
           <input
             type="text"
             id="event-location"
@@ -274,12 +294,14 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
         <fieldset className="grid grid-cols-2 gap-4">
           <legend className="sr-only">Event options</legend>
+
           <RadioGroup
             label="Recurring?"
             name="isRecurring"
             value={form.isRecurring}
             onChange={handleRadioChange}
           />
+
           <RadioGroup
             label="Festival?"
             name="isFestival"
@@ -293,11 +315,13 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             Details <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
+
           {form.isRecurring && (
             <p className="text-xs font-bold text-red-600" role="note">
               * Please include Frequency (e.g. Weekly)
             </p>
           )}
+
           <textarea
             id="event-details"
             name="details"
@@ -311,18 +335,28 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        <div className="grid gap-1">
-          <label htmlFor="event-date" className={labelClass}>
+        <div className="grid cursor-pointer gap-1">
+          <label htmlFor="date" className={labelClass}>
             Date <span aria-hidden="true">*</span>
             <span className="sr-only">(required)</span>
           </label>
-          <input
-            id="event-date"
-            type="date"
-            required
-            value={dateValue}
-            onChange={handleDateChange}
-            className={inputClass}
+
+          <DatePicker
+            id="date"
+            selected={form.date}
+            onChange={(date: Date | null) =>
+              setForm((prev) => ({
+                ...prev,
+                date,
+              }))
+            }
+            dateFormat="MM/dd/yyyy"
+            placeholderText="MM/DD/YYYY"
+            className="date-picker-input text-center"
+            calendarClassName="date-picker-calendar"
+            popperClassName="date-picker-popper"
+            showPopperArrow={false}
+            showIcon
           />
         </div>
 
@@ -334,6 +368,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
               (optional) if you want to be notified when the event is added.
             </span>
           </label>
+
           <input
             type="email"
             id="event-email"

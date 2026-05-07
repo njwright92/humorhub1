@@ -103,7 +103,7 @@ export default function HomepagePoll() {
   const noPercent = total ? 100 - yesPercent : 0;
 
   return (
-    <div className="animate-slide-in relative grid w-full max-w-md gap-2 rounded-2xl border border-stone-600 bg-stone-800/80 p-3 shadow-xl">
+    <div className="animate-slide-in relative grid w-full max-w-md gap-2 rounded-2xl border border-stone-600 bg-stone-900/90 p-3 shadow-xl">
       <button
         type="button"
         aria-label="Close poll"

@@ -24,22 +24,8 @@ import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
 import EventCard from "./EventCard";
 import { saveEvent } from "@/app/actions/events";
 import { useSession } from "@/app/components/SessionContext";
-
-// --- UTILITIES ---
-const parseLocalDate = (dateStr?: string | null) => {
-  if (!dateStr) return null;
-  const [year, month, day] = dateStr.split("-").map(Number);
-  if (!year || !month || !day) return null;
-  return new Date(year, month - 1, day);
-};
-
-const formatDateInputValue = (date: Date | null) => {
-  if (!date) return "";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
@@ -223,9 +209,11 @@ export default function MicFinderClient({
   const [locale, setLocale] = useState("en-US");
   const [selectedCity, setSelectedCity] = useState("");
   const [citySearchTerm, setCitySearchTerm] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(() =>
-    parseLocalDate(initialDate),
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
+    if (!initialDate) return new Date();
+    const [year, month, day] = initialDate.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  });
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
@@ -325,12 +313,9 @@ export default function MicFinderClient({
     [refreshSession, session, showToast],
   );
 
-  const handleDateChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSelectedDate(parseLocalDate(e.target.value));
-    },
-    [],
-  );
+  const handleDateChange = useCallback((date: Date | null) => {
+    setSelectedDate(date);
+  }, []);
 
   const toggleMapVisibility = useCallback(() => {
     setIsMapVisible((prev) => !prev);
@@ -349,6 +334,14 @@ export default function MicFinderClient({
 
   const initialLoadRef = useRef(true);
 
+  const formatDateInputValue = (date: Date | null) => {
+    if (!date) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     if (initialLoadRef.current) {
       initialLoadRef.current = false;
@@ -360,8 +353,9 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         if (selectedCity) params.set("city", selectedCity);
-        if (selectedDate)
+        if (selectedDate) {
           params.set("date", formatDateInputValue(selectedDate));
+        }
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
           { signal: controller.signal },
@@ -405,18 +399,21 @@ export default function MicFinderClient({
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
-          <input
+
+          <DatePicker
             id="event-date-picker"
-            name="event-date"
-            type="date"
-            value={formatDateInputValue(selectedDate)}
-            onChange={handleDateChange}
-            onClick={(e) => {
-              if ("showPicker" in e.currentTarget) {
-                e.currentTarget.showPicker();
+            selected={selectedDate}
+            onChange={(date: Date | null) => {
+              if (date) {
+                handleDateChange(date);
               }
             }}
-            className={`${inputClass} cursor-pointer`}
+            dateFormat="MM/dd/yyyy"
+            className={`${inputClass} date-picker-input text-center md:text-left`}
+            calendarClassName="date-picker-calendar"
+            popperClassName="date-picker-popper"
+            showPopperArrow={false}
+            showIcon
           />
         </div>
       </div>
