@@ -207,7 +207,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
         noValidate
-        className="card-base-2 relative grid max-h-[90vh] w-full max-w-md gap-3 overflow-auto border-stone-900 bg-zinc-200 p-4"
+        className="card-base relative grid max-h-[90vh] w-full max-w-md gap-3 overflow-auto border-stone-900 bg-zinc-200 p-4"
       >
         <button
           onClick={onClose}

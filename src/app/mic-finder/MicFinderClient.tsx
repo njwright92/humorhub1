@@ -494,7 +494,7 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section className="card-base-2 shadow-soft relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800 contain-paint">
+        <section className="card-base shadow-soft relative my-2 h-96 w-full overflow-hidden border-amber-700 bg-stone-800 contain-paint">
           <button
             type="button"
             onClick={toggleMapVisibility}

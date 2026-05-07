@@ -78,7 +78,7 @@ export default function Home() {
             </Link>
           </figure>
           <EventForm />
-          <Link href="/mic-finder" className="primary-cta">
+          <Link href="/mic-finder" className="btn-primary w-72 md:w-80">
             Find Your Mic!
           </Link>
         </div>
@@ -107,7 +107,7 @@ export default function Home() {
               {...IMAGE_PROPS}
             />
           </figure>
-          <span className="btn-primary w-72 self-start justify-self-center text-lg md:col-start-2 md:w-80 md:justify-self-end">
+          <span className="btn-primary w-72 self-start justify-self-center text-lg md:w-80 md:justify-self-end md:self-auto">
             Check It Out
           </span>
         </ProtectedRouteButton>
@@ -134,7 +134,7 @@ export default function Home() {
               {...IMAGE_PROPS}
             />
           </figure>
-          <span className="primary-cta md:self-start">Visit Your Profile</span>
+          <span className="btn-primary">Visit Your Profile</span>
         </ProtectedRouteButton>
       </SectionCard>
 
@@ -158,7 +158,7 @@ export default function Home() {
               {...IMAGE_PROPS}
             />
           </figure>
-          <span className="primary-cta md:self-start md:justify-self-end">
+          <span className="btn-primary md:justify-self-end md:self-auto">
             Contact Us
           </span>
         </Link>

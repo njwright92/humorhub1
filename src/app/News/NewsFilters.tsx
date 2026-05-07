@@ -33,7 +33,7 @@ export default function NewsFilters({
       aria-labelledby="filters-heading"
       method="get"
       action="/News"
-      className="card-base-2 card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-4 shadow-amber-700 backdrop-blur-md lg:p-8"
+      className="card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-4 shadow-amber-700 backdrop-blur-md lg:p-8"
     >
       <fieldset>
         <legend id="filters-heading" className="sr-only">
