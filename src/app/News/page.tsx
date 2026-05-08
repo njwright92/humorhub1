@@ -1,42 +1,48 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+
 import NewsClient from "./NewsClient";
 import AuthGatePrompt from "../components/AuthGatePrompt";
+
 import { fetchNewsArticles } from "@/app/lib/data/news";
-import type { NewsCategory } from "@/app/lib/types";
 import { getServerAuth } from "@/app/lib/firebase-admin";
 import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
+
+import type { NewsCategory } from "@/app/lib/types";
+
 import NewsFilters, {
   NEWS_CATEGORIES,
   NEWS_SUBCATEGORIES,
 } from "./NewsFilters";
 
 export const metadata: Metadata = {
-  title: "Hub News - Latest Comedy & World Stories | Humor Hub",
-  description:
-    "Get the latest jokes, events, and comedy news along with top stories from around the world with Humor Hub.",
-  alternates: {
-    canonical: "News",
-  },
-  openGraph: {
-    title: "Hub News - Latest Comedy & World Stories",
-    description: "Curated news and stories for the comedy community.",
-    url: "/News",
-    siteName: "Humor Hub",
-    type: "website",
-  },
+  title: "Hub News | Humor Hub",
+  description: "Latest comedy news and world stories.",
+  alternates: { canonical: "/News" },
+};
+
+type NewsContentProps = {
+  resolvedCategory: NewsCategory;
+  subcategory: string;
+};
+
+type NewsPageProps = {
+  searchParams?: Promise<{
+    category?: string;
+    subcategory?: string;
+  }>;
 };
 
 function NewsHeader() {
   return (
-    <>
+    <header className="space-y-2">
       <h1 className="page-title">Hub News</h1>
-      <p className="text-sm text-stone-300 md:text-lg">
-        Curated stories from around the world. Stay informed with the latest
-        updates.
+
+      <p className="text-center text-stone-400 md:text-lg">
+        Curated stories from around the world.
       </p>
-    </>
+    </header>
   );
 }
 
@@ -44,29 +50,19 @@ function NewsSkeleton() {
   return (
     <div
       role="status"
-      aria-label="Loading news"
-      className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3"
+      className="mx-auto grid w-full max-w-6xl animate-pulse gap-6 md:grid-cols-2 lg:grid-cols-3"
     >
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div
-          key={i}
-          className="card-muted grid h-72 animate-pulse grid-rows-[auto_1fr] gap-4 p-4"
-        >
-          <div className="h-32 rounded-2xl bg-stone-700" />
-          <div className="grid gap-2">
-            <div className="h-4 w-3/4 rounded-2xl bg-stone-700" />
-            <div className="h-4 w-5/6 rounded-2xl bg-stone-700" />
-            <div className="h-4 w-2/3 rounded-2xl bg-stone-700" />
-          </div>
-        </div>
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="card-muted h-96 bg-stone-800/20" />
       ))}
     </div>
   );
 }
 
-async function canAccessNews(): Promise<boolean> {
+async function canAccessNews() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
   if (!sessionCookie) return false;
 
   try {
@@ -80,14 +76,12 @@ async function canAccessNews(): Promise<boolean> {
 async function NewsContent({
   resolvedCategory,
   subcategory,
-}: {
-  resolvedCategory: NewsCategory;
-  subcategory: string;
-}) {
+}: NewsContentProps) {
   const { articles, error } = await fetchNewsArticles(
     resolvedCategory,
     subcategory,
   );
+
   return (
     <NewsClient
       articles={articles}
@@ -98,49 +92,43 @@ async function NewsContent({
   );
 }
 
-export default async function NewsPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ category?: string; subcategory?: string }>;
-}) {
-  const hasAccess = await canAccessNews();
-
-  if (!hasAccess) {
+export default async function NewsPage({ searchParams }: NewsPageProps) {
+  if (!(await canAccessNews())) {
     return (
-      <main className="page-shell gap-4 text-center">
+      <main className="page-shell text-center">
         <NewsHeader />
-        <AuthGatePrompt message="Please sign in to view the Hub News." />
+
+        <AuthGatePrompt message="Sign in to view News." />
       </main>
     );
   }
 
-  const resolvedParams = searchParams ? await searchParams : undefined;
-  const category = resolvedParams?.category;
-  const requestedSubcategory = resolvedParams?.subcategory;
-  const subcategory = NEWS_SUBCATEGORIES.includes(
-    requestedSubcategory as (typeof NEWS_SUBCATEGORIES)[number],
+  const p = searchParams ? await searchParams : undefined;
+
+  const sub = NEWS_SUBCATEGORIES.includes(
+    p?.subcategory as (typeof NEWS_SUBCATEGORIES)[number],
   )
-    ? requestedSubcategory!
+    ? p!.subcategory!
     : "general";
-  const resolvedCategory: NewsCategory =
-    category === "top_stories" ? "top_stories" : "all_news";
-  const newsKey = `${resolvedCategory}:${subcategory}`;
+
+  const cat: NewsCategory =
+    p?.category === "top_stories" ? "top_stories" : "all_news";
+
+  const key = `${cat}:${sub}`;
 
   return (
     <main className="page-shell gap-4 text-center">
       <NewsHeader />
+
       <NewsFilters
-        key={`filters:${newsKey}`}
-        selectedCategory={resolvedCategory}
-        selectedSubcategory={subcategory}
+        selectedCategory={cat}
+        selectedSubcategory={sub}
         categories={NEWS_CATEGORIES}
         subcategories={NEWS_SUBCATEGORIES}
       />
-      <Suspense key={newsKey} fallback={<NewsSkeleton />}>
-        <NewsContent
-          resolvedCategory={resolvedCategory}
-          subcategory={subcategory}
-        />
+
+      <Suspense key={key} fallback={<NewsSkeleton />}>
+        <NewsContent resolvedCategory={cat} subcategory={sub} />
       </Suspense>
     </main>
   );

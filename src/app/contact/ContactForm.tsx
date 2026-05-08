@@ -3,9 +3,6 @@
 import { useState, useRef, type SubmitEvent } from "react";
 import { useToast } from "../components/ToastContext";
 
-const inputClass = "field-dark placeholder:text-zinc-400";
-const labelClass = "my-2 form-label md:text-sm";
-
 export default function ContactForm() {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,117 +10,87 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || !formRef.current) return;
 
-    const form = formRef.current;
-    if (!form) return;
+    const data = new FormData(formRef.current);
+    const payload = Object.fromEntries(data.entries());
 
-    const data = new FormData(form);
-    const name = String(data.get("name") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
-
-    if (!name || !email || !message) {
+    if (!payload.name || !payload.email || !payload.message) {
       showToast("Please fill out all fields.", "info");
       return;
     }
 
     setIsSubmitting(true);
-
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify(payload),
       });
-
-      const result = (await response.json().catch(() => null)) as {
-        success?: boolean;
-        error?: string;
-      } | null;
-
-      if (!response.ok || !result?.success) {
-        showToast(
-          result?.error ?? "Something went wrong. Please try again.",
-          "error",
-        );
-        return;
-      }
-
-      showToast("Message sent! We'll get back to you soon.", "success");
-      form.reset();
+      if (!response.ok) throw new Error();
+      showToast("Message sent!", "success");
+      formRef.current.reset();
     } catch {
-      showToast("Something went wrong. Please try again.", "error");
+      showToast("Something went wrong.", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section
-      aria-labelledby="contact-form-heading"
-      className="animate-slide-in card-dark mx-auto w-full max-w-4xl border-amber-700 p-2 md:p-4 lg:p-6"
-    >
-      <h2 id="contact-form-heading" className="sr-only">
-        Contact Form
-      </h2>
-
+    <section className="animate-slide-in card-dark mx-auto w-full max-w-4xl border-amber-700/50">
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="grid gap-4 text-left sm:gap-6"
+        className="grid gap-6 text-left"
       >
-        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-          <div className="grid gap-1">
-            <label htmlFor="contact-name" className={labelClass}>
-              Name <span className="sr-only">(required)</span>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid">
+            <label htmlFor="name" className="form-label mb-1">
+              Name
             </label>
             <input
               type="text"
-              id="contact-name"
+              id="name"
               name="name"
-              placeholder="Your Name"
+              placeholder="Name"
               required
-              autoComplete="name"
-              className={inputClass}
+              className="field-dark"
             />
           </div>
-
-          <div className="grid gap-1">
-            <label htmlFor="contact-email" className={labelClass}>
-              Email <span className="sr-only">(required)</span>
+          <div className="grid">
+            <label htmlFor="email" className="form-label mb-1">
+              Email
             </label>
             <input
               type="email"
-              id="contact-email"
+              id="email"
               name="email"
-              placeholder="you@example.com"
+              placeholder="Email"
               required
-              autoComplete="email"
-              className={inputClass}
+              className="field-dark"
             />
           </div>
         </div>
 
-        <div className="grid gap-1">
-          <label htmlFor="contact-message" className={labelClass}>
-            Message <span className="sr-only">(required)</span>
+        <div className="grid">
+          <label htmlFor="message" className="form-label mb-1">
+            Message
           </label>
           <textarea
-            id="contact-message"
+            id="message"
             name="message"
-            placeholder="How can we help you?"
+            placeholder="Message"
             required
             rows={5}
-            autoComplete="off"
-            className={`${inputClass} resize-none`}
+            className="field-dark resize-none"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn-primary mx-auto w-72 disabled:scale-100 disabled:cursor-not-allowed disabled:bg-stone-600 disabled:text-stone-400"
+          className="btn-primary mx-auto w-64 disabled:opacity-50"
         >
           {isSubmitting ? "Sending…" : "Send Message"}
         </button>

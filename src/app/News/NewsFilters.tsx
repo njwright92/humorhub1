@@ -14,90 +14,72 @@ export const NEWS_SUBCATEGORIES = [
 
 type Category = "top_stories" | "all_news";
 
-const formatText = (text: string) =>
-  text.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+type NewsFiltersProps = {
+  selectedCategory: Category;
+  selectedSubcategory: string;
+  categories: readonly Category[];
+  subcategories: readonly string[];
+};
 
 export default function NewsFilters({
   selectedCategory,
   selectedSubcategory,
   categories,
   subcategories,
-}: {
-  selectedCategory: Category;
-  selectedSubcategory: string;
-  categories: readonly Category[];
-  subcategories: readonly string[];
-}) {
+}: NewsFiltersProps) {
+  const fmt = (t: string) =>
+    t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+
   return (
     <form
-      aria-labelledby="filters-heading"
       method="get"
       action="/News"
-      className="card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700 bg-stone-800/80 p-4 shadow-amber-700 backdrop-blur-md lg:p-8"
+      className="card-dark mx-auto mb-12 w-full max-w-4xl border-amber-700/50"
     >
-      <fieldset>
-        <legend id="filters-heading" className="sr-only">
-          Filter News
-        </legend>
+      <fieldset className="grid items-end gap-6 text-left md:grid-cols-3">
+        <legend className="sr-only">Filters</legend>
 
-        <div className="grid gap-6 text-left md:grid-cols-3">
-          <div className="grid">
-            <label
-              htmlFor="news-category"
-              className="form-label mb-1 text-center"
-            >
-              feed
-            </label>
-            <select
-              id="news-category"
-              name="category"
-              defaultValue={selectedCategory}
-              className="field-dark cursor-pointer hover:border-amber-700 disabled:opacity-70"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {formatText(cat)}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div>
+          <label htmlFor="cat" className="form-label mb-1 block text-center">
+            Feed
+          </label>
 
-          <div className="grid">
-            <label
-              htmlFor="news-subcategory"
-              className="form-label mb-1 text-center"
-            >
-              topic
-            </label>
-            <select
-              id="news-subcategory"
-              name="subcategory"
-              defaultValue={selectedSubcategory}
-              className="field-dark cursor-pointer hover:border-amber-700 disabled:opacity-70"
-            >
-              {subcategories.map((sub) => (
-                <option key={sub} value={sub}>
-                  {formatText(sub)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="grid">
-            <span
-              aria-hidden="true"
-              className="form-label invisible mb-1 text-center"
-            >
-              action
-            </span>
-            <button
-              type="submit"
-              className="field-dark border-amber-700 bg-transparent px-3 py-3 text-zinc-200 transition-transform hover:scale-105 hover:shadow-lg"
-            >
-              Search
-            </button>
-          </div>
+          <select
+            id="cat"
+            name="category"
+            defaultValue={selectedCategory}
+            className="field-dark cursor-pointer"
+          >
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {fmt(c)}
+              </option>
+            ))}
+          </select>
         </div>
+
+        <div>
+          <label htmlFor="sub" className="form-label mb-1 block text-center">
+            Topic
+          </label>
+
+          <select
+            id="sub"
+            name="subcategory"
+            defaultValue={selectedSubcategory}
+            className="field-dark cursor-pointer"
+          >
+            {subcategories.map((s) => (
+              <option key={s} value={s}>
+                {fmt(s)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button type="submit" className="btn-primary py-3">
+          Search
+        </button>
       </fieldset>
     </form>
   );
