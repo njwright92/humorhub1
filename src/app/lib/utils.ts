@@ -78,10 +78,6 @@ export function parseTimestampToMs(value: unknown): number {
   return 0;
 }
 
-export function isFiniteNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value);
-}
-
 export function toSafeHttpUrl(value: unknown): string | undefined {
   if (typeof value !== "string" || value.trim().length === 0) return undefined;
 
