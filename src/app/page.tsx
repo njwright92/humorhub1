@@ -47,6 +47,7 @@ export default function Home() {
               <RoundImage
                 src="/favicon.ico"
                 alt="Mic Finder"
+                className="bg-white p-1"
                 width={168}
                 height={168}
                 interactive
@@ -78,6 +79,7 @@ export default function Home() {
             <RoundImage
               src="/newsy.webp"
               alt="News"
+              className="bg-white p-1"
               width={168}
               height={168}
               interactive

@@ -11,6 +11,11 @@
 }
 
 @layer base {
+  body {
+    @apply bg-stone-900 text-zinc-200 antialiased;
+    font-family: var(--font-body);
+  }
+
   button {
     cursor: pointer;
   }
@@ -65,7 +70,6 @@
   h5,
   h6 {
     font-family: var(--font-heading);
-    font-weight: 700;
     letter-spacing: 0.025em;
     --tw-text-shadow-color: rgba(35, 26, 20, 0.7);
     text-shadow: 1px 1px 0px var(--tw-text-shadow-color);
