@@ -194,7 +194,7 @@
   }
 
   .btn-dark {
-    @apply cursor-pointer rounded-2xl border border-zinc-200 bg-stone-900 px-3 py-2 text-center font-bold text-zinc-200 transition-all;
+    @apply cursor-pointer rounded-2xl border border-zinc-200 bg-stone-900 px-3 py-2 text-center font-bold text-zinc-200 transition-all hover:outline hover:outline-amber-700;
     box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.25);
     line-height: 1.25;
   }
