@@ -11,53 +11,45 @@ const MobileMenu = dynamic<{ closeMenu: () => void }>(
 
 export default function MobileNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollStage, setScrollStage] = useState(0); // 0: full, 1: mid, 2: compact, 3: hidden
+  const [scrollStage, setScrollStage] = useState(0);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
       const vh = window.innerHeight;
-
-      const t1 = vh / 16; // 1/16th
-      const t2 = (vh * 2) / 16; // 2/16th
-      const t4 = (vh * 3) / 16; // 3/16th
-
+      const t1 = vh / 16;
+      const t2 = (vh * 2) / 16;
+      const t4 = (vh * 4) / 16;
       const isScrollingUp = y < lastScrollY.current;
 
       if (y < t1) {
-        setScrollStage(0); // Full height
+        setScrollStage(0);
       } else if (y < t2) {
-        setScrollStage(1); // Shrunk
+        setScrollStage(1);
       } else if (y < t4) {
-        setScrollStage(2); // Compact
+        setScrollStage(2);
       } else {
-        // Past 3/16ths threshold
         if (isScrollingUp) {
-          setScrollStage(2); // Bring it back compact on scroll up
+          setScrollStage(2);
         } else {
-          setScrollStage(3); // Hide on scroll down
+          setScrollStage(3);
         }
       }
-
       lastScrollY.current = y;
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const closeMenu = () => setIsMenuOpen(false);
   const toggleMenu = () => setIsMenuOpen((open) => !open);
-
-  // Dynamic style arrays
   const headerStyles = [
-    "h-16 translate-y-0 opacity-100", // 0: Full
-    "h-12 translate-y-0 opacity-100 bg-amber-700/90", // 1: Shrunk
-    "h-10 translate-y-0 opacity-100 bg-amber-700/90", // 2: Compact
-    "-translate-y-full opacity-0 pointer-events-none", // 3: Hidden
+    "h-16 translate-y-0 opacity-100",
+    "h-12 translate-y-0 opacity-100 bg-amber-700/90",
+    "h-10 translate-y-0 opacity-100 bg-amber-700/90",
+    "-translate-y-full opacity-0 pointer-events-none",
   ][scrollStage];
-
   const logoStyles = ["size-11", "size-9", "size-8", "size-8"][scrollStage];
   const textStyles = ["text-3xl", "text-2xl", "text-xl", "text-xl"][
     scrollStage
@@ -78,13 +70,11 @@ export default function MobileNav() {
             priority
           />
         </Link>
-
         <h1
           className={`text-center tracking-wider text-stone-900 italic transition-all duration-300 ${textStyles}`}
         >
           Humor Hub
         </h1>
-
         <button
           type="button"
           onClick={toggleMenu}
@@ -106,7 +96,6 @@ export default function MobileNav() {
           </svg>
         </button>
       </header>
-
       {isMenuOpen && <MobileMenu closeMenu={closeMenu} />}
     </div>
   );
