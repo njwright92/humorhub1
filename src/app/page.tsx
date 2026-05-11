@@ -11,16 +11,6 @@ const EventForm = dynamic(() => import("./components/EventForm"));
 export const metadata: Metadata = {
   title: "Humor Hub - Open Mics & Comedy",
   description: "Find open mics, jokes, and community at Humor Hub.",
-  keywords: [
-    "comedy platform",
-    "stand-up comedy",
-    "funny jokes",
-    "puns",
-    "open mic events",
-    "humor content",
-    "comedy community",
-    "comedy tools",
-  ],
   alternates: { canonical: "/" },
 };
 
