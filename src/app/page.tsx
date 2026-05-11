@@ -85,7 +85,7 @@ export default function Home() {
               interactive
             />
           </figure>
-          <span className="primary-cta-right">Check It Out</span>
+          <span className="primary-cta-right">Topical?</span>
         </ProtectedRouteButton>
       </SectionCard>
 
@@ -155,7 +155,7 @@ export default function Home() {
               interactive
             />
           </figure>
-          <span className="primary-cta-left">About Humor Hub</span>
+          <span className="primary-cta-left">About Us</span>
         </Link>
       </SectionCard>
     </main>
