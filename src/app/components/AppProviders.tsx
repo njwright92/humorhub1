@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { ToastProvider } from "./ToastContext";
 import { SessionProvider } from "./SessionContext";
