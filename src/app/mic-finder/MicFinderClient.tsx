@@ -307,7 +307,6 @@ export default function MicFinderClient({
     setSelectedDate(date);
   }, []);
 
-  // FIXED: Using the declared function
   const toggleMapVisibility = useCallback(() => {
     setIsMapVisible((prev) => !prev);
   }, []);
@@ -486,8 +485,8 @@ export default function MicFinderClient({
         <section className="card-base relative my-8 h-96 w-full overflow-hidden border-amber-700 bg-stone-900/10 shadow-xl contain-paint">
           <button
             type="button"
-            onClick={toggleMapVisibility} // FIXED: Using function constant
-            className="btn-primary absolute bottom-6 left-6 z-10 px-3 py-2 text-sm"
+            onClick={toggleMapVisibility}
+            className="btn-primary absolute bottom-6 left-6 z-10 text-sm"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>

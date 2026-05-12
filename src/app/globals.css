@@ -153,7 +153,6 @@
     @apply rounded-2xl border border-white/10 bg-stone-900/50 p-4;
   }
 
-  /* Grouped Base Button Styles for Tailwind v4 Compatibility */
   .btn-primary,
   .primary-cta-left,
   .primary-cta-right {
@@ -169,7 +168,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  /* Specific Layout Sizing for Homepage CTAs */
   .primary-cta-left,
   .primary-cta-right {
     @apply w-72 self-start justify-self-center text-lg md:w-80;

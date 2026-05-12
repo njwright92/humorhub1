@@ -15,7 +15,6 @@ function SavedEventCard({
     : "/mic-finder";
 
   return (
-    /* card-muted: Standardized for dark items */
     <article className="card-muted group flex items-start justify-between transition-all hover:border-amber-700/50">
       <div className="text-left">
         <h3 className="text-lg text-amber-700">{event.name}</h3>

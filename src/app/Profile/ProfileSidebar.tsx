@@ -31,7 +31,6 @@ export default function ProfileSidebar({
 
   return (
     <aside className="lg:col-span-1">
-      {/* panel-light handles bg-zinc-200, text-stone-900, border, and sticky/shadow props */}
       <section className="panel-light sticky top-20 p-6">
         <figure className="group relative mx-auto mb-4 size-32 shrink-0 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300">
           {profile.profileImageUrl ? (
@@ -76,7 +75,7 @@ export default function ProfileSidebar({
                 Stage Name
               </label>
               <input
-                className="input-amber-soft mt-1 w-full"
+                className="input-amber-soft mt-1"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
@@ -87,14 +86,14 @@ export default function ProfileSidebar({
                 Bio
               </label>
               <textarea
-                className="input-amber-soft mt-1 w-full resize-none text-sm"
+                className="input-amber-soft mt-1 resize-none text-sm"
                 rows={4}
                 value={form.bio}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <button type="submit" className="btn-primary py-2 text-sm">
+              <button type="submit" className="btn-primary text-sm">
                 Save
               </button>
               <button
@@ -108,7 +107,6 @@ export default function ProfileSidebar({
           </form>
         ) : (
           <div className="text-center">
-            {/* Global H2 handles font/weight/shadow */}
             <h2 className="my-2 text-2xl italic">
               {profile.name || "Anonymous Comic"}
             </h2>
@@ -117,7 +115,7 @@ export default function ProfileSidebar({
               {profile.bio ? `"${profile.bio}"` : "No bio set."}
             </p>
             <div className="mt-4 grid gap-3">
-              <button onClick={onEdit} className="btn-dark mx-auto w-3/4 py-2">
+              <button onClick={onEdit} className="btn-dark mx-auto w-3/4">
                 Edit Profile
               </button>
               <button

@@ -34,7 +34,6 @@ const INITIAL_FORM_STATE: FormState = {
   email: "",
 };
 
-// DRY Constants for repeated styling
 const inputClass = "input-green mb-1";
 const labelClass = "block text-xs font-bold uppercase opacity-70 mb-1";
 
@@ -194,20 +193,18 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
         noValidate
-        /* panel-light handles bg, color, rounded-2xl, and shadow */
         className="panel-light relative grid max-h-[95dvh] w-full max-w-md gap-4 overflow-y-auto p-6"
       >
         <button
           onClick={onClose}
           type="button"
-          className="absolute top-4 right-4 cursor-pointer transition-transform hover:scale-110"
+          className="absolute top-4 right-4 transition-transform hover:scale-110"
           aria-label="Close modal"
         >
           <CloseIcon className="size-6" />
         </button>
 
         <header className="text-center">
-          {/* h1 inherits global styles from global.css */}
           <h1 id="event-form-title" className="text-3xl">
             Event Form
           </h1>
@@ -303,7 +300,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             }
             dateFormat="MM/dd/yyyy"
             placeholderText="MM/DD/YYYY"
-            className="date-picker-input" /* Global class */
+            className="date-picker-input"
             calendarClassName="date-picker-calendar"
             showPopperArrow={false}
             showIcon
@@ -329,7 +326,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          /* btn-primary handles colors, hover, and shadow */
           className="btn-primary mt-2 w-full py-3 text-lg"
         >
           {isSubmitting ? "Submitting..." : "Submit Event"}

@@ -36,7 +36,7 @@ export default function Footer() {
           <Link
             href="/"
             aria-label="Humor Hub Home"
-            className="cursor-pointer justify-self-center md:justify-self-start md:pl-10"
+            className="justify-self-center md:justify-self-start md:pl-10"
           >
             <Image
               src="/logo.webp"

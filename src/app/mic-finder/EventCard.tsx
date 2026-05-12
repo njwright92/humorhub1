@@ -38,7 +38,7 @@ function EventCard({
       <button
         type="button"
         onClick={() => onSave(event)}
-        className="btn-primary my-2 px-3 py-1.5"
+        className="btn-primary my-2 py-1.5"
         aria-label={`Save ${event.name}`}
       >
         Save Event

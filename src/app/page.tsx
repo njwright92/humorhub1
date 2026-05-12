@@ -8,6 +8,13 @@ import SectionCard from "./components/SectionCard";
 const HomepagePoll = dynamic(() => import("./components/HomepagePoll"));
 const EventForm = dynamic(() => import("./components/EventForm"));
 
+const featureLeft = "grid gap-6 md:grid-cols-2 md:text-left";
+const featureRight = "grid gap-6 md:grid-cols-2 md:text-right";
+const featureImageRight =
+  "row-span-3 grid place-items-center md:justify-items-end";
+const featureImageLeft =
+  "row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start";
+
 export const metadata: Metadata = {
   title: "Humor Hub - Open Mics & Comedy",
   description: "Find open mics, jokes, and community at Humor Hub.",
@@ -24,7 +31,7 @@ export default function Home() {
       <h1 className="text-5xl md:text-7xl">Humor Hub!</h1>
 
       <SectionCard id="mics" title="Mic Finder!" variant="spaced">
-        <div className="grid gap-6 md:grid-cols-2 md:text-left">
+        <div className={featureLeft}>
           <div>
             <h3 className="mb-1 text-xl">Looking for your next Mic?</h3>
             <p className="text-stone-400">
@@ -32,7 +39,7 @@ export default function Home() {
               worldwide!
             </p>
           </div>
-          <figure className="row-span-3 grid place-items-center md:justify-items-end">
+          <figure className={featureImageRight}>
             <Link href="/mic-finder">
               <RoundImage
                 src="/favicon.ico"
@@ -56,7 +63,7 @@ export default function Home() {
         <ProtectedRouteButton
           route="/News"
           label="News"
-          className="grid gap-6 md:grid-cols-2 md:text-right"
+          className={featureRight}
         >
           <div className="md:col-start-2">
             <h3 className="mb-1 text-xl">Your Source for Fresh Headlines!</h3>
@@ -65,7 +72,7 @@ export default function Home() {
               latest updates!
             </p>
           </div>
-          <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
+          <figure className={featureImageLeft}>
             <RoundImage
               src="/newsy.webp"
               alt="News"
@@ -83,7 +90,7 @@ export default function Home() {
         <ProtectedRouteButton
           route="/Profile"
           label="Profile"
-          className="grid gap-6 md:grid-cols-2 md:text-left"
+          className={featureLeft}
         >
           <div>
             <h3 className="mb-1 text-xl">Keep your calling card fresh.</h3>
@@ -91,7 +98,7 @@ export default function Home() {
               Update your avatar and save mics for easy access on the road.
             </p>
           </div>
-          <figure className="row-span-3 grid place-items-center md:justify-items-end">
+          <figure className={featureImageRight}>
             <RoundImage
               src="/profile.webp"
               alt="Profile"
@@ -105,17 +112,14 @@ export default function Home() {
       </SectionCard>
 
       <SectionCard id="contact" title="Contact">
-        <Link
-          href="/contact"
-          className="grid gap-6 md:grid-cols-2 md:text-right"
-        >
+        <Link href="/contact" className={featureRight}>
           <div className="md:col-start-2">
             <h3 className="mb-1 text-xl">Questions or feedback?</h3>
             <p className="text-stone-400">
               Drop the Humor Hub team a note and we will get back to you.
             </p>
           </div>
-          <figure className="row-span-2 mb-4 grid place-items-center md:col-start-1 md:row-start-1 md:justify-items-start">
+          <figure className={featureImageLeft}>
             <RoundImage
               src="/contact.webp"
               alt="Contact"
@@ -129,14 +133,14 @@ export default function Home() {
       </SectionCard>
 
       <SectionCard id="about" title="About">
-        <Link href="/about" className="grid gap-6 md:grid-cols-2 md:text-left">
+        <Link href="/about" className={featureLeft}>
           <div>
             <h3 className="mb-1 text-xl">See what makes the Hub tick.</h3>
             <p className="text-stone-400">
               Learn the mission, the tools, and the team behind the laughs.
             </p>
           </div>
-          <figure className="row-span-3 grid place-items-center md:justify-items-end">
+          <figure className={featureImageRight}>
             <RoundImage
               src="/about.webp"
               alt="About"

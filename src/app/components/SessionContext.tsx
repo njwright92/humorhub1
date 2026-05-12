@@ -17,7 +17,6 @@ type SessionContextValue = {
   refreshSession: () => Promise<SessionState>;
   setSignedIn: (signedIn: boolean, info?: Partial<SessionInfo>) => void;
 
-  // NEW: auth modal control
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
   pendingRedirect: string | null;
@@ -42,7 +41,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     status: "unknown",
   });
 
-  // NEW GLOBAL AUTH MODAL STATE
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [pendingRedirect, setPendingRedirect] = useState<string | null>(null);
 

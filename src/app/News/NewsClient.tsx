@@ -53,7 +53,7 @@ function ArticleCard({ article, priority }: ArticleCardProps) {
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-outline-amber block w-full py-2 text-sm"
+              className="btn-outline-amber block w-full text-sm"
             >
               Read Full Story →
             </a>

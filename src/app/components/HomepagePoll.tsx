@@ -36,7 +36,7 @@ export default function HomepagePoll() {
         const data = await fetchCounts();
         if (!cancelled && data) setCounts(data);
       } catch {
-        // silently fail — poll is non-critical
+        return;
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -103,18 +103,16 @@ export default function HomepagePoll() {
   const noPercent = total ? 100 - yesPercent : 0;
 
   return (
-    /* card-dark handles rounded, border, bg, and text color */
     <div className="animate-slide-in card-dark relative grid w-full max-w-md gap-2">
       <button
         type="button"
         aria-label="Close poll"
         onClick={() => setVisible(false)}
-        className="absolute top-1 right-1 cursor-pointer"
+        className="absolute top-1 right-1"
       >
         <CloseIcon className="size-4" />
       </button>
 
-      {/* h2 global handles font and weight */}
       <h2 className="mt-2 text-center whitespace-nowrap text-amber-700 lg:text-lg">
         Is crowd work real stand-up?
       </h2>

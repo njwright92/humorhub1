@@ -81,34 +81,29 @@ export default function SearchBar({
     });
   }, []);
 
-  // Optimized Search Logic
   const suggestions = useMemo<Suggestion[]>(() => {
     const q = searchTerm.trim().toLowerCase();
     if (q.length < 2) return [];
 
     const results: Suggestion[] = [];
 
-    // 1. Actions
     if (["login", "sign in", "sign up"].includes(q)) {
       results.push({ type: "action", label: "Login / Sign Up" });
     }
 
-    // 2. Keywords
     if (KEYWORDS_TO_MICFINDER.has(q)) {
       results.push({ type: "page", label: "Mic Finder", page: PAGES[0] });
     }
 
-    // 3. Static Pages
     for (const page of PAGES) {
       if (page.label.toLowerCase().startsWith(q)) {
         results.push({ type: "page", label: page.label, page });
       }
     }
 
-    // 4. Cities (Optimized Loop)
     let cityCount = 0;
     for (const city of cities) {
-      if (cityCount >= 5) break; // Stop after 5 matches
+      if (cityCount >= 5) break;
       if (city.toLowerCase().startsWith(q)) {
         results.push({ type: "city", label: city, city });
         cityCount++;
@@ -172,7 +167,6 @@ export default function SearchBar({
 
       const q = searchTerm.trim().toLowerCase();
 
-      // Prioritize active selection, then exact match, then first partial city match
       const suggestion =
         suggestions[activeIndex] ??
         suggestions.find((s) => s.label.toLowerCase() === q);
@@ -224,14 +218,13 @@ export default function SearchBar({
       };
 
       if (actions[e.key]) {
-        if (e.key !== "Enter") e.preventDefault(); // Enter handled inside
+        if (e.key !== "Enter") e.preventDefault();
         actions[e.key]();
       }
     },
     [suggestions, activeIndex, executeSuggestion, closeSearchBar],
   );
 
-  // Load Cities (Cached)
   useEffect(() => {
     if (!isInputVisible || cities.length) return;
 
@@ -268,7 +261,6 @@ export default function SearchBar({
     };
   }, [isInputVisible, cities.length]);
 
-  // Click Outside
   useEffect(() => {
     if (!isInputVisible) return;
     const onClickOutside = (e: MouseEvent) => {
@@ -283,7 +275,7 @@ export default function SearchBar({
       <button
         type="button"
         onClick={handleToggleInput}
-        className="xs-text-zinc-200 cursor-pointer transition-transform hover:scale-110 hover:text-stone-700 md:text-stone-900"
+        className="xs-text-zinc-200 transition-transform hover:scale-110 hover:text-stone-700 md:text-stone-900"
         aria-label="Open search"
         aria-expanded={isInputVisible}
         aria-controls={POPOVER_ID}
@@ -314,7 +306,7 @@ export default function SearchBar({
           <button
             type="button"
             onClick={closeSearchBar}
-            className="absolute top-0 right-0 cursor-pointer p-1 transition-transform hover:scale-105"
+            className="absolute top-0 right-0 p-1 transition-transform hover:scale-105"
             aria-label="Close search"
           >
             <CloseIcon className="size-5" />
@@ -335,7 +327,6 @@ export default function SearchBar({
               setActiveIndex(-1);
             }}
             onKeyDown={handleKeyDown}
-            /* input-amber handles the borders and ring logic */
             className="input-amber mt-2 bg-white p-2 placeholder:text-stone-400 focus:outline-hidden"
             autoComplete="off"
             role="combobox"
@@ -357,7 +348,6 @@ export default function SearchBar({
               {suggestions.map((sug, idx) => (
                 <li
                   key={`${sug.type}-${sug.label}`}
-                  /* ... accessibility props ... */
                   className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm transition-colors ${
                     idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"
                   }`}
