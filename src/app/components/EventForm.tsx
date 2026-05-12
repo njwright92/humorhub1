@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import EventFormContent from "./EventFormContent";
+import dynamic from "next/dynamic";
+
+const EventFormContent = dynamic(() => import("./EventFormContent"));
 
 export default function EventForm() {
   const [isOpen, setIsOpen] = useState(false);
