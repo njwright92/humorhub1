@@ -213,6 +213,11 @@ export default function MicFinderClient({
   const [eventData, setEventData] =
     useState<MicFinderFilterResult>(initialFilters);
 
+  // Keep track of all map pins independently from text filters
+  const [mapPins, setMapPins] = useState<Event[]>(
+    initialFilters.baseEvents || [],
+  );
+
   useEffect(() => {
     const city = searchParams.get("city");
     const term = searchParams.get("searchTerm");
@@ -332,6 +337,7 @@ export default function MicFinderClient({
     return `${year}-${month}-${day}`;
   };
 
+  // Main UI fetch (Stays scoped to the chosen city for cards/lists)
   useEffect(() => {
     if (initialLoadRef.current) {
       initialLoadRef.current = false;
@@ -362,6 +368,32 @@ export default function MicFinderClient({
     void fetchFilters();
     return () => controller.abort();
   }, [selectedCity, selectedDate, selectedTab]);
+
+  // Map Pins parallel fetch (Bypasses city filter so map stays unlocked)
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchAllMapPins = async () => {
+      try {
+        const params = new URLSearchParams();
+        params.set("tab", selectedTab);
+        params.set("city", "All Cities"); // Forces the backend to return everything
+        if (selectedDate) {
+          params.set("date", formatDateInputValue(selectedDate));
+        }
+        const response = await fetch(
+          `/api/mic-finder/filter?${params.toString()}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) return;
+        const data: MicFinderFilterResult = await response.json();
+        setMapPins(data.baseEvents || []);
+      } catch (error) {
+        if ((error as Error)?.name === "AbortError") return;
+      }
+    };
+    void fetchAllMapPins();
+    return () => controller.abort();
+  }, [selectedTab, selectedDate]);
 
   const mapConfig = useMemo(() => {
     const cityCoords = selectedCity
@@ -496,7 +528,7 @@ export default function MicFinderClient({
                 lat={mapConfig.lat}
                 lng={mapConfig.lng}
                 zoom={mapConfig.zoom}
-                events={eventData.baseEvents}
+                events={mapPins} // <-- Cleanly uses the unfiltered pin master list
               />
             </div>
           ) : (
