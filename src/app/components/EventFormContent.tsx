@@ -21,6 +21,7 @@ interface FormState {
   details: string;
   isRecurring: boolean;
   isFestival: boolean;
+  isOther: boolean;
   email: string;
 }
 
@@ -31,13 +32,14 @@ const INITIAL_FORM_STATE: FormState = {
   details: "",
   isRecurring: false,
   isFestival: false,
+  isOther: false,
   email: "",
 };
 
 const inputClass = "input-green mb-1";
 const labelClass = "block text-xs font-bold uppercase opacity-70 mb-1";
 
-type RadioName = "isRecurring" | "isFestival";
+type RadioName = "isRecurring" | "isFestival" | "isOther";
 
 const RadioGroup = memo(function RadioGroup({
   label,
@@ -99,6 +101,7 @@ function buildSubmission(form: FormState): EventSubmission {
     details: form.details.trim(),
     isRecurring: form.isRecurring,
     isFestival: form.isFestival,
+    isOther: form.isOther,
     email: form.email.trim(),
     timestamp: dateIso,
   };
@@ -184,7 +187,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-stone-900/60 p-2 backdrop-blur-sm"
+      className="fixed inset-0 z-50 grid place-items-center bg-stone-900/70 p-2 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -208,7 +211,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           <h1 id="event-form-title" className="text-3xl">
             Event Form
           </h1>
-          <p className="text-[10px] font-bold tracking-widest text-red-600 uppercase">
+          <p className="m-1 text-xs font-bold tracking-widest text-red-600">
             * Required fields
           </p>
         </header>
@@ -252,7 +255,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           />
         </div>
 
-        <fieldset className="grid grid-cols-2 gap-4">
+        <fieldset className="grid grid-cols-3 gap-2">
           <legend className="sr-only">Event options</legend>
           <RadioGroup
             label="Recurring?"
@@ -266,6 +269,12 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             value={form.isFestival}
             onChange={handleRadioChange}
           />
+          <RadioGroup
+            label="Music/Arts?"
+            name="isOther"
+            value={form.isOther}
+            onChange={handleRadioChange}
+          />
         </fieldset>
 
         <div className="grid">
@@ -273,7 +282,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             Details *
           </label>
           {form.isRecurring && (
-            <p className="mb-1 text-[10px] font-bold text-red-600 italic">
+            <p className="mb-1 text-xs font-bold text-red-600 italic">
               * Include Frequency (e.g. Weekly)
             </p>
           )}

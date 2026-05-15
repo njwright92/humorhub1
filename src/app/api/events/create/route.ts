@@ -107,6 +107,7 @@ async function sendEventNotification(eventData: EventSubmission) {
         details: eventData.details,
         isRecurring: eventData.isRecurring ? "Yes" : "No",
         isFestival: eventData.isFestival ? "Yes" : "No",
+        isOther: eventData.isOther ? "Yes" : "No",
         user_email: eventData.email || "No email provided",
       },
     }),

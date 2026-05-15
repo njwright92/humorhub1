@@ -13,6 +13,7 @@ export interface EventSubmission {
   isFestival: boolean;
   email: string;
   timestamp: string;
+  isOther?: boolean;
 }
 
 export interface StoredEvent extends EventSubmission {
