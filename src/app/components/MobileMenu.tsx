@@ -39,7 +39,7 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
     session.status === "ready" && session.signedIn === true;
 
   return (
-    <div className="animate-slide-in fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col items-center overflow-y-auto bg-zinc-900/90 pt-6 backdrop-blur-sm">
+    <div className="animate-slide-in fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col items-center overflow-y-auto pt-6 backdrop-blur-xl">
       <nav className="grid w-full max-w-xs gap-3">
         {NAV_ITEMS.map(({ href, label, protected: isProtected }) =>
           isProtected ? (
