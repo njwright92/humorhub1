@@ -27,7 +27,7 @@ function MicFinderSkeleton() {
     <div
       role="status"
       aria-label="Loading MicFinder content"
-      className="animate-pulse space-y-4 p-2 [&>*]:rounded-2xl [&>*]:bg-stone-700"
+      className="animate-pulse space-y-4 p-2 *:rounded-2xl *:bg-stone-700"
     >
       <div className="h-16" />
       <div className="h-64" />
