@@ -468,9 +468,7 @@ export default function MicFinderClient({
         ))}
       </nav>
 
-      <div
-        className={`grid w-full transition-opacity duration-300 ${isPending ? "opacity-60" : "opacity-100"}`}
-      >
+      <div className={`grid w-full ${isPending ? "opacity-60" : ""}`}>
         {/* Weekly / Recurring Events */}
         <section className="card-shell my-2 w-full" aria-label="Weekly events">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
