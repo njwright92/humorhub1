@@ -2,10 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import SearchBar from "./searchBar";
-import CloseIcon from "./CloseIcon";
-import { useSession } from "./SessionContext";
 import { useProtectedNavigation } from "./useProtectedNavigation";
+import { useSession } from "./SessionContext";
 
 type NavItem = {
   href: string;
@@ -37,25 +35,12 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
     };
   }, [closeMenu]);
 
+  const isUserSignedIn =
+    session.status === "ready" && session.signedIn === true;
+
   return (
-    <div className="animate-slide-in fixed inset-0 z-40 grid content-start justify-items-center gap-4 pt-10 backdrop-blur-lg">
-      <button
-        onClick={closeMenu}
-        className="justify-self-end p-1 text-stone-900"
-        aria-label="Close menu"
-        type="button"
-      >
-        <CloseIcon />
-      </button>
-
-      <SearchBar
-        isUserSignedIn={session.signedIn}
-        sessionStatus={session.status}
-        onNavigate={closeMenu}
-        onRequireAuth={requireAuth}
-      />
-
-      <nav className="grid w-full max-w-xs gap-4">
+    <div className="animate-slide-in fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col items-center overflow-y-auto bg-zinc-900/90 pt-6 backdrop-blur-sm">
+      <nav className="grid w-full max-w-xs gap-3">
         {NAV_ITEMS.map(({ href, label, protected: isProtected }) =>
           isProtected ? (
             <button
@@ -76,6 +61,16 @@ export default function MobileMenu({ closeMenu }: { closeMenu: () => void }) {
               {label}
             </Link>
           ),
+        )}
+
+        {!isUserSignedIn && (
+          <button
+            type="button"
+            onClick={() => void requireAuth("/Profile", "Sign In")}
+            className="btn-primary mx-auto mt-1 w-1/2"
+          >
+            Sign In/Sign Up
+          </button>
         )}
       </nav>
     </div>

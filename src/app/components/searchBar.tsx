@@ -1,6 +1,14 @@
 "use client";
 
-import { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  useEffect,
+  memo,
+  useDeferredValue,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
 import { useSession } from "./SessionContext";
@@ -37,52 +45,27 @@ type Suggestion =
   | { type: "page"; label: string; page: PageItem }
   | { type: "city"; label: string; city: string };
 
-export default function SearchBar({
-  isUserSignedIn,
-  sessionStatus,
-  onNavigate,
-  onRequireAuth,
-}: {
-  isUserSignedIn: boolean;
-  sessionStatus: "unknown" | "ready";
-  onNavigate?: () => void;
-  onRequireAuth?: (path: string, label: string) => void;
-}) {
-  const { showToast } = useToast();
-  const { setIsAuthModalOpen } = useSession();
-  const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+// 1. ISOLATED LIST COMPONENT: Prevents array looping mechanics from breaking text input frames
+interface SuggestionListProps {
+  deferredSearchTerm: string;
+  cities: string[];
+  activeIndex: number;
+  onExecute: (sug: Suggestion) => void;
+  onHoverIndex: (idx: number) => void;
+  onSuggestionsChange: (sugs: Suggestion[]) => void;
+}
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isInputVisible, setInputVisible] = useState(false);
-  const [cities, setCities] = useState<string[]>([]);
-  const [activeIndex, setActiveIndex] = useState(-1);
-
-  const closeSearchBar = useCallback(() => {
-    setSearchTerm("");
-    setInputVisible(false);
-    setActiveIndex(-1);
-  }, []);
-
-  const navigateTo = useCallback(
-    (path: string) => {
-      router.push(path);
-      onNavigate?.();
-      closeSearchBar();
-    },
-    [router, onNavigate, closeSearchBar],
-  );
-
-  const handleToggleInput = useCallback(() => {
-    setInputVisible((prev) => {
-      if (!prev) setTimeout(() => inputRef.current?.focus(), 0);
-      return !prev;
-    });
-  }, []);
-
-  const suggestions = useMemo<Suggestion[]>(() => {
-    const q = searchTerm.trim().toLowerCase();
+const SuggestionList = memo(function SuggestionList({
+  deferredSearchTerm,
+  cities,
+  activeIndex,
+  onExecute,
+  onHoverIndex,
+  onSuggestionsChange,
+}: SuggestionListProps) {
+  // Computes matches off the deferred state loop safely
+  const currentSuggestions = useMemo<Suggestion[]>(() => {
+    const q = deferredSearchTerm.trim().toLowerCase();
     if (q.length < 2) return [];
 
     const results: Suggestion[] = [];
@@ -111,7 +94,91 @@ export default function SearchBar({
     }
 
     return results;
-  }, [searchTerm, cities]);
+  }, [deferredSearchTerm, cities]);
+
+  // Bubble up raw suggestions back to parent references safely without structural recursion loops
+  useEffect(() => {
+    onSuggestionsChange(currentSuggestions);
+  }, [currentSuggestions, onSuggestionsChange]);
+
+  if (currentSuggestions.length === 0) return null;
+
+  return (
+    <ul
+      id={LISTBOX_ID}
+      role="listbox"
+      className="grid max-h-60 divide-y divide-stone-300 overflow-auto border-t border-stone-400"
+    >
+      {currentSuggestions.map((sug, idx) => (
+        <li
+          key={`${sug.type}-${sug.label}`}
+          className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm transition-colors ${
+            idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"
+          }`}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onExecute(sug);
+          }}
+          onMouseEnter={() => onHoverIndex(idx)}
+        >
+          <span className="font-medium">{sug.label}</span>
+          <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">
+            {sug.type}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+});
+
+export default function SearchBar({
+  isUserSignedIn,
+  sessionStatus,
+  onNavigate,
+  onRequireAuth,
+}: {
+  isUserSignedIn: boolean;
+  sessionStatus: "unknown" | "ready";
+  onNavigate?: () => void;
+  onRequireAuth?: (path: string, label: string) => void;
+}) {
+  const { showToast } = useToast();
+  const { setIsAuthModalOpen } = useSession();
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isInputVisible, setInputVisible] = useState(false);
+  const [cities, setCities] = useState<string[]>([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [activeSuggestions, setActiveSuggestions] = useState<Suggestion[]>([]);
+
+  // Defer search tracking to prioritize frame rendering transitions
+  const deferredSearchTerm = useDeferredValue(searchTerm);
+
+  const closeSearchBar = useCallback(() => {
+    setSearchTerm("");
+    setInputVisible(false);
+    setActiveIndex(-1);
+    setActiveSuggestions([]);
+  }, []);
+
+  const navigateTo = useCallback(
+    (path: string) => {
+      router.push(path);
+      onNavigate?.();
+      closeSearchBar();
+    },
+    [router, onNavigate, closeSearchBar],
+  );
+
+  const handleToggleInput = useCallback(() => {
+    setInputVisible((prev) => {
+      if (!prev) setTimeout(() => inputRef.current?.focus(), 0);
+      return !prev;
+    });
+  }, []);
 
   const executeSuggestion = useCallback(
     (s: Suggestion) => {
@@ -162,14 +229,14 @@ export default function SearchBar({
   );
 
   const handleSearch = useCallback(
-    (e: React.SubmitEvent<HTMLFormElement>) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const q = searchTerm.trim().toLowerCase();
 
       const suggestion =
-        suggestions[activeIndex] ??
-        suggestions.find((s) => s.label.toLowerCase() === q);
+        activeSuggestions[activeIndex] ??
+        activeSuggestions.find((s) => s.label.toLowerCase() === q);
 
       if (suggestion) {
         executeSuggestion(suggestion);
@@ -191,7 +258,7 @@ export default function SearchBar({
     },
     [
       activeIndex,
-      suggestions,
+      activeSuggestions,
       searchTerm,
       cities,
       executeSuggestion,
@@ -202,7 +269,7 @@ export default function SearchBar({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const len = suggestions.length;
+      const len = activeSuggestions.length;
       if (!len && e.key !== "Escape") return;
 
       const actions: Record<string, () => void> = {
@@ -211,7 +278,7 @@ export default function SearchBar({
         Enter: () => {
           if (activeIndex >= 0) {
             e.preventDefault();
-            executeSuggestion(suggestions[activeIndex]);
+            executeSuggestion(activeSuggestions[activeIndex]);
           }
         },
         Escape: closeSearchBar,
@@ -222,8 +289,16 @@ export default function SearchBar({
         actions[e.key]();
       }
     },
-    [suggestions, activeIndex, executeSuggestion, closeSearchBar],
+    [activeSuggestions, activeIndex, executeSuggestion, closeSearchBar],
   );
+
+  const handleHoverIndex = useCallback((idx: number) => {
+    setActiveIndex(idx);
+  }, []);
+
+  const handleSuggestionsChange = useCallback((sugs: Suggestion[]) => {
+    setActiveSuggestions(sugs);
+  }, []); // No dependencies needed
 
   useEffect(() => {
     if (!isInputVisible || cities.length) return;
@@ -268,7 +343,7 @@ export default function SearchBar({
     };
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [isInputVisible, closeSearchBar]);
+  }, [isInputVisible, closeSearchBar]); // Essential dependencies for proper cleanup
 
   return (
     <search className="relative">
@@ -301,7 +376,7 @@ export default function SearchBar({
           id={POPOVER_ID}
           role="search"
           onSubmit={handleSearch}
-          className="panel-light absolute top-0 left-1/2 z-50 w-72 -translate-x-1/2 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
+          className="panel-light absolute top-10 z-50 w-72 -translate-x-3/4 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
         >
           <button
             type="button"
@@ -339,32 +414,14 @@ export default function SearchBar({
             Search
           </button>
 
-          {suggestions.length > 0 && (
-            <ul
-              id={LISTBOX_ID}
-              role="listbox"
-              className="grid max-h-60 divide-y divide-stone-300 overflow-auto border-t border-stone-400"
-            >
-              {suggestions.map((sug, idx) => (
-                <li
-                  key={`${sug.type}-${sug.label}`}
-                  className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm transition-colors ${
-                    idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"
-                  }`}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    executeSuggestion(sug);
-                  }}
-                  onMouseEnter={() => setActiveIndex(idx)}
-                >
-                  <span className="font-medium">{sug.label}</span>
-                  <span className="text-xs font-bold tracking-wider text-stone-500 uppercase">
-                    {sug.type}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <SuggestionList
+            deferredSearchTerm={deferredSearchTerm}
+            cities={cities}
+            activeIndex={activeIndex}
+            onExecute={executeSuggestion}
+            onHoverIndex={handleHoverIndex}
+            onSuggestionsChange={handleSuggestionsChange}
+          />
         </form>
       )}
     </search>

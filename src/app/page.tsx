@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="page-shell gap-12 py-20 text-center">
-      <div className="fixed top-21 left-2 z-1 lg:top-2 lg:left-22">
+      <div className="fixed top-18 left-2 z-1 lg:top-2 lg:left-22">
         <HomepagePoll />
       </div>
 
@@ -44,7 +44,7 @@ export default function Home() {
               <RoundImage
                 src="/favicon.ico"
                 alt="Mic Finder"
-                className="bg-white p-1"
+                className="bg-zinc-200 p-1"
                 width={168}
                 height={168}
                 interactive
@@ -76,10 +76,11 @@ export default function Home() {
             <RoundImage
               src="/newsy.webp"
               alt="News"
-              className="bg-white p-1"
+              className="bg-zinc-200 p-1"
               width={168}
               height={168}
               interactive
+              priority
             />
           </figure>
           <span className="primary-cta-right">Topical?</span>

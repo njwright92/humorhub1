@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "./SessionContext";
@@ -42,7 +42,10 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-function NavIcon({ icon }: { icon: string }) {
+const SIGN_IN_ICON =
+  "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4|M10 17l5-5-5-5|M15 12H3";
+
+const NavIcon = memo(function NavIcon({ icon }: { icon: string }) {
   const parts = icon.split("|");
   return (
     <svg
@@ -64,7 +67,7 @@ function NavIcon({ icon }: { icon: string }) {
       })}
     </svg>
   );
-}
+});
 
 export default function DesktopNav() {
   const { session, refreshSession } = useSession();
@@ -77,9 +80,12 @@ export default function DesktopNav() {
     }
   }, [preloadAuthModal, refreshSession, session.status]);
 
+  const isUserSignedIn =
+    session.status === "ready" && session.signedIn === true;
+
   return (
-    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 content-start bg-amber-700 p-2 pt-6 shadow-xl sm:grid">
-      <div className="grid justify-items-center gap-6 text-stone-900">
+    <nav className="fixed inset-y-0 left-0 z-50 hidden w-20 flex-col items-center bg-amber-700 p-2 pt-6 shadow-lg sm:flex">
+      <div className="grid w-full justify-items-center gap-6 text-stone-900">
         <Link href="/" aria-label="Home" className="nav-item">
           <Image
             src="/logo.webp"
@@ -131,6 +137,21 @@ export default function DesktopNav() {
           );
         })}
       </div>
+      {!isUserSignedIn && (
+        <div className="mt-16 text-zinc-200">
+          <button
+            type="button"
+            onMouseEnter={ensureAuthListener}
+            onFocus={ensureAuthListener}
+            onClick={() => void requireAuth("/Profile", "Sign In")}
+            aria-label="Sign In / Sign Up"
+            className="nav-item group relative"
+          >
+            <NavIcon icon={SIGN_IN_ICON} />
+            <span className="nav-tooltip">Sign In / Sign Up</span>
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
