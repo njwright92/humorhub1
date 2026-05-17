@@ -17,7 +17,7 @@ function EventCard({
       </h3>
       <p className="text-sm leading-snug">
         <span aria-hidden="true">📅 </span>
-        <span className="sr-only">Date: </span>
+        <time className="sr-only">Date: </time>
         {event.date}
       </p>
       <p className="text-sm leading-snug">
@@ -25,16 +25,16 @@ function EventCard({
         <span className="sr-only">Location: </span>
         {event.location}
       </p>
-      <div className="w-full px-2 text-sm">
-        <span className="mb-1 block leading-snug font-bold">
+      <p className="w-full px-2 text-sm">
+        <strong className="mb-1 block leading-snug">
           <span aria-hidden="true">ℹ️ </span>
           Details:
-        </span>
-        <div
-          className="leading-relaxed wrap-break-word [&_a]:text-blue-400"
+        </strong>
+        <span
+          className="block leading-relaxed wrap-break-word [&_a]:text-blue-400"
           dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
         />
-      </div>
+      </p>
       <button
         type="button"
         onClick={() => onSave(event)}

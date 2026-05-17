@@ -472,7 +472,7 @@ export default function MicFinderClient({
         className={`grid w-full transition-opacity duration-300 ${isPending ? "opacity-60" : "opacity-100"}`}
       >
         {/* Weekly / Recurring Events */}
-        <section className="card-shell my-2 w-full" role="list">
+        <section className="card-shell my-2 w-full" aria-label="Weekly events">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             {dayOfWeek} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
@@ -497,7 +497,10 @@ export default function MicFinderClient({
         </section>
 
         {/* One-Time Events */}
-        <section className="card-shell my-2 w-full" role="list">
+        <section
+          className="card-shell my-2 w-full"
+          aria-label="One-time events"
+        >
           <h2 className={`${sectionHeadingClass} border-purple-700`}>
             {formattedDate} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
@@ -522,7 +525,10 @@ export default function MicFinderClient({
         </section>
 
         {/* Map */}
-        <section className="card-base relative my-8 h-96 w-full overflow-hidden border-amber-700 bg-stone-900/10 shadow-xl contain-paint">
+        <section
+          className="card-base relative my-8 h-96 w-full overflow-hidden border-amber-700 bg-stone-900/10 shadow-xl contain-paint"
+          aria-label="Map"
+        >
           <button
             type="button"
             onClick={toggleMapVisibility}
@@ -547,7 +553,10 @@ export default function MicFinderClient({
         </section>
 
         {/* All City Events */}
-        <section className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-4 p-2">
+        <section
+          className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-4 p-2"
+          aria-label="All city events"
+        >
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             All {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
