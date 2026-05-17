@@ -95,6 +95,67 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Other: "Music/All-Arts Mics",
 };
 
+// Isolated inner list component to protect input typing from re-evaluation lags
+const CityDropdownList = memo(function CityDropdownList({
+  searchTerm,
+  initialCities,
+  onCitySelect,
+  onUseLocation,
+}: {
+  searchTerm: string;
+  initialCities: string[];
+  onCitySelect: (city: string) => void;
+  onUseLocation: () => void;
+}) {
+  const dropdownCities = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    const matches = term
+      ? initialCities.filter((city) => city.toLowerCase().startsWith(term))
+      : initialCities;
+
+    return {
+      items: matches.slice(0, MAX_CITY_RESULTS),
+    };
+  }, [searchTerm, initialCities]);
+
+  return (
+    <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
+      <ul role="listbox">
+        <li
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onUseLocation();
+          }}
+          className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+        >
+          <span aria-hidden="true">📍</span> Use My Location
+        </li>
+        <li
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onCitySelect("All Cities");
+          }}
+          className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+        >
+          <span aria-hidden="true">🌎</span> All Cities
+        </li>
+        {dropdownCities.items.map((city) => (
+          <li
+            key={city}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              onCitySelect(city);
+            }}
+            className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
+          >
+            {city}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+});
+
 const CitySelector = memo(function CitySelector({
   initialCities,
   selectedCity,
@@ -106,23 +167,13 @@ const CitySelector = memo(function CitySelector({
     initialSearchTerm || selectedCity,
   );
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+
+  // Correctly defer the heavy search filter data down the line
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   useEffect(() => {
     setSearchTerm(initialSearchTerm || selectedCity);
   }, [initialSearchTerm, selectedCity]);
-
-  const dropdownCities = useMemo(() => {
-    const term = deferredSearchTerm.trim().toLowerCase();
-    const matches = term
-      ? initialCities.filter((city) => city.toLowerCase().startsWith(term))
-      : initialCities;
-
-    return {
-      items: matches.slice(0, MAX_CITY_RESULTS),
-      hiddenCount: Math.max(0, matches.length - MAX_CITY_RESULTS),
-    };
-  }, [deferredSearchTerm, initialCities]);
 
   return (
     <div className="relative h-11 w-full max-w-80 sm:w-64">
@@ -147,42 +198,12 @@ const CitySelector = memo(function CitySelector({
         autoComplete="off"
       />
       {isCityDropdownOpen && (
-        <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
-          <ul role="listbox">
-            <li
-              onMouseDown={(e) => {
-                e.preventDefault();
-                onUseLocation();
-                setIsCityDropdownOpen(false);
-              }}
-              className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
-            >
-              <span aria-hidden="true">📍</span> Use My Location
-            </li>
-            <li
-              onMouseDown={(e) => {
-                e.preventDefault();
-                onCitySelect("All Cities");
-                setIsCityDropdownOpen(false);
-              }}
-              className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
-            >
-              <span aria-hidden="true">🌎</span> All Cities
-            </li>
-            {dropdownCities.items.map((city) => (
-              <li
-                key={city}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  onCitySelect(city);
-                }}
-                className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
-              >
-                {city}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <CityDropdownList
+          searchTerm={deferredSearchTerm}
+          initialCities={initialCities}
+          onCitySelect={onCitySelect}
+          onUseLocation={onUseLocation}
+        />
       )}
     </div>
   );
@@ -212,8 +233,6 @@ export default function MicFinderClient({
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
     useState<MicFinderFilterResult>(initialFilters);
-
-  // Keep track of all map pins independently from text filters
   const [mapPins, setMapPins] = useState<Event[]>(
     initialFilters.baseEvents || [],
   );
@@ -291,6 +310,7 @@ export default function MicFinderClient({
     setCitySearchTerm(normalized);
   }, []);
 
+  // Optimized to drop object parsing delay metrics entirely
   const handleEventSave = useCallback(
     async (event: Event) => {
       try {
@@ -298,7 +318,9 @@ export default function MicFinderClient({
           session.status === "ready" ? session : await refreshSession();
         if (!current.signedIn)
           return showToast("Please sign in to save events.", "info");
-        const result = await saveEvent(JSON.parse(JSON.stringify(event)));
+
+        // Pass a structural shallow/deep mirror cleanly without using heavy JSON utilities
+        const result = await saveEvent({ ...event });
         if (!result.success) throw new Error();
         showToast("Event saved successfully!", "success");
       } catch {
@@ -337,7 +359,6 @@ export default function MicFinderClient({
     return `${year}-${month}-${day}`;
   };
 
-  // Main UI fetch (Stays scoped to the chosen city for cards/lists)
   useEffect(() => {
     if (initialLoadRef.current) {
       initialLoadRef.current = false;
@@ -369,14 +390,13 @@ export default function MicFinderClient({
     return () => controller.abort();
   }, [selectedCity, selectedDate, selectedTab]);
 
-  // Map Pins parallel fetch (Bypasses city filter so map stays unlocked)
   useEffect(() => {
     const controller = new AbortController();
     const fetchAllMapPins = async () => {
       try {
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
-        params.set("city", "All Cities"); // Forces the backend to return everything
+        params.set("city", "All Cities");
         if (selectedDate) {
           params.set("date", formatDateInputValue(selectedDate));
         }
@@ -422,7 +442,6 @@ export default function MicFinderClient({
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
-
           <DatePicker
             id="event-date-picker"
             selected={selectedDate}
@@ -528,7 +547,7 @@ export default function MicFinderClient({
                 lat={mapConfig.lat}
                 lng={mapConfig.lng}
                 zoom={mapConfig.zoom}
-                events={mapPins} // <-- Cleanly uses the unfiltered pin master list
+                events={mapPins}
               />
             </div>
           ) : (
