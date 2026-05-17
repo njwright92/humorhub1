@@ -95,7 +95,6 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Other: "Music/All-Arts Mics",
 };
 
-// Isolated inner list component to protect input typing from re-evaluation lags
 const CityDropdownList = memo(function CityDropdownList({
   searchTerm,
   initialCities,
@@ -112,47 +111,45 @@ const CityDropdownList = memo(function CityDropdownList({
     const matches = term
       ? initialCities.filter((city) => city.toLowerCase().startsWith(term))
       : initialCities;
-
-    return {
-      items: matches.slice(0, MAX_CITY_RESULTS),
-    };
+    return matches.slice(0, MAX_CITY_RESULTS);
   }, [searchTerm, initialCities]);
 
   return (
-    <div className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl">
-      <ul role="listbox">
+    <ul
+      role="listbox"
+      className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl"
+    >
+      <li
+        onMouseDown={(e) => {
+          e.preventDefault();
+          onUseLocation();
+        }}
+        className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+      >
+        <span aria-hidden="true">📍</span> Use My Location
+      </li>
+      <li
+        onMouseDown={(e) => {
+          e.preventDefault();
+          onCitySelect("All Cities");
+        }}
+        className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+      >
+        <span aria-hidden="true">🌎</span> All Cities
+      </li>
+      {dropdownCities.map((city) => (
         <li
+          key={city}
           onMouseDown={(e) => {
             e.preventDefault();
-            onUseLocation();
+            onCitySelect(city);
           }}
-          className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-100 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
+          className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
         >
-          <span aria-hidden="true">📍</span> Use My Location
+          {city}
         </li>
-        <li
-          onMouseDown={(e) => {
-            e.preventDefault();
-            onCitySelect("All Cities");
-          }}
-          className="grid cursor-pointer grid-flow-col place-content-center gap-2 border-b border-stone-400 bg-amber-50 px-4 py-3 font-bold text-stone-900 hover:bg-amber-700"
-        >
-          <span aria-hidden="true">🌎</span> All Cities
-        </li>
-        {dropdownCities.items.map((city) => (
-          <li
-            key={city}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              onCitySelect(city);
-            }}
-            className="cursor-pointer border-b border-stone-400 px-4 py-2 text-center text-stone-900 last:border-0 hover:bg-amber-100"
-          >
-            {city}
-          </li>
-        ))}
-      </ul>
-    </div>
+      ))}
+    </ul>
   );
 });
 
@@ -167,8 +164,6 @@ const CitySelector = memo(function CitySelector({
     initialSearchTerm || selectedCity,
   );
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
-
-  // Correctly defer the heavy search filter data down the line
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   useEffect(() => {
@@ -310,7 +305,6 @@ export default function MicFinderClient({
     setCitySearchTerm(normalized);
   }, []);
 
-  // Optimized to drop object parsing delay metrics entirely
   const handleEventSave = useCallback(
     async (event: Event) => {
       try {
@@ -318,8 +312,6 @@ export default function MicFinderClient({
           session.status === "ready" ? session : await refreshSession();
         if (!current.signedIn)
           return showToast("Please sign in to save events.", "info");
-
-        // Pass a structural shallow/deep mirror cleanly without using heavy JSON utilities
         const result = await saveEvent({ ...event });
         if (!result.success) throw new Error();
         showToast("Event saved successfully!", "success");
@@ -370,18 +362,15 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         if (selectedCity) params.set("city", selectedCity);
-        if (selectedDate) {
+        if (selectedDate)
           params.set("date", formatDateInputValue(selectedDate));
-        }
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
           { signal: controller.signal },
         );
         if (!response.ok) return;
         const data: MicFinderFilterResult = await response.json();
-        startTransition(() => {
-          setEventData(data);
-        });
+        startTransition(() => setEventData(data));
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
       }
@@ -397,9 +386,8 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         params.set("city", "All Cities");
-        if (selectedDate) {
+        if (selectedDate)
           params.set("date", formatDateInputValue(selectedDate));
-        }
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
           { signal: controller.signal },
@@ -446,9 +434,7 @@ export default function MicFinderClient({
             id="event-date-picker"
             selected={selectedDate}
             onChange={(date: Date | null) => {
-              if (date) {
-                handleDateChange(date);
-              }
+              if (date) handleDateChange(date);
             }}
             dateFormat="MM/dd/yyyy"
             className={`${inputClass} date-picker-input text-center md:text-left`}
@@ -471,7 +457,11 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => setSelectedTab(tab.id)}
-            className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:px-3 sm:text-base ${selectedTab === tab.id ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200` : tab.inactiveClass}`}
+            className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:px-3 sm:text-base ${
+              selectedTab === tab.id
+                ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
+                : tab.inactiveClass
+            }`}
           >
             {tab.label}
           </button>
@@ -481,7 +471,8 @@ export default function MicFinderClient({
       <div
         className={`grid w-full transition-opacity duration-300 ${isPending ? "opacity-60" : "opacity-100"}`}
       >
-        <section className="card-shell my-2 w-full">
+        {/* Weekly / Recurring Events */}
+        <section className="card-shell my-2 w-full" role="list">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             {dayOfWeek} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
@@ -491,15 +482,13 @@ export default function MicFinderClient({
               Select a city to see weekly events.
             </p>
           ) : eventData.recurringEvents.length > 0 ? (
-            <div role="list" className="grid gap-4">
-              {eventData.recurringEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onSave={handleEventSave}
-                />
-              ))}
-            </div>
+            eventData.recurringEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onSave={handleEventSave}
+              />
+            ))
           ) : (
             <p className={emptyStateClass}>
               No weekly {TAB_LABELS[selectedTab].toLowerCase()} found.
@@ -507,7 +496,8 @@ export default function MicFinderClient({
           )}
         </section>
 
-        <section className="card-shell my-2 w-full">
+        {/* One-Time Events */}
+        <section className="card-shell my-2 w-full" role="list">
           <h2 className={`${sectionHeadingClass} border-purple-700`}>
             {formattedDate} {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
@@ -517,15 +507,13 @@ export default function MicFinderClient({
               Select a city to see one-time events.
             </p>
           ) : eventData.oneTimeEvents.length > 0 ? (
-            <div role="list" className="grid gap-4">
-              {eventData.oneTimeEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onSave={handleEventSave}
-                />
-              ))}
-            </div>
+            eventData.oneTimeEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onSave={handleEventSave}
+              />
+            ))
           ) : (
             <p className={emptyStateClass}>
               No one-time {TAB_LABELS[selectedTab].toLowerCase()} found.
@@ -533,6 +521,7 @@ export default function MicFinderClient({
           )}
         </section>
 
+        {/* Map */}
         <section className="card-base relative my-8 h-96 w-full overflow-hidden border-amber-700 bg-stone-900/10 shadow-xl contain-paint">
           <button
             type="button"
@@ -542,21 +531,22 @@ export default function MicFinderClient({
             {isMapVisible ? "Hide Map" : "Show Map"}
           </button>
           {isMapVisible ? (
-            <div className="size-full">
-              <GoogleMap
-                lat={mapConfig.lat}
-                lng={mapConfig.lng}
-                zoom={mapConfig.zoom}
-                events={mapPins}
-              />
-            </div>
+            <GoogleMap
+              lat={mapConfig.lat}
+              lng={mapConfig.lng}
+              zoom={mapConfig.zoom}
+              events={mapPins}
+            />
           ) : (
             <div className="grid size-full place-content-center opacity-20">
-              <span className="text-8xl">🗺️</span>
+              <span className="text-8xl" aria-hidden="true">
+                🗺️
+              </span>
             </div>
           )}
         </section>
 
+        {/* All City Events */}
         <section className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-4 p-2">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             All {TAB_LABELS[selectedTab]}

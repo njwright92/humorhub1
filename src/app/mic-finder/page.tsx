@@ -22,23 +22,18 @@ export const metadata: Metadata = {
   },
 };
 
-const SKELETON_ITEMS = [1, 2, 3, 4, 5] as const;
-
 function MicFinderSkeleton() {
   return (
     <div
       role="status"
-      aria-label="Loading MicFinder"
-      className="animate-pulse p-2"
+      aria-label="Loading MicFinder content"
+      className="animate-pulse space-y-4 p-2 [&>*]:rounded-2xl [&>*]:bg-stone-700"
     >
-      <div className="mb-6 h-16 rounded-2xl bg-stone-700" />
-      <div className="mb-6 h-64 rounded-2xl bg-stone-700" />
-      <div className="space-y-4">
-        {SKELETON_ITEMS.map((i) => (
-          <div key={i} className="h-32 rounded-2xl bg-stone-700" />
-        ))}
-      </div>
-      <span className="sr-only">Loading MicFinder content...</span>
+      <div className="h-16" />
+      <div className="h-64" />
+      <div className="h-32" />
+      <div className="h-32" />
+      <div className="h-32" />
     </div>
   );
 }
@@ -181,26 +176,27 @@ export default function MicFinderPage() {
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
       />
       <main className="grid min-h-dvh justify-items-center gap-10 px-2 py-12 text-center md:ml-20 md:gap-12 md:px-6 md:py-20">
-        <aside className="shadow-soft -mt-8 min-h-11 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-200 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base">
-          <p className="m-0 leading-snug">
-            <span aria-hidden="true">📢 </span>
-            Note: Open mic events evolve quickly. See something outdated?{" "}
-            <Link
-              href="/contact"
-              className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
-            >
-              Contact Us
-            </Link>{" "}
-            to keep the comedy community thriving!
-          </p>
+        <aside
+          aria-label="Community notice"
+          className="shadow-soft -mt-8 min-h-11 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-200 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base"
+        >
+          <span aria-hidden="true">📢 </span>
+          Note: Open mic events evolve quickly. See something outdated?{" "}
+          <Link
+            href="/contact"
+            className="font-bold text-blue-700 underline transition-colors hover:text-blue-900"
+          >
+            Contact Us
+          </Link>{" "}
+          to keep the comedy community thriving!
         </aside>
 
-        <header className="min-h-fit space-y-3">
+        <hgroup className="min-h-fit space-y-3">
           <h1 className="page-title">Mic Finder</h1>
           <p className="text-lg leading-tight font-bold sm:text-xl md:text-2xl lg:text-3xl">
             Discover Mics and Festivals Near You!
           </p>
-        </header>
+        </hgroup>
 
         <p className="max-w-2xl text-sm text-stone-300 lg:text-lg">
           Find a Mic tonight or list yours, built by comics for comics. Use Mic
@@ -209,11 +205,9 @@ export default function MicFinderPage() {
 
         <EventForm />
 
-        <div className="space-y-2">
-          <p className="text-sm font-semibold text-stone-400 md:text-base">
-            Pick a city and date!
-          </p>
-        </div>
+        <p className="mb-2 text-sm font-semibold text-stone-400 md:text-base">
+          Pick a city and date!
+        </p>
 
         <div className="page-content gap-2">
           <Suspense fallback={<MicFinderSkeleton />}>
