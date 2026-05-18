@@ -95,6 +95,14 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Other: "Music/All-Arts Mics",
 };
 
+// CHANGE 1 — module-level date formatter, created once not per render
+function formatDateParam(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const CityDropdownList = memo(function CityDropdownList({
   searchTerm,
   initialCities,
@@ -291,19 +299,28 @@ export default function MicFinderClient({
         }
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
-          setSelectedCity(normalized);
-          setCitySearchTerm(normalized);
+          // CHANGE 5 — batch geolocation setters in startTransition
+          startTransition(() => {
+            setSelectedCity(normalized);
+            setCitySearchTerm(normalized);
+          });
         }
       },
       () => showToast("Location access denied", "error"),
     );
-  }, [initialCityCoordinates, showToast]);
+  }, [initialCityCoordinates, showToast, startTransition]);
 
-  const handleCitySelect = useCallback((city: string) => {
-    const normalized = normalizeCityName(city);
-    setSelectedCity(normalized);
-    setCitySearchTerm(normalized);
-  }, []);
+  // CHANGE 3 — city select wrapped in startTransition
+  const handleCitySelect = useCallback(
+    (city: string) => {
+      const normalized = normalizeCityName(city);
+      startTransition(() => {
+        setSelectedCity(normalized);
+        setCitySearchTerm(normalized);
+      });
+    },
+    [startTransition],
+  );
 
   const handleEventSave = useCallback(
     async (event: Event) => {
@@ -330,6 +347,16 @@ export default function MicFinderClient({
     setIsMapVisible((prev) => !prev);
   }, []);
 
+  // CHANGE 2 — tab select wrapped in startTransition
+  const handleTabSelect = useCallback(
+    (tab: EventCategory) => {
+      startTransition(() => {
+        setSelectedTab(tab);
+      });
+    },
+    [startTransition],
+  );
+
   const { dayOfWeek, formattedDate } = useMemo(() => {
     if (!selectedDate) return { dayOfWeek: "", formattedDate: "" };
     return {
@@ -343,14 +370,6 @@ export default function MicFinderClient({
 
   const initialLoadRef = useRef(true);
 
-  const formatDateInputValue = (date: Date | null) => {
-    if (!date) return "";
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   useEffect(() => {
     if (initialLoadRef.current) {
       initialLoadRef.current = false;
@@ -362,8 +381,8 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         if (selectedCity) params.set("city", selectedCity);
-        if (selectedDate)
-          params.set("date", formatDateInputValue(selectedDate));
+        // CHANGE 1 — use module-level formatDateParam
+        if (selectedDate) params.set("date", formatDateParam(selectedDate));
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
           { signal: controller.signal },
@@ -379,15 +398,18 @@ export default function MicFinderClient({
     return () => controller.abort();
   }, [selectedCity, selectedDate, selectedTab]);
 
+  // CHANGE 4 — only fetch map pins when map is visible
   useEffect(() => {
+    if (!isMapVisible) return;
+
     const controller = new AbortController();
     const fetchAllMapPins = async () => {
       try {
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         params.set("city", "All Cities");
-        if (selectedDate)
-          params.set("date", formatDateInputValue(selectedDate));
+        // CHANGE 1 — use module-level formatDateParam
+        if (selectedDate) params.set("date", formatDateParam(selectedDate));
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
           { signal: controller.signal },
@@ -401,7 +423,7 @@ export default function MicFinderClient({
     };
     void fetchAllMapPins();
     return () => controller.abort();
-  }, [selectedTab, selectedDate]);
+  }, [selectedTab, selectedDate, isMapVisible]);
 
   const mapConfig = useMemo(() => {
     const cityCoords = selectedCity
@@ -456,7 +478,8 @@ export default function MicFinderClient({
             type="button"
             role="tab"
             aria-selected={selectedTab === tab.id}
-            onClick={() => setSelectedTab(tab.id)}
+            // CHANGE 2 — handleTabSelect instead of inline setSelectedTab
+            onClick={() => handleTabSelect(tab.id)}
             className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:px-3 sm:text-base ${
               selectedTab === tab.id
                 ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
