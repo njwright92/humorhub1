@@ -29,7 +29,7 @@
     width: 100%;
     min-height: 2.75rem;
     padding: 0.75rem 1rem;
-    border: 1px solid var(--color-stone-400);
+    border: 0.125rem solid var(--color-stone-400);
     border-radius: 1rem;
     background-color: var(--color-zinc-200);
     color: var(--color-stone-900);
@@ -46,21 +46,13 @@
   .date-picker-calendar {
     border-radius: 1rem !important;
     overflow: hidden;
-    border: 1px solid var(--color-stone-400) !important;
-    background-color: var(--color-zinc-200) !important;
     color: var(--color-stone-900) !important;
-  }
-
-  .react-datepicker-wrapper,
-  .react-datepicker__input-container {
-    width: 100%;
   }
 
   .react-datepicker__calendar-icon {
     right: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
-    fill: var(--color-stone-900);
   }
 
   h1,
@@ -71,6 +63,7 @@
   h6 {
     font-family: var(--font-heading);
     letter-spacing: 0.025em;
+    font-weight: 800;
     --tw-text-shadow-color: rgba(35, 26, 20, 0.7);
     text-shadow: 1px 1px 0px var(--tw-text-shadow-color);
   }
@@ -87,7 +80,7 @@
 
 @layer components {
   .section-card {
-    @apply mx-auto grid w-full gap-8 rounded-xl bg-stone-900/90 p-2;
+    @apply mx-auto grid w-full gap-8 rounded-xl bg-stone-900/80 p-2;
     box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.25);
   }
 
@@ -109,7 +102,7 @@
 
   .section-title,
   .page-title {
-    @apply text-3xl text-amber-700 md:text-4xl lg:text-5xl;
+    @apply text-3xl tracking-wide text-amber-700 md:text-4xl lg:text-5xl;
     line-height: 1.1;
   }
 
@@ -124,13 +117,13 @@
   }
 
   .card-dark {
-    @apply rounded-2xl border-2 border-zinc-200/10 bg-stone-900/80 p-4 text-zinc-200;
+    @apply rounded-2xl border-2 border-zinc-200/40 bg-stone-900/80 p-4 text-zinc-200;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
 
   .card-base {
     @apply rounded-2xl border;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .shadow-soft {
@@ -150,7 +143,7 @@
   }
 
   .card-muted {
-    @apply rounded-2xl border border-zinc-200/10 bg-stone-900/50 p-4;
+    @apply rounded-2xl border border-zinc-200/40 bg-stone-900/50 p-4;
   }
 
   .btn-primary,
@@ -267,13 +260,13 @@
   }
 
   .input-amber {
-    @apply w-full rounded-2xl border-2 border-stone-400 px-4 py-3 text-stone-900 transition-colors focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    @apply w-full rounded-2xl border-2 border-stone-400 px-4 py-3 text-stone-900 transition-colors focus:border-amber-700 focus:ring-2 focus:ring-amber-700;
     min-height: 2.75rem;
     line-height: 1.25;
   }
 
   .input-amber-soft {
-    @apply w-full rounded-2xl border border-stone-400 bg-zinc-200 p-2 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50;
+    @apply w-full rounded-2xl border border-stone-400 bg-zinc-200 p-2 outline-hidden focus:border-amber-700/80 focus:ring-2 focus:ring-amber-700/80;
     min-height: 2.5rem;
     line-height: 1.25;
   }

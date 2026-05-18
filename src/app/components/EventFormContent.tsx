@@ -237,6 +237,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
             className={inputClass}
             placeholder="e.g., The Comedy Store Open Mic"
+            autoComplete="false"
           />
         </div>
 
@@ -252,6 +253,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
             className={inputClass}
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles"
+            autoComplete="false"
           />
         </div>
 
@@ -294,6 +296,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             rows={3}
             className={`${inputClass} resize-none`}
             placeholder="Time, Host, Entry Fee, etc."
+            autoComplete="false"
           />
         </div>
 
@@ -329,13 +332,14 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
             className={inputClass}
             placeholder="yourname@example.com"
+            autoComplete="true"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn-primary mt-2 w-full py-3 text-lg"
+          className="btn-primary mx-auto mt-2 w-2/3"
         >
           {isSubmitting ? "Submitting..." : "Submit Event"}
         </button>

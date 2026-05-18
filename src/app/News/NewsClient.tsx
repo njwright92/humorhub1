@@ -82,7 +82,7 @@ export default function NewsClient({
 
           <Link
             href={`/News?category=${selectedCategory}&subcategory=${selectedSubcategory}`}
-            className="text-sm text-red-300 underline hover:text-white"
+            className="text-sm text-red-300 underline hover:text-zinc-200"
           >
             Try Again
           </Link>

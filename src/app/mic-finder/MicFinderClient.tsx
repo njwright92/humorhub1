@@ -56,9 +56,9 @@ interface CitySelectorProps {
 }
 
 const inputClass =
-  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700/50";
+  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700";
 const sectionHeadingClass =
-  "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-center text-xl leading-tight sm:min-h-12 sm:text-2xl";
+  "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-center text-2xl leading-tight md:text-3xl";
 const emptyStateClass = "py-4 text-center text-stone-400";
 const MAX_CITY_RESULTS = 40;
 
@@ -68,8 +68,7 @@ const TABS = [
     label: "Comedy Mics",
     activeClass: "bg-amber-700",
     activeTextClass: "text-stone-900",
-    inactiveClass:
-      "bg-amber-100 text-amber-800 hover:bg-amber-200 font-bold tracking-wide",
+    inactiveClass: "bg-amber-100 text-amber-800 hover:bg-amber-200 font-bold",
   },
   {
     id: "Festivals",
@@ -77,15 +76,14 @@ const TABS = [
     activeClass: "bg-purple-700",
     activeTextClass: "text-white",
     inactiveClass:
-      "bg-purple-100 text-purple-800 hover:bg-purple-200 font-bold tracking-wide",
+      "bg-purple-100 text-purple-800 hover:bg-purple-200 font-bold",
   },
   {
     id: "Other",
     label: "Music/All Arts",
     activeClass: "bg-green-700",
     activeTextClass: "text-white",
-    inactiveClass:
-      "bg-green-100 text-green-800 hover:bg-green-200 font-bold tracking-wide",
+    inactiveClass: "bg-green-100 text-green-800 hover:bg-green-200 font-bold",
   },
 ] as const;
 
@@ -440,7 +438,7 @@ export default function MicFinderClient({
 
   return (
     <>
-      <div className="relative z-20 mt-2 grid min-h-12 w-full items-center justify-items-center gap-3 sm:flex sm:justify-center sm:gap-4">
+      <div className="relative z-20 my-2 grid w-full items-center justify-items-center gap-3 sm:flex sm:justify-center sm:gap-6">
         <CitySelector
           initialCities={initialCities}
           selectedCity={selectedCity}
@@ -470,7 +468,7 @@ export default function MicFinderClient({
 
       <nav
         role="tablist"
-        className="my-2 grid min-h-12 w-full auto-cols-auto grid-flow-col justify-center gap-1 sm:gap-2"
+        className="my-4 grid w-full auto-cols-auto grid-flow-col justify-center gap-2 sm:my-6"
       >
         {TABS.map((tab) => (
           <button
@@ -480,7 +478,7 @@ export default function MicFinderClient({
             aria-selected={selectedTab === tab.id}
             // CHANGE 2 — handleTabSelect instead of inline setSelectedTab
             onClick={() => handleTabSelect(tab.id)}
-            className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:px-3 sm:text-base ${
+            className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:text-base ${
               selectedTab === tab.id
                 ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
                 : tab.inactiveClass
