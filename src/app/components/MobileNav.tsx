@@ -11,7 +11,6 @@ const MobileMenu = dynamic<{ closeMenu: () => void }>(
   () => import("./MobileMenu"),
 );
 
-// Pre-compute style arrays to avoid re-creation on every render
 const HEADER_STYLES = [
   "h-14 bg-amber-700",
   "h-12 bg-amber-700/90",
@@ -28,18 +27,16 @@ export default function MobileNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollStage, setScrollStage] = useState(0);
   const lastScrollY = useRef(0);
-  const ticking = useRef(false); // Throttling lock flag
+  const ticking = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // 1. PERFORMANCE: RequestAnimationFrame Throttling
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           const y = window.scrollY;
           const vh = window.innerHeight;
           const isScrollingUp = y < lastScrollY.current;
 
-          // Combined calculations to drop variable clutter
           if (y < vh / 16) setScrollStage(0);
           else if (y < (vh * 2) / 16) setScrollStage(1);
           else if (y < (vh * 4) / 16) setScrollStage(2);
@@ -91,7 +88,6 @@ export default function MobileNav() {
           Humor Hub
         </h1>
 
-        {/* Right Aligned: Action Controls Panel (Search & Hamburger) */}
         <div className="flex items-center gap-2">
           <div
             className={`flex items-center justify-center text-stone-900 transition-all duration-200 ${searchScaleStyles}`}
@@ -122,8 +118,6 @@ export default function MobileNav() {
                     ? "M6 6l12 12M18 6L6 18"
                     : "M3 12h18M3 6h18M3 18h18"
                 }
-                transition-all="true"
-                duration-300="true"
               />
             </svg>
           </button>

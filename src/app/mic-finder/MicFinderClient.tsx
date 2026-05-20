@@ -56,7 +56,7 @@ interface CitySelectorProps {
 }
 
 const inputClass =
-  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 p-2 px-3 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700";
+  "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 px-3 py-2 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700";
 const sectionHeadingClass =
   "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-center text-2xl leading-tight md:text-3xl";
 const emptyStateClass = "py-4 text-center text-stone-400";
@@ -93,7 +93,6 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Other: "Music/All-Arts Mics",
 };
 
-// CHANGE 1 — module-level date formatter, created once not per render
 function formatDateParam(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -297,7 +296,6 @@ export default function MicFinderClient({
         }
         if (closestCity) {
           const normalized = normalizeCityName(closestCity);
-          // CHANGE 5 — batch geolocation setters in startTransition
           startTransition(() => {
             setSelectedCity(normalized);
             setCitySearchTerm(normalized);
@@ -308,7 +306,6 @@ export default function MicFinderClient({
     );
   }, [initialCityCoordinates, showToast, startTransition]);
 
-  // CHANGE 3 — city select wrapped in startTransition
   const handleCitySelect = useCallback(
     (city: string) => {
       const normalized = normalizeCityName(city);
@@ -345,7 +342,6 @@ export default function MicFinderClient({
     setIsMapVisible((prev) => !prev);
   }, []);
 
-  // CHANGE 2 — tab select wrapped in startTransition
   const handleTabSelect = useCallback(
     (tab: EventCategory) => {
       startTransition(() => {
@@ -379,7 +375,6 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         if (selectedCity) params.set("city", selectedCity);
-        // CHANGE 1 — use module-level formatDateParam
         if (selectedDate) params.set("date", formatDateParam(selectedDate));
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
@@ -396,7 +391,6 @@ export default function MicFinderClient({
     return () => controller.abort();
   }, [selectedCity, selectedDate, selectedTab]);
 
-  // CHANGE 4 — only fetch map pins when map is visible
   useEffect(() => {
     if (!isMapVisible) return;
 
@@ -406,7 +400,6 @@ export default function MicFinderClient({
         const params = new URLSearchParams();
         params.set("tab", selectedTab);
         params.set("city", "All Cities");
-        // CHANGE 1 — use module-level formatDateParam
         if (selectedDate) params.set("date", formatDateParam(selectedDate));
         const response = await fetch(
           `/api/mic-finder/filter?${params.toString()}`,
@@ -476,7 +469,6 @@ export default function MicFinderClient({
             type="button"
             role="tab"
             aria-selected={selectedTab === tab.id}
-            // CHANGE 2 — handleTabSelect instead of inline setSelectedTab
             onClick={() => handleTabSelect(tab.id)}
             className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:text-base ${
               selectedTab === tab.id

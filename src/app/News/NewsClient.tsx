@@ -47,22 +47,20 @@ function ArticleCard({ article, priority }: ArticleCardProps) {
           {article.description}
         </p>
 
-        <div className="mt-auto pt-4">
-          {article.url ? (
-            <a
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-outline-amber block w-full text-sm"
-            >
-              Read Full Story →
-            </a>
-          ) : (
-            <span className="block text-center text-xs font-bold text-stone-600 uppercase">
-              Unavailable
-            </span>
-          )}
-        </div>
+        {article.url ? (
+          <a
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline-amber mt-auto block w-full text-sm"
+          >
+            Read Full Story →
+          </a>
+        ) : (
+          <span className="mt-auto block text-center text-xs font-bold text-stone-600 uppercase">
+            Unavailable
+          </span>
+        )}
       </div>
     </article>
   );

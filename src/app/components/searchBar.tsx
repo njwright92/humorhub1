@@ -45,7 +45,6 @@ type Suggestion =
   | { type: "page"; label: string; page: PageItem }
   | { type: "city"; label: string; city: string };
 
-// 1. ISOLATED LIST COMPONENT: Prevents array looping mechanics from breaking text input frames
 interface SuggestionListProps {
   deferredSearchTerm: string;
   cities: string[];
@@ -63,7 +62,6 @@ const SuggestionList = memo(function SuggestionList({
   onHoverIndex,
   onSuggestionsChange,
 }: SuggestionListProps) {
-  // Computes matches off the deferred state loop safely
   const currentSuggestions = useMemo<Suggestion[]>(() => {
     const q = deferredSearchTerm.trim().toLowerCase();
     if (q.length < 2) return [];
@@ -96,7 +94,6 @@ const SuggestionList = memo(function SuggestionList({
     return results;
   }, [deferredSearchTerm, cities]);
 
-  // Bubble up raw suggestions back to parent references safely without structural recursion loops
   useEffect(() => {
     onSuggestionsChange(currentSuggestions);
   }, [currentSuggestions, onSuggestionsChange]);
@@ -154,7 +151,6 @@ export default function SearchBar({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [activeSuggestions, setActiveSuggestions] = useState<Suggestion[]>([]);
 
-  // Defer search tracking to prioritize frame rendering transitions
   const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const closeSearchBar = useCallback(() => {
@@ -298,7 +294,7 @@ export default function SearchBar({
 
   const handleSuggestionsChange = useCallback((sugs: Suggestion[]) => {
     setActiveSuggestions(sugs);
-  }, []); // No dependencies needed
+  }, []);
 
   useEffect(() => {
     if (!isInputVisible || cities.length) return;
@@ -343,14 +339,14 @@ export default function SearchBar({
     };
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [isInputVisible, closeSearchBar]); // Essential dependencies for proper cleanup
+  }, [isInputVisible, closeSearchBar]);
 
   return (
     <search className="relative">
       <button
         type="button"
         onClick={handleToggleInput}
-        className="xs-text-zinc-200 transition-transform hover:scale-110 hover:text-stone-700 md:text-stone-900"
+        className="text-zinc-200 transition-transform hover:scale-110 hover:text-stone-700 md:text-stone-900"
         aria-label="Open search"
         aria-expanded={isInputVisible}
         aria-controls={POPOVER_ID}
