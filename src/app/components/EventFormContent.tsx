@@ -204,7 +204,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           className="absolute top-4 right-4 transition-transform hover:scale-110"
           aria-label="Close modal"
         >
-          <CloseIcon className="size-6" />
+          <CloseIcon className="light-close size-7" />
         </button>
 
         <header className="text-center">

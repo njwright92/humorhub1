@@ -156,7 +156,7 @@ const InnerMap = memo(function InnerMap({
               aria-label="Close"
               type="button"
             >
-              <CloseIcon className="size-3" />
+              <CloseIcon className="light-close size-4" />
             </button>
 
             <p className="break-word mb-1 text-base leading-tight font-bold text-amber-700">

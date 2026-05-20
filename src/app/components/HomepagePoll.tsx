@@ -110,7 +110,7 @@ export default function HomepagePoll() {
         onClick={() => setVisible(false)}
         className="absolute top-1 right-1"
       >
-        <CloseIcon className="size-4" />
+        <CloseIcon className="size-5 rounded-full bg-stone-300 p-1 text-zinc-900" />
       </button>
 
       <h2 className="mt-2 text-center whitespace-nowrap text-amber-700 lg:text-lg">

@@ -380,7 +380,7 @@ export default function SearchBar({
             className="absolute top-0 right-0 p-1 transition-transform hover:scale-105"
             aria-label="Close search"
           >
-            <CloseIcon className="size-5" />
+            <CloseIcon className="light-close size-5" />
           </button>
 
           <label htmlFor={INPUT_ID} className="sr-only">

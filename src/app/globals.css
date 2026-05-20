@@ -272,6 +272,10 @@
     min-height: 2.75rem;
     line-height: 1.25;
   }
+
+  .light-close {
+    @apply rounded-full bg-stone-900 p-1 text-zinc-200 shadow-lg;
+  }
 }
 
 @keyframes slide-in {
