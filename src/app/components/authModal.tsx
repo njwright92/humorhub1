@@ -1,14 +1,11 @@
 "use client";
 
 import { useState, useCallback, type SubmitEvent } from "react";
+import { validateAndAuth } from "@/app/actions/auth";
 import { useToast } from "./ToastContext";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getAuth } from "@/app/lib/firebase-auth";
 import CloseIcon from "./CloseIcon";
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 const inputClass = "field-soft";
 
@@ -51,71 +48,30 @@ export default function AuthModal({
   const handleAuth = useCallback(
     async (e: SubmitEvent) => {
       e.preventDefault();
-
-      if (!emailRegex.test(email)) {
-        showToast("Please enter a valid email address.", "error");
-        return;
-      }
-
-      if (!isSignIn && !passwordRegex.test(password)) {
-        showToast(
-          "Password too weak (needs 8 chars, letter, number, symbol).",
-          "error",
-        );
-        return;
-      }
-
-      if (!isSignIn && password !== confirmPassword) {
-        showToast("Passwords do not match.", "error");
-        return;
-      }
-
       setIsLoading(true);
-      try {
-        const res = await fetch(`/api/auth/${isSignIn ? "login" : "signup"}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-          credentials: "include",
-        });
-        const result = (await res.json()) as {
-          success?: boolean;
-          errorCode?: string;
-        };
 
-        if (!res.ok || !result.success) {
-          const code = result.errorCode || "";
-          const msg =
-            code === "auth/email-already-in-use"
-              ? "Email already in use. Try signing in."
-              : [
-                    "auth/wrong-password",
-                    "auth/user-not-found",
-                    "auth/invalid-credential",
-                  ].includes(code)
-                ? "Invalid email or password."
-                : code === "auth/invalid-email"
-                  ? "Please enter a valid email address."
-                  : code === "auth/weak-password"
-                    ? "Password too weak (needs 8 chars, letter, number, symbol)."
-                    : "Authentication failed. Please try again.";
-          showToast(msg, "error");
-          return;
-        }
+      const result = await validateAndAuth(
+        email,
+        password,
+        confirmPassword,
+        isSignIn,
+      );
 
-        showToast(
-          isSignIn
-            ? "Sign-in successful! Welcome back."
-            : "Sign-up successful! Welcome.",
-          "success",
-        );
-        onLoginSuccess?.();
-        handleClose();
-      } catch {
-        showToast("Authentication failed. Please try again.", "error");
-      } finally {
-        setIsLoading(false);
+      setIsLoading(false);
+
+      if (!result.success) {
+        showToast(result.error || "Authentication failed", "error");
+        return;
       }
+
+      showToast(
+        isSignIn
+          ? "Sign-in successful! Welcome back."
+          : "Sign-up successful! Welcome.",
+        "success",
+      );
+      onLoginSuccess?.();
+      handleClose();
     },
     [
       email,
@@ -231,7 +187,6 @@ export default function AuthModal({
               required
             />
           </div>
-
           {!isSignIn && (
             <div className="space-y-1">
               <label htmlFor="auth-confirm" className="text-sm text-stone-900">

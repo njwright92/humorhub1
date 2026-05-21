@@ -7,7 +7,7 @@ export type SessionInfo = {
 export async function getSession(): Promise<SessionInfo> {
   try {
     const res = await fetch("/api/auth/session", {
-      cache: "no-store",
+      next: { revalidate: 60 },
       credentials: "include",
     });
     const data = (await res.json()) as {
