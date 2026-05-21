@@ -9,17 +9,26 @@ const links = [
 
 export default function NotFound() {
   const btnCls =
-    "rounded-lg bg-amber-700 px-4 py-3 transition-colors hover:bg-amber-600";
+    "shadow-lg rounded-xl bg-amber-800 px-4 py-3 zinc-200 font-bold text-lg transition-colors hover:bg-amber-700";
 
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
+    <main
+      aria-labelledby="not-found-title"
+      className="flex min-h-dvh flex-col items-center justify-center px-4 text-center"
+    >
       <div className="max-w-md">
-        <h1 className="mb-4 text-6xl font-bold text-amber-700 md:text-8xl">
+        <h1
+          id="not-found-title"
+          className="mb-4 text-6xl font-bold text-amber-800 md:text-8xl"
+        >
           404
         </h1>
+
         <h2 className="mb-4 text-2xl md:text-3xl">Page Not Found</h2>
-        <p className="mb-8 text-stone-400">
-          Looks like this page doesn't exist. Let's get you back on track!
+
+        <p className="mb-8 text-stone-300">
+          Looks like this page doesn&apos;t exist. Let&apos;s get you back on
+          track!
         </p>
 
         <div className="mb-8 grid grid-cols-2 gap-4">
@@ -32,11 +41,11 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="inline-block rounded-lg bg-stone-700 px-6 py-4 text-lg font-black transition-colors hover:bg-stone-600"
+          className="inline-block rounded-xl bg-stone-700 px-6 py-4 text-xl font-bold text-zinc-200 shadow-lg transition-colors hover:bg-stone-600"
         >
           Home
         </Link>
       </div>
-    </section>
+    </main>
   );
 }
