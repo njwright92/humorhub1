@@ -9,6 +9,33 @@ const SOCIALS = [
   { label: "GitHub", href: "https://github.com/njwright92" },
 ];
 
+const FOOTER_NAVS = [
+  {
+    id: "about-nav",
+    title: "Get to Know Us",
+    external: false,
+    links: [
+      { label: "About Humor Hub", href: "/about" },
+      { label: "Contact Our Team", href: "/contact" },
+    ],
+  },
+  {
+    id: "social-nav",
+    title: "Stay Connected",
+    links: SOCIALS,
+    external: true,
+  },
+  {
+    id: "legal-nav",
+    title: "Legal Info",
+    external: false,
+    links: [
+      { label: "User Agreement", href: "/user-agreement" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+    ],
+  },
+] as const;
+
 const headingClass = "text-amber-700 uppercase";
 const linkClass = "transition-colors hover:text-amber-700";
 
@@ -49,70 +76,38 @@ export default function Footer() {
           </Link>
 
           <div className="grid grid-cols-2 gap-6 text-center sm:grid-cols-3 md:pr-10">
-            <nav aria-labelledby="about-nav" className="grid h-fit gap-1">
-              <h3 id="about-nav" className={headingClass}>
-                Get to Know Us
-              </h3>
-              <ul className="grid gap-1 font-medium text-stone-400">
-                <li>
-                  <Link href="/about" prefetch={false} className={linkClass}>
-                    About Humor Hub
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" prefetch={false} className={linkClass}>
-                    Contact Our Team
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-
-            <nav aria-labelledby="social-nav" className="grid h-fit gap-1">
-              <h3 id="social-nav" className={headingClass}>
-                Stay Connected
-              </h3>
-              <ul className="grid gap-1 font-medium text-stone-400">
-                {SOCIALS.map(({ href, label }) => (
-                  <li key={href}>
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={linkClass}
-                    >
-                      {label}
-                      <span className="sr-only"> (opens in new tab)</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <nav aria-labelledby="legal-nav" className="grid h-fit gap-1">
-              <h3 id="legal-nav" className={headingClass}>
-                Legal Info
-              </h3>
-              <ul className="grid gap-1 font-medium text-stone-400">
-                <li>
-                  <Link
-                    href="/user-agreement"
-                    prefetch={false}
-                    className={linkClass}
-                  >
-                    User Agreement
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy-policy"
-                    prefetch={false}
-                    className={linkClass}
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-              </ul>
-            </nav>
+            {FOOTER_NAVS.map(({ id, title, links, external }) => (
+              <nav key={id} aria-labelledby={id} className="grid h-fit gap-1">
+                <h3 id={id} className={headingClass}>
+                  {title}
+                </h3>
+                <ul className="grid gap-1 font-medium text-stone-400">
+                  {links.map(({ href, label }) => (
+                    <li key={href}>
+                      {external ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={linkClass}
+                        >
+                          {label}
+                          <span className="sr-only"> (opens in new tab)</span>
+                        </a>
+                      ) : (
+                        <Link
+                          href={href}
+                          prefetch={false}
+                          className={linkClass}
+                        >
+                          {label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
           </div>
         </div>
 

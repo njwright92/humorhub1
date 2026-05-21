@@ -11,10 +11,7 @@ import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
 
 import type { NewsCategory } from "@/app/lib/types";
 
-import NewsFilters, {
-  NEWS_CATEGORIES,
-  NEWS_SUBCATEGORIES,
-} from "./NewsFilters";
+import NewsFilters, { NEWS_SUBCATEGORIES } from "./NewsFilters";
 
 export const metadata: Metadata = {
   title: "Hub News | Humor Hub",
@@ -120,12 +117,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     <main className="page-shell gap-4 text-center">
       <NewsHeader />
 
-      <NewsFilters
-        selectedCategory={cat}
-        selectedSubcategory={sub}
-        categories={NEWS_CATEGORIES}
-        subcategories={NEWS_SUBCATEGORIES}
-      />
+      <NewsFilters selectedCategory={cat} selectedSubcategory={sub} />
 
       <Suspense key={key} fallback={<NewsSkeleton />}>
         <NewsContent resolvedCategory={cat} subcategory={sub} />

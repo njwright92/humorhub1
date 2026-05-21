@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import LegalPage from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "User Agreement | Humor Hub",
@@ -32,41 +32,6 @@ const SECTIONS = [
 
 export default function UserAgreementPage() {
   return (
-    <main className="page-shell gap-8">
-      <h1 className="page-title text-center">User Agreement</h1>
-      <section className="panel-light">
-        <p className="border-b border-stone-300 pb-4 text-xs font-bold uppercase opacity-60">
-          Last Updated: December 2025
-        </p>
-
-        <div className="grid gap-8 pt-4 text-left">
-          {SECTIONS.map((s) => (
-            <article key={s.title} className="grid gap-2">
-              <h2 className="text-2xl text-amber-700">{s.title}</h2>
-              <p>{s.content}</p>
-            </article>
-          ))}
-
-          <article className="grid gap-2">
-            <h2 className="text-2xl text-amber-700">5. Contact</h2>
-            <p>
-              Questions?{" "}
-              <Link
-                href="/contact"
-                className="font-bold text-blue-700 underline"
-              >
-                Contact Us
-              </Link>
-            </p>
-          </article>
-
-          <div className="flex justify-center border-t border-stone-300 pt-8">
-            <Link href="/" className="btn-primary">
-              Return Home
-            </Link>
-          </div>
-        </div>
-      </section>
-    </main>
+    <LegalPage title="User Agreement" updated="May 2026" sections={SECTIONS} />
   );
 }

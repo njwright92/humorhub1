@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import LegalPage from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Humor Hub",
@@ -37,48 +37,6 @@ const SECTIONS = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="page-shell gap-8">
-      <h1 className="page-title text-center">Privacy Policy</h1>
-      <section className="panel-light">
-        <p className="border-b border-stone-300 pb-4 text-xs font-bold uppercase opacity-60">
-          Last Updated: May 2026
-        </p>
-
-        <div className="grid gap-8 pt-4 text-left">
-          {SECTIONS.map((s) => (
-            <article key={s.title} className="grid gap-2">
-              <h2 className="text-2xl text-amber-700">{s.title}</h2>
-              <p>{s.content}</p>
-              {s.list && (
-                <ul className="grid list-inside list-disc gap-1 pl-4 opacity-80">
-                  {s.list.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              )}
-            </article>
-          ))}
-
-          <article className="grid gap-2">
-            <h2 className="text-2xl text-amber-700">5. Contact</h2>
-            <p>
-              Questions?{" "}
-              <Link
-                href="/contact"
-                className="font-bold text-blue-700 underline"
-              >
-                Contact Us
-              </Link>
-            </p>
-          </article>
-
-          <div className="flex justify-center border-t border-stone-300 pt-8">
-            <Link href="/" className="btn-primary">
-              Return Home
-            </Link>
-          </div>
-        </div>
-      </section>
-    </main>
+    <LegalPage title="Privacy Policy" updated="May 2026" sections={SECTIONS} />
   );
 }

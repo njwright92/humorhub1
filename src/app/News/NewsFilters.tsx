@@ -17,15 +17,11 @@ type Category = "top_stories" | "all_news";
 type NewsFiltersProps = {
   selectedCategory: Category;
   selectedSubcategory: string;
-  categories: readonly Category[];
-  subcategories: readonly string[];
 };
 
 export default function NewsFilters({
   selectedCategory,
   selectedSubcategory,
-  categories,
-  subcategories,
 }: NewsFiltersProps) {
   const fmt = (t: string) =>
     t.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
@@ -50,7 +46,7 @@ export default function NewsFilters({
             defaultValue={selectedCategory}
             className="field-dark cursor-pointer"
           >
-            {categories.map((c) => (
+            {NEWS_CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {fmt(c)}
               </option>
@@ -69,7 +65,7 @@ export default function NewsFilters({
             defaultValue={selectedSubcategory}
             className="field-dark cursor-pointer"
           >
-            {subcategories.map((s) => (
+            {NEWS_SUBCATEGORIES.map((s) => (
               <option key={s} value={s}>
                 {fmt(s)}
               </option>

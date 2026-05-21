@@ -100,6 +100,13 @@ function formatDateParam(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function buildFilterUrl(tab: EventCategory, city?: string, date?: Date | null) {
+  const params = new URLSearchParams({ tab });
+  if (city) params.set("city", city);
+  if (date) params.set("date", formatDateParam(date));
+  return `/api/mic-finder/filter?${params.toString()}`;
+}
+
 const CityDropdownList = memo(function CityDropdownList({
   searchTerm,
   initialCities,
@@ -334,14 +341,6 @@ export default function MicFinderClient({
     [refreshSession, session, showToast],
   );
 
-  const handleDateChange = useCallback((date: Date | null) => {
-    setSelectedDate(date);
-  }, []);
-
-  const toggleMapVisibility = useCallback(() => {
-    setIsMapVisible((prev) => !prev);
-  }, []);
-
   const handleTabSelect = useCallback(
     (tab: EventCategory) => {
       startTransition(() => {
@@ -372,12 +371,8 @@ export default function MicFinderClient({
     const controller = new AbortController();
     const fetchFilters = async () => {
       try {
-        const params = new URLSearchParams();
-        params.set("tab", selectedTab);
-        if (selectedCity) params.set("city", selectedCity);
-        if (selectedDate) params.set("date", formatDateParam(selectedDate));
         const response = await fetch(
-          `/api/mic-finder/filter?${params.toString()}`,
+          buildFilterUrl(selectedTab, selectedCity, selectedDate),
           { signal: controller.signal },
         );
         if (!response.ok) return;
@@ -397,12 +392,8 @@ export default function MicFinderClient({
     const controller = new AbortController();
     const fetchAllMapPins = async () => {
       try {
-        const params = new URLSearchParams();
-        params.set("tab", selectedTab);
-        params.set("city", "All Cities");
-        if (selectedDate) params.set("date", formatDateParam(selectedDate));
         const response = await fetch(
-          `/api/mic-finder/filter?${params.toString()}`,
+          buildFilterUrl(selectedTab, "All Cities", selectedDate),
           { signal: controller.signal },
         );
         if (!response.ok) return;
@@ -447,7 +438,7 @@ export default function MicFinderClient({
             id="event-date-picker"
             selected={selectedDate}
             onChange={(date: Date | null) => {
-              if (date) handleDateChange(date);
+              if (date) setSelectedDate(date);
             }}
             dateFormat="MM/dd/yyyy"
             className={`${inputClass} date-picker-input text-center md:text-left`}
@@ -542,7 +533,7 @@ export default function MicFinderClient({
         >
           <button
             type="button"
-            onClick={toggleMapVisibility}
+            onClick={() => setIsMapVisible((visible) => !visible)}
             className="btn-primary absolute bottom-6 left-6 z-10 text-sm"
           >
             {isMapVisible ? "Hide Map" : "Show Map"}
