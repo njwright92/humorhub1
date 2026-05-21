@@ -32,7 +32,7 @@ export default function ProfileSidebar({
   return (
     <aside className="md:col-span-1">
       <section className="panel-light top-20 p-6">
-        <figure className="group relative mx-auto mb-4 size-32 shrink-0 overflow-hidden rounded-full border-2 border-stone-900 bg-stone-300">
+        <figure className="group relative mx-auto mb-4 size-32 shrink-0 overflow-hidden rounded-full border-2 border-stone-900 bg-zinc-200">
           {profile.profileImageUrl ? (
             <Image
               src={profile.profileImageUrl}
@@ -48,7 +48,7 @@ export default function ProfileSidebar({
           )}
 
           {isEditing && (
-            <label className="absolute inset-0 grid cursor-pointer place-content-center bg-stone-900/60 text-xs font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <label className="absolute inset-0 grid cursor-pointer place-content-center bg-stone-900 text-xs font-bold text-zinc-200 opacity-0 transition-opacity group-hover:opacity-100">
               {profile.profileImageUrl ? "Change" : "Upload"}
               <input
                 type="file"
@@ -99,7 +99,7 @@ export default function ProfileSidebar({
               <button
                 type="button"
                 onClick={onCancel}
-                className="rounded-2xl border border-stone-400 py-2 text-sm font-bold hover:bg-stone-100"
+                className="rounded-2xl border border-stone-500 py-2 text-sm font-bold hover:bg-stone-400"
               >
                 Cancel
               </button>
@@ -120,7 +120,7 @@ export default function ProfileSidebar({
               </button>
               <button
                 onClick={onSignOut}
-                className="mx-auto text-xs font-bold text-red-700 underline opacity-70 hover:opacity-100"
+                className="mx-auto text-sm font-bold text-red-700 underline hover:text-red-600"
               >
                 Sign Out
               </button>

@@ -15,11 +15,11 @@ function SavedEventCard({
     : "/mic-finder";
 
   return (
-    <article className="card-muted group flex items-start justify-between transition-all hover:border-amber-700/50">
+    <article className="card-muted group flex items-start justify-between shadow-xl transition-all hover:border-amber-700">
       <div className="text-left">
         <h3 className="text-lg text-amber-700">{event.name}</h3>
-        <p className="text-sm opacity-80">📍 {event.location}</p>
-        <p className="mt-1 text-xs opacity-60">📅 {event.date}</p>
+        <p className="text-sm">📍 {event.location}</p>
+        <p className="mt-1 text-xs text-stone-300">📅 {event.date}</p>
       </div>
       <div className="flex flex-col items-end gap-4">
         <Link
@@ -30,7 +30,7 @@ function SavedEventCard({
         </Link>
         <button
           onClick={() => onDelete(event.id, event.name)}
-          className="text-xs font-bold text-red-500/70 hover:text-red-500 hover:underline"
+          className="text-xs font-bold text-red-600 underline"
         >
           Remove
         </button>
