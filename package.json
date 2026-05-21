@@ -22,7 +22,7 @@
     "preview": "npm run format && next build && next start"
   },
   "dependencies": {
-    "@tanstack/react-virtual": "^3.13.24",
+    "@tanstack/react-virtual": "^3.13.25",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "@vis.gl/react-google-maps": "^1.8.3",

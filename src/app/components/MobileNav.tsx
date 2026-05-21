@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,133 +11,169 @@ const MobileMenu = dynamic<{ closeMenu: () => void }>(
   () => import("./MobileMenu"),
 );
 
-const HEADER_STYLES = [
-  "h-14 bg-amber-700",
-  "h-12 bg-amber-700/90",
-  "h-10 bg-amber-700/90",
-  "-translate-y-full opacity-0 pointer-events-none",
-];
-
-const LOGO_STYLES = ["size-9", "size-7", "size-6", "size-6"];
-const TEXT_STYLES = ["text-3xl", "text-2xl", "text-xl", "text-xl"];
-const SEARCH_SCALE_STYLES = ["scale-85", "scale-75", "scale-75", "scale-70"];
+const clamp = (n: number) => Math.min(1, Math.max(0, n));
 
 export default function MobileNav() {
   const { session } = useSession();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollStage, setScrollStage] = useState(0);
-  const scrollStageRef = useRef(0);
-  const lastScrollY = useRef(0);
-  const ticking = useRef(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [canExpandSearch, setCanExpandSearch] = useState(true);
+
+  const headerRef = useRef<HTMLElement>(null);
+  const scrollState = useRef({
+    lastY: 0,
+    lastDir: "down" as "up" | "down",
+    hideStartY: 0,
+    ticking: false,
+    canExpand: true,
+  });
 
   useEffect(() => {
-    const mobileQuery = window.matchMedia("(max-width: 639px)");
-    if (!mobileQuery.matches) return;
+    if (!window.matchMedia("(max-width: 639px)").matches) return;
+    const el = headerRef.current;
+    if (!el) return;
 
-    const handleScroll = () => {
-      if (!ticking.current) {
-        window.requestAnimationFrame(() => {
-          const y = window.scrollY;
-          const vh = window.innerHeight;
-          const isScrollingUp = y < lastScrollY.current;
-          const nextStage =
-            y < vh / 16
-              ? 0
-              : y < (vh * 2) / 16
-                ? 1
-                : y < (vh * 4) / 16
-                  ? 2
-                  : isScrollingUp
-                    ? 2
-                    : 3;
+    let vh = window.innerHeight;
+    const s = scrollState.current;
 
-          if (nextStage !== scrollStageRef.current) {
-            scrollStageRef.current = nextStage;
-            setScrollStage(nextStage);
-          }
+    const update = () => {
+      const y = window.scrollY;
+      const dir = y < s.lastY ? "up" : "down";
+      const shrinkEnd = vh / 4;
+      const atTop = y <= 8;
 
-          lastScrollY.current = y;
-          ticking.current = false;
-        });
-        ticking.current = true;
+      if (atTop !== s.canExpand) {
+        s.canExpand = atTop;
+        setCanExpandSearch(atTop);
       }
+      if (dir !== s.lastDir) {
+        s.lastDir = dir;
+        if (dir === "down") s.hideStartY = y;
+      }
+
+      const shrink = y <= shrinkEnd ? clamp(y / shrinkEnd) : 1;
+      const hide =
+        y <= shrinkEnd || dir === "up"
+          ? 0
+          : clamp((y - Math.max(s.hideStartY, shrinkEnd)) / (vh / 10));
+
+      el.style.setProperty("--shrink", String(shrink));
+      el.style.setProperty("--hide", String(hide));
+
+      s.lastY = y;
+      s.ticking = false;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => {
+      if (s.ticking) return;
+      s.ticking = true;
+      requestAnimationFrame(update);
+    };
+    const onResize = () => {
+      vh = window.innerHeight;
+      update();
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
-  const closeMenu = () => setIsMenuOpen(false);
-  const toggleMenu = () => setIsMenuOpen((open) => !open);
-
-  const headerStyles = HEADER_STYLES[scrollStage];
-  const logoStyles = LOGO_STYLES[scrollStage];
-  const textStyles = TEXT_STYLES[scrollStage];
-  const searchScaleStyles = SEARCH_SCALE_STYLES[scrollStage];
-
-  const isUserSignedIn = session.status === "ready" && session.signedIn;
+  const close = () => setMenuOpen(false);
+  const isSignedIn = session.status === "ready" && session.signedIn;
 
   return (
     <div className="pb-14 sm:hidden">
       <header
-        className={`fixed top-0 right-0 left-0 z-40 flex items-center justify-between gap-2 p-1 shadow-lg transition-all duration-300 ease-in-out ${headerStyles}`}
+        ref={headerRef}
+        className="fixed inset-x-0 top-0 z-40 h-14 [--hide:0] [--shrink:0]"
       >
-        <div className="flex items-center">
-          <Link href="/" aria-label="Humor Hub Home" onClick={closeMenu}>
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
+            className="absolute inset-0 origin-top bg-amber-700 shadow-lg will-change-transform"
+            style={{
+              transform:
+                "scaleY(calc(1 - 0.2857 * var(--shrink))) translateY(calc(-100% * var(--hide)))",
+              opacity: "calc(1 - 0.15 * var(--hide))",
+            }}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 flex items-center justify-between gap-2 p-1 will-change-transform"
+          style={{
+            transform:
+              "translateY(calc(-8px * var(--shrink) - 100% * var(--hide)))",
+            opacity: "calc(1 - 0.15 * var(--hide))",
+          }}
+        >
+          <Link href="/" aria-label="Humor Hub Home" onClick={close}>
             <Image
               src="/logo.webp"
               alt=""
               width={60}
               height={60}
-              sizes="(min-width: 768px) 168px, 128px"
-              className={`shadow-soft rounded-full transition-all duration-300 ${logoStyles}`}
+              sizes="60px"
+              className="shadow-soft size-9 rounded-full will-change-transform"
+              style={{
+                transform: "scale(calc(1 - 0.3333 * var(--shrink)))",
+                transformOrigin: "left center",
+              }}
               priority
             />
           </Link>
-        </div>
 
-        <h1
-          className={`pointer-events-none absolute inset-x-0 mr-2 text-center font-bold tracking-wider text-stone-900 italic transition-all duration-300 ${textStyles}`}
-        >
-          Humor Hub
-        </h1>
-
-        <div className="flex items-center gap-2">
-          <div
-            className={`flex items-center justify-center text-stone-900 transition-all duration-200 ${searchScaleStyles}`}
+          <h1
+            className="pointer-events-none absolute inset-x-0 mr-2 text-center text-3xl leading-none font-bold tracking-wider text-stone-900 italic will-change-transform"
+            style={{ transform: "scale(calc(1 - 0.3333 * var(--shrink)))" }}
           >
-            <SearchBar
-              isUserSignedIn={isUserSignedIn}
-              sessionStatus={session.status}
-              onNavigate={closeMenu}
-            />
-          </div>
+            Humor Hub
+          </h1>
 
-          <button
-            type="button"
-            onClick={toggleMenu}
-            className="flex items-center justify-center p-1 text-stone-900"
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.5}
-              className={`transition-all duration-300 ${scrollStage >= 2 ? "size-6" : "size-8"}`}
+          <div className="flex items-center gap-2">
+            <div
+              className="relative flex items-center justify-center text-stone-900 will-change-transform"
+              style={{ transform: "scale(calc(0.85 - 0.1 * var(--shrink)))" }}
             >
-              <path
-                d={
-                  isMenuOpen
-                    ? "M6 6l12 12M18 6L6 18"
-                    : "M3 12h18M3 6h18M3 18h18"
-                }
+              <SearchBar
+                isUserSignedIn={isSignedIn}
+                sessionStatus={session.status}
+                onNavigate={close}
+                canExpandSearch={canExpandSearch}
               />
-            </svg>
-          </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              className="flex items-center justify-center p-1 text-stone-900"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                className="size-8 will-change-transform"
+                style={{ transform: "scale(calc(1 - 0.25 * var(--shrink)))" }}
+              >
+                <path
+                  d={
+                    menuOpen
+                      ? "M6 6l12 12M18 6L6 18"
+                      : "M3 12h18M3 6h18M3 18h18"
+                  }
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
-      {isMenuOpen && <MobileMenu closeMenu={closeMenu} />}
+
+      {menuOpen && <MobileMenu closeMenu={close} />}
     </div>
   );
 }
