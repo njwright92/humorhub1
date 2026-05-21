@@ -23,12 +23,12 @@ function ArticleCard({ article, priority }: ArticleCardProps) {
             src={article.image_url}
             alt=""
             fill
-            sizes="(min-width: 768px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover transition-transform group-hover:scale-105"
             priority={priority}
           />
         ) : (
-          <div className="grid h-full place-content-center text-4xl text-stone-500 opacity-30">
+          <div className="grid h-full place-content-center text-4xl text-stone-400 opacity-30">
             📰
           </div>
         )}
@@ -57,7 +57,7 @@ function ArticleCard({ article, priority }: ArticleCardProps) {
             Read Full Story →
           </a>
         ) : (
-          <span className="mt-auto block text-center text-xs font-bold text-stone-600 uppercase">
+          <span className="mt-auto block text-center text-xs font-bold text-stone-400 uppercase">
             Unavailable
           </span>
         )}
@@ -75,7 +75,7 @@ export default function NewsClient({
   return (
     <div className="animate-slide-in">
       {error && (
-        <div className="card-dark mx-auto mb-8 max-w-2xl border-red-900 bg-red-900/20 p-4 text-center">
+        <div className="card-dark mx-auto mb-8 max-w-2xl border-red-900 p-4 text-center">
           <p className="font-bold text-red-400">{error}</p>
 
           <Link
@@ -96,7 +96,7 @@ export default function NewsClient({
           ))}
         </ul>
       ) : (
-        <p className="py-20 text-xl text-stone-500">No articles found.</p>
+        <p className="py-20 text-xl text-stone-400">No articles found.</p>
       )}
     </div>
   );

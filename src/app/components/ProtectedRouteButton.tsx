@@ -30,7 +30,6 @@ export default function ProtectedRouteButton({
       type="button"
       onPointerEnter={preload}
       onFocus={preload}
-      onTouchStart={preload}
       onClick={() => void requireAuth(route, label)}
       className={className}
       aria-haspopup="dialog"

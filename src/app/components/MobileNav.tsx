@@ -26,21 +26,35 @@ export default function MobileNav() {
   const { session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollStage, setScrollStage] = useState(0);
+  const scrollStageRef = useRef(0);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
   useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 639px)");
+    if (!mobileQuery.matches) return;
+
     const handleScroll = () => {
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           const y = window.scrollY;
           const vh = window.innerHeight;
           const isScrollingUp = y < lastScrollY.current;
+          const nextStage =
+            y < vh / 16
+              ? 0
+              : y < (vh * 2) / 16
+                ? 1
+                : y < (vh * 4) / 16
+                  ? 2
+                  : isScrollingUp
+                    ? 2
+                    : 3;
 
-          if (y < vh / 16) setScrollStage(0);
-          else if (y < (vh * 2) / 16) setScrollStage(1);
-          else if (y < (vh * 4) / 16) setScrollStage(2);
-          else setScrollStage(isScrollingUp ? 2 : 3);
+          if (nextStage !== scrollStageRef.current) {
+            scrollStageRef.current = nextStage;
+            setScrollStage(nextStage);
+          }
 
           lastScrollY.current = y;
           ticking.current = false;
