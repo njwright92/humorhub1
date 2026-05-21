@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="page-shell gap-12 py-20 text-center">
-      <div className="fixed top-18 left-2 z-1 md:top-2 md:left-22">
+      <div className="fixed top-18 left-2 z-10 md:top-2 md:left-22">
         <HomepagePoll />
       </div>
 
