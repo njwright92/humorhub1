@@ -37,7 +37,7 @@ export default function AboutPage() {
       <header className="grid gap-4">
         <h1 className="page-title">About Us</h1>
         <h2 className="text-xl lg:text-2xl">Built for Comics by Comics</h2>
-        <p className="mx-auto max-w-2xl text-stone-400">
+        <p className="mx-auto max-w-2xl text-stone-300">
           Humor Hub is a fast, friendly hub to help comedians find their next
           gig and joke!
         </p>
@@ -53,8 +53,8 @@ export default function AboutPage() {
               {f.emoji}
             </span>
             <h3 className="text-2xl">{f.title}</h3>
-            <p className="text-sm text-stone-300">{f.description}</p>
-            <p className="text-xs text-stone-500">{f.detail}</p>
+            <p className="text-sm text-zinc-200">{f.description}</p>
+            <p className="text-xs text-stone-300">{f.detail}</p>
             <Link href={f.href} className="mt-4 font-bold hover:underline">
               {f.btn} →
             </Link>
