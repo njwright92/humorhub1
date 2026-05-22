@@ -11,8 +11,14 @@ import {
 import { useToast } from "./ToastContext";
 import CloseIcon from "./CloseIcon";
 import type { EventSubmission, ApiResponse } from "../lib/types";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import dynamic from "next/dynamic";
+
+const DatePicker = dynamic<any>(
+  () => import("@/app/components/LazyDatePicker"),
+  {
+    ssr: false,
+  },
+);
 
 interface FormState {
   name: string;

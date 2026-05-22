@@ -9,6 +9,7 @@ import { useSession } from "./SessionContext";
 
 const MobileMenu = dynamic<{ closeMenu: () => void }>(
   () => import("./MobileMenu"),
+  { ssr: false },
 );
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));

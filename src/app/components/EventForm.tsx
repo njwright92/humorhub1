@@ -3,8 +3,9 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
-const EventFormContent = dynamic(() => import("./EventFormContent"));
-
+const EventFormContent = dynamic(() => import("./EventFormContent"), {
+  ssr: false,
+});
 export default function EventForm() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -13,7 +14,7 @@ export default function EventForm() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="btn-outline-amber w-50 text-lg"
+        className="btn-outline-amber w-50"
       >
         Add Your Event
       </button>
