@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-
 import NewsClient from "./NewsClient";
 import AuthGatePrompt from "../components/AuthGatePrompt";
-
 import { fetchNewsArticles } from "@/app/lib/data/news";
 import { getServerAuth } from "@/app/lib/firebase-admin";
 import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
-
 import type { NewsCategory } from "@/app/lib/types";
-
 import NewsFilters, { NEWS_SUBCATEGORIES } from "./NewsFilters";
 
 export const metadata: Metadata = {
@@ -36,7 +32,7 @@ function NewsHeader() {
     <header className="space-y-2">
       <h1 className="page-title">Hub News</h1>
 
-      <p className="text-center text-stone-400 md:text-lg">
+      <p className="text-center text-stone-300 md:text-lg">
         Curated stories from around the world.
       </p>
     </header>
@@ -59,9 +55,7 @@ function NewsSkeleton() {
 async function canAccessNews() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
   if (!sessionCookie) return false;
-
   try {
     await getServerAuth().verifySessionCookie(sessionCookie);
     return true;
@@ -94,7 +88,6 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     return (
       <main className="page-shell text-center">
         <NewsHeader />
-
         <AuthGatePrompt message="Sign in to view News." />
       </main>
     );
@@ -116,9 +109,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   return (
     <main className="page-shell gap-4 text-center">
       <NewsHeader />
-
       <NewsFilters selectedCategory={cat} selectedSubcategory={sub} />
-
       <Suspense key={key} fallback={<NewsSkeleton />}>
         <NewsContent resolvedCategory={cat} subcategory={sub} />
       </Suspense>

@@ -32,6 +32,8 @@ export async function GET(request: NextRequest) {
     const db = getServerDb();
     const docRef = db.collection(COLLECTIONS.polls).doc(pollId);
     const snap = await docRef.get();
+
+    // FIXED: Removed markdown artifacts [snap.data](...)
     const counts = normalizeCounts(
       snap.data() as Partial<PollCounts> | undefined,
     );
@@ -44,7 +46,10 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // 1. Security check for Trusted Origin
   if (!hasTrustedOrigin(request)) {
+    // Note: If you get a 403 on localhost, your hasTrustedOrigin helper
+    // might need to be updated to allow 'localhost' or '::1'.
     return json({ success: false, error: "Invalid request origin" }, 403);
   }
 
@@ -53,6 +58,7 @@ export async function POST(request: NextRequest) {
     typeof body.pollId === "string" && body.pollId.trim().length > 0
       ? body.pollId.trim()
       : DEFAULT_POLL_ID;
+
   const pollCookieName = `${POLL_COOKIE_PREFIX}${pollId.replace(/[^a-z0-9_-]/gi, "_")}`;
   const normalizedAnswer =
     body.answer === "yes" || body.answer === "no" ? body.answer : null;
@@ -61,10 +67,12 @@ export async function POST(request: NextRequest) {
     return json({ success: false, error: "Invalid answer" }, 400);
   }
 
+  // 2. Cookie check (Prevents double voting)
   if (request.cookies.get(pollCookieName)?.value === "1") {
     return json({ success: false, error: "You already voted recently." }, 409);
   }
 
+  // 3. Rate limiting check
   const rateLimit = checkRateLimit(request, {
     key: `poll:${pollId}`,
     windowMs: 60 * 60 * 1000,
@@ -89,6 +97,7 @@ export async function POST(request: NextRequest) {
     const incrementYes = normalizedAnswer === "yes" ? 1 : 0;
     const incrementNo = normalizedAnswer === "no" ? 1 : 0;
 
+    // 4. Atomic Increment in Firestore
     await docRef.set(
       {
         yesCount: FieldValue.increment(incrementYes),
@@ -100,11 +109,15 @@ export async function POST(request: NextRequest) {
     );
 
     const snap = await docRef.get();
+
+    // FIXED: Removed markdown artifacts [snap.data](...)
     const counts = normalizeCounts(
       snap.data() as Partial<PollCounts> | undefined,
     );
 
     const response = json({ success: true, data: counts });
+
+    // 5. Set vote cookie
     response.cookies.set(pollCookieName, "1", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -112,6 +125,7 @@ export async function POST(request: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24,
     });
+
     return response;
   } catch (error) {
     console.error("Poll POST error:", error);

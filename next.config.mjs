@@ -9,14 +9,12 @@ const nextConfig = {
 
   experimental: {
     inlineCss: true,
-
     optimizePackageImports: [
       "firebase",
       "firebase-admin",
       "@tanstack/react-virtual",
       "@vis.gl/react-google-maps",
     ],
-
     cssChunking: "strict",
   },
 
@@ -26,10 +24,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
     qualities: [70, 75],
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      { protocol: "https", hostname: "**" },
-      { protocol: "http", hostname: "**" },
-    ],
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
 
   async headers() {
@@ -48,24 +43,6 @@ const nextConfig = {
           {
             key: "Cross-Origin-Opener-Policy",
             value: "same-origin-allow-popups",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://maps.googleapis.com https://apis.google.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' data: https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https:",
-              "connect-src 'self' https: wss:",
-              "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'self'",
-              "upgrade-insecure-requests",
-              "trusted-types nextjs nextjs#app-pages-react-hydrator default * 'allow-duplicates'",
-            ].join("; "),
           },
         ],
       },

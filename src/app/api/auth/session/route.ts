@@ -8,37 +8,33 @@ import { getServerAuth } from "@/app/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
+const CACHE_HEADER = "private, max-age=0, must-revalidate";
+
 export async function GET(request: NextRequest) {
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+
   if (!sessionCookie) {
     const response = jsonResponse({ success: true, signedIn: false });
-    response.headers.set(
-      "Cache-Control",
-      "private, max-age=0, must-revalidate",
-    );
+    response.headers.set("Cache-Control", CACHE_HEADER);
     return response;
   }
 
   try {
     const decoded = await getServerAuth().verifySessionCookie(sessionCookie);
+
     const response = jsonResponse({
       success: true,
       signedIn: true,
       uid: decoded.uid,
       email: decoded.email,
     });
-    response.headers.set(
-      "Cache-Control",
-      "private, max-age=0, must-revalidate",
-    );
+
+    response.headers.set("Cache-Control", CACHE_HEADER);
     return response;
-  } catch {
+  } catch (error) {
     const response = jsonResponse({ success: true, signedIn: false });
     clearSessionCookie(response);
-    response.headers.set(
-      "Cache-Control",
-      "private, max-age=0, must-revalidate",
-    );
+    response.headers.set("Cache-Control", CACHE_HEADER);
     return response;
   }
 }
