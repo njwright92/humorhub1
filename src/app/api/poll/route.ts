@@ -1,34 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { getServerDb } from "@/app/lib/firebase-admin";
-import { COLLECTIONS, DEFAULT_POLL_ID } from "@/app/lib/constants";
 
 export const runtime = "nodejs";
 
 const json = (body: any, status = 200) => NextResponse.json(body, { status });
 
+const COLLECTION = "polls";
+const DEFAULT_POLL_ID = "defaultPoll";
+
 export async function GET(req: NextRequest) {
   try {
     const pollId = req.nextUrl.searchParams.get("id") || DEFAULT_POLL_ID;
 
-    const snap = await getServerDb()
-      .collection(COLLECTIONS.polls)
-      .doc(pollId)
-      .get();
+    const snap = await getServerDb().collection(COLLECTION).doc(pollId).get();
 
     const data = snap.data() || {};
 
     return json({
       success: true,
       data: {
-        yesCount: data.yesCount ?? 0,
-        noCount: data.noCount ?? 0,
-        totalCount: data.totalCount ?? 0,
+        yesCount: data.yesCount || 0,
+        noCount: data.noCount || 0,
+        totalCount: data.totalCount || 0,
       },
     });
-  } catch (error) {
-    console.error("Poll GET error:", error);
-    return json({ success: false, error: "Failed to load poll" }, 500);
+  } catch (e) {
+    console.error("Poll GET error:", e);
+    return json({ success: false, error: "GET failed" }, 500);
   }
 }
 
@@ -52,7 +51,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const docRef = getServerDb().collection(COLLECTIONS.polls).doc(pollId);
+    const docRef = getServerDb().collection(COLLECTION).doc(pollId);
 
     await docRef.set(
       {
@@ -69,23 +68,23 @@ export async function POST(req: NextRequest) {
     const response = json({
       success: true,
       data: {
-        yesCount: data.yesCount ?? 0,
-        noCount: data.noCount ?? 0,
-        totalCount: data.totalCount ?? 0,
+        yesCount: data.yesCount || 0,
+        noCount: data.noCount || 0,
+        totalCount: data.totalCount || 0,
       },
     });
 
     response.cookies.set(cookieName, "1", {
       httpOnly: true,
-      sameSite: "lax",
       secure: true,
+      sameSite: "lax",
       path: "/",
       maxAge: 86400,
     });
 
     return response;
-  } catch (error) {
-    console.error("Poll POST error:", error);
+  } catch (e) {
+    console.error("Poll POST error:", e);
     return json({ success: false, error: "Internal server error" }, 500);
   }
 }
