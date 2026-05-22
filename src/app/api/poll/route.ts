@@ -32,6 +32,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  console.log("POLL POST HIT");
+  console.log("DB exists:", !!getServerDb);
   try {
     const body = await req.json().catch(() => ({}));
 
