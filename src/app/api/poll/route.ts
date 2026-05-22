@@ -7,41 +7,35 @@ export const runtime = "nodejs";
 
 const json = (body: any, status = 200) => NextResponse.json(body, { status });
 
-export async function GET(request: NextRequest) {
-  const pollId = request.nextUrl.searchParams.get("id") ?? DEFAULT_POLL_ID;
+export async function GET(req: NextRequest) {
   try {
+    const pollId = req.nextUrl.searchParams.get("id") || DEFAULT_POLL_ID;
+
     const snap = await getServerDb()
       .collection(COLLECTIONS.polls)
       .doc(pollId)
       .get();
+
     const data = snap.data() || {};
+
     return json({
       success: true,
       data: {
-        yesCount: data.yesCount || 0,
-        noCount: data.noCount || 0,
-        totalCount: data.totalCount || 0,
+        yesCount: data.yesCount ?? 0,
+        noCount: data.noCount ?? 0,
+        totalCount: data.totalCount ?? 0,
       },
     });
   } catch (error) {
-    return json({ success: false }, 500);
+    console.error("Poll GET error:", error);
+    return json({ success: false, error: "Failed to load poll" }, 500);
   }
 }
 
-export async function POST(request: NextRequest) {
-  // 1. Simple Origin Check (Works better on Vercel)
-  const origin =
-    request.headers.get("origin") || request.headers.get("referer");
-  if (
-    origin &&
-    !origin.includes("thehumorhub.com") &&
-    !origin.includes("localhost")
-  ) {
-    return json({ success: false, error: "Unauthorized" }, 403);
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json().catch(() => ({}));
+    const body = await req.json().catch(() => ({}));
+
     const pollId = body.pollId || DEFAULT_POLL_ID;
     const answer = body.answer;
 
@@ -49,17 +43,17 @@ export async function POST(request: NextRequest) {
       return json({ success: false, error: "Invalid answer" }, 400);
     }
 
-    // 2. Cookie check
-    const pollCookieName = `hh_poll_${pollId}`;
-    if (request.cookies.get(pollCookieName)) {
+    const cookieName = `hh_poll_${pollId}`;
+
+    if (req.cookies.get(cookieName)) {
       return json(
         { success: false, error: "You already voted recently." },
         409,
       );
     }
 
-    // 3. Firestore Update
     const docRef = getServerDb().collection(COLLECTIONS.polls).doc(pollId);
+
     await docRef.set(
       {
         [`${answer}Count`]: FieldValue.increment(1),
@@ -69,23 +63,22 @@ export async function POST(request: NextRequest) {
       { merge: true },
     );
 
-    // 4. Return success and set cookie
     const snap = await docRef.get();
-    const d = snap.data() || {};
+    const data = snap.data() || {};
 
     const response = json({
       success: true,
       data: {
-        yesCount: d.yesCount || 0,
-        noCount: d.noCount || 0,
-        totalCount: d.totalCount || 0,
+        yesCount: data.yesCount ?? 0,
+        noCount: data.noCount ?? 0,
+        totalCount: data.totalCount ?? 0,
       },
     });
 
-    response.cookies.set(pollCookieName, "1", {
+    response.cookies.set(cookieName, "1", {
       httpOnly: true,
-      secure: true,
       sameSite: "lax",
+      secure: true,
       path: "/",
       maxAge: 86400,
     });
