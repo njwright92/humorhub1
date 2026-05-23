@@ -13,7 +13,11 @@ export async function GET(request: Request): Promise<Response> {
     const { eventsByTab } = await fetchMicFinderData();
     const filters = getMicFinderFilters(eventsByTab, { tab, city, date });
 
-    return NextResponse.json(filters);
+    return NextResponse.json(filters, {
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
+      },
+    });
   } catch (error) {
     console.error("[API] Error filtering MicFinder events:", error);
     return NextResponse.json(

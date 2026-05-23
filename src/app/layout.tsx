@@ -15,7 +15,6 @@ const comicNeue = Comic_Neue({
   subsets: ["latin"],
   variable: "--font-comic-neue",
   display: "optional",
-  preload: true,
 });
 
 export const viewport: Viewport = {

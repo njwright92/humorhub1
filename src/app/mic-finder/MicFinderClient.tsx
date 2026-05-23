@@ -20,16 +20,19 @@ import type {
   MicFinderFilterResult,
 } from "../lib/types";
 import { DEFAULT_US_CENTER, DEFAULT_ZOOM, CITY_ZOOM } from "../lib/constants";
-import { getDistanceFromLatLonInKm, normalizeCityName } from "../lib/utils";
+import {
+  getDistanceFromLatLonInKm,
+  normalizeCityName,
+  buildFilterUrl,
+} from "../lib/utils";
 import EventCard from "./EventCard";
 import { saveEvent } from "@/app/actions/events";
 import { useSession } from "@/app/components/SessionContext";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DatePicker = dynamic<any>(
   () => import("@/app/components/LazyDatePicker"),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 );
 
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
@@ -50,6 +53,7 @@ interface MicFinderClientProps {
   initialCities: string[];
   initialFilters: MicFinderFilterResult;
   initialDate: string | null;
+  initialCity: string; // ← added
 }
 
 interface CitySelectorProps {
@@ -97,20 +101,6 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Festivals: "Festivals/Competitions",
   Other: "Music/All-Arts Mics",
 };
-
-function formatDateParam(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function buildFilterUrl(tab: EventCategory, city?: string, date?: Date | null) {
-  const params = new URLSearchParams({ tab });
-  if (city) params.set("city", city);
-  if (date) params.set("date", formatDateParam(date));
-  return `/api/mic-finder/filter?${params.toString()}`;
-}
 
 const CityDropdownList = memo(function CityDropdownList({
   searchTerm,
@@ -226,6 +216,7 @@ export default function MicFinderClient({
   initialCities,
   initialFilters,
   initialDate,
+  initialCity, // ← added
 }: MicFinderClientProps) {
   const { showToast } = useToast();
   const { session, refreshSession } = useSession();
@@ -234,8 +225,11 @@ export default function MicFinderClient({
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
-  const [selectedCity, setSelectedCity] = useState("");
-  const [citySearchTerm, setCitySearchTerm] = useState("");
+
+  // ← seeded from server prop instead of empty string
+  const [selectedCity, setSelectedCity] = useState(initialCity);
+  const [citySearchTerm, setCitySearchTerm] = useState(initialCity);
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
     if (!initialDate) return new Date();
     const [year, month, day] = initialDate.split("-").map(Number);
@@ -250,15 +244,9 @@ export default function MicFinderClient({
   );
 
   useEffect(() => {
+    // City is already seeded via initialCity prop — only handle the URL cleanup
     const city = searchParams.get("city");
     const term = searchParams.get("searchTerm");
-    if (city) {
-      const normalized = normalizeCityName(city);
-      setSelectedCity(normalized);
-      setCitySearchTerm(normalized);
-    } else if (term) {
-      setCitySearchTerm(term);
-    }
     if (city || term) router.replace(pathname, { scroll: false });
   }, [pathname, router, searchParams]);
 
@@ -393,7 +381,6 @@ export default function MicFinderClient({
 
   useEffect(() => {
     if (!isMapVisible) return;
-
     const controller = new AbortController();
     const fetchAllMapPins = async () => {
       try {
@@ -478,7 +465,6 @@ export default function MicFinderClient({
       </nav>
 
       <div className={`grid w-full ${isPending ? "opacity-60" : ""}`}>
-        {/* Weekly / Recurring Events */}
         <section className="card-shell my-2 w-full" aria-label="Weekly events">
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
             {dayOfWeek} {TAB_LABELS[selectedTab]}
@@ -503,7 +489,6 @@ export default function MicFinderClient({
           )}
         </section>
 
-        {/* One-Time Events */}
         <section
           className="card-shell my-2 w-full"
           aria-label="One-time events"
@@ -531,7 +516,6 @@ export default function MicFinderClient({
           )}
         </section>
 
-        {/* Map */}
         <section
           className="card-base relative my-8 h-96 w-full overflow-hidden border-amber-700 bg-stone-900/10 shadow-xl contain-paint"
           aria-label="Map"
@@ -559,7 +543,6 @@ export default function MicFinderClient({
           )}
         </section>
 
-        {/* All City Events */}
         <section
           className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-4 p-2"
           aria-label="All city events"

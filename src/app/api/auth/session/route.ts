@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     response.headers.set("Cache-Control", CACHE_HEADER);
     return response;
-  } catch (error) {
+  } catch {
     const response = jsonResponse({ success: true, signedIn: false });
     clearSessionCookie(response);
     response.headers.set("Cache-Control", CACHE_HEADER);

@@ -13,11 +13,10 @@ import CloseIcon from "./CloseIcon";
 import type { EventSubmission, ApiResponse } from "../lib/types";
 import dynamic from "next/dynamic";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DatePicker = dynamic<any>(
   () => import("@/app/components/LazyDatePicker"),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 );
 
 interface FormState {

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { fetchMicFinderData } from "@/app/lib/data/events";
+import { fetchMicFinderData, getMicFinderFilters } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
 import EventForm from "@/app/components/EventForm";
+import { normalizeCityName, formatDateParam } from "@/app/lib/utils";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
@@ -143,36 +145,46 @@ const STRUCTURED_DATA = {
 
 const STRUCTURED_DATA_STRING = JSON.stringify(STRUCTURED_DATA);
 
-async function MicFinderContent() {
-  const { cities, cityCoordinates } = await fetchMicFinderData();
-  const initialFilters = {
-    baseEvents: [],
-    recurringEvents: [],
-    oneTimeEvents: [],
-    allCityEvents: [],
-  };
+async function MicFinderContent({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const resolvedParams = await searchParams;
+  const { cities, cityCoordinates, eventsByTab } = await fetchMicFinderData();
   const today = new Date();
-  const initialDate =
-    new Intl.DateTimeFormat("en-CA", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(today) || null;
+  const initialDate = formatDateParam(today);
+  const rawCity =
+    typeof resolvedParams?.city === "string" ? resolvedParams.city : "";
+  const city = rawCity ? normalizeCityName(rawCity) : "";
+  const initialFilters = getMicFinderFilters(eventsByTab, {
+    tab: "Mics",
+    city: city || undefined,
+    date: initialDate,
+  });
 
   return (
     <MicFinderClient
       initialCityCoordinates={cityCoordinates}
       initialCities={cities}
       initialFilters={initialFilters}
+      initialCity={city}
       initialDate={initialDate}
     />
   );
 }
 
-export default function MicFinderPage() {
+export default async function MicFinderPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const nonce = (await headers()).get("x-nonce") ?? "";
+
   return (
     <>
       <script
+        nonce={nonce}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
       />
@@ -212,7 +224,7 @@ export default function MicFinderPage() {
 
         <div className="page-content min-h-dvh">
           <Suspense fallback={<MicFinderSkeleton />}>
-            <MicFinderContent />
+            <MicFinderContent searchParams={searchParams} />
           </Suspense>
         </div>
       </main>
