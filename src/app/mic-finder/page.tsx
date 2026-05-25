@@ -55,8 +55,7 @@ const STRUCTURED_DATA = {
       item: {
         "@type": "Event",
         name: "Open Mic Night at Spokane Comedy Club",
-        description:
-          "Every Wednesday. A night with professional and first-time comedians. Free admission.",
+        description: "Every Wednesday. Open Mic Comedy Free admission.",
         startDate: "2025-12-03T19:30:00-08:00",
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
         eventStatus: "https://schema.org/EventScheduled",
@@ -113,31 +112,6 @@ const STRUCTURED_DATA = {
           availability: "https://schema.org/InStock",
         },
         url: "https://www.thehumorhub.com/mic-finder?city=New+York",
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      item: {
-        "@type": "Event",
-        name: "Open Mic Lunch at Jimmy Kimmel's Comedy Club",
-        description:
-          "Open Mic Lunch with Hailey Brooks. Doors 11 AM, Show 12 PM.",
-        startDate: "2025-12-11T12:00:00-08:00",
-        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-        eventStatus: "https://schema.org/EventScheduled",
-        location: {
-          "@type": "Place",
-          name: "Jimmy Kimmel's Comedy Club",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "3535 S Las Vegas Blvd",
-            addressLocality: "Las Vegas",
-            addressRegion: "NV",
-            addressCountry: "US",
-          },
-        },
-        url: "https://www.thehumorhub.com/mic-finder?city=Las+Vegas",
       },
     },
   ],
@@ -204,16 +178,16 @@ export default async function MicFinderPage({
           to keep the comedy community thriving!
         </aside>
 
-        <hgroup className="space-y-3">
+        <hgroup className="space-y-2">
           <h1 className="page-title">Mic Finder</h1>
-          <p className="text-lg leading-tight font-semibold sm:text-xl md:text-xl lg:text-2xl">
+          <p className="text-lg leading-tight font-semibold md:text-xl lg:text-2xl">
             Discover Mics and Festivals Near You!
           </p>
         </hgroup>
 
         <p className="max-w-2xl text-sm text-stone-300 md:text-base lg:text-lg">
-          Find a Mic tonight or list yours, built by comics for comics. Use Mic
-          Finder to connect with your community!
+          Use Mic Finder to connect with your community! Find a Mic or list
+          yours!
         </p>
 
         <EventForm />

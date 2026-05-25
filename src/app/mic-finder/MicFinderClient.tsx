@@ -444,7 +444,7 @@ export default function MicFinderClient({
 
       <nav
         role="tablist"
-        className="my-4 grid w-full auto-cols-auto grid-flow-col justify-center gap-2 sm:my-6"
+        className="my-6 grid w-full auto-cols-auto grid-flow-col justify-center gap-2 sm:my-8"
       >
         {TABS.map((tab) => (
           <button
@@ -453,7 +453,7 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => handleTabSelect(tab.id)}
-            className={`rounded-2xl px-2 py-2 text-xs leading-tight font-bold whitespace-nowrap transition-all sm:text-base ${
+            className={`rounded-xl px-2 py-3 leading-tight font-bold whitespace-nowrap transition-all sm:text-lg ${
               selectedTab === tab.id
                 ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
                 : tab.inactiveClass
@@ -535,7 +535,7 @@ export default function MicFinderClient({
               events={mapPins}
             />
           ) : (
-            <div className="grid size-full place-content-center opacity-20">
+            <div className="grid size-full place-content-center opacity-80">
               <span className="text-8xl" aria-hidden="true">
                 🗺️
               </span>
@@ -544,7 +544,7 @@ export default function MicFinderClient({
         </section>
 
         <section
-          className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-4 p-2"
+          className="card-shell relative z-10 my-2 grid w-full justify-items-center gap-5 p-3"
           aria-label="All city events"
         >
           <h2 className={`${sectionHeadingClass} border-amber-700`}>
@@ -555,7 +555,7 @@ export default function MicFinderClient({
             <VirtualizedEventList
               events={eventData.allCityEvents}
               onSave={handleEventSave}
-              className="h-96 w-full overflow-auto rounded-2xl border border-stone-600 sm:h-125 md:h-150"
+              className="h-96 w-full overflow-auto rounded-2xl border border-stone-700 sm:h-125 md:h-150"
               ariaLabel={`${eventData.allCityEvents.length} events`}
             />
           ) : (
