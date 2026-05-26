@@ -64,7 +64,7 @@ This project utilizes **Next.js 16** with **React 19**, leveraging server-side r
 | **Geospatial**     | Google Maps (`@vis.gl/react-google-maps`)       |
 | **Performance**    | `@tanstack/react-virtual` (list virtualization) |
 | **Communication**  | EmailJS (`@emailjs/browser`)                    |
-| **Observability**  | Vercel Speed Insights                           |
+| **Observability**  | Vercel Analytics/Speed Insights                 |
 | **Code Quality**   | ESLint 10, Prettier 3, lint-staged              |
 | **Deployment**     | Vercel                                          |
 
@@ -151,6 +151,6 @@ _Feel free to reach out for collaborations, feature requests, or to connect rega
 <br>
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-_Made with ❤️, ☕, and a dash of humor._
+_Made with ❤️ ☕, and a dash of humor._
 
 </div>
