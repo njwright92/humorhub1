@@ -29,12 +29,6 @@ import EventCard from "./EventCard";
 import { saveEvent } from "@/app/actions/events";
 import { useSession } from "@/app/components/SessionContext";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const DatePicker = dynamic<any>(
-  () => import("@/app/components/LazyDatePicker"),
-  { ssr: false },
-);
-
 const GoogleMap = dynamic(() => import("@/app/components/GoogleMap"), {
   ssr: false,
   loading: () => (
@@ -101,6 +95,46 @@ const TAB_LABELS: Record<EventCategory, string> = {
   Festivals: "Festivals/Competitions",
   Other: "Music/All-Arts Mics",
 };
+
+function formatDateInput(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${month}/${day}/${date.getFullYear()}`;
+}
+
+function formatNativeDateInput(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function parseDateInput(value: string): Date | null {
+  const trimmed = value.trim();
+  const match = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+
+  const month = Number(match[1]);
+  const day = Number(match[2]);
+  const year = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+
+  const date = new Date(year, month - 1, day);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return date;
+}
+
+function parseNativeDateInput(value: string): Date | null {
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+}
 
 const CityDropdownList = memo(function CityDropdownList({
   searchTerm,
@@ -225,6 +259,7 @@ export default function MicFinderClient({
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
+  const nativeDateInputRef = useRef<HTMLInputElement>(null);
 
   // ← seeded from server prop instead of empty string
   const [selectedCity, setSelectedCity] = useState(initialCity);
@@ -235,13 +270,21 @@ export default function MicFinderClient({
     const [year, month, day] = initialDate.split("-").map(Number);
     return new Date(year, month - 1, day);
   });
+  const [dateInputValue, setDateInputValue] = useState(() =>
+    formatDateInput(
+      initialDate
+        ? (() => {
+            const [year, month, day] = initialDate.split("-").map(Number);
+            return new Date(year, month - 1, day);
+          })()
+        : new Date(),
+    ),
+  );
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
     useState<MicFinderFilterResult>(initialFilters);
-  const [mapPins, setMapPins] = useState<Event[]>(
-    initialFilters.baseEvents || [],
-  );
+  const [mapPins, setMapPins] = useState<Event[]>([]);
 
   useEffect(() => {
     // City is already seeded via initialCity prop — only handle the URL cleanup
@@ -249,31 +292,6 @@ export default function MicFinderClient({
     const term = searchParams.get("searchTerm");
     if (city || term) router.replace(pathname, { scroll: false });
   }, [pathname, router, searchParams]);
-
-  useEffect(() => {
-    const preloadModules = () => {
-      void import("@/app/components/GoogleMap");
-      void import("./VirtualizedEventList");
-    };
-
-    const browserGlobals = globalThis as typeof globalThis & {
-      requestIdleCallback?: (
-        callback: IdleRequestCallback,
-        options?: IdleRequestOptions,
-      ) => number;
-      cancelIdleCallback?: (handle: number) => void;
-    };
-
-    if (typeof browserGlobals.requestIdleCallback === "function") {
-      const idleId = browserGlobals.requestIdleCallback(preloadModules, {
-        timeout: 1500,
-      });
-      return () => browserGlobals.cancelIdleCallback?.(idleId);
-    }
-
-    const timeoutId = globalThis.setTimeout(preloadModules, 1200);
-    return () => globalThis.clearTimeout(timeoutId);
-  }, []);
 
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation)
@@ -354,6 +372,27 @@ export default function MicFinderClient({
     };
   }, [selectedDate]);
 
+  const nativeDateInputValue = useMemo(
+    () => (selectedDate ? formatNativeDateInput(selectedDate) : ""),
+    [selectedDate],
+  );
+
+  const handleDateSelect = useCallback((date: Date) => {
+    setSelectedDate(date);
+    setDateInputValue(formatDateInput(date));
+  }, []);
+
+  const openNativeDatePicker = useCallback(() => {
+    const input = nativeDateInputRef.current;
+    if (!input) return;
+    if (typeof input.showPicker === "function") {
+      input.showPicker();
+      return;
+    }
+    input.focus();
+    input.click();
+  }, []);
+
   const initialLoadRef = useRef(true);
 
   useEffect(() => {
@@ -390,7 +429,7 @@ export default function MicFinderClient({
         );
         if (!response.ok) return;
         const data: MicFinderFilterResult = await response.json();
-        setMapPins(data.baseEvents || []);
+        setMapPins(data.allCityEvents || []);
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
       }
@@ -422,23 +461,61 @@ export default function MicFinderClient({
           onCitySelect={handleCitySelect}
           onUseLocation={fetchUserLocation}
         />
-        <div className="relative h-11 w-full max-w-80 sm:w-48">
+        <div className="relative h-11 w-full max-w-80 sm:w-52">
           <label htmlFor="event-date-picker" className="sr-only">
             Select Event Date
           </label>
-          <DatePicker
+          <input
             id="event-date-picker"
-            selected={selectedDate}
-            onChange={(date: Date | null) => {
-              if (date) setSelectedDate(date);
+            type="text"
+            inputMode="numeric"
+            placeholder="MM/DD/YYYY"
+            value={dateInputValue}
+            onChange={(event) => {
+              const value = event.target.value;
+              setDateInputValue(value);
+              const nextDate = parseDateInput(value);
+              if (nextDate) setSelectedDate(nextDate);
             }}
-            dateFormat="MM/dd/yyyy"
-            className={`${inputClass} date-picker-input text-center md:text-left`}
-            calendarClassName="date-picker-calendar"
-            popperClassName="date-picker-popper"
-            showPopperArrow={false}
-            showIcon
+            onBlur={() => {
+              if (selectedDate)
+                setDateInputValue(formatDateInput(selectedDate));
+            }}
+            className={`${inputClass} pr-12 text-center md:text-left`}
+            autoComplete="off"
           />
+          <input
+            ref={nativeDateInputRef}
+            type="date"
+            value={nativeDateInputValue}
+            onChange={(event) => {
+              const nextDate = parseNativeDateInput(event.target.value);
+              if (nextDate) handleDateSelect(nextDate);
+            }}
+            className="pointer-events-none absolute top-0 right-0 h-full w-11 opacity-0"
+            aria-hidden="true"
+            tabIndex={-1}
+          />
+          <button
+            type="button"
+            onClick={openNativeDatePicker}
+            className="absolute top-1/2 right-2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-stone-900 transition-colors hover:bg-amber-700/20 focus-visible:outline-stone-900"
+            aria-label="Open calendar"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="size-5"
+              aria-hidden="true"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" />
+            </svg>
+          </button>
         </div>
       </div>
 

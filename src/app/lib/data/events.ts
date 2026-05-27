@@ -66,7 +66,7 @@ function buildFilterResult(
   const allCityEvents = isAnyCity ? baseEvents : [];
 
   return {
-    baseEvents,
+    baseEvents: [],
     recurringEvents,
     oneTimeEvents,
     allCityEvents,
