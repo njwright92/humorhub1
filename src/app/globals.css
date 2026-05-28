@@ -25,36 +25,6 @@
     outline-offset: 2px;
   }
 
-  .date-picker-input {
-    width: 100%;
-    min-height: 2.75rem;
-    padding: 0.75rem 1rem;
-    border: 0.125rem solid var(--color-stone-400);
-    border-radius: 1rem;
-    background-color: var(--color-zinc-200);
-    color: var(--color-stone-900);
-    font-size: 1rem;
-    font-weight: 500;
-    outline: none;
-  }
-
-  .date-picker-input:focus {
-    border-color: rgb(22 163 74);
-    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
-  }
-
-  .date-picker-calendar {
-    border-radius: 1rem !important;
-    overflow: hidden;
-    color: var(--color-stone-900) !important;
-  }
-
-  .react-datepicker__calendar-icon {
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
   h1,
   h2,
   h3,
