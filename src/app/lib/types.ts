@@ -43,6 +43,19 @@ export interface Event {
   sanitizedDetails?: string;
 }
 
+export type MapEvent = Pick<
+  Event,
+  | "id"
+  | "name"
+  | "location"
+  | "date"
+  | "lat"
+  | "lng"
+  | "details"
+  | "isFestival"
+  | "isMusic"
+>;
+
 export interface ProfileData {
   name: string;
   bio: string;

@@ -44,15 +44,6 @@ export const SAVED_EVENT_FIELDS = [
   "location",
   "normalizedCity",
   "date",
-  "lat",
-  "lng",
-  "details",
-  "isRecurring",
-  "isFestival",
-  "festival",
-  "isMusic",
-  "savedAt",
-  "googleTimestamp",
 ] as const;
 
 export const SAVED_EVENT_ALLOWED_FIELDS = [

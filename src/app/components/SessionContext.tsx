@@ -11,6 +11,8 @@ import {
 import { getSession, type SessionInfo } from "@/app/lib/auth-client";
 
 type SessionState = SessionInfo & { status: "unknown" | "ready" };
+const SESSION_CACHE_KEY = "humorhub-session";
+const UNKNOWN_SESSION: SessionState = { signedIn: false, status: "unknown" };
 
 type SessionContextValue = {
   session: SessionState;
@@ -27,6 +29,16 @@ const SessionContext = createContext<SessionContextValue | undefined>(
   undefined,
 );
 
+function cacheSession(session: SessionInfo) {
+  try {
+    if (typeof window === "undefined") return;
+    if (session.signedIn) window.sessionStorage.setItem(SESSION_CACHE_KEY, "1");
+    else window.sessionStorage.removeItem(SESSION_CACHE_KEY);
+  } catch {
+    return;
+  }
+}
+
 export function useSession() {
   const context = useContext(SessionContext);
   if (!context) {
@@ -36,9 +48,15 @@ export function useSession() {
 }
 
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<SessionState>({
-    signedIn: false,
-    status: "unknown",
+  const [session, setSession] = useState<SessionState>(() => {
+    try {
+      return typeof window !== "undefined" &&
+        window.sessionStorage.getItem(SESSION_CACHE_KEY) === "1"
+        ? { signedIn: true, status: "ready" }
+        : UNKNOWN_SESSION;
+    } catch {
+      return UNKNOWN_SESSION;
+    }
   });
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -57,6 +75,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
           email: data.email,
           status: "ready",
         };
+        cacheSession(next);
         setSession(next);
         return next;
       })
@@ -70,13 +89,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const setSignedIn = useCallback(
     (signedIn: boolean, info: Partial<SessionInfo> = {}) => {
-      setSession((prev) => ({
-        ...prev,
-        ...(signedIn ? {} : { uid: undefined, email: undefined }),
-        ...info,
-        signedIn,
-        status: "ready",
-      }));
+      setSession((prev) => {
+        const next = {
+          ...prev,
+          ...(signedIn ? {} : { uid: undefined, email: undefined }),
+          ...info,
+          signedIn,
+          status: "ready" as const,
+        };
+        cacheSession(next);
+        return next;
+      });
     },
     [],
   );

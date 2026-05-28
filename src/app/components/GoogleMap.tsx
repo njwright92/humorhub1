@@ -9,7 +9,7 @@ import {
   useMap,
   useApiIsLoaded,
 } from "@vis.gl/react-google-maps";
-import type { Event } from "../lib/types";
+import type { MapEvent } from "../lib/types";
 import CloseIcon from "./CloseIcon";
 
 const PIN_COLORS = {
@@ -18,7 +18,7 @@ const PIN_COLORS = {
   default: "#c4714d",
 } as const;
 
-const getPinColor = (event: Event) =>
+const getPinColor = (event: MapEvent) =>
   event.isFestival
     ? PIN_COLORS.festival
     : event.isMusic
@@ -70,8 +70,8 @@ const EventMarker = memo(function EventMarker({
   event,
   onClick,
 }: {
-  event: Event;
-  onClick: (event: Event) => void;
+  event: MapEvent;
+  onClick: (event: MapEvent) => void;
 }) {
   if (Number.isNaN(event.lat) || Number.isNaN(event.lng)) return null;
 
@@ -95,10 +95,10 @@ const InnerMap = memo(function InnerMap({
   lat: number;
   lng: number;
   zoom?: number;
-  events: Event[];
+  events: MapEvent[];
 }) {
   const apiIsLoaded = useApiIsLoaded();
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<MapEvent | null>(null);
   const markerEvents = useMemo(
     () =>
       events.filter(
@@ -107,7 +107,7 @@ const InnerMap = memo(function InnerMap({
     [events],
   );
 
-  const handleMarkerClick = useCallback((event: Event) => {
+  const handleMarkerClick = useCallback((event: MapEvent) => {
     setSelectedEvent(event);
   }, []);
 
@@ -194,7 +194,7 @@ export default function GoogleMap(props: {
   lat: number;
   lng: number;
   zoom?: number;
-  events: Event[];
+  events: MapEvent[];
 }) {
   if (!API_KEY) {
     return (

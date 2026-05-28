@@ -9,11 +9,43 @@ export async function GET(request: Request): Promise<Response> {
     const tab = searchParams.get("tab") ?? undefined;
     const city = searchParams.get("city") ?? undefined;
     const date = searchParams.get("date") ?? undefined;
+    const view = searchParams.get("view");
 
     const { eventsByTab } = await fetchMicFinderData();
     const filters = getMicFinderFilters(eventsByTab, { tab, city, date });
+    const body =
+      view === "map"
+        ? {
+            baseEvents: [],
+            recurringEvents: [],
+            oneTimeEvents: [],
+            allCityEvents: filters.allCityEvents.map(
+              ({
+                id,
+                name,
+                location,
+                date,
+                lat,
+                lng,
+                details,
+                isFestival,
+                isMusic,
+              }) => ({
+                id,
+                name,
+                location,
+                date,
+                lat,
+                lng,
+                details: details.slice(0, 120),
+                isFestival,
+                isMusic,
+              }),
+            ),
+          }
+        : filters;
 
-    return NextResponse.json(filters, {
+    return NextResponse.json(body, {
       headers: {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
       },

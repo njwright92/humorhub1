@@ -31,6 +31,16 @@ export default function ProfileClient({
   } | null>(null);
 
   const handleImageChange = async (file: File) => {
+    if (!/^image\/(avif|gif|jpeg|png|webp)$/.test(file.type)) {
+      showToast("Upload a PNG, JPG, WEBP, GIF, or AVIF image", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Image must be 5MB or less", "error");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
 

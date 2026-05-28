@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(EMAILJS_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(4000),
       body: JSON.stringify({
         service_id: process.env.EMAILJS_SERVICE_ID,
         template_id: process.env.EMAILJS_TEMPLATE_ID1,

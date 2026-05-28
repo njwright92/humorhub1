@@ -70,7 +70,7 @@ export async function fetchNewsArticles(
     const articles = data.filter(hasRequiredFields).map((article, index) => {
       const raw = article as Record<string, unknown>;
       const title = String(raw.title);
-      const description = String(raw.description);
+      const description = String(raw.description).slice(0, 260);
       const safeArticleUrl = toSafeHttpUrl(raw.url);
       const safeImageUrl = toSafeHttpUrl(raw.image_url);
       const uuid = raw.uuid

@@ -70,15 +70,12 @@ const NavIcon = memo(function NavIcon({ icon }: { icon: string }) {
 });
 
 export default function DesktopNav() {
-  const { session, refreshSession } = useSession();
+  const { session } = useSession();
   const { requireAuth, preloadAuthModal } = useProtectedNavigation();
 
   const ensureAuthListener = useCallback(() => {
     preloadAuthModal();
-    if (session.status === "unknown") {
-      void refreshSession();
-    }
-  }, [preloadAuthModal, refreshSession, session.status]);
+  }, [preloadAuthModal]);
 
   const isUserSignedIn =
     session.status === "ready" && session.signedIn === true;

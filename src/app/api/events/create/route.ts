@@ -31,6 +31,7 @@ async function geocodeAddress(address: string): Promise<LatLng> {
 
   const response = await fetch(url, {
     headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(3500),
   });
 
   if (!response.ok) throw new Error(`Geocoding failed (${response.status})`);
@@ -95,6 +96,7 @@ async function sendEventNotification(eventData: EventSubmission) {
   const response = await fetch(EMAILJS_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    signal: AbortSignal.timeout(4000),
     body: JSON.stringify({
       service_id: process.env.EMAILJS_SERVICE_ID,
       template_id: process.env.EMAILJS_TEMPLATE_ID,

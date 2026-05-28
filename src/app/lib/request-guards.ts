@@ -15,6 +15,7 @@ type RateLimitStore = Map<string, RateLimitEntry>;
 
 declare global {
   var __humorHubRateLimitStore: RateLimitStore | undefined;
+  var __humorHubRateLimitCleanupAt: number | undefined;
 }
 
 const rateLimitStore =
@@ -56,10 +57,11 @@ export function checkRateLimit(
 ) {
   const now = Date.now();
 
-  for (const [storedKey, entry] of rateLimitStore.entries()) {
-    if (entry.resetAt <= now) {
-      rateLimitStore.delete(storedKey);
+  if ((globalThis.__humorHubRateLimitCleanupAt ?? 0) <= now) {
+    for (const [storedKey, entry] of rateLimitStore.entries()) {
+      if (entry.resetAt <= now) rateLimitStore.delete(storedKey);
     }
+    globalThis.__humorHubRateLimitCleanupAt = now + 60_000;
   }
 
   const clientKey = `${key}:${getClientIp(request)}`;

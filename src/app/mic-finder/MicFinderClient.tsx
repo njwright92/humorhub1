@@ -15,6 +15,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useToast } from "@/app/components/ToastContext";
 import type {
   Event,
+  MapEvent,
   CityCoordinates,
   EventCategory,
   MicFinderFilterResult,
@@ -284,7 +285,7 @@ export default function MicFinderClient({
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
     useState<MicFinderFilterResult>(initialFilters);
-  const [mapPins, setMapPins] = useState<Event[]>([]);
+  const [mapPins, setMapPins] = useState<MapEvent[]>([]);
 
   useEffect(() => {
     // City is already seeded via initialCity prop — only handle the URL cleanup
@@ -423,12 +424,16 @@ export default function MicFinderClient({
     const controller = new AbortController();
     const fetchAllMapPins = async () => {
       try {
-        const response = await fetch(
-          buildFilterUrl(selectedTab, "All Cities", selectedDate),
-          { signal: controller.signal },
+        const filterUrl = buildFilterUrl(
+          selectedTab,
+          "All Cities",
+          selectedDate,
         );
+        const response = await fetch(`${filterUrl}&view=map`, {
+          signal: controller.signal,
+        });
         if (!response.ok) return;
-        const data: MicFinderFilterResult = await response.json();
+        const data = (await response.json()) as { allCityEvents?: MapEvent[] };
         setMapPins(data.allCityEvents || []);
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;

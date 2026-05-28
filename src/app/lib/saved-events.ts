@@ -1,5 +1,4 @@
 import { buildEventFromData } from "./event-mappers";
-import { sanitizeHtml } from "./sanitizeHtml";
 import type { Event, EventData } from "./types";
 
 type SavedEventDoc = {
@@ -18,7 +17,6 @@ export function mapSavedEventDocs(docs: SavedEventDoc[]): Event[] {
         : doc.id;
 
     const event = buildEventFromData(eventId, data);
-    event.sanitizedDetails = event.details ? sanitizeHtml(event.details) : "";
     events.push(event);
   }
 
