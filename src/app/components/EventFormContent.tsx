@@ -4,6 +4,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
   memo,
   type ChangeEvent,
   type SubmitEvent,
@@ -11,13 +12,6 @@ import {
 import { useToast } from "./ToastContext";
 import CloseIcon from "./CloseIcon";
 import type { EventSubmission, ApiResponse } from "../lib/types";
-import dynamic from "next/dynamic";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const DatePicker = dynamic<any>(
-  () => import("@/app/components/LazyDatePicker"),
-  { ssr: false },
-);
 
 interface FormState {
   name: string;
@@ -45,6 +39,46 @@ const inputClass = "input-green mb-1";
 const labelClass = "block text-xs font-bold uppercase opacity-70 mb-1";
 
 type RadioName = "isRecurring" | "isFestival" | "isOther";
+
+function formatDateInput(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${month}/${day}/${date.getFullYear()}`;
+}
+
+function formatNativeDateInput(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function parseDateInput(value: string): Date | null {
+  const trimmed = value.trim();
+  const match = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+
+  const month = Number(match[1]);
+  const day = Number(match[2]);
+  const year = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+
+  const date = new Date(year, month - 1, day);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return date;
+}
+
+function parseNativeDateInput(value: string): Date | null {
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+}
 
 const RadioGroup = memo(function RadioGroup({
   label,
@@ -118,6 +152,15 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE);
   const [formError, setFormError] = useState("");
 
+  const [dateInputValue, setDateInputValue] = useState(() =>
+    formatDateInput(new Date()),
+  );
+  const nativeDateInputRef = useRef<HTMLInputElement>(null);
+
+  const nativeDateInputValue = form.date
+    ? formatNativeDateInput(form.date)
+    : "";
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", handleEscape);
@@ -143,6 +186,43 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const handleRadioChange = useCallback((name: RadioName, value: boolean) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   }, []);
+
+  const handleDateSelect = useCallback((date: Date) => {
+    setForm((prev) => ({ ...prev, date }));
+    setDateInputValue(formatDateInput(date));
+  }, []);
+
+  const handleDateTextChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const raw = event.target.value;
+      const prev = dateInputValue;
+      const isDeleting = raw.length < prev.length;
+
+      if (isDeleting) {
+        setDateInputValue(raw);
+        return;
+      }
+
+      const digits = raw.replace(/\D/g, "");
+
+      let formatted = "";
+      if (digits.length <= 2) {
+        formatted = digits;
+      } else if (digits.length <= 4) {
+        formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+      } else {
+        formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
+      }
+
+      setDateInputValue(formatted);
+
+      const nextDate = parseDateInput(formatted);
+      if (nextDate) {
+        setForm((prev) => ({ ...prev, date: nextDate }));
+      }
+    },
+    [dateInputValue],
+  );
 
   const handleSubmit = useCallback(
     async (e: SubmitEvent) => {
@@ -180,6 +260,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
         showToast("Event submitted successfully!", "success");
         setForm(INITIAL_FORM_STATE);
+        setDateInputValue(formatDateInput(new Date()));
         onClose();
       } catch {
         showToast("Submission failed.", "error");
@@ -306,22 +387,54 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="grid">
-          <label htmlFor="date" className={labelClass}>
+          <label htmlFor="event-date-text" className={labelClass}>
             Date *
           </label>
-          <DatePicker
-            id="date"
-            selected={form.date}
-            onChange={(date: Date | null) =>
-              setForm((prev) => ({ ...prev, date }))
-            }
-            dateFormat="MM/dd/yyyy"
-            placeholderText="MM/DD/YYYY"
-            className="date-picker-input"
-            calendarClassName="date-picker-calendar"
-            showPopperArrow={false}
-            showIcon
-          />
+          <div className="relative">
+            <input
+              id="event-date-text"
+              type="text"
+              inputMode="numeric"
+              placeholder="MM/DD/YYYY"
+              value={dateInputValue}
+              onChange={handleDateTextChange}
+              onBlur={() => {
+                if (form.date) setDateInputValue(formatDateInput(form.date));
+              }}
+              className={`${inputClass} pr-12`}
+              autoComplete="off"
+            />
+
+            <div className="absolute top-1/2 right-2 size-8 -translate-y-1/2">
+              <span className="pointer-events-none absolute inset-0 grid place-items-center rounded-lg text-stone-900">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-5"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+              </span>
+
+              <input
+                ref={nativeDateInputRef}
+                type="date"
+                value={nativeDateInputValue}
+                onChange={(event) => {
+                  const nextDate = parseNativeDateInput(event.target.value);
+                  if (nextDate) handleDateSelect(nextDate);
+                }}
+                aria-label="Open calendar"
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="grid">
