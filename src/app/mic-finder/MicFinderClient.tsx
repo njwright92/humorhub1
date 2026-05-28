@@ -48,7 +48,7 @@ interface MicFinderClientProps {
   initialCities: string[];
   initialFilters: MicFinderFilterResult;
   initialDate: string | null;
-  initialCity: string; // ← added
+  initialCity: string;
 }
 
 interface CitySelectorProps {
@@ -251,7 +251,7 @@ export default function MicFinderClient({
   initialCities,
   initialFilters,
   initialDate,
-  initialCity, // ← added
+  initialCity,
 }: MicFinderClientProps) {
   const { showToast } = useToast();
   const { session, refreshSession } = useSession();
@@ -262,7 +262,6 @@ export default function MicFinderClient({
   const [isPending, startTransition] = useTransition();
   const nativeDateInputRef = useRef<HTMLInputElement>(null);
 
-  // ← seeded from server prop instead of empty string
   const [selectedCity, setSelectedCity] = useState(initialCity);
   const [citySearchTerm, setCitySearchTerm] = useState(initialCity);
 
@@ -271,6 +270,7 @@ export default function MicFinderClient({
     const [year, month, day] = initialDate.split("-").map(Number);
     return new Date(year, month - 1, day);
   });
+
   const [dateInputValue, setDateInputValue] = useState(() =>
     formatDateInput(
       initialDate
@@ -281,6 +281,7 @@ export default function MicFinderClient({
         : new Date(),
     ),
   );
+
   const [isMapVisible, setIsMapVisible] = useState(false);
   const [selectedTab, setSelectedTab] = useState<EventCategory>("Mics");
   const [eventData, setEventData] =
@@ -288,7 +289,6 @@ export default function MicFinderClient({
   const [mapPins, setMapPins] = useState<MapEvent[]>([]);
 
   useEffect(() => {
-    // City is already seeded via initialCity prop — only handle the URL cleanup
     const city = searchParams.get("city");
     const term = searchParams.get("searchTerm");
     if (city || term) router.replace(pathname, { scroll: false });
@@ -383,16 +383,38 @@ export default function MicFinderClient({
     setDateInputValue(formatDateInput(date));
   }, []);
 
-  const openNativeDatePicker = useCallback(() => {
-    const input = nativeDateInputRef.current;
-    if (!input) return;
-    if (typeof input.showPicker === "function") {
-      input.showPicker();
-      return;
-    }
-    input.focus();
-    input.click();
-  }, []);
+  // Auto-formats MM/DD/YYYY as the user types digits
+  const handleDateTextChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const raw = event.target.value;
+      const prev = dateInputValue;
+      const isDeleting = raw.length < prev.length;
+
+      if (isDeleting) {
+        setDateInputValue(raw);
+        return;
+      }
+
+      // Strip non-numeric characters
+      const digits = raw.replace(/\D/g, "");
+
+      // Auto-insert slashes: MM/DD/YYYY
+      let formatted = "";
+      if (digits.length <= 2) {
+        formatted = digits;
+      } else if (digits.length <= 4) {
+        formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+      } else {
+        formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
+      }
+
+      setDateInputValue(formatted);
+
+      const nextDate = parseDateInput(formatted);
+      if (nextDate) setSelectedDate(nextDate);
+    },
+    [dateInputValue],
+  );
 
   const initialLoadRef = useRef(true);
 
@@ -466,22 +488,19 @@ export default function MicFinderClient({
           onCitySelect={handleCitySelect}
           onUseLocation={fetchUserLocation}
         />
+
+        {/* Date input with iOS-compatible native date picker */}
         <div className="relative h-11 w-full max-w-80 sm:w-52">
-          <label htmlFor="event-date-picker" className="sr-only">
+          <label htmlFor="event-date-text" className="sr-only">
             Select Event Date
           </label>
           <input
-            id="event-date-picker"
+            id="event-date-text"
             type="text"
             inputMode="numeric"
             placeholder="MM/DD/YYYY"
             value={dateInputValue}
-            onChange={(event) => {
-              const value = event.target.value;
-              setDateInputValue(value);
-              const nextDate = parseDateInput(value);
-              if (nextDate) setSelectedDate(nextDate);
-            }}
+            onChange={handleDateTextChange}
             onBlur={() => {
               if (selectedDate)
                 setDateInputValue(formatDateInput(selectedDate));
@@ -489,38 +508,45 @@ export default function MicFinderClient({
             className={`${inputClass} pr-12 text-center md:text-left`}
             autoComplete="off"
           />
-          <input
-            ref={nativeDateInputRef}
-            type="date"
-            value={nativeDateInputValue}
-            onChange={(event) => {
-              const nextDate = parseNativeDateInput(event.target.value);
-              if (nextDate) handleDateSelect(nextDate);
-            }}
-            className="pointer-events-none absolute top-0 right-0 h-full w-11 opacity-0"
-            aria-hidden="true"
-            tabIndex={-1}
-          />
-          <button
-            type="button"
-            onClick={openNativeDatePicker}
-            className="absolute top-1/2 right-2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-stone-900 transition-colors hover:bg-amber-700/20 focus-visible:outline-stone-900"
-            aria-label="Open calendar"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-5"
-              aria-hidden="true"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2" />
-              <path d="M16 2v4M8 2v4M3 10h18" />
-            </svg>
-          </button>
+
+          {/*
+           * iOS Safari fix:
+           * The native date input sits on top of the calendar icon area.
+           * It is transparent (opacity-0) but pointer-events are enabled,
+           * so tapping the icon area triggers the native iOS date wheel picker.
+           * On desktop, clicking also opens the browser's native date picker.
+           */}
+          <div className="absolute top-1/2 right-2 size-8 -translate-y-1/2">
+            {/* Calendar icon — purely visual, sits behind the native input */}
+            <span className="pointer-events-none absolute inset-0 grid place-items-center rounded-lg text-stone-900">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-5"
+                aria-hidden="true"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <path d="M16 2v4M8 2v4M3 10h18" />
+              </svg>
+            </span>
+
+            {/* Transparent native date input overlaid on the icon */}
+            <input
+              ref={nativeDateInputRef}
+              type="date"
+              value={nativeDateInputValue}
+              onChange={(event) => {
+                const nextDate = parseNativeDateInput(event.target.value);
+                if (nextDate) handleDateSelect(nextDate);
+              }}
+              aria-label="Open calendar"
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            />
+          </div>
         </div>
       </div>
 
