@@ -28,8 +28,7 @@ export async function updateProfile(payload: {
       .set(update, { merge: true });
     revalidatePath("/Profile");
     return { success: true };
-  } catch (error) {
-    console.error("Save profile error:", error);
+  } catch {
     return { success: false, error: "Failed to save profile" };
   }
 }

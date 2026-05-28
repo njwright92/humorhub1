@@ -63,3 +63,7 @@ export const SAVED_EVENT_ALLOWED_FIELDS = [
 export const DEFAULT_US_CENTER = { lat: 39.8283, lng: -98.5795 };
 export const DEFAULT_ZOOM = 4;
 export const CITY_ZOOM = 12;
+
+export const EVENT_CATEGORIES = ["Mics", "Festivals", "Other"] as const;
+
+export const NEWS_CATEGORIES = ["top_stories", "all_news"] as const;

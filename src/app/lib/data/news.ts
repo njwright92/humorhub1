@@ -98,7 +98,6 @@ export async function fetchNewsArticles(
       };
     }
 
-    console.error("News fetch failed:", error);
     return { articles: [], error: "Failed to fetch news" };
   }
 }

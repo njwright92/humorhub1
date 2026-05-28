@@ -9,7 +9,7 @@ export async function validateAndAuth(
   password: string,
   confirmPassword: string,
   isSignIn: boolean,
-) {
+): Promise<{ success: boolean; error?: string }> {
   // Validation on server-side
   if (!emailRegex.test(email)) {
     return { success: false, error: "Please enter a valid email address." };
@@ -58,8 +58,7 @@ export async function validateAndAuth(
       return { success: false, error: msg };
     }
     return { success: true };
-  } catch (error) {
-    console.error("Auth error:", error);
+  } catch {
     return {
       success: false,
       error: "Authentication failed. Please try again.",

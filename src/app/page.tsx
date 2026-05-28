@@ -5,7 +5,6 @@ import ProtectedRouteButton from "./components/ProtectedRouteButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
 
-// const HomepagePoll = dynamic(() => import("./components/HomepagePoll"));
 const EventForm = dynamic(() => import("./components/EventForm"));
 
 const featureLeft = "grid gap-6 md:grid-cols-2 md:text-left";
@@ -24,9 +23,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="page-shell gap-12 py-20 text-center">
-      <div className="fixed top-18 left-2 z-10 md:top-2 md:left-22">
-        {/* <HomepagePoll /> */}
-      </div>
+      <div className="fixed top-18 left-2 z-10 md:top-2 md:left-22" />
 
       <h1 className="text-5xl md:text-7xl">Humor Hub!</h1>
 

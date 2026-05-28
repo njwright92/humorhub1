@@ -98,8 +98,10 @@ export function formatDateParam(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+import type { EventCategory } from "./types";
+
 export function buildFilterUrl(
-  tab: string,
+  tab: EventCategory,
   city?: string,
   date?: Date | null,
 ): string {

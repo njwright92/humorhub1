@@ -15,8 +15,7 @@ export async function GET(): Promise<Response> {
         },
       },
     );
-  } catch (error) {
-    console.error("[API] Error fetching cities:", error);
+  } catch {
     return NextResponse.json({ cities: [] }, { status: 500 });
   }
 }

@@ -83,7 +83,7 @@ async function sendEventNotification(eventData: EventSubmission) {
     !process.env.EMAILJS_PUBLIC_KEY ||
     !process.env.EMAILJS_PRIVATE_KEY
   ) {
-    console.warn("EmailJS env vars missing; skipping event notification.");
+    // EmailJS not configured; skip notification
     return;
   }
 
@@ -166,8 +166,8 @@ export async function POST(request: NextRequest) {
 
     try {
       coords = await geocodeAddress(eventData.location);
-    } catch (error) {
-      console.warn("Geocoding failed, routing to manual review:", error);
+    } catch {
+      // Geocoding failure — route to manual review without logging
       collection = COLLECTIONS.eventsManualReview;
     }
 
@@ -186,13 +186,12 @@ export async function POST(request: NextRequest) {
 
     try {
       await sendEventNotification(eventData);
-    } catch (error) {
-      console.warn("Event email failed:", error);
+    } catch {
+      // Email notification failure is non-critical — event was already saved
     }
 
     return jsonResponse({ success: true });
-  } catch (error) {
-    console.error("Event creation error:", error);
+  } catch {
     return jsonResponse(
       { success: false, error: "Failed to create event" },
       500,

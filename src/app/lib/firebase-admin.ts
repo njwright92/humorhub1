@@ -67,8 +67,7 @@ export async function verifyIdToken(token: string) {
     const auth = getServerAuth();
     const decodedToken = await auth.verifyIdToken(token);
     return { valid: true, uid: decodedToken.uid, decodedToken };
-  } catch (error) {
-    console.error("Token verification failed:", error);
+  } catch {
     return { valid: false, uid: null, decodedToken: null };
   }
 }

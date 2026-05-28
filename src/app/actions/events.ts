@@ -46,8 +46,7 @@ export async function saveEvent(
       .set(dataToSave);
     revalidatePath("/Profile");
     return { success: true };
-  } catch (error) {
-    console.error("Save event error:", error);
+  } catch {
     return { success: false, error: "Failed to save event" };
   }
 }
@@ -86,8 +85,7 @@ export async function deleteSavedEvent(eventId: string): Promise<ActionResult> {
     await eventDoc.ref.delete();
     revalidatePath("/Profile");
     return { success: true };
-  } catch (error) {
-    console.error("Delete event error:", error);
+  } catch {
     return { success: false, error: "Failed to delete event" };
   }
 }

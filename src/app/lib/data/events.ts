@@ -10,7 +10,12 @@ import type {
 } from "../types";
 import { getServerDb } from "../firebase-admin";
 import { buildEventFromData } from "../event-mappers";
-import { COLLECTIONS, FEATURED_CITY, ALL_CITIES_LABEL } from "../constants";
+import {
+  COLLECTIONS,
+  FEATURED_CITY,
+  ALL_CITIES_LABEL,
+  EVENT_CATEGORIES,
+} from "../constants";
 import { sanitizeHtml } from "../sanitizeHtml";
 
 export type MicFinderDataWithCities = MicFinderData & {
@@ -18,8 +23,10 @@ export type MicFinderDataWithCities = MicFinderData & {
 };
 
 function normalizeTab(tab?: string): EventCategory {
-  if (tab === "Festivals" || tab === "Other" || tab === "Mics") return tab;
-  return "Mics";
+  if (!tab) return EVENT_CATEGORIES[0];
+  return EVENT_CATEGORIES.includes(tab as EventCategory)
+    ? (tab as EventCategory)
+    : EVENT_CATEGORIES[0];
 }
 
 function parseDateParam(dateParam?: string): Date | null {
@@ -172,8 +179,7 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
     });
 
     return { events, cityCoordinates, cities, eventsByTab };
-  } catch (error) {
-    console.error("[Server] Error fetching MicFinder data:", error);
+  } catch {
     return {
       events: [],
       cityCoordinates: {},

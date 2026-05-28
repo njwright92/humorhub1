@@ -104,16 +104,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const details = await response.text();
-      console.error("EmailJS send failed:", response.status, details);
       return NextResponse.json(
-        {
-          success: false,
-          error:
-            process.env.NODE_ENV === "development"
-              ? details || "Failed to send message."
-              : "Failed to send message.",
-        },
+        { success: false, error: "Failed to send message." },
         { status: 502 },
       );
     }

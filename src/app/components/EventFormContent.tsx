@@ -195,31 +195,24 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const handleDateTextChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const raw = event.target.value;
-      const prev = dateInputValue;
-      const isDeleting = raw.length < prev.length;
+      const isDeleting = raw.length < dateInputValue.length;
 
       if (isDeleting) {
         setDateInputValue(raw);
         return;
       }
 
-      const digits = raw.replace(/\D/g, "");
-
-      let formatted = "";
-      if (digits.length <= 2) {
-        formatted = digits;
-      } else if (digits.length <= 4) {
-        formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
-      } else {
-        formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
-      }
+      const digits = raw.replace(/\D/g, "").slice(0, 8);
+      const formatted =
+        digits.length <= 2
+          ? digits
+          : digits.length <= 4
+            ? `${digits.slice(0, 2)}/${digits.slice(2)}`
+            : `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
 
       setDateInputValue(formatted);
-
       const nextDate = parseDateInput(formatted);
-      if (nextDate) {
-        setForm((prev) => ({ ...prev, date: nextDate }));
-      }
+      if (nextDate) setForm((prev) => ({ ...prev, date: nextDate }));
     },
     [dateInputValue],
   );

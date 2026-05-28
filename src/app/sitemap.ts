@@ -57,8 +57,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily" as const,
       priority: 0.85,
     }));
-  } catch (error) {
-    console.error("Sitemap: Failed to fetch cities:", error);
+  } catch {
+    // Failed to fetch cached cities — return static routes only
   }
 
   return [...staticRoutes, ...cityRoutes];

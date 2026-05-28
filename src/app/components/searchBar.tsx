@@ -273,8 +273,8 @@ export default function SearchBar({
           if (valid.length)
             sessionStorage.setItem(CITIES_CACHE_KEY, JSON.stringify(valid));
         }
-      } catch (err) {
-        console.error("Error fetching cities:", err);
+      } catch {
+        // Swallow fetch errors to avoid leaking internals
       }
     })();
     return () => {

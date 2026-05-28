@@ -1,9 +1,9 @@
-export interface LatLng {
+export type LatLng = {
   lat: number;
   lng: number;
-}
+};
 
-export interface EventSubmission {
+export type EventSubmission = {
   id: string;
   name: string;
   location: string;
@@ -14,15 +14,15 @@ export interface EventSubmission {
   email: string;
   timestamp: string;
   isOther?: boolean;
-}
+};
 
-export interface StoredEvent extends EventSubmission {
+export type StoredEvent = EventSubmission & {
   lat?: number;
   lng?: number;
   submissionDate: string;
-}
+};
 
-export interface Event {
+export type Event = {
   id: string;
   name: string;
   location: string;
@@ -41,7 +41,7 @@ export interface Event {
   recurringDow: number | null;
   dateMs: number | null;
   sanitizedDetails?: string;
-}
+};
 
 export type MapEvent = Pick<
   Event,
@@ -56,19 +56,19 @@ export type MapEvent = Pick<
   | "isMusic"
 >;
 
-export interface ProfileData {
+export type ProfileData = {
   name: string;
   bio: string;
   profileImageUrl: string;
-}
+};
 
-export interface PollCounts {
+export type PollCounts = {
   yesCount: number;
   noCount: number;
   totalCount: number;
-}
+};
 
-export interface ApiResponse<T = undefined> {
+export type ApiResponse<T = unknown> = {
   success: boolean;
   data?: T;
   error?: string;
@@ -76,19 +76,21 @@ export interface ApiResponse<T = undefined> {
   signedIn?: boolean;
   uid?: string;
   email?: string;
-}
+};
 
 export type CityCoordinates = Record<string, LatLng>;
 
-export type EventCategory = "Mics" | "Festivals" | "Other";
+import { EVENT_CATEGORIES, NEWS_CATEGORIES } from "./constants";
+
+export type EventCategory = (typeof EVENT_CATEGORIES)[number];
 
 export type EventsByTab = Record<EventCategory, Event[]>;
 
-export interface MicFinderData {
+export type MicFinderData = {
   events: Event[];
   cityCoordinates: CityCoordinates;
   eventsByTab: EventsByTab;
-}
+};
 
 export type GoogleTimestamp =
   | string
@@ -104,20 +106,20 @@ export type GoogleTimestamp =
 
 export type EventData = Record<string, unknown>;
 
-export interface MicFinderFilterResult {
+export type MicFinderFilterResult = {
   baseEvents: Event[];
   recurringEvents: Event[];
   oneTimeEvents: Event[];
   allCityEvents: Event[];
-}
+};
 
-export type NewsCategory = "top_stories" | "all_news";
+export type NewsCategory = (typeof NEWS_CATEGORIES)[number];
 
-export interface NewsArticle {
+export type NewsArticle = {
   uuid: string;
   title: string;
   url?: string;
   description: string;
   image_url?: string;
   source?: string;
-}
+};

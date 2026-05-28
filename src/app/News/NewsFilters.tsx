@@ -1,4 +1,5 @@
-export const NEWS_CATEGORIES = ["top_stories", "all_news"] as const;
+import { NEWS_CATEGORIES } from "../lib/constants";
+
 export const NEWS_SUBCATEGORIES = [
   "general",
   "science",
@@ -12,7 +13,7 @@ export const NEWS_SUBCATEGORIES = [
   "travel",
 ] as const;
 
-type Category = "top_stories" | "all_news";
+type Category = (typeof NEWS_CATEGORIES)[number];
 
 type NewsFiltersProps = {
   selectedCategory: Category;

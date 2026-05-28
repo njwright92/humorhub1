@@ -5,6 +5,7 @@ import { fetchMicFinderData, getMicFinderFilters } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
 import EventForm from "@/app/components/EventForm";
 import { normalizeCityName, formatDateParam } from "@/app/lib/utils";
+import { EVENT_CATEGORIES } from "@/app/lib/constants";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
@@ -132,7 +133,7 @@ async function MicFinderContent({
     typeof resolvedParams?.city === "string" ? resolvedParams.city : "";
   const city = rawCity ? normalizeCityName(rawCity) : "";
   const initialFilters = getMicFinderFilters(eventsByTab, {
-    tab: "Mics",
+    tab: EVENT_CATEGORIES[0],
     city: city || undefined,
     date: initialDate,
   });

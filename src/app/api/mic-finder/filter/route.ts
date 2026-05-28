@@ -50,8 +50,7 @@ export async function GET(request: Request): Promise<Response> {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=1800",
       },
     });
-  } catch (error) {
-    console.error("[API] Error filtering MicFinder events:", error);
+  } catch {
     return NextResponse.json(
       {
         baseEvents: [],
