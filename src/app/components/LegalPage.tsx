@@ -19,7 +19,7 @@ export default function LegalPage({
     <main className="page-shell gap-8">
       <h1 className="page-title text-center">{title}</h1>
       <section className="panel-light">
-        <p className="border-b border-stone-300 pb-4 text-xs font-bold uppercase opacity-60">
+        <p className="border-b border-stone-400 pb-4 text-xs font-bold uppercase opacity-60">
           Last Updated: {updated}
         </p>
 
@@ -51,7 +51,7 @@ export default function LegalPage({
             </p>
           </article>
 
-          <div className="flex justify-center border-t border-stone-300 pt-8">
+          <div className="flex justify-center border-t border-stone-400 pt-8">
             <Link href="/" className="btn-primary">
               Return Home
             </Link>

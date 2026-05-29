@@ -164,7 +164,7 @@ const CityDropdownList = memo(function CityDropdownList({
   return (
     <ul
       role="listbox"
-      className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-300 bg-zinc-200 shadow-xl"
+      className="absolute top-full left-0 z-30 mt-1 max-h-48 w-full overflow-auto rounded-2xl border border-stone-400 bg-zinc-200 shadow-xl"
     >
       <li
         onMouseDown={(e) => {
@@ -560,7 +560,7 @@ export default function MicFinderClient({
             role="tab"
             aria-selected={selectedTab === tab.id}
             onClick={() => handleTabSelect(tab.id)}
-            className={`rounded-xl px-2 py-3 leading-tight font-bold whitespace-nowrap transition-all sm:text-lg ${
+            className={`rounded-2xl px-2 py-3 leading-tight font-bold whitespace-nowrap transition-all sm:text-lg ${
               selectedTab === tab.id
                 ? `${tab.activeClass} ${tab.activeTextClass} ring-2 ring-zinc-200`
                 : tab.inactiveClass

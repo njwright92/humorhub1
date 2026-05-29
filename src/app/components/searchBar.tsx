@@ -96,7 +96,7 @@ const SuggestionList = memo(function SuggestionList({
     <ul
       id={LISTBOX_ID}
       role="listbox"
-      className={`grid divide-y divide-stone-300 overflow-auto border-t border-stone-400 ${
+      className={`grid divide-y divide-stone-400 overflow-auto border-t border-stone-400 ${
         isModal ? "max-h-[calc(100dvh-11rem)]" : "max-h-60"
       }`}
     >
@@ -104,7 +104,7 @@ const SuggestionList = memo(function SuggestionList({
         <li
           key={`${sug.type}-${sug.label}`}
           className={`grid cursor-pointer grid-cols-[1fr_auto] items-center p-2 text-sm transition-colors ${
-            idx === activeIndex ? "bg-amber-100" : "hover:bg-stone-300"
+            idx === activeIndex ? "bg-amber-100" : "hover:bg-amber-300"
           }`}
           onMouseDown={(e) => {
             e.preventDefault();
@@ -113,9 +113,7 @@ const SuggestionList = memo(function SuggestionList({
           onMouseEnter={() => onHoverIndex(idx)}
         >
           <span className="font-bold text-zinc-900 italic">{sug.label}</span>
-          <span className="text-xs font-bold text-stone-500 uppercase">
-            {sug.type}
-          </span>
+          <span className="text-xs text-stone-600 uppercase">{sug.type}</span>
         </li>
       ))}
     </ul>
@@ -354,7 +352,7 @@ export default function SearchBar({
             return !p;
           });
         }}
-        className="text-zinc-200 transition-transform hover:scale-110 hover:text-stone-700 md:text-stone-900"
+        className="text-zinc-200 transition-transform hover:scale-110 hover:text-stone-700"
         aria-label="Open search"
         aria-expanded={isOpen}
         aria-controls={POPOVER_ID}
@@ -380,7 +378,7 @@ export default function SearchBar({
           id={POPOVER_ID}
           role="search"
           onSubmit={handleSearch}
-          className="panel-light absolute top-10 z-50 w-72 -translate-x-3/4 sm:left-full sm:ml-4 sm:w-80 sm:translate-x-0"
+          className="panel-light absolute top-12 z-50 w-80 -translate-x-3/4 sm:left-full sm:ml-4 sm:translate-x-0 md:top-0"
         >
           <button
             type="button"
@@ -411,12 +409,12 @@ export default function SearchBar({
               onSubmit={handleSearch}
               className="grid h-full content-start gap-3 p-3 pt-4"
             >
-              <div className="flex items-center border-b border-stone-300 pb-3">
+              <div className="flex items-center border-b border-stone-400 pb-3">
                 <button
                   type="button"
                   onClick={close}
-                  className="shrink-0 rounded-full p-2 text-stone-900 transition-colors hover:bg-stone-200"
-                  aria-label="Back"
+                  className="shrink-0 rounded-full p-2 text-stone-900 transition-colors hover:bg-zinc-200"
+                  aria-label="close search"
                 >
                   <svg
                     viewBox="0 0 24 24"

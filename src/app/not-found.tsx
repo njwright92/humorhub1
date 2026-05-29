@@ -9,7 +9,7 @@ const links = [
 
 export default function NotFound() {
   const btnCls =
-    "shadow-lg rounded-xl bg-amber-800 px-4 py-3 zinc-200 font-bold text-lg transition-colors hover:bg-amber-700";
+    "shadow-lg rounded-2xl bg-amber-800 px-4 py-3 zinc-200 font-bold text-lg transition-colors hover:bg-amber-700";
 
   return (
     <main
@@ -41,7 +41,7 @@ export default function NotFound() {
 
         <Link
           href="/"
-          className="inline-block rounded-xl bg-stone-700 px-6 py-4 text-xl font-bold text-zinc-200 shadow-lg transition-colors hover:bg-stone-600"
+          className="inline-block rounded-2xl bg-stone-700 px-6 py-4 text-xl font-bold text-zinc-200 shadow-lg transition-colors hover:bg-stone-600"
         >
           Home
         </Link>

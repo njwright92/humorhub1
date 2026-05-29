@@ -94,7 +94,7 @@ const RadioGroup = memo(function RadioGroup({
   const id = `${name}-label`;
 
   return (
-    <div className="grid gap-2 rounded-2xl border border-stone-300 bg-stone-100/50 p-2 text-center">
+    <div className="grid gap-2 rounded-2xl border border-stone-400 bg-stone-100/50 p-2 text-center">
       <span className="text-xs font-bold uppercase opacity-70" id={id}>
         {label}
       </span>
@@ -298,7 +298,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         {formError && (
           <div
             role="alert"
-            className="rounded-xl border border-red-200 bg-red-50 p-2 text-center text-xs font-bold text-red-700"
+            className="rounded-2xl border border-red-200 bg-red-50 p-2 text-center text-xs font-bold text-red-700"
           >
             {formError}
           </div>

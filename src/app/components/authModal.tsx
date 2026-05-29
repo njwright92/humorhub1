@@ -242,7 +242,7 @@ export default function AuthModal({
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-stone-300 bg-white p-2.5 text-sm font-bold text-stone-900 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-stone-400 bg-white p-2.5 text-sm font-bold text-stone-900 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

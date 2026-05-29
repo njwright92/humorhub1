@@ -50,7 +50,7 @@
 
 @layer components {
   .section-card {
-    @apply mx-auto grid w-full gap-8 rounded-xl bg-stone-900/80 p-2;
+    @apply mx-auto grid w-full gap-8 rounded-2xl bg-stone-900/80 p-2;
     box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 0.25);
   }
 
@@ -63,7 +63,7 @@
   }
 
   .section-divider {
-    @apply border-t border-zinc-200/90;
+    @apply border-t border-zinc-200;
   }
 
   .cta-row {
@@ -82,7 +82,7 @@
   }
 
   .card-shell {
-    @apply rounded-xl;
+    @apply rounded-2xl;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
@@ -181,7 +181,7 @@
   }
 
   .round-image {
-    @apply h-32 w-32 rounded-xl border-2 border-zinc-700 object-contain md:h-42 md:w-42;
+    @apply h-32 w-32 rounded-2xl border-2 border-zinc-700 object-contain md:h-42 md:w-42;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .round-image:hover {
