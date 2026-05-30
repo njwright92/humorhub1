@@ -36,7 +36,7 @@ const INITIAL_FORM_STATE: FormState = {
 };
 
 const inputClass = "input-green mb-1";
-const labelClass = "block text-xs font-bold uppercase opacity-70 mb-1";
+const labelClass = "block text-xs font-bold uppercase mb-1";
 
 type RadioName = "isRecurring" | "isFestival" | "isOther";
 
@@ -94,13 +94,13 @@ const RadioGroup = memo(function RadioGroup({
   const id = `${name}-label`;
 
   return (
-    <div className="grid gap-2 rounded-2xl border border-stone-400 bg-stone-100/50 p-2 text-center">
-      <span className="text-xs font-bold uppercase opacity-70" id={id}>
+    <div className="grid gap-2 rounded-2xl border border-stone-400 bg-zinc-200 p-2 text-center">
+      <span className="labelClass" id={id}>
         {label}
       </span>
 
       <div
-        className="grid grid-flow-col justify-center gap-4"
+        className="grid grid-flow-col justify-center gap-2"
         role="radiogroup"
         aria-labelledby={id}
       >
@@ -110,7 +110,7 @@ const RadioGroup = memo(function RadioGroup({
             name={name}
             checked={value}
             onChange={() => onChange(name, true)}
-            className="size-4 accent-green-600"
+            className="size-4 accent-green-500"
           />
           Yes
         </label>
@@ -275,7 +275,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         onSubmit={handleSubmit}
         onClick={(e) => e.stopPropagation()}
         noValidate
-        className="panel-light relative grid max-h-[95dvh] w-full max-w-md gap-4 overflow-y-auto p-6"
+        className="panel-light relative grid max-h-[95dvh] w-full max-w-md gap-4 overflow-y-auto p-4"
       >
         <button
           onClick={onClose}
@@ -290,7 +290,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
           <h1 id="event-form-title" className="text-3xl">
             Event Form
           </h1>
-          <p className="m-1 text-xs font-bold tracking-widest text-red-600">
+          <p className="m-1 text-xs font-bold tracking-widest text-red-500">
             * Required fields
           </p>
         </header>
@@ -298,7 +298,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
         {formError && (
           <div
             role="alert"
-            className="rounded-2xl border border-red-200 bg-red-50 p-2 text-center text-xs font-bold text-red-700"
+            className="rounded-2xl border border-red-200 bg-red-100 p-2 text-center text-xs font-bold text-red-700"
           >
             {formError}
           </div>
