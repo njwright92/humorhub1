@@ -118,8 +118,6 @@ const STRUCTURED_DATA = {
   ],
 } as const;
 
-const STRUCTURED_DATA_STRING = JSON.stringify(STRUCTURED_DATA);
-
 async function MicFinderContent({
   searchParams,
 }: {
@@ -161,7 +159,7 @@ export default async function MicFinderPage({
       <script
         nonce={nonce}
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: STRUCTURED_DATA_STRING }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
       />
       <main className="grid min-h-dvh justify-items-center gap-8 px-1 py-10 text-center md:ml-20 md:gap-10 md:px-4 md:py-16">
         <aside

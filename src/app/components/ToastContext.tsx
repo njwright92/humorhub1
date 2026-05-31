@@ -36,8 +36,6 @@ const TOAST_CONFIG: Record<ToastType, { bg: string; icon: string }> = {
   info: { bg: "bg-blue-700", icon: "ⓘ" },
 };
 
-const DEFAULT_DURATION = 3000;
-
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toast, setToast] = useState<ToastState | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -59,7 +57,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (msg: string, type: ToastType) => {
       clearExistingTimeout();
       setToast({ msg, type });
-      timeoutRef.current = setTimeout(() => setToast(null), DEFAULT_DURATION);
+      timeoutRef.current = setTimeout(() => setToast(null), 3000);
     },
     [clearExistingTimeout],
   );

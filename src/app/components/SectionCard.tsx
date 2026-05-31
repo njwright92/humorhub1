@@ -18,16 +18,12 @@ export default function SectionCard({
   titleClassName,
   variant = "default",
 }: SectionCardProps) {
-  const sectionClassName = cn(
-    "section-card",
-    variant === "spaced" && "mb-4",
-    className,
-  );
-  const headingClassName = cn("section-title", titleClassName);
-
   return (
-    <section aria-labelledby={id} className={sectionClassName}>
-      <h2 id={id} className={headingClassName}>
+    <section
+      aria-labelledby={id}
+      className={cn("section-card", variant === "spaced" && "mb-4", className)}
+    >
+      <h2 id={id} className={cn("section-title", titleClassName)}>
         {title}
       </h2>
       {children}

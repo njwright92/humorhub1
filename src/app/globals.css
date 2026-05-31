@@ -175,11 +175,6 @@
     min-height: 2.75rem;
     line-height: 1.25;
   }
-
-  .pin-drop-shadow {
-    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4));
-  }
-
   .round-image {
     @apply h-32 w-32 rounded-2xl border-2 border-zinc-700 object-contain md:h-42 md:w-42;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

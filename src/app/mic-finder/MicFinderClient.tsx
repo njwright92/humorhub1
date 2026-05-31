@@ -67,8 +67,8 @@ interface CitySelectorProps {
 const inputClass =
   "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 px-3 py-2 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700";
 const sectionHeadingClass =
-  "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-center text-2xl leading-tight md:text-3xl";
-const emptyStateClass = "py-4 text-center text-stone-400";
+  "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-2xl leading-tight md:text-3xl";
+const emptyStateClass = "py-4 text-stone-400";
 const MAX_CITY_RESULTS = 40;
 
 const TABS = [
@@ -578,9 +578,7 @@ export default function MicFinderClient({
             {selectedCity && ` in ${selectedCity}`}
           </h2>
           {!selectedCity ? (
-            <p className="py-4 text-center">
-              Select a city to see weekly events.
-            </p>
+            <p className="py-4">Select a city to see weekly events.</p>
           ) : eventData.recurringEvents.length > 0 ? (
             eventData.recurringEvents.map((event) => (
               <EventCard
@@ -605,9 +603,7 @@ export default function MicFinderClient({
             {selectedCity && ` in ${selectedCity}`}
           </h2>
           {!selectedCity ? (
-            <p className="py-4 text-center">
-              Select a city to see one-time events.
-            </p>
+            <p className="py-4">Select a city to see one-time events.</p>
           ) : eventData.oneTimeEvents.length > 0 ? (
             eventData.oneTimeEvents.map((event) => (
               <EventCard

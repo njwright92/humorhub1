@@ -40,8 +40,6 @@ const headingClass = "text-amber-700 uppercase";
 const linkClass = "transition-colors hover:text-amber-700";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer
       className="border-t border-stone-500 md:ml-20"
@@ -113,7 +111,7 @@ export default function Footer() {
 
         <div className="grid items-center gap-2 border-t border-stone-400 pt-2 sm:grid-cols-[1fr_auto_1fr]">
           <small className="font-mono text-xs text-stone-400 sm:col-start-2 md:text-sm">
-            © {currentYear} Humor Hub™. All rights reserved.
+            © {new Date().getFullYear()} Humor Hub™. All rights reserved.
           </small>
           <ScrollToTop className="justify-self-center sm:col-start-3 sm:justify-self-end" />
         </div>

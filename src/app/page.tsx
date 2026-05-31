@@ -23,8 +23,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="page-shell gap-12 py-20 text-center">
-      <div className="fixed top-18 left-2 z-10 md:top-2 md:left-22" />
-
       <h1 className="text-5xl md:text-7xl">Humor Hub!</h1>
 
       <SectionCard id="mics" title="Mic Finder!" variant="spaced">

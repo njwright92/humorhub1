@@ -26,18 +26,16 @@ export default function RoundImage({
   quality,
   priority = false,
 }: RoundImageProps) {
-  const mergedClassName = cn(
-    "round-image",
-    interactive && "round-image-interactive",
-    variant === "news" && "round-image-news",
-    className,
-  );
-
   return (
     <Image
       src={src}
       alt={alt}
-      className={mergedClassName}
+      className={cn(
+        "round-image",
+        interactive && "round-image-interactive",
+        variant === "news" && "round-image-news",
+        className,
+      )}
       width={width}
       height={height}
       sizes={sizes}

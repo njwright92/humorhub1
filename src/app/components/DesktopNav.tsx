@@ -42,8 +42,7 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-const SIGN_IN_ICON =
-  "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4|M10 17l5-5-5-5|M15 12H3";
+// inlined SIGN_IN_ICON where used to avoid a single-use constant
 
 const NavIcon = memo(function NavIcon({ icon }: { icon: string }) {
   const parts = icon.split("|");
@@ -144,7 +143,11 @@ export default function DesktopNav() {
             aria-label="Sign In / Sign Up"
             className="nav-item group relative"
           >
-            <NavIcon icon={SIGN_IN_ICON} />
+            <NavIcon
+              icon={
+                "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4|M10 17l5-5-5-5|M15 12H3"
+              }
+            />
             <span className="nav-tooltip">Sign In / Sign Up</span>
           </button>
         </div>

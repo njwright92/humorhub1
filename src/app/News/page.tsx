@@ -32,7 +32,7 @@ function NewsHeader() {
     <header className="space-y-2">
       <h1 className="page-title">Hub News</h1>
 
-      <p className="text-center text-stone-300 md:text-lg">
+      <p className="text-stone-300 md:text-lg">
         Curated stories from around the world.
       </p>
     </header>
