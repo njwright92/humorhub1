@@ -4,7 +4,6 @@ import {
   useState,
   useCallback,
   useEffect,
-  useRef,
   memo,
   type ChangeEvent,
   type SubmitEvent,
@@ -155,7 +154,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
   const [dateInputValue, setDateInputValue] = useState(() =>
     formatDateInput(new Date()),
   );
-  const nativeDateInputRef = useRef<HTMLInputElement>(null);
 
   const nativeDateInputValue = form.date
     ? formatNativeDateInput(form.date)
@@ -416,7 +414,6 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
               </span>
 
               <input
-                ref={nativeDateInputRef}
                 type="date"
                 value={nativeDateInputValue}
                 onChange={(event) => {

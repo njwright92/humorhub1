@@ -67,7 +67,7 @@ interface CitySelectorProps {
 const inputClass =
   "flex h-full min-h-11 w-full items-center justify-center rounded-2xl border-2 border-stone-500 bg-zinc-200 px-3 py-2 text-center leading-tight font-semibold text-stone-900 outline-hidden focus:border-amber-700 focus:ring-2 focus:ring-amber-700";
 const sectionHeadingClass =
-  "mb-4 min-h-14 w-full rounded-2xl border-b-4 pb-2 text-2xl leading-tight md:text-3xl";
+  "mb-4 min-h-14 rounded-2xl border-b-4 pb-2 text-2xl leading-tight md:text-3xl";
 const emptyStateClass = "py-4 text-stone-400";
 const MAX_CITY_RESULTS = 40;
 
@@ -77,22 +77,21 @@ const TABS = [
     label: "Comedy Mics",
     activeClass: "bg-amber-700",
     activeTextClass: "text-stone-900",
-    inactiveClass: "bg-amber-100 text-amber-800 hover:bg-amber-200 font-bold",
+    inactiveClass: "bg-amber-100 text-amber-800 hover:bg-amber-200",
   },
   {
     id: "Festivals",
     label: "Festivals",
     activeClass: "bg-purple-700",
     activeTextClass: "text-white",
-    inactiveClass:
-      "bg-purple-100 text-purple-800 hover:bg-purple-200 font-bold",
+    inactiveClass: "bg-purple-100 text-purple-800 hover:bg-purple-200",
   },
   {
     id: "Other",
     label: "Music/All Arts",
     activeClass: "bg-green-700",
     activeTextClass: "text-white",
-    inactiveClass: "bg-green-100 text-green-800 hover:bg-green-200 font-bold",
+    inactiveClass: "bg-green-100 text-green-800 hover:bg-green-200",
   },
 ] as const;
 
@@ -229,12 +228,10 @@ const CitySelector = memo(function CitySelector({
         placeholder="Select or Search City..."
         value={searchTerm}
         onFocus={() => setIsCityDropdownOpen(true)}
-        onBlur={() =>
-          setTimeout(() => {
-            setIsCityDropdownOpen(false);
-            setSearchTerm(selectedCity);
-          }, 200)
-        }
+        onBlur={() => {
+          setIsCityDropdownOpen(false);
+          setSearchTerm(selectedCity);
+        }}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={inputClass}
         autoComplete="off"
@@ -265,7 +262,6 @@ export default function MicFinderClient({
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
-  const nativeDateInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedCity, setSelectedCity] = useState(initialCity);
   const [citySearchTerm, setCitySearchTerm] = useState(initialCity);
@@ -504,7 +500,7 @@ export default function MicFinderClient({
               if (selectedDate)
                 setDateInputValue(formatDateInput(selectedDate));
             }}
-            className={`${inputClass} pr-12 text-center md:text-left`}
+            className={`${inputClass} pr-12 md:text-left`}
             autoComplete="off"
           />
 
@@ -535,7 +531,6 @@ export default function MicFinderClient({
 
             {/* Transparent native date input overlaid on the icon */}
             <input
-              ref={nativeDateInputRef}
               type="date"
               value={nativeDateInputValue}
               onChange={(event) => {
