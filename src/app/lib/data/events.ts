@@ -2,7 +2,6 @@ import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import type {
   CityCoordinates,
-  MicFinderData,
   Event,
   EventsByTab,
   EventCategory,
@@ -16,10 +15,11 @@ import {
   ALL_CITIES_LABEL,
   EVENT_CATEGORIES,
 } from "../constants";
-import { sanitizeHtml } from "../sanitizeHtml";
 
-export type MicFinderDataWithCities = MicFinderData & {
+export type MicFinderDataWithCities = {
   cities: string[];
+  cityCoordinates: CityCoordinates;
+  eventsByTab: EventsByTab;
 };
 
 function normalizeTab(tab?: string): EventCategory {
@@ -87,78 +87,75 @@ export function getMicFinderFilters(
   return buildFilterResult(eventsByTab, params);
 }
 
-const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
+const fetchEventsFromFirestore = async (): Promise<{
+  eventsByTab: EventsByTab;
+}> => {
   try {
     const db = getServerDb();
 
-    const [eventsSnap, citiesSnap] = await Promise.all([
-      db
-        .collection(COLLECTIONS.userEvents)
-        .select(
-          "name",
-          "location",
-          "date",
-          "lat",
-          "lng",
-          "details",
-          "isRecurring",
-          "festival",
-          "isMusic",
-          "googleTimestamp",
-        )
-        .get(),
-      db.collection(COLLECTIONS.cities).select("city", "coordinates").get(),
-    ]);
+    const eventsSnap = await db
+      .collection(COLLECTIONS.userEvents)
+      .select(
+        "name",
+        "location",
+        "date",
+        "lat",
+        "lng",
+        "details",
+        "isRecurring",
+        "festival",
+        "isMusic",
+        "googleTimestamp",
+      )
+      .get();
 
-    const eventsDocs = eventsSnap.docs;
     const events: Event[] = [];
 
-    for (let i = 0; i < eventsDocs.length; i++) {
-      const doc = eventsDocs[i];
+    for (const doc of eventsSnap.docs) {
       const data = doc.data();
-
       if (!data.name || !data.location) continue;
-
-      const event = buildEventFromData(doc.id, data, {
-        includeDerivedDates: true,
-      });
-      event.sanitizedDetails = sanitizeHtml(event.details);
-      events.push(event);
+      events.push(
+        buildEventFromData(doc.id, data, { includeDerivedDates: true }),
+      );
     }
 
     events.sort((a, b) => {
-      if (a.isSpokaneClub !== b.isSpokaneClub) {
-        return a.isSpokaneClub ? -1 : 1;
-      }
+      if (a.isSpokaneClub !== b.isSpokaneClub) return a.isSpokaneClub ? -1 : 1;
       return (b.numericTimestamp || 0) - (a.numericTimestamp || 0);
     });
 
-    const eventsByTab: EventsByTab = {
-      Mics: [],
-      Festivals: [],
-      Other: [],
-    };
+    const eventsByTab: EventsByTab = { Mics: [], Festivals: [], Other: [] };
 
-    for (let i = 0; i < events.length; i++) {
-      const event = events[i];
-      if (event.isFestival) {
-        eventsByTab.Festivals.push(event);
-      } else if (event.isMusic) {
-        eventsByTab.Other.push(event);
-      } else {
-        eventsByTab.Mics.push(event);
-      }
+    for (const event of events) {
+      if (event.isFestival) eventsByTab.Festivals.push(event);
+      else if (event.isMusic) eventsByTab.Other.push(event);
+      else eventsByTab.Mics.push(event);
     }
 
-    const citiesDocs = citiesSnap.docs;
+    return { eventsByTab };
+  } catch {
+    return { eventsByTab: { Mics: [], Festivals: [], Other: [] } };
+  }
+};
+
+const fetchCitiesFromFirestore = async (): Promise<{
+  cityCoordinates: CityCoordinates;
+  cities: string[];
+}> => {
+  try {
+    const db = getServerDb();
+
+    const citiesSnap = await db
+      .collection(COLLECTIONS.cities)
+      .select("city", "coordinates")
+      .get();
+
     const cityCoordinates: CityCoordinates = {};
     const cities: string[] = [];
 
-    for (let i = 0; i < citiesDocs.length; i++) {
-      const data = citiesDocs[i].data();
-      const city = data.city;
-      const coordinates = data.coordinates;
-
+    for (const doc of citiesSnap.docs) {
+      const data = doc.data();
+      const { city, coordinates } = data;
       if (
         typeof city === "string" &&
         city.trim().length > 0 &&
@@ -178,21 +175,28 @@ const fetchFromFirestore = async (): Promise<MicFinderDataWithCities> => {
       return a.localeCompare(b);
     });
 
-    return { events, cityCoordinates, cities, eventsByTab };
+    return { cityCoordinates, cities };
   } catch {
-    return {
-      events: [],
-      cityCoordinates: {},
-      cities: [],
-      eventsByTab: { Mics: [], Festivals: [], Other: [] },
-    };
+    return { cityCoordinates: {}, cities: [] };
   }
 };
 
-const getCachedMicFinderData = unstable_cache(
-  fetchFromFirestore,
-  ["mic-finder-data"],
+const getCachedEvents = unstable_cache(
+  fetchEventsFromFirestore,
+  ["mic-finder-events"],
   { revalidate: 300 },
 );
 
-export const fetchMicFinderData = cache(getCachedMicFinderData);
+const getCachedCities = unstable_cache(
+  fetchCitiesFromFirestore,
+  ["mic-finder-cities"],
+  { revalidate: 3600 },
+);
+
+export const fetchMicFinderData = cache(async () => {
+  const [eventsData, citiesData] = await Promise.all([
+    getCachedEvents(),
+    getCachedCities(),
+  ]);
+  return { ...eventsData, ...citiesData };
+});

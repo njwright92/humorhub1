@@ -8,8 +8,6 @@ function EventCard({
   event: Event;
   onSave: (event: Event) => void;
 }) {
-  const sanitizedDetails = event.sanitizedDetails ?? event.details;
-
   return (
     <article className="card-base mb-4 grid justify-items-center gap-3 border-stone-700 p-2 text-center contain-content">
       <h3 className="text-lg leading-tight text-amber-700 md:text-xl">
@@ -32,7 +30,9 @@ function EventCard({
         </strong>
         <span
           className="block leading-relaxed wrap-break-word [&_a]:text-blue-400"
-          dangerouslySetInnerHTML={{ __html: sanitizedDetails }}
+          dangerouslySetInnerHTML={{
+            __html: event.sanitizedDetails ?? event.details,
+          }}
         />
       </p>
       <button
