@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { fetchMicFinderData, getMicFinderFilters } from "@/app/lib/data/events";
 import MicFinderClient from "./MicFinderClient";
 import EventForm from "@/app/components/EventForm";
-import { normalizeCityName, formatDateParam } from "@/app/lib/utils";
-import { EVENT_CATEGORIES } from "@/app/lib/constants";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "MicFinder: 1,000's of Comedy, Music & All-Arts Open Mics | Humor Hub",
@@ -25,30 +21,13 @@ export const metadata: Metadata = {
   },
 };
 
-function MicFinderSkeleton() {
-  return (
-    <div
-      role="status"
-      aria-label="Loading MicFinder content"
-      className="animate-pulse space-y-4 p-2 *:rounded-2xl *:bg-stone-700"
-    >
-      <div className="h-11" />
-      <div className="h-12" />
-      <div className="h-48" />
-      <div className="h-48" />
-      <div className="h-96" />
-      <div className="h-96" />
-    </div>
-  );
-}
-
 const STRUCTURED_DATA = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: "Comedy Open Mics Directory",
   description:
     "Directory of recurring comedy open mics and festivals across the USA.",
-  numberOfItems: 3,
+  numberOfItems: 2,
   itemListElement: [
     {
       "@type": "ListItem",
@@ -118,46 +97,27 @@ const STRUCTURED_DATA = {
   ],
 } as const;
 
-async function MicFinderContent({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const resolvedParams = await searchParams;
-  const { cities, cityCoordinates, eventsByTab } = await fetchMicFinderData();
-  const today = new Date();
-  const initialDate = formatDateParam(today);
-  const rawCity =
-    typeof resolvedParams?.city === "string" ? resolvedParams.city : "";
-  const city = rawCity ? normalizeCityName(rawCity) : "";
-  const initialFilters = getMicFinderFilters(eventsByTab, {
-    tab: EVENT_CATEGORIES[0],
-    city: city || undefined,
-    date: initialDate,
-  });
-
+function MicFinderSkeleton() {
   return (
-    <MicFinderClient
-      initialCityCoordinates={cityCoordinates}
-      initialCities={cities}
-      initialFilters={initialFilters}
-      initialCity={city}
-      initialDate={initialDate}
-    />
+    <div
+      role="status"
+      aria-label="Loading MicFinder content"
+      className="animate-pulse space-y-4 p-2 *:rounded-2xl *:bg-stone-700"
+    >
+      <div className="h-11" />
+      <div className="h-12" />
+      <div className="h-48" />
+      <div className="h-48" />
+      <div className="h-96" />
+      <div className="h-96" />
+    </div>
   );
 }
 
-export default async function MicFinderPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  const nonce = (await headers()).get("x-nonce") ?? "";
-
+export default function MicFinderPage() {
   return (
     <>
       <script
-        nonce={nonce}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
       />
@@ -197,7 +157,7 @@ export default async function MicFinderPage({
 
         <div className="page-content min-h-dvh">
           <Suspense fallback={<MicFinderSkeleton />}>
-            <MicFinderContent searchParams={searchParams} />
+            <MicFinderClient />
           </Suspense>
         </div>
       </main>

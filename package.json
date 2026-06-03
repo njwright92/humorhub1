@@ -19,7 +19,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "preview": "npm run format && next build && next start"
+    "preview": "npm run format && npm run build && next start"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.14.2",

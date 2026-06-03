@@ -49,11 +49,7 @@ const VirtualizedEventList = dynamic(() => import("./VirtualizedEventList"), {
 });
 
 interface MicFinderClientProps {
-  initialCityCoordinates: CityCoordinates;
-  initialCities: string[];
-  initialFilters: MicFinderFilterResult;
-  initialDate: string | null;
-  initialCity: string;
+  initialCity?: string;
 }
 
 interface CitySelectorProps {
@@ -70,6 +66,13 @@ const sectionHeadingClass =
   "mb-4 min-h-14 rounded-2xl border-b-4 pb-2 text-2xl leading-tight md:text-3xl";
 const emptyStateClass = "py-4 text-stone-400";
 const MAX_CITY_RESULTS = 40;
+const CITIES_CACHE_KEY = "humorhub-micfinder-cities";
+const EMPTY_FILTERS: MicFinderFilterResult = {
+  baseEvents: [],
+  recurringEvents: [],
+  oneTimeEvents: [],
+  allCityEvents: [],
+};
 
 const TABS = [
   {
@@ -249,11 +252,7 @@ const CitySelector = memo(function CitySelector({
 });
 
 export default function MicFinderClient({
-  initialCityCoordinates,
-  initialCities,
-  initialFilters,
-  initialDate,
-  initialCity,
+  initialCity = "",
 }: MicFinderClientProps) {
   const { showToast } = useToast();
   const { session, refreshSession } = useSession();
@@ -263,24 +262,22 @@ export default function MicFinderClient({
 
   const [isPending, startTransition] = useTransition();
 
-  const [selectedCity, setSelectedCity] = useState(initialCity);
-  const [citySearchTerm, setCitySearchTerm] = useState(initialCity);
+  const initialUrlCity = useMemo(() => {
+    const city = searchParams.get("city") || searchParams.get("searchTerm");
+    return city ? normalizeCityName(city) : initialCity;
+  }, [initialCity, searchParams]);
+
+  const [cities, setCities] = useState<string[]>([]);
+  const [cityCoordinates, setCityCoordinates] = useState<CityCoordinates>({});
+  const [selectedCity, setSelectedCity] = useState(initialUrlCity);
+  const [citySearchTerm, setCitySearchTerm] = useState(initialUrlCity);
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
-    if (!initialDate) return new Date();
-    const [year, month, day] = initialDate.split("-").map(Number);
-    return new Date(year, month - 1, day);
+    return new Date();
   });
 
   const [dateInputValue, setDateInputValue] = useState(() =>
-    formatDateInput(
-      initialDate
-        ? (() => {
-            const [year, month, day] = initialDate.split("-").map(Number);
-            return new Date(year, month - 1, day);
-          })()
-        : new Date(),
-    ),
+    formatDateInput(new Date()),
   );
 
   const [isMapVisible, setIsMapVisible] = useState(false);
@@ -288,8 +285,9 @@ export default function MicFinderClient({
     EVENT_CATEGORIES[0],
   );
   const [eventData, setEventData] =
-    useState<MicFinderFilterResult>(initialFilters);
+    useState<MicFinderFilterResult>(EMPTY_FILTERS);
   const [mapPins, setMapPins] = useState<MapEvent[]>([]);
+  const [isFetchingFilters, setIsFetchingFilters] = useState(false);
 
   useEffect(() => {
     const city = searchParams.get("city");
@@ -297,14 +295,32 @@ export default function MicFinderClient({
     if (city || term) router.replace(pathname, { scroll: false });
   }, [pathname, router, searchParams]);
 
+  const loadCityCoordinates = useCallback(async () => {
+    if (Object.keys(cityCoordinates).length > 0) return cityCoordinates;
+
+    try {
+      const response = await fetch("/api/mic-finder/city-coordinates");
+      if (!response.ok) return {};
+      const data = (await response.json()) as {
+        cityCoordinates?: CityCoordinates;
+      };
+      const nextCoordinates = data.cityCoordinates || {};
+      setCityCoordinates(nextCoordinates);
+      return nextCoordinates;
+    } catch {
+      return {};
+    }
+  }, [cityCoordinates]);
+
   const fetchUserLocation = useCallback(() => {
     if (!navigator.geolocation)
       return showToast("Geolocation not supported", "error");
     navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
+      async ({ coords: { latitude, longitude } }) => {
+        const coordinatesByCity = await loadCityCoordinates();
         let closestCity: string | null = null;
         let minDistance = Infinity;
-        for (const [city, coords] of Object.entries(initialCityCoordinates)) {
+        for (const [city, coords] of Object.entries(coordinatesByCity)) {
           const dist = getDistanceFromLatLonInKm(
             latitude,
             longitude,
@@ -326,7 +342,7 @@ export default function MicFinderClient({
       },
       () => showToast("Location access denied", "error"),
     );
-  }, [initialCityCoordinates, showToast, startTransition]);
+  }, [loadCityCoordinates, showToast, startTransition]);
 
   const handleCitySelect = useCallback(
     (city: string) => {
@@ -411,15 +427,63 @@ export default function MicFinderClient({
     [dateInputValue],
   );
 
-  const initialLoadRef = useRef(true);
+  // FIX 1: If a city came from the URL, fetch immediately on mount.
+  // If no city was set, skip the first render to avoid fetching with no city.
+  const initialLoadRef = useRef(!initialUrlCity);
 
+  useEffect(() => {
+    const cached =
+      typeof window !== "undefined" && sessionStorage.getItem(CITIES_CACHE_KEY);
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached) as string[];
+        setCities(parsed);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    let mounted = true;
+    const controller = new AbortController();
+    const fetchCities = async () => {
+      try {
+        const res = await fetch("/api/cities", { signal: controller.signal });
+        if (!res.ok) return;
+        const payload = (await res.json()) as { cities?: string[] };
+        const next = Array.isArray(payload.cities) ? payload.cities : [];
+        if (!mounted) return;
+        setCities(next);
+        try {
+          sessionStorage.setItem(CITIES_CACHE_KEY, JSON.stringify(next));
+        } catch {
+          /* ignore */
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    void fetchCities();
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  // FIX 2: setIsFetchingFilters wraps the fetch so loading states work correctly.
+  // FIX 3 (initialLoadRef): skip only when no city was set, fire immediately if URL had a city.
   useEffect(() => {
     if (initialLoadRef.current) {
       initialLoadRef.current = false;
       return;
     }
+
+    // Do not fetch if no city is selected
+    if (!selectedCity) return;
+
     const controller = new AbortController();
+
     const fetchFilters = async () => {
+      setIsFetchingFilters(true);
       try {
         const response = await fetch(
           buildFilterUrl(selectedTab, selectedCity, selectedDate),
@@ -430,8 +494,11 @@ export default function MicFinderClient({
         startTransition(() => setEventData(data));
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
+      } finally {
+        setIsFetchingFilters(false);
       }
     };
+
     void fetchFilters();
     return () => controller.abort();
   }, [selectedCity, selectedDate, selectedTab]);
@@ -461,9 +528,7 @@ export default function MicFinderClient({
   }, [selectedTab, selectedDate, isMapVisible]);
 
   const mapConfig = useMemo(() => {
-    const cityCoords = selectedCity
-      ? initialCityCoordinates[selectedCity]
-      : null;
+    const cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
     return cityCoords
       ? { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM }
       : {
@@ -471,13 +536,13 @@ export default function MicFinderClient({
           lng: DEFAULT_US_CENTER.lng,
           zoom: DEFAULT_ZOOM,
         };
-  }, [selectedCity, initialCityCoordinates]);
+  }, [selectedCity, cityCoordinates]);
 
   return (
     <>
       <div className="relative z-20 my-2 grid w-full items-center justify-items-center gap-3 sm:flex sm:justify-center sm:gap-6">
         <CitySelector
-          initialCities={initialCities}
+          initialCities={cities}
           selectedCity={selectedCity}
           initialSearchTerm={citySearchTerm}
           onCitySelect={handleCitySelect}
@@ -574,6 +639,8 @@ export default function MicFinderClient({
           </h2>
           {!selectedCity ? (
             <p className="py-4">Select a city to see weekly events.</p>
+          ) : isFetchingFilters ? (
+            <p className={emptyStateClass}>Loading...</p>
           ) : eventData.recurringEvents.length > 0 ? (
             eventData.recurringEvents.map((event) => (
               <EventCard
@@ -599,6 +666,8 @@ export default function MicFinderClient({
           </h2>
           {!selectedCity ? (
             <p className="py-4">Select a city to see one-time events.</p>
+          ) : isFetchingFilters ? (
+            <p className={emptyStateClass}>Loading...</p>
           ) : eventData.oneTimeEvents.length > 0 ? (
             eventData.oneTimeEvents.map((event) => (
               <EventCard
@@ -649,7 +718,11 @@ export default function MicFinderClient({
             All {TAB_LABELS[selectedTab]}
             {selectedCity && ` in ${selectedCity}`}
           </h2>
-          {eventData.allCityEvents.length > 0 ? (
+          {!selectedCity ? (
+            <p className="py-4">Select a city to see all events.</p>
+          ) : isFetchingFilters ? (
+            <p className={emptyStateClass}>Loading...</p>
+          ) : eventData.allCityEvents.length > 0 ? (
             <VirtualizedEventList
               events={eventData.allCityEvents}
               onSave={handleEventSave}

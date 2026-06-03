@@ -8,7 +8,6 @@ import AppProviders from "./components/AppProviders";
 import AuthModalHost from "./components/authModalHost";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { headers } from "next/headers";
 
 const comicNeue = Comic_Neue({
   weight: ["700"],
@@ -57,31 +56,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const headerList = await headers();
-  const nonce = headerList.get("x-nonce") || "";
+const trustedTypesScript = `
+if (typeof window !== "undefined" && window.trustedTypes && !window.trustedTypes.defaultPolicy) {
+  try {
+    window.trustedTypes.createPolicy("default", {
+      createHTML: (s) => s,
+      createScript: (s) => s,
+      createScriptURL: (s) => s,
+    });
+  } catch (e) {
+    // policy already exists
+  }
+}
+`.trim();
 
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" nonce={nonce} className={comicNeue.variable}>
+    <html lang="en" className={comicNeue.variable}>
       <head>
-        <script
-          nonce={nonce}
-          dangerouslySetInnerHTML={{
-            __html: `
-      if (window.trustedTypes && !window.trustedTypes.defaultPolicy) {
-        window.trustedTypes.createPolicy('default', {
-          createHTML: (s) => s,
-          createScriptURL: (s) => s,
-          createScript: (s) => s,
-        });
-      }
-    `,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: trustedTypesScript }} />
       </head>
       <body>
         <AppProviders>
