@@ -78,8 +78,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <AppProviders>
-          <Header />
           <AuthModalHost />
+          <Header />
           {children}
           <Footer />
         </AppProviders>
