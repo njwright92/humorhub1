@@ -29,12 +29,11 @@ const nextConfig = {
 
   experimental: {
     inlineCss: true,
-    // SRI (subresource integrity) previously added integrity attributes
-    // Commented out because mismatched digests were blocking scripts in production.
-    // To re-enable, ensure assets are served unmodified and uncomment below.
-    // sri: {
-    //   algorithm: "sha256",
-    // },
+    // SRI (subresource integrity) — enabled for build-time integrity attributes.
+    // Uses sha384 for stronger protection in production builds.
+    sri: {
+      algorithm: "sha384",
+    },
     optimizePackageImports: [
       "firebase",
       "firebase-admin",
