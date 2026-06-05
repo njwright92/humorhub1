@@ -29,11 +29,11 @@ const nextConfig = {
 
   experimental: {
     inlineCss: true,
-    // SRI (subresource integrity) — enabled for build-time integrity attributes.
-    // Uses sha384 for stronger protection in production builds.
-    sri: {
-      algorithm: "sha384",
-    },
+    // SRI adds integrity attributes to all script tags at build time
+    // Browser verifies scripts have not been tampered with in transit
+    // sri: {
+    //   algorithm: "sha256",
+    // },
     optimizePackageImports: [
       "firebase",
       "firebase-admin",
