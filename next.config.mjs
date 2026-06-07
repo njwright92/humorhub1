@@ -27,9 +27,6 @@ const nextConfig = {
   },
   experimental: {
     inlineCss: true,
-    sri: {
-      algorithm: "sha256",
-    },
     optimizePackageImports: [
       "firebase",
       "firebase-admin",
