@@ -8,13 +8,11 @@
     "fully supports es6-module"
   ],
   "overrides": {
-    "postcss": "^8.5.15",
-    "uuid": "^14.0.0",
-    "@tootallnate/once": "^3.0.1"
+    "uuid": "^11.1.1",
+    "postcss": "^8.5.15"
   },
   "scripts": {
     "dev": "next dev",
-    "verify-sri": "ts-node scripts/verify-sri.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -37,8 +35,7 @@
     "@eslint/js": "^10.0.1",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/postcss": "^4.3.0",
-    "@types/node": "^25.9.1",
-    "@types/react": "^19.2.16",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.4.1",
     "globals": "^17.6.0",
@@ -55,9 +52,9 @@
     "*.{json,css,md,mdx,html}": "prettier --write"
   },
   "allowScripts": {
-    "@firebase/util@1.15.1": true,
     "@parcel/watcher@2.5.6": true,
-    "sharp@0.34.5": true,
-    "protobufjs@7.6.2": true
+    "@firebase/util@1.15.1": true,
+    "protobufjs@7.6.2": true,
+    "sharp@0.34.5": true
   }
 }

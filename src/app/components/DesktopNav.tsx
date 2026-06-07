@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, memo } from "react";
+import { useCallback, memo, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "./SessionContext";
@@ -42,8 +42,6 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
-// inlined SIGN_IN_ICON where used to avoid a single-use constant
-
 const NavIcon = memo(function NavIcon({ icon }: { icon: string }) {
   const parts = icon.split("|");
   return (
@@ -71,6 +69,11 @@ const NavIcon = memo(function NavIcon({ icon }: { icon: string }) {
 export default function DesktopNav() {
   const { session } = useSession();
   const { requireAuth, preloadAuthModal } = useProtectedNavigation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const ensureAuthListener = useCallback(() => {
     preloadAuthModal();
@@ -133,7 +136,7 @@ export default function DesktopNav() {
           );
         })}
       </div>
-      {!isUserSignedIn && (
+      {mounted && !isUserSignedIn && (
         <div className="mt-16 text-zinc-200">
           <button
             type="button"
