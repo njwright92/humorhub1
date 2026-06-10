@@ -22,9 +22,11 @@ const cspHeader = [
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
+
   compiler: {
     removeConsole: true,
   },
+
   experimental: {
     inlineCss: true,
     optimizePackageImports: [
@@ -35,6 +37,7 @@ const nextConfig = {
     ],
     cssChunking: "strict",
   },
+
   images: {
     minimumCacheTTL: 31536000,
     deviceSizes: [308, 640, 750, 828, 1080, 1200, 1920],
@@ -49,17 +52,14 @@ const nextConfig = {
       {
         source: "/:path*",
         headers: [
-          {
-            key: "Content-Security-Policy",
-            value: cspHeader,
-          },
+          { key: "Content-Security-Policy", value: cspHeader },
           { key: "X-DNS-Prefetch-Control", value: "on" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
+            value: "max-age=3600; includeSubDomains",
           },
           {
             key: "Cross-Origin-Opener-Policy",
