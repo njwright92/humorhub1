@@ -5,11 +5,15 @@
       "headers": [
         {
           "key": "Strict-Transport-Security",
-          "value": "max-age=3600; includeSubDomains"
+          "value": "max-age=36000; includeSubDomains"
         },
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://apis.google.com https://maps.googleapis.com https://maps.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src 'self' https://apis.google.com https://*.firebaseapp.com https://accounts.google.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types nextjs nextjs#app-pages-react-hydrator google-maps-api-loader google-maps-api#html lit-html goog#html gapi#gapi default 'allow-duplicates'"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(self), interest-cohort=()"
         },
         {
           "key": "X-DNS-Prefetch-Control",
