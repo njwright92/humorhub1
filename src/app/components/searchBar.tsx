@@ -1,14 +1,7 @@
 "use client";
 
-import {
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-  useEffect,
-  memo,
-  useDeferredValue,
-} from "react";
+import { useState, useMemo, useRef, useCallback, useEffect, memo } from "react";
+import { useDebouncedValue } from "@/app/lib/hooks/useDebouncedValue";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ToastContext";
@@ -145,7 +138,7 @@ export default function SearchBar({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
-  const deferredTerm = useDeferredValue(searchTerm);
+  const deferredTerm = useDebouncedValue(searchTerm, 250);
   const isModal = !canExpandSearch;
 
   const close = useCallback(() => {

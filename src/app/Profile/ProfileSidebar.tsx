@@ -71,25 +71,37 @@ export default function ProfileSidebar({
             className="grid gap-4 text-left"
           >
             <div>
-              <label className="text-xs font-bold uppercase opacity-60">
+              <label
+                htmlFor="profile-name"
+                className="text-xs font-bold uppercase opacity-60"
+              >
                 Stage Name
               </label>
               <input
+                id="profile-name"
+                name="name"
                 className="input-amber-soft mt-1"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
+                autoComplete="name"
               />
             </div>
             <div>
-              <label className="text-xs font-bold uppercase opacity-60">
+              <label
+                htmlFor="profile-bio"
+                className="text-xs font-bold uppercase opacity-60"
+              >
                 Bio
               </label>
               <textarea
+                id="profile-bio"
+                name="bio"
                 className="input-amber-soft mt-1 resize-none text-sm"
                 rows={4}
                 value={form.bio}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
+                autoComplete="off"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">

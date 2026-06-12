@@ -314,7 +314,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
             className={inputClass}
             placeholder="e.g., The Comedy Store Open Mic"
-            autoComplete="false"
+            autoComplete="off"
           />
         </div>
 
@@ -330,7 +330,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
             className={inputClass}
             placeholder="e.g., 8433 Sunset Blvd, Los Angeles"
-            autoComplete="false"
+            autoComplete="street-address"
           />
         </div>
 
@@ -373,7 +373,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             rows={3}
             className={`${inputClass} resize-none`}
             placeholder="Time, Host, Entry Fee, etc."
-            autoComplete="false"
+            autoComplete="off"
           />
         </div>
 
@@ -415,12 +415,15 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
 
               <input
                 type="date"
+                id="event-date-native"
+                name="date"
                 value={nativeDateInputValue}
                 onChange={(event) => {
                   const nextDate = parseNativeDateInput(event.target.value);
                   if (nextDate) handleDateSelect(nextDate);
                 }}
                 aria-label="Open calendar"
+                autoComplete="off"
                 className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
               />
             </div>
@@ -440,7 +443,7 @@ export default function EventFormContent({ onClose }: { onClose: () => void }) {
             onChange={handleChange}
             className={inputClass}
             placeholder="yourname@example.com"
-            autoComplete="true"
+            autoComplete="email"
           />
         </div>
 

@@ -24,13 +24,13 @@ function SavedEventCard({
       <div className="flex flex-col items-end gap-4">
         <Link
           href={mapHref}
-          className="text-xs font-bold text-green-500 underline hover:text-green-400"
+          className="text-sm font-bold text-green-500 underline hover:text-green-400"
         >
           View on Map
         </Link>
         <button
           onClick={() => onDelete(event.id, event.name)}
-          className="text-xs font-bold text-red-600 underline"
+          className="text-sm font-bold text-red-500 underline"
         >
           Remove
         </button>

@@ -52,6 +52,7 @@ export default function ContactForm() {
             type="text"
             id="name"
             name="name"
+            autoComplete="name"
             placeholder="Name"
             required
             className="field-dark"
@@ -65,6 +66,7 @@ export default function ContactForm() {
             type="email"
             id="email"
             name="email"
+            autoComplete="email"
             placeholder="Email"
             required
             className="field-dark"
@@ -79,6 +81,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
+          autoComplete="off"
           placeholder="Message"
           required
           rows={5}

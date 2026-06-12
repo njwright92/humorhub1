@@ -22,7 +22,7 @@ export default function RoundImage({
   variant = "default",
   width,
   height,
-  sizes,
+  sizes = "(min-width: 768px) 168px, 128px",
   quality,
   priority = false,
 }: RoundImageProps) {

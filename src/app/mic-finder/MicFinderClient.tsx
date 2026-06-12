@@ -8,8 +8,8 @@ import {
   useRef,
   memo,
   useTransition,
-  useDeferredValue,
 } from "react";
+import { useDebouncedValue } from "@/app/lib/hooks/useDebouncedValue";
 import dynamic from "next/dynamic";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useToast } from "@/app/components/ToastContext";
@@ -25,6 +25,7 @@ import {
   DEFAULT_ZOOM,
   CITY_ZOOM,
   EVENT_CATEGORIES,
+  CITIES_CACHE_KEY,
 } from "../lib/constants";
 import {
   getDistanceFromLatLonInKm,
@@ -66,13 +67,34 @@ const sectionHeadingClass =
   "mb-4 min-h-14 rounded-2xl border-b-4 pb-2 text-2xl leading-tight md:text-3xl";
 const emptyStateClass = "py-4 text-stone-400";
 const MAX_CITY_RESULTS = 40;
-const CITIES_CACHE_KEY = "humorhub-micfinder-cities";
 const EMPTY_FILTERS: MicFinderFilterResult = {
   baseEvents: [],
   recurringEvents: [],
   oneTimeEvents: [],
   allCityEvents: [],
 };
+
+// Client-side in-memory cache for MicFinder filter responses to avoid repeated
+// network requests when users toggle tabs or dates back-and-forth.
+const FILTER_CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes
+type FilterCacheEntry = { data: MicFinderFilterResult; expires: number };
+const globalWithCache = globalThis as {
+  __hhFilterCache?: Map<string, FilterCacheEntry>;
+};
+
+const filterCache: Map<string, FilterCacheEntry> =
+  globalWithCache.__hhFilterCache ??
+  (globalWithCache.__hhFilterCache = new Map<string, FilterCacheEntry>());
+
+function getCachedFilters(key: string): MicFinderFilterResult | null {
+  const entry = filterCache.get(key);
+  if (entry && entry.expires > Date.now()) return entry.data;
+  return null;
+}
+
+function setCachedFilters(key: string, data: MicFinderFilterResult) {
+  filterCache.set(key, { data, expires: Date.now() + FILTER_CACHE_TTL_MS });
+}
 
 const TABS = [
   {
@@ -213,7 +235,7 @@ const CitySelector = memo(function CitySelector({
     initialSearchTerm || selectedCity,
   );
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
-  const deferredSearchTerm = useDeferredValue(searchTerm);
+  const deferredSearchTerm = useDebouncedValue(searchTerm, 180);
 
   useEffect(() => {
     setSearchTerm(initialSearchTerm || selectedCity);
@@ -483,14 +505,19 @@ export default function MicFinderClient({
     const controller = new AbortController();
 
     const fetchFilters = async () => {
+      const url = buildFilterUrl(selectedTab, selectedCity, selectedDate);
+      const cached = getCachedFilters(url);
+      if (cached) {
+        startTransition(() => setEventData(cached));
+        return;
+      }
+
       setIsFetchingFilters(true);
       try {
-        const response = await fetch(
-          buildFilterUrl(selectedTab, selectedCity, selectedDate),
-          { signal: controller.signal },
-        );
+        const response = await fetch(url, { signal: controller.signal });
         if (!response.ok) return;
         const data: MicFinderFilterResult = await response.json();
+        setCachedFilters(url, data);
         startTransition(() => setEventData(data));
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
@@ -499,8 +526,14 @@ export default function MicFinderClient({
       }
     };
 
-    void fetchFilters();
-    return () => controller.abort();
+    const timer = setTimeout(() => {
+      void fetchFilters();
+    }, 120);
+
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
   }, [selectedCity, selectedDate, selectedTab]);
 
   useEffect(() => {
@@ -513,22 +546,56 @@ export default function MicFinderClient({
           "All Cities",
           selectedDate,
         );
-        const response = await fetch(`${filterUrl}&view=map`, {
+        const url = `${filterUrl}&view=map`;
+        const cached = getCachedFilters(url);
+        if (cached) {
+          setMapPins(cached.allCityEvents || []);
+          return;
+        }
+
+        const response = await fetch(url, {
           signal: controller.signal,
         });
         if (!response.ok) return;
-        const data = (await response.json()) as { allCityEvents?: MapEvent[] };
+        const data = (await response.json()) as MicFinderFilterResult & {
+          allCityEvents?: MapEvent[];
+        };
+        setCachedFilters(url, data);
         setMapPins(data.allCityEvents || []);
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
       }
     };
-    void fetchAllMapPins();
-    return () => controller.abort();
+    const timer = setTimeout(() => void fetchAllMapPins(), 120);
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
   }, [selectedTab, selectedDate, isMapVisible]);
 
+  // Ensure we have city coordinates loaded when a city is selected.
+  useEffect(() => {
+    if (!selectedCity) return;
+    // If we already have coordinates for the selected city, nothing to do.
+    if (cityCoordinates[selectedCity]) return;
+
+    // Otherwise trigger a load (loadCityCoordinates is idempotent and will no-op
+    // if the coordinates are already present).
+    void loadCityCoordinates();
+  }, [selectedCity, cityCoordinates, loadCityCoordinates]);
+
   const mapConfig = useMemo(() => {
-    const cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
+    // Try direct lookup first, then a case-insensitive normalized match as a fallback.
+    let cityCoords = selectedCity ? cityCoordinates[selectedCity] : null;
+
+    if (!cityCoords && selectedCity && Object.keys(cityCoordinates).length) {
+      const normalizedTarget = normalizeCityName(selectedCity).toLowerCase();
+      const matchKey = Object.keys(cityCoordinates).find(
+        (k) => normalizeCityName(k).toLowerCase() === normalizedTarget,
+      );
+      if (matchKey) cityCoords = cityCoordinates[matchKey];
+    }
+
     return cityCoords
       ? { lat: cityCoords.lat, lng: cityCoords.lng, zoom: CITY_ZOOM }
       : {
@@ -597,12 +664,15 @@ export default function MicFinderClient({
             {/* Transparent native date input overlaid on the icon */}
             <input
               type="date"
+              id="micfinder-date-native"
+              name="date"
               value={nativeDateInputValue}
               onChange={(event) => {
                 const nextDate = parseNativeDateInput(event.target.value);
                 if (nextDate) handleDateSelect(nextDate);
               }}
               aria-label="Open calendar"
+              autoComplete="off"
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />
           </div>
