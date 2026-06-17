@@ -70,7 +70,17 @@ function buildFilterResult(
       )
     : [];
 
-  const allCityEvents = isAnyCity ? baseEvents : [];
+  const isAllCities = isAnyCity && cityLower === ALL_CITIES_LABEL.toLowerCase();
+  const selectedDayEvents = baseEvents.filter(
+    (event) =>
+      (event.isRecurring && event.recurringDow === selectedDow) ||
+      (!event.isRecurring && event.dateMs === dateCheckMs),
+  );
+  const allCityEvents = isAllCities
+    ? selectedDayEvents
+    : isAnyCity
+      ? baseEvents
+      : [];
 
   return {
     baseEvents: [],
