@@ -67,6 +67,7 @@ const sectionHeadingClass =
   "mb-4 min-h-14 rounded-2xl border-b-4 pb-2 text-2xl leading-tight md:text-3xl";
 const emptyStateClass = "py-4 text-stone-400";
 const MAX_CITY_RESULTS = 40;
+const VIRTUALIZED_SECTION_THRESHOLD = 8;
 const EMPTY_FILTERS: MicFinderFilterResult = {
   baseEvents: [],
   recurringEvents: [],
@@ -573,16 +574,12 @@ export default function MicFinderClient({
     };
   }, [selectedTab, selectedDate, isMapVisible]);
 
-  // Ensure we have city coordinates loaded when a city is selected.
   useEffect(() => {
-    if (!selectedCity) return;
-    // If we already have coordinates for the selected city, nothing to do.
+    if (!isMapVisible || !selectedCity) return;
     if (cityCoordinates[selectedCity]) return;
 
-    // Otherwise trigger a load (loadCityCoordinates is idempotent and will no-op
-    // if the coordinates are already present).
     void loadCityCoordinates();
-  }, [selectedCity, cityCoordinates, loadCityCoordinates]);
+  }, [selectedCity, cityCoordinates, isMapVisible, loadCityCoordinates]);
 
   const mapConfig = useMemo(() => {
     // Try direct lookup first, then a case-insensitive normalized match as a fallback.
@@ -604,6 +601,26 @@ export default function MicFinderClient({
           zoom: DEFAULT_ZOOM,
         };
   }, [selectedCity, cityCoordinates]);
+
+  const renderEventCards = useCallback(
+    (events: Event[], ariaLabel: string) => {
+      if (events.length > VIRTUALIZED_SECTION_THRESHOLD) {
+        return (
+          <VirtualizedEventList
+            events={events}
+            onSave={handleEventSave}
+            className="h-96 w-full overflow-auto rounded-2xl border border-stone-700"
+            ariaLabel={ariaLabel}
+          />
+        );
+      }
+
+      return events.map((event) => (
+        <EventCard key={event.id} event={event} onSave={handleEventSave} />
+      ));
+    },
+    [handleEventSave],
+  );
 
   return (
     <>
@@ -712,13 +729,10 @@ export default function MicFinderClient({
           ) : isFetchingFilters ? (
             <p className={emptyStateClass}>Loading...</p>
           ) : eventData.recurringEvents.length > 0 ? (
-            eventData.recurringEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onSave={handleEventSave}
-              />
-            ))
+            renderEventCards(
+              eventData.recurringEvents,
+              `${eventData.recurringEvents.length} weekly events`,
+            )
           ) : (
             <p className={emptyStateClass}>
               No weekly {TAB_LABELS[selectedTab].toLowerCase()} found.
@@ -739,13 +753,10 @@ export default function MicFinderClient({
           ) : isFetchingFilters ? (
             <p className={emptyStateClass}>Loading...</p>
           ) : eventData.oneTimeEvents.length > 0 ? (
-            eventData.oneTimeEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onSave={handleEventSave}
-              />
-            ))
+            renderEventCards(
+              eventData.oneTimeEvents,
+              `${eventData.oneTimeEvents.length} one-time events`,
+            )
           ) : (
             <p className={emptyStateClass}>
               No one-time {TAB_LABELS[selectedTab].toLowerCase()} found.
