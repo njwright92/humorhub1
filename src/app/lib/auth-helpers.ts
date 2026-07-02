@@ -4,8 +4,7 @@ import { SESSION_COOKIE_NAME } from "@/app/lib/auth-session";
 import type { ApiResponse } from "@/app/lib/types";
 
 export type AuthResult =
-  | { success: true; uid: string }
-  | { success: false; response: NextResponse };
+  { success: true; uid: string } | { success: false; response: NextResponse };
 
 export async function authenticateRequest(
   request: NextRequest,
