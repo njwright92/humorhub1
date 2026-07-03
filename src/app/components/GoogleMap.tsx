@@ -42,7 +42,7 @@ function EventPin({ color }: { color: string }) {
         stroke="#fff"
         strokeWidth={4}
       />
-      <circle cx="16" cy="16" r="4" fill="#f0efeb" />
+      <circle cx="16" cy="16" r="4" fill="#f0eee9" />
     </svg>
   );
 }
@@ -149,10 +149,10 @@ const InnerMap = memo(function InnerMap({
           pixelOffset={[0, -30]}
           headerDisabled
         >
-          <article className="relative w-57 bg-zinc-200 p-2 pt-4 text-center text-zinc-900">
+          <article className="relative w-60 bg-zinc-200 p-2 text-center text-zinc-900">
             <button
               onClick={clearSelection}
-              className="absolute top-1 right-1 grid place-items-center"
+              className="absolute top-0 right-0 grid place-items-center"
               aria-label="Close"
               type="button"
             >
@@ -173,8 +173,8 @@ const InnerMap = memo(function InnerMap({
             </div>
 
             {selectedEvent.details && (
-              <div className="mt-2 border-t border-stone-100 pt-2">
-                <p className="text-left text-[11px] leading-relaxed whitespace-pre-wrap">
+              <div className="mt-2 border-t border-stone-400">
+                <p className="text-xs leading-relaxed whitespace-pre-wrap">
                   {selectedEvent.details.length > 120
                     ? `${selectedEvent.details.substring(0, 120)}...`
                     : selectedEvent.details}
