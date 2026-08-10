@@ -16,7 +16,6 @@ const nextConfig = {
       "@tanstack/react-virtual",
       "@vis.gl/react-google-maps",
     ],
-    cssChunking: "strict",
   },
 
   images: {
