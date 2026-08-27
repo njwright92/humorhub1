@@ -27,7 +27,7 @@
     "@vis.gl/react-google-maps": "^1.9.0",
     "firebase": "^12.18.0",
     "firebase-admin": "^14.3.0",
-    "next": "^16.3.2",
+    "next": "^16.3.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
@@ -36,16 +36,16 @@
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "eslint": "^10.9.0",
+    "@types/react-dom": "^19.2.5",
+    "eslint": "^10.9.1",
     "globals": "^17.11.0",
-    "lint-staged": "^17.3.0",
+    "lint-staged": "^17.4.1",
     "postcss": "^8.5.26",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.68.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "eslint --fix",
@@ -54,7 +54,7 @@
   "allowScripts": {
     "@parcel/watcher@2.5.1": true,
     "@firebase/util@1.15.3": true,
-    "protobufjs@7.6.5": true,
+    "protobufjs@7.6.6": true,
     "sharp@0.34.5": true
   }
 }
