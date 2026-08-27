@@ -4,6 +4,7 @@ import { Comic_Neue } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import DonationBanner from "./components/DonationBanner";
 import AppProviders from "./components/AppProviders";
 import AuthModalHost from "./components/authModalHost";
 import { Analytics } from "@vercel/analytics/react";
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <AppProviders>
           <AuthModalHost />
           <Header />
+          <DonationBanner />
           {children}
           <Footer />
         </AppProviders>
