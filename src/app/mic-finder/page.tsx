@@ -124,7 +124,7 @@ export default function MicFinderPage() {
       <main className="grid min-h-dvh justify-items-center gap-8 px-1 py-10 text-center md:ml-20 md:gap-10 md:px-4 md:py-16">
         <aside
           aria-label="Community notice"
-          className="shadow-soft -mt-8 min-h-10 w-full max-w-4xl transform-gpu rounded-2xl border border-amber-800 bg-zinc-200 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base"
+          className="shadow-soft -mt-8 min-h-10 w-full max-w-4xl rounded-3xl border border-amber-800 bg-zinc-200 p-1 text-xs leading-tight font-medium text-amber-800 contain-content lg:text-base"
         >
           <span aria-hidden="true">📢 </span>
           Note: Open mic events evolve quickly. See something outdated?{" "}

@@ -33,7 +33,7 @@ export default function DonationBanner() {
     <div className="h-14 sm:h-0">
       <aside
         aria-label="Support Humor Hub"
-        className="fixed inset-x-2 top-16 z-30 mx-auto grid max-w-xl grid-cols-[2rem_minmax(0,1fr)_2rem] items-center rounded-2xl border border-amber-700 bg-zinc-200 px-2 py-1 text-stone-900 shadow-xl sm:top-4 sm:right-4 sm:left-24 sm:mx-0"
+        className="fixed inset-x-2 top-16 z-30 mx-auto grid max-w-xl grid-cols-[2rem_minmax(0,1fr)_2rem] items-center rounded-3xl border border-amber-700 bg-zinc-200 px-1 py-1 text-stone-900 shadow-xl sm:top-4 sm:right-4 sm:left-24 sm:mx-0"
       >
         <span aria-hidden="true" />
         <button
@@ -64,13 +64,13 @@ export default function DonationBanner() {
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setIsQrCodeOpen(false);
           }}
-          className="fixed inset-0 z-50 grid place-items-center bg-stone-900/70 p-4"
+          className="fixed inset-0 z-50 grid place-items-center bg-stone-900/70 p-2"
         >
           <section
             role="dialog"
             aria-modal="true"
             aria-labelledby="support-qr-title"
-            className="relative grid w-full max-w-sm justify-items-center gap-4 rounded-xl border border-amber-700 bg-zinc-200 p-6 text-center text-stone-900 shadow-xl"
+            className="relative grid w-full max-w-sm justify-items-center gap-4 rounded-xl border border-amber-700 bg-zinc-200 p-4 text-center text-stone-900 shadow-xl"
           >
             <button
               type="button"
@@ -92,7 +92,7 @@ export default function DonationBanner() {
               alt="QR code to support Humor Hub"
               width={512}
               height={512}
-              className="h-auto w-full max-w-64 border border-stone-400 bg-zinc-200 p-2"
+              className="h-auto w-full max-w-64 border border-stone-400 bg-zinc-200 p-1"
             />
           </section>
         </div>
