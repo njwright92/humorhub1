@@ -2,19 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import CloseIcon from "./CloseIcon";
 
 const QR_CODE_PATH = "/support-qr-code.jpeg";
 
 export default function DonationBanner() {
-  const pathname = usePathname();
   const [isDismissed, setIsDismissed] = useState(false);
   const [isQrCodeOpen, setIsQrCodeOpen] = useState(false);
-
-  useEffect(() => {
-    setIsDismissed(false);
-  }, [pathname]);
 
   useEffect(() => {
     if (!isQrCodeOpen) return;
@@ -30,31 +24,30 @@ export default function DonationBanner() {
   if (isDismissed) return null;
 
   return (
-    <div className="h-14 sm:h-0">
+    <>
       <aside
         aria-label="Support Humor Hub"
-        className="fixed inset-x-2 top-16 z-30 mx-auto grid max-w-xl grid-cols-[2rem_minmax(0,1fr)_2rem] items-center rounded-3xl border border-amber-700 bg-zinc-200 px-1 py-1 text-stone-900 shadow-xl sm:top-4 sm:right-4 sm:left-24 sm:mx-0"
+        className="fixed bottom-4 left-6 z-30 inline-grid w-fit max-w-[calc(100vw-1rem)] -translate-x-1/2 -translate-y-1/2 grid-cols-[minmax(0,1fr)_1.5rem] items-center rounded-3xl border border-amber-700 bg-zinc-200 p-1 text-stone-900 shadow-lg sm:right-4 sm:left-auto sm:translate-x-0"
       >
-        <span aria-hidden="true" />
         <button
           type="button"
           onClick={() => setIsQrCodeOpen(true)}
-          className="grid min-w-0 place-items-center gap-0.5 rounded-md px-2 py-1 text-center transition-colors hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900"
+          className="grid min-w-0 place-items-center gap-px rounded-md px-1 py-1 text-center transition-colors hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900 sm:px-2"
         >
-          <p className="mb-1 text-xs leading-tight">
+          <p className="mb-1 text-[0.5rem] leading-tight whitespace-nowrap sm:text-[0.6rem] lg:text-xs">
             Help people find and perform comedy anywhere!
           </p>
-          <span className="text-lg font-extrabold text-amber-700 underline">
-            Support Comedy & Donate Now!
+          <span className="text-[0.5rem] leading-tight font-bold text-blue-700 underline sm:text-[0.6rem] lg:text-xs">
+            Support Comedy Donations!
           </span>
         </button>
         <button
           type="button"
           onClick={() => setIsDismissed(true)}
           aria-label="Dismiss support banner"
-          className="col-start-3 grid size-8 place-items-center justify-self-end rounded-full text-stone-900 transition-colors hover:bg-amber-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900"
+          className="col-start-2 row-start-1 grid size-4 place-items-center self-start justify-self-end rounded-full text-stone-900 transition-colors hover:bg-amber-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900"
         >
-          <CloseIcon className="size-5" />
+          <CloseIcon className="size-3" />
         </button>
       </aside>
 
@@ -64,13 +57,13 @@ export default function DonationBanner() {
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setIsQrCodeOpen(false);
           }}
-          className="fixed inset-0 z-50 grid place-items-center bg-stone-900/70 p-2"
+          className="fixed inset-0 z-50 grid place-items-center bg-stone-900/70 p-1"
         >
           <section
             role="dialog"
             aria-modal="true"
             aria-labelledby="support-qr-title"
-            className="relative grid w-full max-w-sm justify-items-center gap-4 rounded-xl border border-amber-700 bg-zinc-200 p-4 text-center text-stone-900 shadow-xl"
+            className="relative grid w-full max-w-sm justify-items-center gap-4 rounded-xl border border-amber-700 bg-zinc-200 p-2 text-center text-stone-900 shadow-xl"
           >
             <button
               type="button"
@@ -97,6 +90,6 @@ export default function DonationBanner() {
           </section>
         </div>
       )}
-    </div>
+    </>
   );
 }

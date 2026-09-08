@@ -4,9 +4,9 @@ import Link from "next/link";
 import ProtectedRouteButton from "./components/ProtectedRouteButton";
 import RoundImage from "./components/RoundImage";
 import SectionCard from "./components/SectionCard";
+// import DonationBanner from "./components/DonationBanner";
 
 const EventForm = dynamic(() => import("./components/EventForm"));
-
 const featureLeft = "grid gap-6 md:grid-cols-2 md:text-left";
 const featureRight = "grid gap-6 md:grid-cols-2 md:text-right";
 const featureImageRight =
@@ -24,6 +24,10 @@ export default function Home() {
   return (
     <main className="page-shell gap-12 py-20 text-center">
       <h1 className="text-5xl md:text-7xl">Humor Hub!</h1>
+
+      {/* <>
+        <DonationBanner />
+      </> */}
 
       <SectionCard id="mics" title="Mic Finder!" variant="spaced">
         <div className={featureLeft}>
